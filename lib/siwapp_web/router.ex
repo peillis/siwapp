@@ -17,6 +17,10 @@ defmodule SiwappWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authenticated do
+    plug SiwappWeb.Plugs.Authenticate
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", SiwappWeb do
   #   pipe_through :api

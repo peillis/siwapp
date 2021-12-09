@@ -23,5 +23,14 @@ defmodule Siwapp.Repo.Migrations.CreateUsersAuthTables do
 
     create index(:users_tokens, [:user_id])
     create unique_index(:users_tokens, [:context, :token])
+
+    create table(:users_api_tokens) do
+      add :user_id, references(:users, on_delete: :delete_all), null: false
+      add :token, :binary, null: false
+      timestamps(updated_at: false)
+    end
+
+    create index(:users_api_tokens, [:user_id])
+    create unique_index(:users_api_tokens, [:user_id, :token])
   end
 end
