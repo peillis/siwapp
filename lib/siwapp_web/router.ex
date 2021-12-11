@@ -21,9 +21,14 @@ defmodule SiwappWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", SiwappWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", SiwappWeb do
+    pipe_through :api
+
+    resources "/invoices", InvoicesController, only: [:show, :index]
+    post "/invoices", InvoicesController, :create
+    put "/invoices/:id", InvoicesController, :update
+
+  end
 
   # Enables LiveDashboard only for development
   #
