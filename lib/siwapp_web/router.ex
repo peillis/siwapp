@@ -27,10 +27,23 @@ defmodule SiwappWeb.Router do
     post "/sign_in", ApiTokenController, :create
   end
 
+
+  # Other scopes may use custom stacks.
   scope "/api/v1", SiwappWeb do
     pipe_through [:api, :token_authenticated]
-
+    
     get "/", ApiTokenController, :show
+
+    get "/invoices", InvoicesController, :list
+    get "/invoices/searching/:map", InvoicesController, :searching
+    get "/invoices/show/:id", InvoicesController, :show
+    get "/invoices/send_email/:id", InvoicesController, :send_email
+
+    post "/invoices", InvoicesController, :create
+
+    put "/invoices/:id", InvoicesController, :update
+
+    delete "/invoices/:id", InvoicesController, :delete
   end
 
   # Enables LiveDashboard only for development
