@@ -27,11 +27,10 @@ defmodule SiwappWeb.Router do
     post "/sign_in", ApiTokenController, :create
   end
 
-
   # Other scopes may use custom stacks.
   scope "/api/v1", SiwappWeb do
     pipe_through [:api, :token_authenticated]
-    
+
     get "/", ApiTokenController, :show
 
     get "/invoices", InvoicesController, :list
