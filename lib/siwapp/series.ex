@@ -9,7 +9,6 @@ defmodule Siwapp.Series do
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
     field :first_number, :integer, default: 1
-
   end
 
   @doc false

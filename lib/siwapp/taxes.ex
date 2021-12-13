@@ -8,7 +8,6 @@ defmodule Siwapp.Taxes do
     field :active, :boolean, default: true
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
-
   end
 
   @doc false

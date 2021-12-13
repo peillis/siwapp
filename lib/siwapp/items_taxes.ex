@@ -6,7 +6,6 @@ defmodule Siwapp.ItemsTaxes do
   schema "items_taxes" do
     belongs_to :items, Siwapp.Items
     belongs_to :taxes, Siwapp.Taxes
-
   end
 
   @doc false

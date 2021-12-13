@@ -9,7 +9,6 @@ defmodule Siwapp.Items do
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
     belongs_to :invoices, Siwapp.Invoices
-
   end
 
   @doc false

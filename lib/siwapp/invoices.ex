@@ -58,7 +58,8 @@ defmodule Siwapp.Invoices do
       :deleted_at,
       :meta_attributes,
       :series_id,
-      :customers_id])
+      :customers_id
+    ])
     |> validate_name()
   end
 
@@ -76,8 +77,9 @@ defmodule Siwapp.Invoices do
   def validate_email(changeset) do
     changeset
     |> validate_required([:email])
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "email must have the @ sign and no spaces")
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/,
+      message: "email must have the @ sign and no spaces"
+    )
     |> unique_constraint(:email)
   end
-
 end
