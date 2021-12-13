@@ -9,7 +9,7 @@ defmodule Siwapp.Customers do
     field :email, :string
     field :contact_person, :string
     field :active, :boolean, default: true
-    field :deleted_at, :utc_datetime_usec
+    field :deleted_at, :utc_datetime
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map

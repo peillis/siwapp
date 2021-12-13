@@ -23,10 +23,10 @@ defmodule Siwapp.Invoices do
     field :shipping_address, :string
     field :notes, :string
     field :terms, :string
-    field :deleted_at, :utc_datetime_usec
+    field :deleted_at, :utc_datetime
     field :meta_attributes, :map
-    field :series_id, :integer
-    field :customers_id, :integer, null: false
+    belongs_to :series, Siwapp.Series
+    belongs_to :customers, Siwapp.Customers
 
     timestamps()
   end
@@ -65,6 +65,19 @@ defmodule Siwapp.Invoices do
   def validate_name(changeset) do
     changeset
     |> validate_required([:name])
-
   end
+
+  def validate_identification(changeset) do
+    changeset
+    |> validate_required([:identification])
+    |> unique_constraint(:email)
+  end
+
+  def validate_email(changeset) do
+    changeset
+    |> validate_required([:email])
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "email must have the @ sign and no spaces")
+    |> unique_constraint(:email)
+  end
+
 end

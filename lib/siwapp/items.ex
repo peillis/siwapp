@@ -5,10 +5,10 @@ defmodule Siwapp.Items do
   schema "items" do
     field :quantity, :integer, default: 1
     field :discount, :integer, default: 0
-    field :description, :string, size: 20000
+    field :description, :string
     field :unitary_cost, :integer, default: 0
-    field :deleted_at, :utc_datetime_usec
-    field :invoices_id, :integer
+    field :deleted_at, :utc_datetime
+    belongs_to :invoices, Siwapp.Invoices
 
   end
 

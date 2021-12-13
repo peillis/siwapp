@@ -7,7 +7,7 @@ defmodule Siwapp.Series do
     field :value, :string
     field :enabled, :boolean, default: true
     field :default, :boolean, default: false
-    field :deleted_at, :utc_datetime_usec
+    field :deleted_at, :utc_datetime
     field :first_number, :integer, default: 1
 
   end

@@ -3,11 +3,11 @@ defmodule Siwapp.Taxes do
   import Ecto.Changeset
 
   schema "taxes" do
-    field :name, :string, size: 50
+    field :name, :string
     field :value, :integer
     field :active, :boolean, default: true
     field :default, :boolean, default: false
-    field :deleted_at, :utc_datetime_usec
+    field :deleted_at, :utc_datetime
 
   end
 
