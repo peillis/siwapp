@@ -12,10 +12,9 @@ defmodule SiwappWeb.UserApiTokenController do
     render(conn, "new.html")
   end
 
+
   def create(conn, %{"user" => user_params}) do
 
     user = conn.assigns.current_user
-
-
   end
 end
