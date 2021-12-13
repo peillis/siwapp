@@ -1,5 +1,5 @@
 defmodule Siwapp.ApiToken do
-  @signing_salt "siwapp_api"
+  @signing_salt "bm9YQ9J68CJqnM3P6S62x6htopuZ4Wp5vtVOP5IdUlQcVq/d+KuAr6FEkqn3Yibg"
 
   # 3 hours
   @token_age_secs 3 * 3_600
