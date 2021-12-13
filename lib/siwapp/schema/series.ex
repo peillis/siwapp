@@ -1,18 +1,19 @@
-defmodule Siwapp.Taxes do
+defmodule Siwapp.Schema.Series do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "taxes" do
+  schema "series" do
     field :name, :string
-    field :value, :integer
-    field :active, :boolean, default: true
+    field :value, :string
+    field :enabled, :boolean, default: true
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
+    field :first_number, :integer, default: 1
   end
 
   @doc false
-  def changeset(taxes, attrs) do
-    taxes
+  def changeset(series, attrs) do
+    series
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end

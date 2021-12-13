@@ -1,11 +1,10 @@
-defmodule Siwapp.Customers do
+defmodule Siwapp.Schema.Customers do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "customers" do
     field :identification, :string
     field :name, :string
-    field :name_slug, :string
     field :email, :string
     field :contact_person, :string
     field :active, :boolean, default: true

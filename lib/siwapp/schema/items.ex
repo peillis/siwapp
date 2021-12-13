@@ -1,5 +1,6 @@
-defmodule Siwapp.Items do
+defmodule Siwapp.Schema.Items do
   use Ecto.Schema
+  alias Siwapp.Schema.Invoices
   import Ecto.Changeset
 
   schema "items" do
@@ -8,13 +9,13 @@ defmodule Siwapp.Items do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    belongs_to :invoices, Siwapp.Invoices
+    belongs_to :invoices, Invoices
   end
 
   @doc false
   def changeset(items, attrs) do
     items
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:quantity])
+    |> validate_required([:quantity])
   end
 end
