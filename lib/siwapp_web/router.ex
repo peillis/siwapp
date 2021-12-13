@@ -25,7 +25,7 @@ defmodule SiwappWeb.Router do
     pipe_through :api
 
     get "/invoices", InvoicesController, :list
-    get "/invoices/searching/:tuple", InvoicesController, :searching
+    get "/invoices/searching/:map", InvoicesController, :searching
     get "/invoices/show/:id", InvoicesController, :show
     get "/invoices/send_email/:id", InvoicesController, :send_email
 
@@ -34,7 +34,6 @@ defmodule SiwappWeb.Router do
     put "/invoices/:id", InvoicesController, :update
 
     delete "/invoices/:id", InvoicesController, :delete
-
   end
 
   # Enables LiveDashboard only for development
