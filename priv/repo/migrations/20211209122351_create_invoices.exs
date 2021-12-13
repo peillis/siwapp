@@ -11,8 +11,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :first_number, :integer, default: 1
     end
 
-    create index(:series, [:deleted_at])
-
     create table(:customers) do
       add :name, :string, size: 100
       add :identification, :string, size: 50
@@ -24,8 +22,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :shipping_address, :text
       add :meta_attributes, :jsonb
     end
-
-    create index(:customers, [:deleted_at])
 
     create table(:invoices) do
       add :name, :string, size: 100
@@ -60,7 +56,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     create index(:invoices, [:identification])
     create index(:invoices, [:email])
     create index(:invoices, [:name])
-    create index(:invoices, [:deleted_at])
     create index(:invoices, [:series_id, :number], unique: true)
     create index(:invoices, [:series_id, :deleted_number], unique: true)
     create index(:invoices, [:customer_id])
@@ -76,7 +71,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     end
 
     create index(:items, [:description])
-    create index(:items, [:deleted_at])
     create index(:items, [:invoices_id])
 
     create table(:taxes) do
