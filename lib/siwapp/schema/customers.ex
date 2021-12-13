@@ -1,5 +1,6 @@
 defmodule Siwapp.Schema.Customers do
   use Ecto.Schema
+  alias Siwapp.Schema.Invoices
   import Ecto.Changeset
 
   schema "customers" do
@@ -12,6 +13,7 @@ defmodule Siwapp.Schema.Customers do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map
+    has_many :invoices, Invoices
 
     timestamps()
   end
@@ -19,7 +21,7 @@ defmodule Siwapp.Schema.Customers do
   @doc false
   def changeset(customers, attrs) do
     customers
-    |> cast(attrs, [:name, :identification])
+    |> cast(attrs, [:name, :identification, :email, :invoicing_address, :shipping_address])
     |> validate_required([:name, :identification])
   end
 end

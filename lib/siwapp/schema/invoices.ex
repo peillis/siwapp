@@ -2,6 +2,7 @@ defmodule Siwapp.Schema.Invoices do
   use Ecto.Schema
   alias Siwapp.Schema.Series
   alias Siwapp.Schema.Customers
+  alias Siwapp.Schema.Items
   import Ecto.Changeset
 
   schema "invoices" do
@@ -29,6 +30,7 @@ defmodule Siwapp.Schema.Invoices do
     field :meta_attributes, :map
     belongs_to :series, Series
     belongs_to :customers, Customers
+    has_many :items, Items
 
     timestamps()
   end
