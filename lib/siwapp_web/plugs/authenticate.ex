@@ -7,10 +7,8 @@ defmodule SiwappWeb.Plugs.Authenticate do
   def call(conn, _opts) do
     with ["Token token=" <> token] <- get_req_header(conn, "Authorization"),
          {:ok, data} <- Siwapp.ApiToken.verify(token) do
-
       conn
       |> assign(:current_user, Siwapp.Accounts.get_user!(data.user_id))
-
     else
       _error ->
         conn

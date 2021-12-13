@@ -6,7 +6,7 @@ defmodule Siwapp.Accounts do
   import Ecto.Query, warn: false
   alias Siwapp.Repo
 
-  alias Siwapp.Accounts.{User, UserToken, UserNotifier}
+  alias Siwapp.Accounts.{User, UserToken, UserNotifier, UserApiToken}
 
   ## Database getters
 
@@ -220,6 +220,12 @@ defmodule Siwapp.Accounts do
   def generate_user_session_token(user) do
     {token, user_token} = UserToken.build_session_token(user)
     Repo.insert!(user_token)
+    token
+  end
+
+  def generate_user_api_token(user) do
+    {token, api_token} = UserApiToken.build_api_token(user)
+    Repo.insert!(api_token)
     token
   end
 
