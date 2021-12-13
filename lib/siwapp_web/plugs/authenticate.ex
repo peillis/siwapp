@@ -5,7 +5,7 @@ defmodule SiwappWeb.Plugs.Authenticate do
   def init(default), do: default
 
   def call(conn, _opts) do
-    with ["Token token=" <> token] <- get_req_header(conn, "Authorization"),
+    with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, data} <- Siwapp.ApiToken.verify(token) do
 
       conn

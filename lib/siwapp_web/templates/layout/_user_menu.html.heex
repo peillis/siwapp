@@ -2,7 +2,6 @@
 <%= if @current_user do %>
   <li><%= @current_user.email %></li>
   <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>
-  <li><%= link "API Token", to: Routes.user_api_token_path(@conn, :show) %></li>
   <li><%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
 <% end %>
 </ul>

@@ -17,14 +17,22 @@ defmodule SiwappWeb.Router do
     plug :accepts, ["json"]
   end
 
-  pipeline :authenticated do
+  pipeline :token_authenticated do
     plug SiwappWeb.Plugs.Authenticate
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", SiwappWeb do
-  #   pipe_through :api
-  # end
+
+  scope "/api/v1", SiwappWeb do
+    pipe_through :api
+
+    post "/sign_in", ApiTokenController, :create
+  end
+
+  scope "/api/v1", SiwappWeb do
+    pipe_through [:api, :token_authenticated]
+
+    get "/", ApiTokenController, :show
+  end
 
   # Enables LiveDashboard only for development
   #
@@ -74,7 +82,6 @@ defmodule SiwappWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-    get "/users/api-token", UserApiTokenController, :show
   end
 
   scope "/", SiwappWeb do
