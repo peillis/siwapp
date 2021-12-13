@@ -24,9 +24,16 @@ defmodule SiwappWeb.Router do
   scope "/api", SiwappWeb do
     pipe_through :api
 
-    resources "/invoices", InvoicesController, only: [:show, :index]
+    get "/invoices", InvoicesController, :list
+    get "/invoices/searching/:tuple", InvoicesController, :searching
+    get "/invoices/show/:id", InvoicesController, :show
+    get "/invoices/send_email/:id", InvoicesController, :send_email
+
     post "/invoices", InvoicesController, :create
+
     put "/invoices/:id", InvoicesController, :update
+
+    delete "/invoices/:id", InvoicesController, :delete
 
   end
 

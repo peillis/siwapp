@@ -2,15 +2,21 @@ defmodule SiwappWeb.InvoicesController do
   use SiwappWeb, :controller
   # alias AlejandroModuleForRecordings
 
-  def index(conn, _params) do
+  def list(conn, _params) do
     # invoices = Recording.list_invoices()
     json(conn, %{data: "invoices"})
   end
 
+  def searching(conn, params) do
+    by = Map.get(params, "tuple")
+    # invoices_query = Recording.searching_invoices(by)
+      json(conn, by)
+  end
+
   def show(conn, params) do
     id = Map.get(params, "id")
-    # invoices_query = Recording.invoices(key, parameter)
-    #json(conn, invoices_query)
+    # invoices_show = Recording.show_invoice(id)
+    #json(conn, invoices_show)
     json(conn, id)
   end
 
@@ -39,6 +45,20 @@ defmodule SiwappWeb.InvoicesController do
     #     render(conn, "edit.html", changeset: changeset)
     # end
     json(conn, updates)
+  end
+
+  def send_email(conn, params) do
+    # conn
+    # |> put_flash(:info, "E-mail succesfully sent.")
+    # |> Invoice.send_email()
+    json(conn, params)
+  end
+
+  def delete(conn, params) do
+    # conn
+    # |> put_flash(:info, "Logged out successfully.")
+    # |> Invoice.delete_invoice()
+    json(conn, params)
   end
 
 end
