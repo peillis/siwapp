@@ -21,7 +21,6 @@ defmodule SiwappWeb.Router do
     plug SiwappWeb.Plugs.Authenticate
   end
 
-
   scope "/api/v1", SiwappWeb do
     pipe_through :api
 

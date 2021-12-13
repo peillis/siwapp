@@ -12,7 +12,6 @@ defmodule SiwappWeb.UserSessionControllerTest do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
       assert response =~ "<h1>Log in</h1>"
-      assert response =~ "Register</a>"
       assert response =~ "Forgot your password?</a>"
     end
 
@@ -83,14 +82,14 @@ defmodule SiwappWeb.UserSessionControllerTest do
   describe "DELETE /users/log_out" do
     test "logs the user out", %{conn: conn, user: user} do
       conn = conn |> log_in_user(user) |> delete(Routes.user_session_path(conn, :delete))
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/users/log_in"
       refute get_session(conn, :user_token)
       assert get_flash(conn, :info) =~ "Logged out successfully"
     end
 
     test "succeeds even if the user is not logged in", %{conn: conn} do
       conn = delete(conn, Routes.user_session_path(conn, :delete))
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == "/users/log_in"
       refute get_session(conn, :user_token)
       assert get_flash(conn, :info) =~ "Logged out successfully"
     end

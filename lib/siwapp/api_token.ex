@@ -9,8 +9,7 @@ defmodule Siwapp.ApiToken do
   end
 
   def verify(token) do
-    case Phoenix.Token.verify(SiwappWeb.Endpoint, @signing_salt, token,
-              max_age: @token_age_secs) do
+    case Phoenix.Token.verify(SiwappWeb.Endpoint, @signing_salt, token, max_age: @token_age_secs) do
       {:ok, data} -> {:ok, data}
       _error -> {:error, :unauthenticated}
     end

@@ -8,10 +8,8 @@ defmodule SiwappWeb.ApiTokenController do
   def create(conn, %{"email" => email, "password" => password}) do
     with %User{} = user <- Accounts.get_user_by_email_and_password(email, password),
          token <- ApiToken.sign(%{user_id: user.id}) do
-
       conn
       |> render("token.json", token: token)
-
     else
       nil ->
         conn
@@ -23,5 +21,4 @@ defmodule SiwappWeb.ApiTokenController do
     conn
     |> render("valid_token.json", email: conn.assigns.current_user.email)
   end
-
 end
