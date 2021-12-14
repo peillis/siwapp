@@ -1,6 +1,8 @@
 defmodule SiwappWeb.Router do
   use SiwappWeb, :router
 
+  import SiwappWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,22 +10,40 @@ defmodule SiwappWeb.Router do
     plug :put_root_layout, {SiwappWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/", SiwappWeb do
-    pipe_through :browser
+  pipeline :token_authenticated do
+    plug SiwappWeb.Plugs.Authenticate
+  end
 
-    get "/", PageController, :index
+  scope "/api/v1", SiwappWeb do
+    pipe_through :api
+
+    post "/sign_in", ApiTokenController, :create
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", SiwappWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", SiwappWeb do
+    pipe_through [:api, :token_authenticated]
+
+    get "/", ApiTokenController, :show
+
+    get "/invoices", InvoicesController, :list
+    get "/invoices/searching/:map", InvoicesController, :searching
+    get "/invoices/show/:id", InvoicesController, :show
+    get "/invoices/send_email/:id", InvoicesController, :send_email
+
+    post "/invoices", InvoicesController, :create
+
+    put "/invoices/:id", InvoicesController, :update
+
+    delete "/invoices/:id", InvoicesController, :delete
+  end
 
   # Enables LiveDashboard only for development
   #
@@ -51,5 +71,37 @@ defmodule SiwappWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", SiwappWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/users/log_in", UserSessionController, :new
+    post "/users/log_in", UserSessionController, :create
+    get "/users/reset_password", UserResetPasswordController, :new
+    post "/users/reset_password", UserResetPasswordController, :create
+    get "/users/reset_password/:token", UserResetPasswordController, :edit
+    put "/users/reset_password/:token", UserResetPasswordController, :update
+  end
+
+  scope "/", SiwappWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/", PageController, :index
+    get "/users/settings", UserSettingsController, :edit
+    put "/users/settings", UserSettingsController, :update
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+  end
+
+  scope "/", SiwappWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+    get "/users/confirm", UserConfirmationController, :new
+    post "/users/confirm", UserConfirmationController, :create
+    get "/users/confirm/:token", UserConfirmationController, :edit
+    post "/users/confirm/:token", UserConfirmationController, :update
   end
 end
