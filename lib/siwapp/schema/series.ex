@@ -1,6 +1,6 @@
 defmodule Siwapp.Schema.Series do
   use Ecto.Schema
-  alias Siwapp.Schema.Invoices
+  alias Siwapp.Schema.Invoice
   import Ecto.Changeset
 
   schema "series" do
@@ -10,7 +10,7 @@ defmodule Siwapp.Schema.Series do
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
     field :first_number, :integer, default: 1
-    has_many :invoices, Invoices
+    has_many :invoices, Invoice
   end
 
   @doc false

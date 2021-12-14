@@ -1,6 +1,6 @@
-defmodule Siwapp.Schema.Items do
+defmodule Siwapp.Schema.Item do
   use Ecto.Schema
-  alias Siwapp.Schema.Invoices
+  alias Siwapp.Schema.Invoice
   import Ecto.Changeset
 
   schema "items" do
@@ -9,7 +9,7 @@ defmodule Siwapp.Schema.Items do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    belongs_to :invoices, Invoices
+    belongs_to :invoice, Invoice
   end
 
   @doc false

@@ -1,6 +1,6 @@
-defmodule Siwapp.Schema.Taxes do
+defmodule Siwapp.Schema.Tax do
   use Ecto.Schema
-  alias Siwapp.Schema.Items
+  alias Siwapp.Schema.Item
   import Ecto.Changeset
 
   schema "taxes" do
@@ -9,7 +9,7 @@ defmodule Siwapp.Schema.Taxes do
     field :active, :boolean, default: true
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
-    many_to_many :items, Items, join_through: "items_taxes"
+    many_to_many :items, Item, join_through: "items_taxes"
   end
 
   @doc false

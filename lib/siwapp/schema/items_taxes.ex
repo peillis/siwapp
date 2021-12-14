@@ -1,13 +1,13 @@
 defmodule Siwapp.Schema.ItemsTaxes do
   use Ecto.Schema
-  alias Siwapp.Schema.Items
-  alias Siwapp.Schema.Taxes
+  alias Siwapp.Schema.Item
+  alias Siwapp.Schema.Tax
   # import Ecto.Changeset
 
   @primary_key false
   schema "items_taxes" do
-    belongs_to :items, Items
-    belongs_to :taxes, Taxes
+    belongs_to :items, Item
+    belongs_to :taxes, Tax
   end
 
   # @doc false

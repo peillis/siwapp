@@ -1,6 +1,6 @@
-defmodule Siwapp.Schema.Customers do
+defmodule Siwapp.Schema.Customer do
   use Ecto.Schema
-  alias Siwapp.Schema.Invoices
+  alias Siwapp.Schema.Invoice
   import Ecto.Changeset
 
   schema "customers" do
@@ -13,7 +13,7 @@ defmodule Siwapp.Schema.Customers do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map
-    has_many :invoices, Invoices
+    has_many :invoices, Invoice
 
     timestamps()
   end
@@ -29,6 +29,17 @@ defmodule Siwapp.Schema.Customers do
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
   end
 
+  # def validate_customer(changeset, attrs) do
+
+  #   case changeset do
+  #     %{data: %Siwapp.Schema.Customer{name: nil}} -> changeset |> validate_required(:name)
+  #     %{data: %Siwapp.Schema.Customer{identification: nil}} -> changeset |> validate_required(:identification)
+  #     %{data: %Siwapp.Schema.Customer{name: nil, identification: nil}} -> changeset |> validate_required([:name, :identification])
+  #     %{data: %Siwapp.Schema.Customer{name: _, identification: _}} -> changeset
+  #   end
+
+  # end
+
   def validate_required_customer_info(changeset, %{name: _}) do
     changeset
     |> validate_required(:name)
@@ -37,11 +48,6 @@ defmodule Siwapp.Schema.Customers do
   def validate_required_customer_info(changeset, %{identification: _}) do
     changeset
     |> validate_required(:identification)
-  end
-
-  def validate_required_customer_info(changeset, %{name: _, identification: _}) do
-    changeset
-    |> validate_required([:name, :identification])
   end
 
   def validate_required_customer_info(changeset, _) do
