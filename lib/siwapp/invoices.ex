@@ -24,13 +24,6 @@ defmodule Siwapp.Invoices do
   end
 
   @doc """
-  Gets all the information about the specified invoice
-  """
-  def show_invoice(id) do
-    Repo.get(Invoices, id)
-  end
-
-  @doc """
   Creates an invoice
   """
   def create_invoice(attrs \\ %{}) do
