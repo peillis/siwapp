@@ -9,7 +9,7 @@ defmodule Siwapp.Schema.Invoices do
     field :identification, :string
     field :name, :string
     field :email, :string
-    field :contact_person_, :string
+    field :contact_person, :string
     field :net_amount, :integer, default: 0
     field :gross_amount, :integer, default: 0
     field :paid_amount, :integer, default: 0
@@ -56,9 +56,32 @@ defmodule Siwapp.Schema.Invoices do
       :deleted_number,
       :currency,
       :invoicing_address,
-      :meta_attributes,
-      :series_id,
-      :customers_id
+      :meta_attributes
     ])
+    |> validate_required_customer_info(attrs)
+    |> foreign_key_constraint(:series_id)
+    |> foreign_key_constraint(:customers_id)
+    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> unique_constraint(:number)
+  end
+
+  def validate_required_customer_info(changeset, %{name: _}) do
+    changeset
+    |> validate_required(:name)
+  end
+
+  def validate_required_customer_info(changeset, %{identification: _}) do
+    changeset
+    |> validate_required(:identification)
+  end
+
+  def validate_required_customer_info(changeset, %{name: _, identification: _}) do
+    changeset
+    |> validate_required([:name, :identification])
+  end
+
+  def validate_required_customer_info(changeset, _) do
+    changeset
+    |> add_error(:attrs, "either :name or :identification is required")
   end
 end

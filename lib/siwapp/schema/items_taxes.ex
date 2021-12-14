@@ -2,7 +2,7 @@ defmodule Siwapp.Schema.ItemsTaxes do
   use Ecto.Schema
   alias Siwapp.Schema.Items
   alias Siwapp.Schema.Taxes
-  import Ecto.Changeset
+  # import Ecto.Changeset
 
   @primary_key false
   schema "items_taxes" do
@@ -10,10 +10,9 @@ defmodule Siwapp.Schema.ItemsTaxes do
     belongs_to :taxes, Taxes
   end
 
-  @doc false
-  def changeset(items_taxes, attrs) do
-    items_taxes
-    |> cast(attrs, [:items_id, :taxes_id])
-    |> validate_required([:items_id, :taxes_id])
-  end
+  # @doc false
+  # def changeset(items_taxes, attrs) do
+  #   items_taxes
+  #   |> cast(attrs, [:items_id, :taxes_id])
+  # end
 end

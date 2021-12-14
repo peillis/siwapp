@@ -15,7 +15,6 @@ defmodule Siwapp.Schema.Items do
   @doc false
   def changeset(items, attrs) do
     items
-    |> cast(attrs, [:quantity])
-    |> validate_required([:quantity])
+    |> cast(attrs, [:quantity, :discount, :description, :unitary_cost, :deleted_at])
   end
 end
