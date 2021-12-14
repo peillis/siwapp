@@ -18,7 +18,7 @@ defmodule SiwappWeb.InvoicesController do
   end
 
   def show(conn, %{"id" => id}) do
-    invoice = Invoices.show_invoice(id)
+    invoice = Invoices.get_invoice!(id)
     json(conn, invoice)
   end
 
