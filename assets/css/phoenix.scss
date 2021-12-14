@@ -1,0 +1,20 @@
+$phoenix-orange: #b9f023;
+
+.phx-hero {
+  h1 {
+    color: $phoenix-orange;
+  }
+}
+
+.label.hidden{
+  visibility: hidden;
+}
+
+main.container{
+  margin: 1em auto;  
+}
+
+fieldset.fieldset{
+  margin-bottom: 3em;
+}
+

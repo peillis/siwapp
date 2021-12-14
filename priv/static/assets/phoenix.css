@@ -1,0 +1,17 @@
+.phx-hero h1 {
+  color: #b9f023;
+}
+
+.label.hidden {
+  visibility: hidden;
+}
+
+main.container {
+  margin: 1em auto;
+}
+
+fieldset.fieldset {
+  margin-bottom: 3em;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22file:///home/pablo/Escritorio/elixir/siwapp/assets/css/phoenix.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAGE;EACE,OAJa;;;AAQjB;EACE;;;AAGF;EACE;;;AAGF;EACE%22,%22file%22:%22phoenix.css%22%7D */
