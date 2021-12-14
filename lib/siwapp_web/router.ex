@@ -27,7 +27,6 @@ defmodule SiwappWeb.Router do
     post "/sign_in", ApiTokenController, :create
 
     get "/", PageController, :index
-    get "/edit/invoices", PageController, :edit_invoices
   end
 
   # Other scopes may use custom stacks.
@@ -87,6 +86,7 @@ defmodule SiwappWeb.Router do
     post "/users/reset_password", UserResetPasswordController, :create
     get "/users/reset_password/:token", UserResetPasswordController, :edit
     put "/users/reset_password/:token", UserResetPasswordController, :update
+    get "/edit/invoices", PageController, :edit_invoices
   end
 
   scope "/", SiwappWeb do
