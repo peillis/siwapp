@@ -1,18 +1,18 @@
-defmodule Siwapp.Invoices do
+defmodule Siwapp.Invoice do
   @moduledoc """
-  The Invoices context.
+  The Invoice context.
   """
 
   import Ecto.Query, warn: false
   alias Siwapp.Repo
-  alias Siwapp.Schema.Invoices
+  alias Siwapp.Schema.Invoice
 
   @doc """
   Gets a list of invoices by updated date
   """
   def list_invoices() do
     # query = Query.invoices()
-    Repo.all(Invoices)
+    Repo.all(Invoice)
   end
 
   @doc """
@@ -20,35 +20,35 @@ defmodule Siwapp.Invoices do
   """
   def list_invoices_by(_key, _value) do
     # query = Query.invoices_by(key, value)
-    Repo.all(Invoices)
+    Repo.all(Invoice)
   end
 
   @doc """
   Creates an invoice
   """
   def create_invoice(attrs \\ %{}) do
-    %Invoices{}
-    |> Invoices.changeset(attrs)
+    %Invoice{}
+    |> Invoice.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
   Update an invoice
   """
-  def update_invoice(%Invoices{} = invoice, attrs) do
+  def update_invoice(%Invoice{} = invoice, attrs) do
     invoice
-    |> Invoices.changeset(attrs)
+    |> Invoice.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
   Delete an invoice
   """
-  def delete_invoice(%Invoices{} = invoice) do
+  def delete_invoice(%Invoice{} = invoice) do
     Repo.delete(invoice)
   end
   @doc """
   Gets an invoice by id
   """
-  def get_invoice!(id), do: Repo.get!(Invoices, id)
+  def get_invoice!(id), do: Repo.get!(Invoice, id)
 end
