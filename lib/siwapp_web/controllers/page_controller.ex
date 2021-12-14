@@ -12,4 +12,5 @@ defmodule SiwappWeb.PageController do
   def invoices(conn, _params) do
     render(conn, "invoices.html")
   end
+
 end
