@@ -34,6 +34,8 @@ defmodule Siwapp.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 2.0"},
+      {:bulma, "0.9.3"},
+      {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
@@ -50,9 +52,7 @@ defmodule Siwapp.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"},
-      {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
-      {:bulma, "0.9.3"}
+      {:telemetry_poller, "~> 1.0"}
     ]
   end
 
