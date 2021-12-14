@@ -15,8 +15,10 @@ defmodule Siwapp.Schema.Series do
 
   @doc false
   def changeset(series, attrs) do
+    keys = Map.keys(attrs)
+
     series
-    |> cast(attrs, [:name, :value, :enabled, :default, :deleted_at, :first_number])
+    |> cast(attrs, keys)
     |> validate_required([:value])
   end
 end

@@ -14,8 +14,10 @@ defmodule Siwapp.Schema.Taxes do
 
   @doc false
   def changeset(taxes, attrs) do
+    keys = Map.keys(attrs)
+
     taxes
-    |> cast(attrs, [:name, :value, :active, :default, :deleted_at])
+    |> cast(attrs, keys)
     |> validate_required([:name, :value])
   end
 end

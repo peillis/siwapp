@@ -37,27 +37,10 @@ defmodule Siwapp.Schema.Invoices do
 
   @doc false
   def changeset(invoices, attrs) do
+    keys = Map.keys(attrs)
+
     invoices
-    |> cast(attrs, [
-      :name,
-      :identification,
-      :email,
-      :contact_person,
-      :net_amount,
-      :gross_amount,
-      :paid_amount,
-      :draft,
-      :paid,
-      :sent_by_email,
-      :number,
-      :issue_date,
-      :due_date,
-      :failed,
-      :deleted_number,
-      :currency,
-      :invoicing_address,
-      :meta_attributes
-    ])
+    |> cast(attrs, keys)
     |> validate_required_customer_info(attrs)
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customers_id)

@@ -14,7 +14,9 @@ defmodule Siwapp.Schema.Items do
 
   @doc false
   def changeset(items, attrs) do
+    keys = Map.keys(attrs)
+
     items
-    |> cast(attrs, [:quantity, :discount, :description, :unitary_cost, :deleted_at])
+    |> cast(attrs, keys)
   end
 end

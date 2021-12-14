@@ -20,18 +20,10 @@ defmodule Siwapp.Schema.Customers do
 
   @doc false
   def changeset(customers, attrs) do
+    keys = Map.keys(attrs)
+
     customers
-    |> cast(attrs, [
-      :name,
-      :identification,
-      :email,
-      :contact_person,
-      :active,
-      :deleted_at,
-      :invoicing_address,
-      :shipping_address,
-      :meta_attributes
-    ])
+    |> cast(attrs, keys)
     |> validate_required_customer_info(attrs)
     |> unique_constraint([:name, :identification])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
