@@ -25,6 +25,9 @@ defmodule SiwappWeb.Router do
     pipe_through :api
 
     post "/sign_in", ApiTokenController, :create
+
+    get "/", PageController, :index
+    get "/edit/invoices", PageController, :edit_invoices
   end
 
   # Other scopes may use custom stacks.

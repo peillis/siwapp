@@ -50,7 +50,9 @@ defmodule Siwapp.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"}
+      {:telemetry_poller, "~> 1.0"},
+      {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
+      {:bulma, "0.9.3"}
     ]
   end
 
@@ -66,7 +68,11 @@ defmodule Siwapp.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      "assets.deploy": [
+        "sass default --no-source-map --style=compressed",
+        "esbuild default --minify",
+        "phx.digest"
+      ]
     ]
   end
 end
