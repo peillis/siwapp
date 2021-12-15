@@ -33,20 +33,20 @@ defmodule SiwappWeb.Router do
 
     get "/", ApiTokenController, :show
 
-    get "/invoices", InvoicesController, :list
-    get "/invoices/searching/:map", InvoicesController, :searching
-    get "/invoices/show/:id", InvoicesController, :show
-    get "/invoices/send_email/:id", InvoicesController, :send_email
-    post "/invoices", InvoicesController, :create
-    put "/invoices/:id", InvoicesController, :update
-    delete "/invoices/:id", InvoicesController, :delete
+    get "/invoices", Api.InvoicesController, :list
+    get "/invoices/searching/:map", Api.InvoicesController, :searching
+    get "/invoices/show/:id", Api.InvoicesController, :show
+    get "/invoices/send_email/:id", Api.InvoicesController, :send_email
+    post "/invoices", Api.InvoicesController, :create
+    put "/invoices/:id", Api.InvoicesController, :update
+    delete "/invoices/:id", Api.InvoicesController, :delete
 
-    get "/recurring_invoices", RecurringInvoicesController, :list
-    get "/recurring_invoices/show/:id", RecurringInvoicesController, :show
-    get "/recurring_invoices/:id", RecurringInvoicesController, :generate_invoices
-    post "/recurring_invoices", RecurringInvoicesController, :create
-    put "/recurring_invoices/:id", RecurringInvoicesController, :update
-    delete "/recurring_invoices/:id", RecurringInvoicesController, :delete
+    get "/recurring_invoices", Api.RecurringInvoicesController, :list
+    get "/recurring_invoices/show/:id", Api.RecurringInvoicesController, :show
+    get "/recurring_invoices/:id", Api.RecurringInvoicesController, :generate_invoices
+    post "/recurring_invoices", Api.RecurringInvoicesController, :create
+    put "/recurring_invoices/:id", Api.RecurringInvoicesController, :update
+    delete "/recurring_invoices/:id", Api.RecurringInvoicesController, :delete
   end
 
   # Enables LiveDashboard only for development

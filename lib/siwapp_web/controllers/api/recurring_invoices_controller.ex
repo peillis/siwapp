@@ -1,4 +1,4 @@
-defmodule SiwappWeb.RecurringInvoicesController do
+defmodule SiwappWeb.Api.RecurringInvoicesController do
   use SiwappWeb, :controller
   alias Siwapp.RecurringInvoices
 
