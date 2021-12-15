@@ -3,7 +3,7 @@ defmodule SiwappWeb.InvoicesController do
   alias Siwapp.Invoices
 
   def list(conn, _params) do
-    invoices = Invoices.list_invoices()
+    invoices = Invoices.list()
     json(conn, invoices)
   end
 
@@ -13,24 +13,25 @@ defmodule SiwappWeb.InvoicesController do
       |> String.split()
       |> List.to_tuple()
 
-    search = Invoices.list_invoices_by(key, value)
+
+    search = Invoices.list_by(key, value)
     json(conn, search)
   end
 
   def show(conn, %{"id" => id}) do
-    invoice = Invoices.get_invoice!(id)
+    invoice = Invoices.get!(id)
     json(conn, invoice)
   end
 
   def create(conn, %{"invoice" => invoice_params}) do
-    case Invoices.create_invoice(invoice_params) do
+    case Invoices.create(invoice_params) do
       {:ok, _} -> json(conn, "The invoice was successfully created")
       {:error, changeset} -> json(conn, changeset)
     end
   end
 
   def update(conn, %{"id" => invoice_params}) do
-    case Invoices.update_invoice(conn.assigns.invoice, invoice_params) do
+    case Invoices.update(conn.assigns.invoice, invoice_params) do
       {:ok, _} -> json(conn, "The invoice was successfully updated")
       {:error, changeset} -> json(conn, changeset)
     end
@@ -41,8 +42,9 @@ defmodule SiwappWeb.InvoicesController do
   end
 
   def delete(conn, %{"id" => id}) do
-    invoice = Invoices.get_invoice!(id)
-    {:ok, response} = Invoices.delete_invoice(invoice)
+
+    invoice = Invoices.get!(id)
+    {:ok, response} = Invoices.delete(invoice)
     json(conn, response)
   end
 end
