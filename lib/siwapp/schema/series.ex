@@ -1,6 +1,7 @@
 defmodule Siwapp.Schema.Series do
   use Ecto.Schema
   alias Siwapp.Schema.Invoice
+  import Ecto.Changeset
 
   schema "series" do
     field :name, :string
@@ -10,5 +11,13 @@ defmodule Siwapp.Schema.Series do
     field :deleted_at, :utc_datetime
     field :first_number, :integer, default: 1
     has_many :invoices, Invoice
+  end
+
+  def changeset(series, attrs) do
+    keys = Map.keys(attrs)
+
+    series
+    |> cast(attrs, keys)
+    |> validate_required([:value])
   end
 end
