@@ -1,0 +1,12 @@
+<%= inputs_for @f, :meta_attributes, fn v -> %>
+  <%= label v, :key %>
+  <%= text_input v, :key %>
+  
+  <%= label v, :value %>
+  <%= text_input v, :value %>
+
+  <%= label v, :remove_attribute %>
+  <button phx-click = "remove-attribute"> Remove attribute </button>
+  <button phx-click = "add-attribute"> Add attribute </button>
+<% end %>
+
