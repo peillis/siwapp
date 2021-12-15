@@ -4,7 +4,7 @@ defmodule SiwappWeb.SeriesController do
   # alias *****.Series (CONTEXT)
   alias Siwapp.Schema.Series
 
-  def index(conn, _params) do
+  def index(_conn, _params) do
     # TO DO
   end
 
@@ -14,25 +14,27 @@ defmodule SiwappWeb.SeriesController do
       |> assign(:form_action, :create)
       |> assign(:page_title, "New Series")
       |> assign(:changeset, Series.changeset(%Series{}, %{}))
-      #|> assign(:changeset, Series.change_series(%Series{}))
+
+    # |> assign(:changeset, Series.change_series(%Series{}))
 
     render(conn, "form.html")
   end
 
-  def edit(conn, %{"id" => id}) do
-    #series = Series.get!(id)
+  def edit(conn, %{"id" => _id}) do
+    # series = Series.get!(id)
 
     conn =
       conn
       |> assign(:form_action, :update)
-      #|> assign(:page_title, series.name)
-      #|> assign(:series, series)
-      #|> assign(:changeset, Accounts.change_series(series))
+
+    # |> assign(:page_title, series.name)
+    # |> assign(:series, series)
+    # |> assign(:changeset, Accounts.change_series(series))
 
     render(conn, "form.html")
   end
 
-  def update(conn, params) do
+  def update(_conn, _params) do
     # case Series.create_series(params) do
     #   {:ok, _series} ->
     #     conn
@@ -44,7 +46,7 @@ defmodule SiwappWeb.SeriesController do
     # end
   end
 
-  def create(conn, params) do
+  def create(_conn, _params) do
     # case Series.update_series(conn.assigns.series, params) do
     #   {:ok, _series} ->
     #     conn

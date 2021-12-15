@@ -47,6 +47,7 @@ defmodule Siwapp.Invoices do
   def delete_invoice(%Invoices{} = invoice) do
     Repo.delete(invoice)
   end
+
   @doc """
   Gets an invoice by id
   """
