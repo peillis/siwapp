@@ -21,6 +21,8 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :invoicing_address, :text
       add :shipping_address, :text
       add :meta_attributes, :jsonb
+
+      timestamps()
     end
 
     create table(:invoices) do
@@ -67,11 +69,11 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :description, :string, size: 20000
       add :unitary_cost, :integer, default: 0
       add :deleted_at, :utc_datetime
-      add :invoices_id, references(:invoices, type: :integer)
+      add :invoice_id, references(:invoices, type: :integer)
     end
 
     create index(:items, [:description])
-    create index(:items, [:invoices_id])
+    create index(:items, [:invoice_id])
 
     create table(:taxes) do
       add :name, :string, size: 50
@@ -82,8 +84,8 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     end
 
     create table(:items_taxes, primary_key: false) do
-      add :item_id, references(:items)
-      add :tax_id, references(:taxes)
+      add :items_id, references(:items)
+      add :taxes_id, references(:taxes)
     end
   end
 end
