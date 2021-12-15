@@ -7,11 +7,11 @@
     <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "Siwapp", suffix: " · Phoenix Framework" %>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>    
+    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <script src="https://kit.fontawesome.com/138af46218.js" crossorigin="anonymous"></script>
   </head>
 
-  <body class="has-navbar-fixed-top" >        
+  <body class="has-navbar-fixed-top" >
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="https://bulma.io">
@@ -58,7 +58,7 @@
               </a>
               <a class="navbar-item">
                 Templates
-              </a>                          
+              </a>
               <hr class="navbar-divider">
               <a class="navbar-item">
                 Hooks
@@ -72,15 +72,15 @@
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">                
+          <div class="navbar-item">
             <a class="button is-primary">
               <strong>New Invoice</strong>
-            </a>                
+            </a>
           </div>
         </div>
       </div>
     </nav>
-         
+
     <%= @inner_content %>
   </body>
 </html>
