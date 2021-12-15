@@ -1,15 +1,12 @@
-defmodule Siwapp.Schema.Invoices do
+defmodule Siwapp.Schema.Invoice do
   use Ecto.Schema
-  alias Siwapp.Schema.Series
-  alias Siwapp.Schema.Customers
-  alias Siwapp.Schema.Items
-  import Ecto.Changeset
+  alias Siwapp.Schema.{Customer, Item, Series}
 
   schema "invoices" do
     field :identification, :string
     field :name, :string
     field :email, :string
-    field :contact_person_, :string
+    field :contact_person, :string
     field :net_amount, :integer, default: 0
     field :gross_amount, :integer, default: 0
     field :paid_amount, :integer, default: 0
@@ -29,36 +26,9 @@ defmodule Siwapp.Schema.Invoices do
     field :deleted_at, :utc_datetime
     field :meta_attributes, :map
     belongs_to :series, Series
-    belongs_to :customers, Customers
-    has_many :items, Items
+    belongs_to :customer, Customer
+    has_many :items, Item
 
     timestamps()
-  end
-
-  @doc false
-  def changeset(invoices, attrs) do
-    invoices
-    |> cast(attrs, [
-      :name,
-      :identification,
-      :email,
-      :contact_person,
-      :net_amount,
-      :gross_amount,
-      :paid_amount,
-      :draft,
-      :paid,
-      :sent_by_email,
-      :number,
-      :issue_date,
-      :due_date,
-      :failed,
-      :deleted_number,
-      :currency,
-      :invoicing_address,
-      :meta_attributes,
-      :series_id,
-      :customers_id
-    ])
   end
 end
