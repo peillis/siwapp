@@ -94,11 +94,7 @@ defmodule SiwappWeb.Router do
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
-    get "/series", SeriesController, :index
-    get "/series/edit/:id", SeriesController, :edit
-    put "/series/edit/:id", SeriesController, :update
-    get "/series/new", SeriesController, :new
-    post "/series/new", SeriesController, :create
+    resources "/series", SeriesController, except: [:show]
   end
 
   scope "/", SiwappWeb do
