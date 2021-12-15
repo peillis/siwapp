@@ -5,15 +5,14 @@ defmodule Siwapp.Invoices do
 
   import Ecto.Query, warn: false
   alias Siwapp.Repo
-  alias Siwapp.Schema.Invoices
-  alias Siwapp.Schema.Customers
+  alias Siwapp.Schema.{Invoice, Customer}
 
   @doc """
   Gets a list of invoices by updated date
   """
   def list() do
     # query = Query.invoices()
-    Repo.all(Invoices)
+    Repo.all(Invoice)
   end
 
   @doc """
@@ -21,73 +20,73 @@ defmodule Siwapp.Invoices do
   """
   def list_by(_key, _value) do
     # query = Query.invoices_by(key, value)
-    Repo.all(Invoices)
+    Repo.all(Invoice)
   end
 
   @doc """
   Creates an invoice
   """
   def create(attrs \\ %{}) do
-    %Invoices{}
-    |> Invoices.changeset(attrs)
+    %Invoice{}
+    |> Invoice.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
   Update an invoice
   """
-  def update(%Invoices{} = invoice, attrs) do
+  def update(%Invoice{} = invoice, attrs) do
     invoice
-    |> Invoices.changeset(attrs)
+    |> Invoice.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
   Delete an invoice
   """
-  def delete(%Invoices{} = invoice) do
+  def delete(%Invoice{} = invoice) do
     Repo.delete(invoice)
   end
 
   @doc """
   Gets an invoice by id
   """
-  def get!(id), do: Repo.get!(Invoices, id)
+  def get!(id), do: Repo.get!(Invoice, id)
 
   @doc """
   Get a single invoice by the params
   """
   def get_by!(key, value) do
-    Repo.get_by!(Invoices, %{key => value})
+    Repo.get_by!(Invoice, %{key => value})
   end
 
   @doc """
   Create a new customer
   """
   def create_customer(attrs \\ %{}) do
-    %Customers{}
-    |> Customers.changeset(attrs)
+    %Customer{}
+    |> Customer.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
   Update a customer
   """
-  def update_customer(%Customers{} = customer, attrs) do
+  def update_customer(%Customer{} = customer, attrs) do
     customer
-    |> Customers.changeset(attrs)
+    |> Customer.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
   Delete a customer
   """
-  def delete_customer(%Customers{} = customer) do
+  def delete_customer(%Customer{} = customer) do
     Repo.delete(customer)
   end
 
   @doc """
   Gets a customer by id
   """
-  def get_customer!(id), do: Repo.get!(Customers, id)
+  def get_customer!(id), do: Repo.get!(Customer, id)
 end
