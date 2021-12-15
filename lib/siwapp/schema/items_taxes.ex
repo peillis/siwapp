@@ -1,7 +1,6 @@
 defmodule Siwapp.Schema.ItemsTaxes do
   use Ecto.Schema
-  alias Siwapp.Schema.Item
-  alias Siwapp.Schema.Tax
+  alias Siwapp.Schema.{Item, Tax}
 
   @primary_key false
   schema "items_taxes" do

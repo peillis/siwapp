@@ -1,8 +1,6 @@
 defmodule Siwapp.Schema.Invoice do
   use Ecto.Schema
-  alias Siwapp.Schema.Series
-  alias Siwapp.Schema.Customer
-  alias Siwapp.Schema.Item
+  alias Siwapp.Schema.{Customer, Item, Series}
 
   schema "invoices" do
     field :identification, :string
