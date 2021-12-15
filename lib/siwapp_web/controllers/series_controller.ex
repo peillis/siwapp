@@ -54,4 +54,5 @@ defmodule SiwappWeb.SeriesController do
     |> put_flash(:info, "Series was successfully destroyed.")
     |> redirect(to: Routes.series_path(conn, :index))
   end
+
 end
