@@ -95,8 +95,10 @@ defmodule SiwappWeb.Router do
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     get "/series", SeriesController, :index
-    get "/series", SeriesController, :edit
-    get "/series", SeriesController, :new
+    get "/series/edit/:id", SeriesController, :edit
+    put "/series/edit/:id", SeriesController, :update
+    get "/series/new", SeriesController, :new
+    post "/series/new", SeriesController, :create
   end
 
   scope "/", SiwappWeb do
