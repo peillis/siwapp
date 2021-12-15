@@ -37,12 +37,16 @@ defmodule SiwappWeb.Router do
     get "/invoices/searching/:map", InvoicesController, :searching
     get "/invoices/show/:id", InvoicesController, :show
     get "/invoices/send_email/:id", InvoicesController, :send_email
-
     post "/invoices", InvoicesController, :create
-
     put "/invoices/:id", InvoicesController, :update
-
     delete "/invoices/:id", InvoicesController, :delete
+
+    get "/recurring_invoices", RecurringInvoicesController, :list
+    get "/recurring_invoices/show/:id", RecurringInvoicesController, :show
+    get "/recurring_invoices/:id", RecurringInvoicesController, :generate_invoices
+    post "/recurring_invoices", RecurringInvoicesController, :create
+    put "/recurring_invoices/:id", RecurringInvoicesController, :update
+    delete "/recurring_invoices/:id", RecurringInvoicesController, :delete
   end
 
   # Enables LiveDashboard only for development
