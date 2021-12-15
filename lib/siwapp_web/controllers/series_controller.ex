@@ -56,6 +56,7 @@ defmodule SiwappWeb.SeriesController do
     #   {:error, %Ecto.Changeset{} = changeset} ->
     #     render(conn, "form.html", changeset: changeset)
     # end
+
   end
 
 end
