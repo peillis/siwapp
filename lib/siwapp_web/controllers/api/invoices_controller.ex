@@ -13,7 +13,6 @@ defmodule SiwappWeb.InvoicesController do
       |> String.split()
       |> List.to_tuple()
 
-
     search = Invoices.list_by(key, value)
     json(conn, search)
   end
@@ -42,7 +41,6 @@ defmodule SiwappWeb.InvoicesController do
   end
 
   def delete(conn, %{"id" => id}) do
-
     invoice = Invoices.get!(id)
     {:ok, response} = Invoices.delete(invoice)
     json(conn, response)

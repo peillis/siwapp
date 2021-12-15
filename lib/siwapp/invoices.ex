@@ -57,7 +57,7 @@ defmodule Siwapp.Invoices do
   @doc """
   Get a single invoice by the params
   """
-  def get_by!(key,value) do
+  def get_by!(key, value) do
     Repo.get_by!(Invoices, %{key => value})
   end
 
@@ -90,5 +90,4 @@ defmodule Siwapp.Invoices do
   Gets a customer by id
   """
   def get_customer!(id), do: Repo.get!(Customers, id)
-
 end
