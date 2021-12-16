@@ -1,10 +1,11 @@
 defmodule SiwappWeb.Api.InvoicesController do
   use SiwappWeb, :controller
   alias Siwapp.Invoices
-
+  alias JSONAPI.Serializer
   def index(conn, _params) do
     invoices = Invoices.list()
-    render(conn, "index.json", list: invoices)
+    json = Serializer.serialize(SiwappWeb.Api.InvoicesView, invoices, conn)
+    render(conn, list: json)
   end
 
   def searching(conn, %{"map" => map}) do
@@ -19,7 +20,8 @@ defmodule SiwappWeb.Api.InvoicesController do
 
   def show(conn, %{"id" => id}) do
     invoice = Invoices.get!(id)
-    json(conn, invoice)
+    json = Serializer.serialize(SiwappWeb.Api.InvoicesView, invoice, conn)
+    render(conn, show: json)
   end
 
   def create(conn, %{"invoice" => invoice_params}) do

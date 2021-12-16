@@ -30,6 +30,7 @@ defmodule Siwapp.Schema.Invoice do
     :customer_id
   ]
 
+
   schema "invoices" do
     field :identification, :string
     field :name, :string

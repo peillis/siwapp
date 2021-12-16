@@ -57,3 +57,11 @@ config :dart_sass,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :jsonapi,
+  scheme: "https",
+  namespace: "/api",
+  field_transformation: :underscore,
+  remove_links: false,
+  json_library: Jason,
+  paginator: nil
