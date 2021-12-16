@@ -3,6 +3,18 @@ defmodule Siwapp.Schema.Customer do
   alias Siwapp.Schema.Invoice
   import Ecto.Changeset
 
+  @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :active,
+    :deleted_at,
+    :invoicing_address,
+    :shipping_address,
+    :meta_attributes
+  ]
+
   schema "customers" do
     field :identification, :string
     field :name, :string
@@ -20,13 +32,15 @@ defmodule Siwapp.Schema.Customer do
 
   @doc false
   def changeset(customer, attrs) do
-    keys = Map.keys(attrs)
-
     customer
-    |> cast(attrs, keys)
+    |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
     |> unique_constraint([:name, :identification])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> validate_length(:name, max: 100)
+    |> validate_length(:identification, max: 50)
+    |> validate_length(:email, max: 100)
+    |> validate_length(:contact_person, max: 100)
   end
 
   # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
