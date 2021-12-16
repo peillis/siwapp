@@ -1,0 +1,20 @@
+/* This file is for your main application CSS */
+@import "./phoenix.scss";
+@import "bulma";
+
+main.container{
+  margin: 1em auto;
+}
+
+fieldset.fieldset{
+  margin-bottom: 3em;
+}
+
+.icon.table-icon{
+  display: revert;
+  text-align: center;
+}
+
+td.table-button:not([align]){
+  text-align: center;
+}

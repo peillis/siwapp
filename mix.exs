@@ -34,6 +34,8 @@ defmodule Siwapp.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 2.0"},
+      {:bulma, "0.9.3"},
+      {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
@@ -66,7 +68,11 @@ defmodule Siwapp.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      "assets.deploy": [
+        "sass default --no-source-map --style=compressed",
+        "esbuild default --minify",
+        "phx.digest"
+      ]
     ]
   end
 end
