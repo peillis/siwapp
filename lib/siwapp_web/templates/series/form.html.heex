@@ -1,0 +1,25 @@
+<h1> <%=@page_title%> </h1>
+<.form let={f} for={@changeset} action={Routes.series_path(@conn, @form_action)}>
+
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :value %>
+  <%= text_input f, :value, required: true %>
+  <%= error_tag f, :value %>
+
+  <%= label f, :first_number %>
+  <%= number_input f, :first_number %>
+  <%= error_tag f, :first_number %>
+
+  <%= checkbox f, :enabled %> Enabled
+
+
+  <div>
+    <%= link "Delete", to: "#", phx_click: "delete", data: [confirm: "Are you sure?"] %>
+  </div>
+  <div>
+    <%= submit "Save" %>
+  </div>
+</.form>

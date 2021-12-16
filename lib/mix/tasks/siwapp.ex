@@ -15,6 +15,7 @@ defmodule Mix.Tasks.Siwapp do
 
   defp general() do
     Application.ensure_all_started(:ecto)
+
     Mix.shell().info("Siwapp")
 
     Mix.shell().info(
@@ -22,6 +23,7 @@ defmodule Mix.Tasks.Siwapp do
     )
 
     Mix.shell().info("\nAvailable tasks:\n")
+
     Mix.Tasks.Help.run(["--search", "siwapp."])
   end
 end
