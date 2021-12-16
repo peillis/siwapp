@@ -2,7 +2,7 @@ defmodule SiwappWeb.Api.RecurringInvoicesController do
   use SiwappWeb, :controller
   alias Siwapp.RecurringInvoices
 
-  def list(conn, _params) do
+  def index(conn, _params) do
     recurring_invoices = RecurringInvoices.list()
     json(conn, recurring_invoices)
   end

@@ -2,7 +2,7 @@ defmodule SiwappWeb.Api.InvoicesController do
   use SiwappWeb, :controller
   alias Siwapp.Invoices
 
-  def list(conn, _params) do
+  def index(conn, _params) do
     invoices = Invoices.list()
     json(conn, invoices)
   end
