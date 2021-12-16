@@ -93,7 +93,8 @@ defmodule SiwappWeb.Router do
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
     resources "/series", SeriesController, except: [:show]
-
+    get "/invoices/edit", PageController, :edit_invoices
+    get "/invoices", PageController, :invoices
   end
 
   scope "/", SiwappWeb do

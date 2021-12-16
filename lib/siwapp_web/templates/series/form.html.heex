@@ -1,25 +1,65 @@
 <.form let={f} for={@changeset} action={@action}>
+  <nav class="navbar is-fixed-bottom" role="navigation" aria-label="main navigation">
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item buttons">
+          <%= if Map.has_key?(assigns, :series) do %>
+            <%= link "Delete", to: Routes.series_path(@conn, :delete, @series), method: :delete, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+          <% end %>
+          <%= link "Back", to: Routes.series_path(@conn, :index), class: "button is-dark" %>
+          <%= submit "Save", class: "button is-success" %>
+        </div>
+      </div>
+    </div>
+  </nav>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
-
-  <%= label f, :value %>
-  <%= text_input f, :value, required: true %>
-  <%= error_tag f, :value %>
-
-  <%= label f, :first_number %>
-  <%= number_input f, :first_number %>
-  <%= error_tag f, :first_number %>
-
-  <%= checkbox f, :enabled %> Enabled
-
-  <div>
-    <%= submit "Save" %>
+  <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <%= label f, :name, class: "label" %>
+        <p class="control">
+          <%= text_input f, :name, class: "input" %>
+          <%= error_tag f, :name %>
+        </p>
+      </div>
+    </div>
   </div>
+
+   <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <%= label f, :value, required: true, class: "label" %>
+        <p class="control">
+          <%= text_input f, :value, class: "input" %>
+          <%= error_tag f, :value %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+   <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <%= label f, :first_number, class: "label" %>
+        <p class="control">
+          <%= number_input f, :first_number, class: "input" %>
+          <%= error_tag f, :first_number %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+   <div class="field is-horizontal">
+    <div class="field-body">
+      <label class="checkbox">
+        <%= checkbox f, :enabled, class: "checkbox" %> Enabled
+      </label>
+    </div>
+  </div>
+ 
 </.form>

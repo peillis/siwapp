@@ -1,1 +1,20 @@
-<!-- TO DO -->
+<h1>Listing Series</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Series</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for series <- @series do %>
+    <tr>
+      <td><%= link series.name, to: Routes.series_path(@conn, :edit, series) %></td>
+      <td><%= series.value %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Series", to: Routes.series_path(@conn, :new) %></span>
