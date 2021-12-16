@@ -100,6 +100,10 @@ defmodule SiwappWeb.Router do
 
   scope "/", SiwappWeb do
     pipe_through [:browser]
+<<<<<<< HEAD
+=======
+    live "/customers/new", NewCustomerLive
+>>>>>>> 8c7e7e8 (CUSTOMER AND META ATTRIBUTES FORMS CREATED)
     delete "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
