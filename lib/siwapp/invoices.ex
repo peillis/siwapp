@@ -69,6 +69,10 @@ defmodule Siwapp.Invoices do
     |> Repo.insert()
   end
 
+  def create_customer_void(attrs \\ %{}) do
+    %Customer{}
+    |> Customer.changeset_void(attrs)
+  end
   @doc """
   Update a customer
   """
