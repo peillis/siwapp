@@ -4,5 +4,4 @@ defmodule SiwappWeb.Api.InvoicesView do
   def render("index.json", %{list: invoices}) do
     %{list: invoices}
   end
-
 end
