@@ -1,7 +1,7 @@
 defmodule SiwappWeb.SeriesController do
   use SiwappWeb, :controller
 
-  # alias *****.Series (CONTEXT)
+  # alias *****.Settings (CONTEXT)
   alias Siwapp.Schema.Series
 
   def index(_conn, _params) do
@@ -9,54 +9,50 @@ defmodule SiwappWeb.SeriesController do
   end
 
   def new(conn, _params) do
-    conn =
-      conn
-      |> assign(:form_action, :create)
-      |> assign(:page_title, "New Series")
-      |> assign(:changeset, Series.changeset(%Series{}, %{}))
-
-    # |> assign(:changeset, Series.change_series(%Series{}))
-
-    render(conn, "form.html")
+    # changeset = Settings.change_series(%Series{})
+    # render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: Series.changeset(%Series{}, %{}))
   end
 
-  def edit(conn, %{"id" => _id}) do
-    # series = Series.get!(id)
-
-    conn =
-      conn
-      |> assign(:form_action, :update)
-
-    # |> assign(:page_title, series.name)
-    # |> assign(:series, series)
-    # |> assign(:changeset, Accounts.change_series(series))
-
-    render(conn, "form.html")
-  end
-
-  def update(_conn, _params) do
-    # case Series.create_series(params) do
-    #   {:ok, _series} ->
+  def create(_conn, %{"series" => _series_params}) do
+    # case Settings.create_series(series_params) do
+    #   {:ok, series} ->
     #     conn
     #     |> put_flash(:info, "Series was successfully created.")
     #     |> redirect(to: Routes.series_path(conn, :index))
 
     #   {:error, %Ecto.Changeset{} = changeset} ->
-    #     render(conn, "form.html", changeset: changeset)
+    #     render(conn, "new.html", changeset: changeset)
     # end
   end
 
-  def create(_conn, _params) do
-    # case Series.update_series(conn.assigns.series, params) do
-    #   {:ok, _series} ->
+  def edit(_conn, %{"id" => _id}) do
+    # series = Settings.get_series!(id)
+    # changeset = Settings.change_series(series)
+    # render(conn, "edit.html", series: series, changeset: changeset)
+  end
+
+  def update(_conn, %{"id" => _id, "series" => _series_params}) do
+    # series = Settings.get_series!(id)
+
+    # case Settings.update_series(series, series_params) do
+    #   {:ok, series} ->
     #     conn
-    #     |> put_flash(:info, "Series was successfully created.")
+    #     |> put_flash(:info, "Series was successfully updated.")
     #     |> redirect(to: Routes.series_path(conn, :index))
 
     #   {:error, %Ecto.Changeset{} = changeset} ->
-    #     render(conn, "form.html", changeset: changeset)
+    #     render(conn, "edit.html", series: series, changeset: changeset)
     # end
 
   end
 
+  def delete(conn, %{"id" => _id}) do
+    # series = Settings.get_series!(id)
+    # {:ok, series} = Settings.delete_series(series)
+
+    conn
+    |> put_flash(:info, "Series was successfully destroyed.")
+    |> redirect(to: Routes.series_path(conn, :index))
+  end
 end

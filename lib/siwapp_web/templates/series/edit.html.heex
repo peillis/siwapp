@@ -1,0 +1,6 @@
+<h1> <%= @series.name %> </h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.series_path(@conn, :update, @series)) %>
+
+<span><%= link "Delete", to: Routes.series_path(@conn, :delete, @series), data: [confirm: "Are you sure?"] %></span>
+<span><%= link "Back", to: Routes.series_path(@conn, :index) %></span>
