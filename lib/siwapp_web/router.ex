@@ -94,10 +94,9 @@ defmodule SiwappWeb.Router do
     resources "/series", SeriesController, except: [:show]
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
-    
+
     live "/customers/meta_attributes", MetaAttributesLive
     live "/customers/new", CustomerLive.Definition, :new
-
   end
 
   scope "/", SiwappWeb do

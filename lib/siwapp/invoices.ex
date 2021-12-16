@@ -73,6 +73,7 @@ defmodule Siwapp.Invoices do
     %Customer{}
     |> Customer.changeset_void(attrs)
   end
+
   @doc """
   Update a customer
   """

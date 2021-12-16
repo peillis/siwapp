@@ -1,4 +1,4 @@
-defmodule SiwappWeb.MetaAttributesLive do 
+defmodule SiwappWeb.MetaAttributesLive do
   use SiwappWeb, :live_view
 
   def mount(_params, _session, socket) do
@@ -13,5 +13,3 @@ defmodule SiwappWeb.MetaAttributesLive do
     """
   end
 end
-
-

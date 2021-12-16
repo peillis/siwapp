@@ -32,12 +32,13 @@ defmodule Siwapp.Schema.Customer do
 
   def changeset_void(customer, attrs) do
     keys = Map.keys(attrs)
+
     customer
     |> cast(attrs, keys)
     |> unique_constraint([:name, :identification])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
   end
-  
+
   @doc false
   def changeset(customer, attrs) do
     customer
