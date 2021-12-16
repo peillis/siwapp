@@ -1,9 +1,8 @@
 defmodule SiwappWeb.MetaAttributesLive.FormComponent do
   use SiwappWeb, :live_component
-<<<<<<< HEAD
+  
+  def render(assigns) do
+    SiwappWeb.MetaAttributesView.render("meta_attributes_form.html", assigns)
+  end
 
-  def handle_event("remove-attribute", )
-
-=======
->>>>>>> 8c7e7e8 (CUSTOMER AND META ATTRIBUTES FORMS CREATED)
 end

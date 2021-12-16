@@ -94,16 +94,14 @@ defmodule SiwappWeb.Router do
     resources "/series", SeriesController, except: [:show]
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
+    
     live "/customers/meta_attributes", MetaAttributesLive
-    live "/customers/new", CustomerLive.New
+    live "/customers/new", CustomerLive.Definition, :new
+
   end
 
   scope "/", SiwappWeb do
     pipe_through [:browser]
-<<<<<<< HEAD
-=======
-    live "/customers/new", NewCustomerLive
->>>>>>> 8c7e7e8 (CUSTOMER AND META ATTRIBUTES FORMS CREATED)
     delete "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
