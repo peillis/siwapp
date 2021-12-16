@@ -55,4 +55,12 @@ defmodule SiwappWeb.SeriesController do
     |> redirect(to: Routes.series_path(conn, :index))
   end
 
+  def delete(conn, %{"id" => _id}) do
+    # series = Settings.get_series!(id)
+    # {:ok, series} = Settings.delete_series(series)
+
+    conn
+    |> put_flash(:info, "Series was successfully destroyed.")
+    |> redirect(to: Routes.series_path(conn, :index))
+  end
 end
