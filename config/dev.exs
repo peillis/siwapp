@@ -31,7 +31,6 @@ config :siwapp, SiwappWeb.Endpoint,
       :install_and_run,
       [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]
     }
-
   ]
 
 # ## SSL Support

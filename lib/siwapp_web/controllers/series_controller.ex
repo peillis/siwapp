@@ -44,7 +44,6 @@ defmodule SiwappWeb.SeriesController do
     #   {:error, %Ecto.Changeset{} = changeset} ->
     #     render(conn, "edit.html", series: series, changeset: changeset)
     # end
-
   end
 
   def delete(conn, %{"id" => _id}) do
