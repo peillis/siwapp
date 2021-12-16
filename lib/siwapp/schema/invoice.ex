@@ -2,6 +2,11 @@ defmodule Siwapp.Schema.Invoice do
   use Ecto.Schema
   alias Siwapp.Schema.{Customer, Item, Series}
 
+  @derive {Jason.Encoder, only: [:identification, :name, :email, :contact_person,
+    :net_amount, :gross_amount, :paid_amount, :draft, :paid, :sent_by_email,
+    :number, :issue_date, :due_date, :failed, :deleted_number, :currency, :invoicing_address,
+    :shipping_address, :notes, :terms, :deleted_at, :meta_attributes]}
+
   schema "invoices" do
     field :identification, :string
     field :name, :string

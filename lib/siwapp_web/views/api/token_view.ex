@@ -1,4 +1,4 @@
-defmodule SiwappWeb.ApiTokenView do
+defmodule SiwappWeb.Api.TokenView do
   use SiwappWeb, :view
 
   def render("token.json", %{token: token}) do
