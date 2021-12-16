@@ -2,7 +2,7 @@ defmodule Siwapp.Schema.Series do
   use Ecto.Schema
   alias Siwapp.Schema.Invoice
   import Ecto.Changeset
-  @fields [:name, :value, :enabled, :default, :deleted_at, :first_number]
+  @series_fields [:name, :value, :enabled, :default, :deleted_at, :first_number]
 
   schema "series" do
     field :name, :string
@@ -16,7 +16,7 @@ defmodule Siwapp.Schema.Series do
 
   def changeset(series, attrs) do
     series
-    |> cast(attrs, @fields)
+    |> cast(attrs, @series_fields)
     |> validate_required([:value])
     |> validate_length(:name, max: 255)
     |> validate_length(:value, max: 255)
