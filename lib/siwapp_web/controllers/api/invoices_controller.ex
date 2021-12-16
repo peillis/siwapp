@@ -4,7 +4,7 @@ defmodule SiwappWeb.Api.InvoicesController do
 
   def index(conn, _params) do
     invoices = Invoices.list()
-    json(conn, invoices)
+    render(conn, "index.json", list: invoices)
   end
 
   def searching(conn, %{"map" => map}) do

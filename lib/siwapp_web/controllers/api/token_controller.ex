@@ -1,4 +1,4 @@
-defmodule SiwappWeb.ApiTokenController do
+defmodule SiwappWeb.Api.TokenController do
   use SiwappWeb, :controller
 
   alias Siwapp.Accounts

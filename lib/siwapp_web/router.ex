@@ -24,14 +24,14 @@ defmodule SiwappWeb.Router do
   scope "/api/v1", SiwappWeb do
     pipe_through :api
 
-    post "/sign_in", ApiTokenController, :create
+    post "/sign_in", Api.TokenController, :create
   end
 
   # Other scopes may use custom stacks.
   scope "/api/v1", SiwappWeb do
     pipe_through [:api, :token_authenticated]
 
-    get "/", ApiTokenController, :show
+    get "/", Api.TokenController, :show
 
     resources "/invoices", Api.InvoicesController, except: [:new, :edit]
     get "/invoices/searching/:map", Api.InvoicesController, :searching
