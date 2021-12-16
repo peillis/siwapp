@@ -92,14 +92,14 @@ defmodule SiwappWeb.Router do
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
     resources "/series", SeriesController, except: [:show]
-
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
+    live "/customers/meta_attributes", MetaAttributesLive
+    live "/customers/new", CustomerLive.New
   end
 
   scope "/", SiwappWeb do
     pipe_through [:browser]
-    live "/customers/new", NewCustomerLive
     delete "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
