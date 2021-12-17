@@ -23,6 +23,16 @@ defmodule SiwappWeb.SeriesLive.Index do
     {:noreply, assign(socket, series_list: series_list)}
   end
 
+  def handle_event("delete", %{"id" => id}, socket) do
+    series = Settings.get_series(id)
+    {:ok, _series} = Settings.delete_series(series)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Series was successfully destroyed.")
+     |> push_redirect(to: socket.assigns.return_to)}
+  end
+
   defp apply_action(socket, :edit, %{"id" => id}) do
     series = Settings.get_series(id)
 
