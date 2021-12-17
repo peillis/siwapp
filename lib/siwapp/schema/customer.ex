@@ -3,6 +3,18 @@ defmodule Siwapp.Schema.Customer do
   alias Siwapp.Schema.Invoice
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only:
+    [:name,
+    :identification,
+    :email,
+    :contact_person,
+    :active,
+    :deleted_at,
+    :invoicing_address,
+    :shipping_address
+    ]
+  }
+
   @fields [
     :name,
     :identification,

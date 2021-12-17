@@ -3,7 +3,7 @@ defmodule SiwappWeb.Api.InvoicesController do
   alias Siwapp.Invoices
   alias JSONAPI.Serializer
   def index(conn, _params) do
-    invoices = Invoices.list()
+    invoices = Invoices.list(:preload)
     json = Serializer.serialize(SiwappWeb.Api.InvoicesView, invoices, conn)
     render(conn, list: json)
   end
