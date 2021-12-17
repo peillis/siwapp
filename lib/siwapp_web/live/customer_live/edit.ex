@@ -7,7 +7,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
     {:ok, socket}
   end
 
-  def handle_params(params, url, socket) do
+  def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -29,18 +29,8 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
     customer_params
-    |> customer_params_active_value()
-    |> customer_params_to_attrs()
     |> Invoices.create_customer()
-
     {:noreply, socket}
   end
 
-  defp customer_params_active_value(customer_params) do
-    %{customer_params | "active" => customer_params["active"] |> String.to_existing_atom()}
-  end
-
-  defp customer_params_to_attrs(customer_params) do
-    for {key, val} <- customer_params, into: %{}, do: {String.to_atom(key), val}
-  end
 end
