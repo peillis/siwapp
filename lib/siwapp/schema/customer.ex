@@ -35,7 +35,8 @@ defmodule Siwapp.Schema.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
-    |> unique_constraint([:name, :identification])
+    |> unique_constraint(:name)
+    |> unique_constraint(:identification)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)

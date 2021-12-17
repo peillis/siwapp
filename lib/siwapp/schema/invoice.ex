@@ -1,32 +1,34 @@
 defmodule Siwapp.Schema.Invoice do
   use Ecto.Schema
   alias Siwapp.Schema.{Customer, Item, Series}
+  import Ecto.Changeset
 
-  @derive {Jason.Encoder,
-           only: [
-             :identification,
-             :name,
-             :email,
-             :contact_person,
-             :net_amount,
-             :gross_amount,
-             :paid_amount,
-             :draft,
-             :paid,
-             :sent_by_email,
-             :number,
-             :issue_date,
-             :due_date,
-             :failed,
-             :deleted_number,
-             :currency,
-             :invoicing_address,
-             :shipping_address,
-             :notes,
-             :terms,
-             :deleted_at,
-             :meta_attributes
-           ]}
+  @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :net_amount,
+    :gross_amount,
+    :paid_amount,
+    :draft,
+    :paid,
+    :sent_by_email,
+    :number,
+    :issue_date,
+    :due_date,
+    :failed,
+    :deleted_number,
+    :currency,
+    :invoicing_address,
+    :shipping_address,
+    :notes,
+    :terms,
+    :deleted_at,
+    :meta_attributes,
+    :series_id,
+    :customer_id
+  ]
 
   schema "invoices" do
     field :identification, :string
@@ -56,5 +58,30 @@ defmodule Siwapp.Schema.Invoice do
     has_many :items, Item
 
     timestamps()
+  end
+
+  def changeset(invoice, attrs) do
+    invoice
+    |> cast(attrs, @fields)
+    |> validate_required_invoice([:name, :identification, :issue_date])
+    |> unique_constraint([:series_id, :number])
+    |> unique_constraint([:series_id, :deleted_number])
+    |> foreign_key_constraint(:series_id)
+    |> foreign_key_constraint(:customer_id)
+    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> validate_length(:name, max: 100)
+    |> validate_length(:identification, max: 50)
+    |> validate_length(:email, max: 100)
+    |> validate_length(:contact_person, max: 100)
+    |> validate_length(:currency, max: 100)
+  end
+
+  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
+  defp validate_required_invoice(changeset, fields) do
+    if Enum.any?(fields, &get_field(changeset, &1)) do
+      changeset
+    else
+      add_error(changeset, hd(fields), "Either name or identification are required")
+    end
   end
 end
