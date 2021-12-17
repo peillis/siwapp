@@ -27,6 +27,7 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
       add :notes, :text
       add :terms, :text
       add :meta_attributes, :jsonb
+      add :items, :jsonb
       add :series_id, references(:series, type: :integer)
       add :customer_id, references(:customers, type: :integer), null: false
 

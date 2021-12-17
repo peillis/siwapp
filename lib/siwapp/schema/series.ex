@@ -1,6 +1,6 @@
 defmodule Siwapp.Schema.Series do
   use Ecto.Schema
-  alias Siwapp.Schema.Invoice
+  alias Siwapp.Schema.{Invoice, RecurringInvoice}
   import Ecto.Changeset
   @fields [:name, :value, :enabled, :default, :deleted_at, :first_number]
 
@@ -12,6 +12,7 @@ defmodule Siwapp.Schema.Series do
     field :deleted_at, :utc_datetime
     field :first_number, :integer, default: 1
     has_many :invoices, Invoice
+    has_many :recurring_invoices, RecurringInvoice
   end
 
   def changeset(series, attrs \\ %{}) do
