@@ -14,7 +14,7 @@ defmodule Siwapp.Schema.Item do
     many_to_many :taxes, Tax, join_through: "items_taxes"
   end
 
-  def changeset(item, attrs) do
+  def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, @fields)
     |> cast_assoc(:taxes)
@@ -22,6 +22,5 @@ defmodule Siwapp.Schema.Item do
     |> validate_length(:description, max: 20000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0)
-    |> validate_number(:unitary_cost, greater_than_or_equal_to: 0)
   end
 end
