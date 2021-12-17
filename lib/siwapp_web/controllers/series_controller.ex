@@ -4,13 +4,8 @@ defmodule SiwappWeb.SeriesController do
   alias Siwapp.Settings
   alias Siwapp.Schema.Series
 
-  def index(conn, _params) do
-    series = Settings.list_series()
-    render(conn, "index.html", series: series)
-  end
-
   def new(conn, _params) do
-    changeset = Settings.change_series(%Series{}, %{})
+    changeset = Settings.change_series(%Series{})
     render(conn, "new.html", changeset: changeset)
   end
 
