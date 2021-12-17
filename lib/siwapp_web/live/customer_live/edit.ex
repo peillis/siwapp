@@ -30,7 +30,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
   def handle_event("save", %{"customer" => customer_params}, socket) do
     customer_params
     |> Invoices.create_customer()
+
     {:noreply, socket}
   end
-
 end
