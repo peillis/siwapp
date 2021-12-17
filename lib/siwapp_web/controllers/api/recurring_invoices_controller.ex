@@ -12,7 +12,7 @@ defmodule SiwappWeb.Api.RecurringInvoicesController do
     json(conn, recurring_invoice)
   end
 
-  def create(conn, %{"invoice" => recurring_invoice_params}) do
+  def create(_conn, %{"invoice" => recurring_invoice_params}) do
     # case RecurringInvoices.create(recurring_invoice_params) do
     #   {:ok, _} -> json(conn, "The  recurring invoice was successfully created")
     #   {:error, changeset} -> json(conn, changeset)

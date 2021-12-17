@@ -87,7 +87,6 @@ defmodule SiwappWeb.Router do
 
   scope "/", SiwappWeb do
     pipe_through [:browser, :require_authenticated_user]
-
     get "/", PageController, :index
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
@@ -95,11 +94,14 @@ defmodule SiwappWeb.Router do
     resources "/series", SeriesController, except: [:show]
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
+
+    live "/customers/new", CustomerLive.Edit, :new
+    live "/customers/:id/edit", CustomerLive.Edit, :edit
+    live "/customers/", CustomerLive.Index, :index
   end
 
   scope "/", SiwappWeb do
     pipe_through [:browser]
-
     delete "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
