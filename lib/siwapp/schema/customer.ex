@@ -1,6 +1,6 @@
 defmodule Siwapp.Schema.Customer do
   use Ecto.Schema
-  alias Siwapp.Schema.Invoice
+  alias Siwapp.Schema.{Invoice, RecurringInvoice}
   import Ecto.Changeset
 
   @fields [
@@ -25,6 +25,7 @@ defmodule Siwapp.Schema.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map
+    has_many :recurring_invoices, RecurringInvoice
     has_many :invoices, Invoice
 
     timestamps()

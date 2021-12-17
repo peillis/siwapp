@@ -50,6 +50,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :meta_attributes, :jsonb
       add :series_id, references(:series, type: :integer)
       add :customer_id, references(:customers, type: :integer), null: false
+      add :recurring_invoice_id, references(:recurring_invoices, type: :integer)
 
       timestamps()
     end
@@ -62,6 +63,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     create index(:invoices, [:series_id, :deleted_number], unique: true)
     create index(:invoices, [:customer_id])
     create index(:invoices, [:series_id])
+    create index(:invoices, [:recurring_invoice_id])
 
     create table(:items) do
       add :quantity, :integer, default: 1
