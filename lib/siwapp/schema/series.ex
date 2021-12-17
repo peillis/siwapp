@@ -14,7 +14,7 @@ defmodule Siwapp.Schema.Series do
     has_many :invoices, Invoice
   end
 
-  def changeset(series, attrs) do
+  def changeset(series, attrs \\ %{}) do
     series
     |> cast(attrs, @fields)
     |> validate_required([:value])
