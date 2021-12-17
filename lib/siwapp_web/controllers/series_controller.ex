@@ -22,13 +22,13 @@ defmodule SiwappWeb.SeriesController do
   end
 
   def edit(conn, %{"id" => id}) do
-    series = Settings.get_series!(id)
+    series = Settings.get_series(id)
     changeset = Settings.change_series(series)
     render(conn, "edit.html", series: series, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "series" => series_params}) do
-    series = Settings.get_series!(id)
+    series = Settings.get_series(id)
 
     case Settings.update_series(series, series_params) do
       {:ok, _series} ->
@@ -42,7 +42,7 @@ defmodule SiwappWeb.SeriesController do
   end
 
   def delete(conn, %{"id" => id}) do
-    series = Settings.get_series!(id)
+    series = Settings.get_series(id)
     {:ok, _series} = Settings.delete_series(series)
 
     conn

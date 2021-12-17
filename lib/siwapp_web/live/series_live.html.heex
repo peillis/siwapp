@@ -16,7 +16,7 @@
   <tbody>
     <%= for series <- @series do %>
       <tr>
-        <td class="icon table-icon"><input type="radio"></td>
+        <td class="icon table-icon"><input type="radio" phx-click="defaultClicked" phx-value-series_id={series.id} checked={series.default}></td>
         <td><%= link series.name, to: Routes.series_path(@socket, :edit, series) %></td>
         <td><%= series.value %></td>
         <td><%= series.first_number %></td>
