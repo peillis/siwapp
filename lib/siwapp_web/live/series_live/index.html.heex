@@ -2,6 +2,15 @@
     <h1>SERIES</h1>
 </div>
 
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal SiwappWeb.SeriesLive.FormComponent,
+    id: @series.id || :new,
+    title: @page_title,
+    action: @live_action,
+    series: @series,
+    return_to: Routes.series_index_path(@socket, :index) %>
+<% end %>
+
 <table class="table is-fullwidth is-striped is-bordered is-hoverable">
   <thead>
     <tr>
@@ -14,10 +23,10 @@
   </thead>
 
   <tbody>
-    <%= for series <- @series do %>
+    <%= for series <- @series_list do %>
       <tr>
         <td class="icon table-icon"><input type="radio" phx-click="defaultClicked" phx-value-series_id={series.id} checked={series.default}></td>
-        <td><%= link series.name, to: Routes.series_path(@socket, :edit, series) %></td>
+        <td><%= live_patch "#{series.name}", to: Routes.series_index_path(@socket, :edit, series) %></td>
         <td><%= series.value %></td>
         <td><%= series.first_number %></td>
         <%= if series.enabled do %>
@@ -30,4 +39,4 @@
   </tbody>
 </table>
 
-<span><%= link "New Series", to: Routes.series_path(@socket, :new) %></span> 
+<span><%= live_patch "New Series", to: Routes.series_index_path(@socket, :new) %></span> 
