@@ -13,13 +13,15 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def apply_action(socket, :new, _params) do
     customer = Customer.changeset(%Customer{}, %{})
+
     socket
     |> assign(:page_title, "New Customer")
     |> assign(:customer, customer)
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
-    customer = Invoices.get_customer!( String.to_integer(id))
+    customer = Invoices.get_customer!(String.to_integer(id))
+
     socket
     |> assign(:page_title, customer.name)
     |> assign(:customer, customer)
@@ -30,16 +32,15 @@ defmodule SiwappWeb.CustomerLive.Edit do
     |> customer_params_active_value()
     |> customer_params_to_attrs()
     |> Invoices.create_customer()
+
     {:noreply, socket}
   end
 
   defp customer_params_active_value(customer_params) do
-    %{ customer_params | "active" => customer_params["active"] |> String.to_existing_atom() }
+    %{customer_params | "active" => customer_params["active"] |> String.to_existing_atom()}
   end
 
   defp customer_params_to_attrs(customer_params) do
     for {key, val} <- customer_params, into: %{}, do: {String.to_atom(key), val}
   end
-
-
 end
