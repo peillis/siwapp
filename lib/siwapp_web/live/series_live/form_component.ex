@@ -2,7 +2,6 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
   use SiwappWeb, :live_component
 
   alias Siwapp.Settings
-  alias Siwapp.Schema.Series
 
   @impl true
   def update(%{series: series} = assigns, socket) do
@@ -65,6 +64,4 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
-
-
 end
