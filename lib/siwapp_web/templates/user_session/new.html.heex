@@ -31,8 +31,10 @@
           <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
       </div>
     </div>
-    <div>
-      <input class="button is-success" type="submit" value="Log in">
+    <div class="columns is-desktop">
+      <div class="column is-one-fifth">
+        <input class="button is-success is-fullwidth" type="submit" value="Log in">
+      </div>
     </div>
   </.form>
 </fieldset>
