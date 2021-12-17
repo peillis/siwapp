@@ -60,7 +60,7 @@ defmodule Siwapp.Schema.Invoice do
     timestamps()
   end
 
-  def changeset(invoice, attrs) do
+  def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
     |> validate_required_invoice([:name, :identification, :issue_date])

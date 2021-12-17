@@ -14,7 +14,7 @@ defmodule Siwapp.Schema.Item do
     many_to_many :taxes, Tax, join_through: "items_taxes"
   end
 
-  def changeset(item, attrs) do
+  def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, @fields)
     |> cast_assoc(:taxes)

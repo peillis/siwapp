@@ -13,7 +13,7 @@ defmodule Siwapp.Schema.Tax do
     many_to_many :items, Item, join_through: "items_taxes"
   end
 
-  def changeset(tax, attrs) do
+  def changeset(tax, attrs \\ %{}) do
     tax
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
