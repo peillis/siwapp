@@ -6,8 +6,7 @@ defmodule Siwapp.Schema.RecurringInvoice do
   @fields [
     :net_amount,
     :gross_amount,
-    :paid_amount,
-    :sent_by_email,
+    :send_by_email,
     :days_to_due,
     :enabled,
     :max_ocurrences,
@@ -29,8 +28,7 @@ defmodule Siwapp.Schema.RecurringInvoice do
   schema "recurring_invoices" do
     field :net_amount, :integer, default: 0
     field :gross_amount, :integer, default: 0
-    field :paid_amount, :integer, default: 0
-    field :sent_by_email, :boolean, default: false
+    field :send_by_email, :boolean, default: false
     field :days_to_due, :integer
     field :enabled, :boolean, default: true
     field :max_ocurrences, :integer

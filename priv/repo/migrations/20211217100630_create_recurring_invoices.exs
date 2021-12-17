@@ -5,8 +5,7 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
     create table(:recurring_invoices) do
       add :net_amount, :integer, default: 0
       add :gross_amount, :integer, default: 0
-      add :paid_amount, :integer, default: 0
-      add :sent_by_email, :boolean, default: false
+      add :send_by_email, :boolean, default: false
       add :days_to_due, :integer
       add :enabled, :boolean, default: true
       add :max_ocurrences, :integer
@@ -27,7 +26,13 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
       timestamps()
     end
 
-    create index(:invoices, [:customer_id])
-    create index(:invoices, [:series_id])
+    create index(:recurring_invoices, [:customer_id])
+    create index(:recurring_invoices, [:series_id])
+
+    alter table(:invoices) do
+      add :recurring_invoice_id, references(:recurring_invoices, type: :integer)
+    end
+
+    create index(:invoices, [:recurring_invoice_id])
   end
 end
