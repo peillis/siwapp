@@ -16,7 +16,7 @@ defmodule Siwapp.Invoices do
   end
 
   def list(:preload) do
-    Repo.all(Invoice) |> Repo.preload(:customer)
+    Repo.all(from p in Invoice, preload: [:customer])
   end
 
   @doc """
