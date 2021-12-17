@@ -95,8 +95,9 @@ defmodule SiwappWeb.Router do
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
 
-    live "/customers/meta_attributes", MetaAttributesLive
-    live "/customers/new", CustomerLive.Definition, :new
+    live "/customers/new", CustomerLive.Edit, :new
+    live "/customers/:id/edit", CustomerLive.Edit, :edit
+    live "/customers/", CustomerLive.Index, :index
   end
 
   scope "/", SiwappWeb do

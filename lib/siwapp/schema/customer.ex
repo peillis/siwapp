@@ -30,27 +30,6 @@ defmodule Siwapp.Schema.Customer do
     timestamps()
   end
 
-  def changeset_void(customer, attrs) do
-<<<<<<< HEAD
-=======
-    keys = Map.keys(attrs)
-    customer
-    |> cast(attrs, keys)
-    |> unique_constraint([:name, :identification])
-    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
-  end
-  
-  @doc false
-  def changeset(customer, attrs) do
->>>>>>> 676d2b263ea6d40f8f28e18cc41c38e5bc47f7df
-    keys = Map.keys(attrs)
-    customer
-    |> cast(attrs, keys)
-    |> unique_constraint([:name, :identification])
-    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
-  end
-
-  @doc false
   def changeset(customer, attrs) do
     customer
     |> cast(attrs, @fields)
