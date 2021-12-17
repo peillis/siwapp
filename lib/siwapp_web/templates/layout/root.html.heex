@@ -12,75 +12,76 @@
   </head>
 
   <body class="has-navbar-fixed-top" >
-    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-        </a>
-
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item">
-            Invoices
-          </a>
-          <a class="navbar-item">
-            Recurring Invoices
-          </a>
-          <a class="navbar-item">
-            Customers
+    <%= if @current_user do %>
+      <nav class="navbar is-fixed-top"  role="navigation" aria-label="main navigation">
+        <div class="navbar-brand ">
+          <a class="navbar-item" href="https://bulma.io">
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
           </a>
 
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              Account
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item">
+              Invoices
             </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item">
-                Profile
+            <a class="navbar-item">
+              Recurring Invoices
+            </a>
+            <a class="navbar-item">
+              Customers
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                Account
               </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Global Settings
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Series
-              </a>
-              <a class="navbar-item">
-                Taxes
-              </a>
-              <a class="navbar-item">
-                Templates
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                Hooks
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item">
-                <%= render "_user_menu.html", assigns %>
+              <div class="navbar-dropdown">
+                <a class="navbar-item">
+                  Profile
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">
+                  Global Settings
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">
+                  Series
+                </a>
+                <a class="navbar-item">
+                  Taxes
+                </a>
+                <a class="navbar-item">
+                  Templates
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">
+                  Hooks
+                </a>
+                <hr class="navbar-divider">
+                <div class="navbar-item">
+                  <%= render "_user_menu.html", assigns %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <a class="button is-primary">
+                <strong>New Invoice</strong>
               </a>
             </div>
           </div>
         </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <a class="button is-primary">
-              <strong>New Invoice</strong>
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-
+      </nav>
+    <% end %>
     <%= @inner_content %>
   </body>
 </html>
