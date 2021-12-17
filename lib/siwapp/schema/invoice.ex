@@ -76,7 +76,7 @@ defmodule Siwapp.Schema.Invoice do
     |> validate_length(:currency, max: 100)
   end
 
-  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
+  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Invoice struct.
   defp validate_required_invoice(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do
       changeset
