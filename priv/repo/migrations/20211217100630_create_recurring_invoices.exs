@@ -15,7 +15,6 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
       add :period_type, :string, size: 8
       add :starting_date, :date
       add :finishing_date, :date
-      add :failed, :boolean, default: false
       add :currency, :string, size: 3
       add :deleted_at, :utc_datetime
       add :notes, :text

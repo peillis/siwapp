@@ -16,7 +16,6 @@ defmodule Siwapp.Schema.RecurringInvoice do
     :period_type,
     :starting_date,
     :finishing_date,
-    :failed,
     :currency,
     :deleted_at,
     :notes,
