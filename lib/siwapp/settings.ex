@@ -62,7 +62,7 @@ defmodule Siwapp.Settings do
           {:ok, %Series{}} | {:error, any()}
   def create_series(attrs \\ %{})
 
-  def create_series(attrs) when is_map_key(attrs, :default) do
+  def create_series(%{default: _}) do
     {:error,
      "You cannot directly assign the default key. Use the set_default_series/1 function instead."}
   end
@@ -92,7 +92,7 @@ defmodule Siwapp.Settings do
   """
   @spec update_series(%Series{}, %{optional(any()) => any()}) ::
           {:ok, %Series{}} | {:error, any()}
-  def update_series(_series, attrs) when is_map_key(attrs, :default) do
+  def update_series(_series, %{default: _}) do
     {:error,
      "You cannot directly assign the default key. Use the set_default_series/1 function instead."}
   end
