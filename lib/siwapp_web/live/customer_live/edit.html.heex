@@ -3,6 +3,7 @@
 <.form let={f} for={@customer} phx-submit="save">
   <%= checkbox(f, :active, checked_value: true, unchecked_value: false) %> This customer is active
   <%= live_component SiwappWeb.CustomerLive.FormComponent, f: f %>
+  <%= live_component SiwappWeb.MetaAttributesLive.FormComponent, f: f %>
   <%= submit "Save" %>
   <!-- in future we will redirect to customer listing -->
   <%= live_patch "Back", to: Routes.customer_index_path(@socket, :index) %>

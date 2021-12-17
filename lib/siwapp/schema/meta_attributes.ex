@@ -11,5 +11,6 @@ defmodule Siwapp.Schema.MetaAttributes do
   def changeset(meta_attribute, attrs) do
     meta_attribute
     |> cast(attrs, [:key, :value])
+    |> validate_required([:key, :value])
   end
 end

@@ -1,0 +1,10 @@
+<h2> Meta Attributes </h2>
+<%= inputs_for @f, :meta_attributes, fn v -> %>
+  <%= text_input v, :key %>
+  <%= error_tag v, :key %>
+
+  <%= text_input v, :value %>
+  <%= error_tag v, :value %>
+<% end %>
+
+
