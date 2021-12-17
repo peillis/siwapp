@@ -1,7 +1,8 @@
 defmodule Siwapp.Schema.Customer do
   use Ecto.Schema
-  alias Siwapp.Schema.Invoice
   import Ecto.Changeset
+  alias Siwapp.Schema.Invoice
+  alias Siwapp.Schema.MetaAttributes
 
   @fields [
     :name,
@@ -12,7 +13,7 @@ defmodule Siwapp.Schema.Customer do
     :deleted_at,
     :invoicing_address,
     :shipping_address,
-    :meta_attributes
+#    :meta_attributes
   ]
 
   schema "customers" do
@@ -24,7 +25,7 @@ defmodule Siwapp.Schema.Customer do
     field :deleted_at, :utc_datetime
     field :invoicing_address, :string
     field :shipping_address, :string
-    field :meta_attributes, :map
+    embeds_one :meta_attributes, MetaAttributes, on_replace: :update
     has_many :invoices, Invoice
 
     timestamps()
@@ -41,6 +42,7 @@ defmodule Siwapp.Schema.Customer do
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
+    |> cast_embed(:meta_attributes)
   end
 
   # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
