@@ -1,7 +1,8 @@
 defmodule Siwapp.RecurringInvoices do
   import Ecto.Query, warn: false
+
   alias Siwapp.Repo
-  alias Siwapp.Schema.{RecurringInvoice, Customer}
+  alias Siwapp.RecurringInvoices.RecurringInvoice
 
   def list() do
     # query = Query.invoices()

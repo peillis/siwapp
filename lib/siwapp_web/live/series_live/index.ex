@@ -1,12 +1,12 @@
 defmodule SiwappWeb.SeriesLive.Index do
   use SiwappWeb, :live_view
 
-  alias Siwapp.Settings
-  alias Siwapp.Schema.Series
+  alias Siwapp.Commons
+  alias Siwapp.Commons.Series
 
   @impl true
   def mount(_params, _session, socket) do
-    series_list = Settings.list_series()
+    series_list = Commons.list_series()
     {:ok, assign(socket, series_list: series_list)}
   end
 
@@ -17,15 +17,15 @@ defmodule SiwappWeb.SeriesLive.Index do
 
   @impl true
   def handle_event("defaultClicked", %{"series_id" => series_id}, socket) do
-    Settings.set_default_series(series_id)
-    series_list = Settings.list_series()
+    Commons.set_default_series(series_id)
+    series_list = Commons.list_series()
 
     {:noreply, assign(socket, series_list: series_list)}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    series = Settings.get_series(id)
-    {:ok, _series} = Settings.delete_series(series)
+    series = Commons.get_series(id)
+    {:ok, _series} = Commons.delete_series(series)
 
     {:noreply,
      socket
@@ -34,7 +34,7 @@ defmodule SiwappWeb.SeriesLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    series = Settings.get_series(id)
+    series = Commons.get_series(id)
 
     socket
     |> assign(:page_title, series.name)

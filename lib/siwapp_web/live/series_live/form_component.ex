@@ -1,11 +1,11 @@
 defmodule SiwappWeb.SeriesLive.FormComponent do
   use SiwappWeb, :live_component
 
-  alias Siwapp.Settings
+  alias Siwapp.Commons
 
   @impl true
   def update(%{series: series} = assigns, socket) do
-    changeset = Settings.change_series(series)
+    changeset = Commons.change_series(series)
 
     socket =
       socket
@@ -19,7 +19,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
   def handle_event("validate", %{"series" => series_params}, socket) do
     changeset =
       socket.assigns.series
-      |> Settings.change_series(series_params)
+      |> Commons.change_series(series_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
@@ -30,7 +30,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
   end
 
   defp save_series(socket, :edit, series_params) do
-    case Settings.update_series(socket.assigns.series, series_params) do
+    case Commons.update_series(socket.assigns.series, series_params) do
       {:ok, _series} ->
         {:noreply,
          socket
@@ -43,7 +43,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
   end
 
   defp save_series(socket, :new, series_params) do
-    case Settings.create_series(series_params) do
+    case Commons.create_series(series_params) do
       {:ok, _series} ->
         {:noreply,
          socket

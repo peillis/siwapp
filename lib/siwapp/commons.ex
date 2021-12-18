@@ -6,7 +6,7 @@ defmodule Siwapp.Commons do
   import Ecto.Query, warn: false
   alias Siwapp.Repo
 
-  alias Siwapp.Schema.{Series, Tax}
+  alias Siwapp.Commons.{Series, Tax}
 
   ### SERIES ###
 

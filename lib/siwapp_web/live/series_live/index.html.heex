@@ -7,7 +7,7 @@
     id: @series.id || :new,
     title: @page_title,
     action: @live_action,
-    series: @series || %Siwapp.Schema.Series{},
+    series: @series || %Siwapp.Commons.Series{},
     return_to: Routes.series_index_path(@socket, :index) %>
 <% end %>
 

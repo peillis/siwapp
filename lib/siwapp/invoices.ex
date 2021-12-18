@@ -2,10 +2,11 @@ defmodule Siwapp.Invoices do
   @moduledoc """
   The Invoices context.
   """
-
   import Ecto.Query, warn: false
+
   alias Siwapp.Repo
-  alias Siwapp.Schema.{Invoice, Customer}
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Customers.Customer
 
   @doc """
   Gets a list of invoices by updated date
