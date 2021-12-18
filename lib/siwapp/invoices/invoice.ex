@@ -1,7 +1,12 @@
-defmodule Siwapp.Schema.Invoice do
+defmodule Siwapp.Invoices.Invoice do
   use Ecto.Schema
-  alias Siwapp.Schema.{Customer, Item, RecurringInvoice, Series}
+
   import Ecto.Changeset
+
+  alias Siwapp.Commons.Series
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Invoices.Item
+  alias Siwapp.RecurringInvoices.RecurringInvoice
 
   @fields [
     :name,

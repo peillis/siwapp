@@ -1,6 +1,6 @@
-defmodule Siwapp.Settings do
+defmodule Siwapp.Commons do
   @moduledoc """
-  The Settings context. It handles Series and Taxes.
+  The Commons context. It handles Series and Taxes.
   """
 
   import Ecto.Query, warn: false
