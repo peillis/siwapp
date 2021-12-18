@@ -60,34 +60,4 @@ defmodule Siwapp.Invoices do
   def get_by!(key, value) do
     Repo.get_by!(Invoice, %{key => value})
   end
-
-  @doc """
-  Create a new customer
-  """
-  def create_customer(attrs \\ %{}) do
-    %Customer{}
-    |> Customer.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Update a customer
-  """
-  def update_customer(%Customer{} = customer, attrs) do
-    customer
-    |> Customer.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Delete a customer
-  """
-  def delete_customer(%Customer{} = customer) do
-    Repo.delete(customer)
-  end
-
-  @doc """
-  Gets a customer by id
-  """
-  def get_customer!(id), do: Repo.get!(Customer, id)
 end
