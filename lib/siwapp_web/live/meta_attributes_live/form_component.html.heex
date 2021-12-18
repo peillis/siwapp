@@ -1,0 +1,26 @@
+<h2> Meta Attributes </h2>
+<%= inputs_for @f, :meta_attributes, fn v -> %>
+  <div class="meta-attributes-form">
+    <div class="form-group">
+      <%= text_input v, :key, class: "form-control" %>
+      <%= error_tag v, :key %>
+    </div>
+
+    <div class="form-group">
+      <%= text_input v, :value %>
+      <%= error_tag v, :value %>
+    </div>
+    
+    <div class="form-group">
+      <%= label v, :delete %>
+      <%= if is_nil(v.data.temp_id) do %>
+        <%= checkbox v, :delete %>
+      <% else %>
+        <%= hidden_input v, :temp_id %>
+        <a href="#" phx-click="remove-meta-attribute" phx-value-remove={v.data.temp_id}>&times</a>
+      <% end %>
+    </div>
+<% end %>
+<a href="#" phx-click="add-meta-attribute"> Add Attribute </a>
+
+

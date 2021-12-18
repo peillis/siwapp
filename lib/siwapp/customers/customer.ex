@@ -27,8 +27,8 @@ defmodule Siwapp.Customers.Customer do
     field :deleted_at, :utc_datetime
     field :invoicing_address, :string
     field :shipping_address, :string
-    field :meta_attributes, :map
     has_many :recurring_invoices, RecurringInvoice
+    embeds_many :meta_attributes, MetaAttributes
     has_many :invoices, Invoice
 
     timestamps()
