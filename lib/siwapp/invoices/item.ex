@@ -1,7 +1,11 @@
-defmodule Siwapp.Schema.Item do
+defmodule Siwapp.Invoices.Item do
   use Ecto.Schema
-  alias Siwapp.Schema.{Invoice, Tax}
+
   import Ecto.Changeset
+
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Commons.Tax
+
   @fields [:quantity, :discount, :description, :unitary_cost, :deleted_at, :invoice_id]
 
   schema "items" do

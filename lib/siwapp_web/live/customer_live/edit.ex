@@ -1,7 +1,8 @@
 defmodule SiwappWeb.CustomerLive.Edit do
   use SiwappWeb, :live_view
-  alias Siwapp.Invoices
-  alias Siwapp.Schema.Customer
+
+  alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -20,7 +21,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
-    customer = Invoices.get_customer!(String.to_integer(id))
+    customer = Customers.get!(String.to_integer(id))
 
     socket
     |> assign(:page_title, customer.name)
@@ -29,7 +30,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
     customer_params
-    |> Invoices.create_customer()
+    |> Customers.create()
 
     {:noreply, socket}
   end
