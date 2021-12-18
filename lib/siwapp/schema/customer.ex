@@ -25,7 +25,7 @@ defmodule Siwapp.Schema.Customer do
     field :deleted_at, :utc_datetime
     field :invoicing_address, :string
     field :shipping_address, :string
-    embeds_one :meta_attributes, MetaAttributes, on_replace: :update
+    embeds_many :meta_attributes, MetaAttributes
     has_many :invoices, Invoice
 
     timestamps()
