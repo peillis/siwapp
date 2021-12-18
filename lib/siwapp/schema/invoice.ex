@@ -1,6 +1,6 @@
 defmodule Siwapp.Schema.Invoice do
   use Ecto.Schema
-  alias Siwapp.Schema.{Customer, Item, Series}
+  alias Siwapp.Schema.{Customer, Item, RecurringInvoice, Series}
   import Ecto.Changeset
 
   @fields [
@@ -27,7 +27,8 @@ defmodule Siwapp.Schema.Invoice do
     :deleted_at,
     :meta_attributes,
     :series_id,
-    :customer_id
+    :customer_id,
+    :recurring_invoice_id
   ]
 
   schema "invoices" do
@@ -55,6 +56,7 @@ defmodule Siwapp.Schema.Invoice do
     field :meta_attributes, :map
     belongs_to :series, Series
     belongs_to :customer, Customer
+    belongs_to :recurring_invoice, RecurringInvoice
     has_many :items, Item
 
     timestamps()
@@ -68,6 +70,7 @@ defmodule Siwapp.Schema.Invoice do
     |> unique_constraint([:series_id, :deleted_number])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
+    |> foreign_key_constraint(:recurring_invoice_id)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
@@ -76,7 +79,7 @@ defmodule Siwapp.Schema.Invoice do
     |> validate_length(:currency, max: 100)
   end
 
-  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
+  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Invoice struct.
   defp validate_required_invoice(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do
       changeset
