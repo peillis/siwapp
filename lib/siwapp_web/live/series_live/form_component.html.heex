@@ -1,0 +1,66 @@
+<fieldset class="fieldset">
+  <div class="content">
+    <h2><%= @title %></h2>
+    <.form let={f} for={@changeset} id="series-form" phx-target={@myself} phx-change="validate" phx-submit="save">
+
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= label f, :name, class: "label" %>
+            <p class="control">
+              <%= text_input f, :name, class: "input" %>
+            </p>
+            <%= error_tag f, :name %>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= label f, :value, required: true, class: "label" %>
+            <p class="control">
+              <%= text_input f, :value, class: "input" %>
+            </p>
+            <%= error_tag f, :value %>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field">
+            <%= label f, :first_number, class: "label" %>
+            <p class="control">
+              <%= number_input f, :first_number, class: "input" %>
+            </p>
+            <%= error_tag f, :first_number %>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <label class="checkbox">
+            <%= checkbox f, :enabled, class: "checkbox" %> Enabled
+          </label>
+        </div>
+      </div>
+
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-end">
+            <div class="navbar-item buttons">
+              <%= if @action == :edit do %>
+                <%= link "Delete", to: Routes.series_index_path(@socket, :index), phx_click: "delete", phx_value_id: @series.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+              <% end %>
+              <%= link "Back", to: Routes.series_index_path(@socket, :index), class: "button is-dark" %>
+              <%= submit "Save", class: "button is-success" %>
+            </div>
+          </div>
+        </div>
+      </nav>
+    
+    </.form>
+  </div>
+</fieldset>

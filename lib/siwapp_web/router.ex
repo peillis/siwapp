@@ -91,8 +91,9 @@ defmodule SiwappWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-    resources "/series", SeriesController, except: [:show, :index]
-    live "/series", SeriesLive, :index
+    live "/series", SeriesLive.Index, :index
+    live "/series/new", SeriesLive.Index, :new
+    live "/series/:id/edit", SeriesLive.Index, :edit
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
 
