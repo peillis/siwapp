@@ -6,7 +6,6 @@ defmodule Siwapp.Invoices do
 
   alias Siwapp.Repo
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Customers.Customer
 
   @doc """
   Gets a list of invoices by updated date
