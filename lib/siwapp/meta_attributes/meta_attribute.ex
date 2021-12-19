@@ -11,7 +11,7 @@ defmodule Siwapp.MetaAttributes.MetaAttribute do
 
   def changeset(meta_attribute, attrs) do
     meta_attribute
-    |> Map.put(:temp_id, (meta_attribute.temp_id || attrs["temp_id"]) )
+    |> Map.put(:temp_id, (meta_attribute.temp_id || attrs["temp_id"]) ) #That way temp_id persists
     |> cast(attrs, [:key, :value, :delete])
     |> maybe_mark_for_deletion()
   end

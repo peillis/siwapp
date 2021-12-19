@@ -5,6 +5,7 @@ defmodule Siwapp.Customers.Customer do
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.MetaAttributes.MetaAttribute
 
   @fields [
     :name,
@@ -15,7 +16,6 @@ defmodule Siwapp.Customers.Customer do
     :deleted_at,
     :invoicing_address,
     :shipping_address,
-    :meta_attributes
   ]
 
   schema "customers" do
@@ -28,7 +28,7 @@ defmodule Siwapp.Customers.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     has_many :recurring_invoices, RecurringInvoice
-    embeds_many :meta_attributes, MetaAttributes
+    embeds_many :meta_attribute, MetaAttribute
     has_many :invoices, Invoice
 
     timestamps()
@@ -38,6 +38,7 @@ defmodule Siwapp.Customers.Customer do
   def changeset(customer, attrs \\ %{}) do
     customer
     |> cast(attrs, @fields)
+    |> cast_embed(:meta_attribute)
     |> validate_required_customer([:name, :identification])
     |> unique_constraint(:identification)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
