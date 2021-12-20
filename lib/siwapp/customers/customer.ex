@@ -2,7 +2,6 @@ defmodule Siwapp.Customers.Customer do
   use Ecto.Schema
 
   import Ecto.Changeset
-
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.MetaAttributes.MetaAttribute
@@ -46,6 +45,7 @@ defmodule Siwapp.Customers.Customer do
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
+    |> cast_embed(:meta_attributes)
   end
 
   # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
