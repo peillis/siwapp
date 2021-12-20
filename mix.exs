@@ -36,7 +36,7 @@ defmodule Siwapp.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:bulma, "0.9.3"},
       {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
-      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
