@@ -68,7 +68,7 @@ defmodule Siwapp.Commons do
   end
 
   def create_series(attrs) do
-    attrs = maybe_make_default_series(attrs)
+    attrs = make_default_if_first(attrs, list_series())
 
     %Series{}
     |> Series.changeset(attrs)
@@ -98,8 +98,6 @@ defmodule Siwapp.Commons do
   end
 
   def update_series(%Series{} = series, attrs) do
-    attrs = maybe_make_default_series(attrs)
-
     series
     |> Series.changeset(attrs)
     |> Repo.update()
@@ -161,6 +159,7 @@ defmodule Siwapp.Commons do
   """
   @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
   def delete_series(%Series{} = series) do
+    maybe_set_new_default_series(series)
     Repo.delete(series)
   end
 
@@ -178,9 +177,21 @@ defmodule Siwapp.Commons do
     Series.changeset(series, attrs)
   end
 
-  @spec maybe_make_default_series(%{optional(any()) => any()}) :: %{optional(any()) => any()}
-  defp maybe_make_default_series(attrs) do
-    if get_default_series(), do: attrs, else: Map.put(attrs, "default", true)
+  @spec maybe_set_new_default_series(%Series{}) :: {:ok, %Series{}}
+  defp maybe_set_new_default_series(series) do
+    first =
+      list_series()
+      |> List.delete(series)
+      |> List.first()
+
+    if first != nil and get_default_series() == series do
+      set_default_series(first.id)
+    end
+  end
+
+  @spec make_default_if_first(%{optional(any()) => any()}, list()) :: %{optional(any()) => any()}
+  defp make_default_if_first(attrs, list) do
+    if list == [], do: Map.put(attrs, "default", true), else: attrs
   end
 
   ### TAXES ###

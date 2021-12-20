@@ -16,21 +16,11 @@ defmodule SiwappWeb.SeriesLive.Index do
   end
 
   @impl true
-  def handle_event("defaultClicked", %{"series_id" => series_id}, socket) do
-    Commons.set_default_series(series_id)
+  def handle_event("defaultClicked", %{"id" => id}, socket) do
+    Commons.set_default_series(id)
     series_list = Commons.list_series()
 
     {:noreply, assign(socket, series_list: series_list)}
-  end
-
-  def handle_event("delete", %{"id" => id}, socket) do
-    series = Commons.get_series(id)
-    {:ok, _series} = Commons.delete_series(series)
-
-    {:noreply,
-     socket
-     |> put_flash(:info, "Series was successfully destroyed.")
-     |> push_redirect(to: socket.assigns.return_to)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
