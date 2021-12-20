@@ -266,7 +266,7 @@ defmodule Siwapp.Commons do
     |> Repo.update()
   end
 
-    @doc """
+  @doc """
   Change the default tax, setting the attribute 'default' of the taxes
   with the given 'tax_id' to true or false.
 
@@ -282,15 +282,16 @@ defmodule Siwapp.Commons do
     default = tax.default
 
     case default do
-      false -> tax
+      false ->
+        tax
         |> Tax.changeset(%{"default" => true})
         |> Repo.update()
 
-      true -> tax
+      true ->
+        tax
         |> Tax.changeset(%{"default" => false})
         |> Repo.update()
     end
-
   end
 
   @doc """

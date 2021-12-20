@@ -2,21 +2,21 @@
     <h2><%= @title %></h2>
     <.form let={f} for={@changeset} id="tax-form" phx-target={@myself} phx-change="validate" phx-submit="save">
 
-          <div class="field">
-            <%= label f, :name, required: true, class: "label" %>
-            <p class="control">
-              <%= text_input f, :name, class: "input" %>
-            </p>
-            <%= error_tag f, :name %>
-          </div>
- 
-          <div class="field">
-            <%= label f, :value, required: true, class: "label" %>
-            <p class="control">
-              <%= number_input f, :value, class: "input" %>
-            </p>
-            <%= error_tag f, :value %>
-          </div>
+        <div class="field">
+          <%= label f, :name, required: true, class: "label" %>
+          <p class="control">
+            <%= text_input f, :name, class: "input" %>
+          </p>
+          <%= error_tag f, :name %>
+        </div>
+
+        <div class="field">
+          <%= label f, :value, required: true, class: "label" %>
+          <p class="control">
+            <%= number_input f, :value, class: "input" %>
+          </p>
+          <%= error_tag f, :value %>
+        </div>
 
         <div class="field">
           <label class="checkbox">
@@ -30,20 +30,18 @@
           </label>
         </div>
 
-
-      <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-end">
-            <div class="navbar-item buttons">
+        <div class="field is-grouped is-pulled-right">
+            <p class="control">
               <%= if @action == :edit do %>
                 <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @tax.id, phx_target: @myself, data: [confirm: "Are you sure?"], class: "button is-danger" %>
               <% end %>
+            </p>
+            <p class="control">
               <%= link "Back", to: Routes.taxes_index_path(@socket, :index), class: "button is-dark" %>
+            </p>
+            <p class="control">
               <%= submit "Save", class: "button is-success" %>
-            </div>
-          </div>
-        </div>
-      </nav>
-    
+            </p>
+        </div> 
     </.form>
 </fieldset>
