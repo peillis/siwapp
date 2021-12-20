@@ -4,7 +4,7 @@ defmodule Siwapp.Customers.Customer do
   import Ecto.Changeset
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
-  alias Siwapp.MetaAttributes.MetaAttribute
+  alias Siwapp.Commons.MetaAttribute
 
   @fields [
     :name,
@@ -27,7 +27,7 @@ defmodule Siwapp.Customers.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     has_many :recurring_invoices, RecurringInvoice
-    embeds_many :meta_attribute, MetaAttribute
+    embeds_many :meta_attributes, MetaAttribute
     has_many :invoices, Invoice
 
     timestamps()
@@ -37,7 +37,7 @@ defmodule Siwapp.Customers.Customer do
   def changeset(customer, attrs \\ %{}) do
     customer
     |> cast(attrs, @fields)
-    |> cast_embed(:meta_attribute)
+    |> cast_embed(:meta_attributes)
     |> validate_required_customer([:name, :identification])
     |> unique_constraint(:identification)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)

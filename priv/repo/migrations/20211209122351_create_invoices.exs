@@ -46,7 +46,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :shipping_address, :text
       add :notes, :text
       add :terms, :text
-      add :meta_attributes, :jsonb
       add :series_id, references(:series, type: :integer)
       add :customer_id, references(:customers, type: :integer), null: false
 

@@ -1,12 +1,30 @@
 defmodule Siwapp.Commons do
   @moduledoc """
-  The Commons context. It handles Series and Taxes.
+  The Commons context. It handles MetaAttributes, Series and Taxes.
   """
 
   import Ecto.Query, warn: false
   alias Siwapp.Repo
+  alias Siwapp.Commons.{MetaAttribute, Series, Tax}
 
-  alias Siwapp.Commons.{Series, Tax}
+  #### METATTRIBUTES ####
+
+  @doc """
+  Creates a meta attribute struct with random temp_id by default
+  """
+  def new_meta_attribute() do
+    %MetaAttribute{ temp_id: get_temp_id() }
+  end
+
+  def change_metattribute(%MetaAttribute{} = meta_attribute) do
+    MetaAttribute.changeset( meta_attribute, %{} )
+  end
+
+  def create_meta_attribute(attrs \\ %{}) do
+    new_meta_attribute()
+    |> MetaAttribute.changeset(attrs)
+  end
+
 
   ### SERIES ###
 
@@ -286,4 +304,12 @@ defmodule Siwapp.Commons do
   def change_tax(%Tax{} = tax, attrs \\ %{}) do
     Tax.changeset(tax, attrs)
   end
+  
+
+  #### CALLBACKS ###
+
+  defp get_temp_id do 
+    :crypto.strong_rand_bytes(5) |> Base.url_encode64 |> binary_part(0, 5)
+  end
+
 end

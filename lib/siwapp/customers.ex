@@ -4,9 +4,13 @@ defmodule Siwapp.Customers do
   """
   alias Siwapp.Repo
   alias Siwapp.Customers.Customer
-  alias Siwapp.MetaAttributes.MetaAttribute
+  alias Siwapp.Commons.MetaAttribute
 
   import Ecto.Query
+
+  def new() do
+    %Customer{}
+  end
 
   @doc """
   Create a new customer
@@ -38,10 +42,10 @@ defmodule Siwapp.Customers do
   """
   def get!(id) do
     Repo.get!(Customer, id) 
-    |> Repo.preload([ meta_attribute: from( m in MetaAttribute, order_by: m.id )] )
+    |> Repo.preload([ meta_attributes: from( m in MetaAttribute, order_by: m.id )] )
   end
 
-  def change(%Customer{} = customer ) do
-    Customer.changeset(customer, %{} )
+  def change(%Customer{} = customer, attrs \\ %{} ) do
+    Customer.changeset(customer, attrs )
   end
 end

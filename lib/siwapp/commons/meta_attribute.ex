@@ -1,4 +1,4 @@
-defmodule Siwapp.MetaAttributes.MetaAttribute do
+defmodule Siwapp.Commons.MetaAttribute do
   use Ecto.Schema
   import Ecto.Changeset
 
