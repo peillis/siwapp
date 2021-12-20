@@ -57,8 +57,10 @@ jobs:
       - name: Retrieve PLT Cache
         uses: actions/cache@v2
         with:
-          path: _build
+          path: _build/dev
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts
+        env:
+          MIX_ENV: dev
 
       - name: Run dialyzer
         run: mix dialyzer --halt-exit-status
