@@ -57,7 +57,7 @@ jobs:
       - name: Retrieve PLT Cache
         uses: actions/cache@v2
         with:
-          path: _build/dev
+          path: _build
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts
 
       - name: Run dialyzer
