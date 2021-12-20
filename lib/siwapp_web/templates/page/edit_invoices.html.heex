@@ -1,225 +1,170 @@
-<nav class="navbar is-fixed-bottom" role="navigation" aria-label="main navigation">
-  <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-end">
-      <div class="navbar-item buttons">
-        <button class="button is-danger">Delete</button>
-        <button class="button is-dark">Back</button>
-        <button class="button is-info">Send Email</button>
-        <button class="button is-info">Download PDF</button>
-        <input class="button is-success" type="submit" value="Save">
-      </div>
-    </div>
+<nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
+  <div class="navbar-end navbar-items buttons">
+    <button class="button is-danger">Delete</button>
+    <button class="button is-dark">Back</button>
+    <button class="button is-info">Send Email</button>
+    <button class="button is-info">Download PDF</button>
+    <input class="button is-success" type="submit" value="Save">
   </div>
 </nav>
 
 <fieldset class="fieldset">
-  <div class="content">
-    <h2>CUSTOMER</h2>
-  </div>
+  <h2>CUSTOMER</h2>
 
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Name</label>
-        <p class="control">
-          <input class="input" type="text"  value="@name">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">VAT ID</label>
-        <p class="control">
-          <input class="input" type="text"  value="@VAT ID">
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Name</label>
+      <p class="control">
+        <input class="input" type="text"  value="@name">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">VAT ID</label>
+      <p class="control">
+        <input class="input" type="text"  value="@VAT ID">
+      </p>
     </div>
   </div>
 
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Contact person</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Contact person">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Email</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Email">
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Contact person</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Contact person">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Email</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Email">
+      </p>
     </div>
   </div>
 
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Invoicing Address</label>
-        <p class="control">
-          <textarea class="textarea" type="text" placeholder="@Invoicing Address"></textarea>
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Shipping Address</label>
-        <p class="control">
-          <textarea class="textarea"  value="@Invoicing Address"></textarea>
-        </p>
-        <p class="help">
-          <a> Copy Invoicing Address </a>
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Invoicing Address</label>
+      <p class="control">
+        <textarea class="textarea" type="text" placeholder="@Invoicing Address"></textarea>
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Shipping Address</label>
+      <p class="control">
+        <textarea class="textarea"  value="@Invoicing Address"></textarea>
+      </p>
+      <p class="help">
+        <a> Copy Invoicing Address </a>
+      </p>
     </div>
   </div>
 
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Legal terms and conditions</label>
-        <p class="control">
-          <input class="input" type="text">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Notes</label>
-        <p class="control">
-          <input class="input" type="text">
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Legal terms and conditions</label>
+      <p class="control">
+        <textarea class="textarea"></textarea>
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Notes</label>
+      <p class="control">
+        <textarea class="textarea"></textarea>
+      </p>
     </div>
   </div>
 </fieldset>
 
 
 <fieldset class="fieldset">
-  <div class="content">
-    <h2>INVOICE DETAILS</h2>
-  </div>
+  <h2>INVOICE DETAILS</h2>
 
-  <div class="field is-horizontal has-addons">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Series</label>
-        <p class="control">
-          <div class="select is-fullwidth">
-            <select name="series">
-              <option value="@A-Series">@A-Series</option>
-            </select>
-          </div>
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Number</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Number">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Currency</label>
-        <p class="control">
-          <div class="select is-fullwidth">
-            <select name="currency">
-              <option value="0">USD</option>
-              <option value="1">EUR</option>
-              <option value="2">GBP</option>
-            </select>
-          </div>
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Series</label>
+      <p class=" control select is-fullwidth">
+        <select name="series">
+          <option value="@A-Series">@A-Series</option>
+        </select>
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Number</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Number">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Currency</label>
+      <p class="control select is-fullwidth">
+        <select name="currency">
+          <option value="0">USD</option>
+          <option value="1">EUR</option>
+          <option value="2">GBP</option>
+        </select>
+      </p>
     </div>
   </div>
 
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Issue Date</label>
-        <p class="control">
-          <input class="input" type="date">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Due Date</label>
-        <p class="control">
-          <input class="input" type="date">
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Issue Date</label>
+      <p class="control">
+        <input class="input" type="date">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Due Date</label>
+      <p class="control">
+        <input class="input" type="date">
+      </p>
     </div>
   </div>
 
-  <div class="field is-horizontal has-addons">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Email Template</label>
-        <p class="control">
-          <div class="select is-fullwidth">
-            <select name="Email Template">
-              <option value="0">Select Template for E-mail</option>
-              <option value="1">Print Default</option>
-              <option value="2">Email Default</option>
-            </select>
-          </div>
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Print Template</label>
-        <p class="control">
-          <div class="select is-fullwidth">
-            <select name="Print Template">
-              <option value="0">Select Template to Print</option>
-              <option value="1">Print Default</option>
-              <option value="2">Email Default</option>
-            </select>
-          </div>
-        </p>
-      </div>
+  <div class="field is-horizontal field-body">
+    <div class="field description">
+      <label class="label">Descrition</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Description">
+      </p>
     </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Descrition</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Description">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Quantity</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Quantity">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Price</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Price">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Discount</label>
-        <p class="control">
-          <input class="input" type="text"  value="@Discount">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Taxes</label>
-        <p class="control">
-          <input class="input" type="text" value="One,Two">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Total</label>
-        <p class="control">
-          <a class="button is-static">
-            Total
-          </a>
-        </p>
-      </div>
-      <div class="field">
-        <label  class="label is-invisible">Hidden</label>
-        <p class="control">
-          <button class="button is-danger is-light">Remove line</button>
-        </p>
-      </div>
+    <div class="field quantity">
+      <label class="label">Quantity</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Quantity">
+      </p>
+    </div>
+    <div class="field price">
+      <label class="label">Price</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Price">
+      </p>
+    </div>
+    <div class="field discount">
+      <label class="label">Discount</label>
+      <p class="control">
+        <input class="input" type="text"  value="@Discount">
+      </p>
+    </div>
+    <div class="field taxes">
+      <label class="label">Taxes</label>
+      <p class="control">
+        <input class="input" type="text" value="One,Two">
+      </p>
+    </div>
+    <div class="field total">
+      <label class="label">Total</label>
+      <p class="control">
+        <a class="button is-static">
+          Total
+        </a>
+      </p>
+    </div>
+    <div class="field hidden">
+      <label  class="label is-invisible">Hidden</label>
+      <p class="control">
+        <button class="button is-danger is-light">Remove line</button>
+      </p>
     </div>
   </div>
 
@@ -253,35 +198,32 @@
 </fieldset>
 
 <fieldset class="fieldset">
-  <div class="content">
-    <h2>PAYMENTS</h2>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <label class="label">Date</label>
-        <p class="control">
-          <input class="input" type="date">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Notes</label>
-        <p class="control">
-          <input class="input" type="text">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Amount</label>
-        <p class="control">
-          <input class="input" type="text">
-        </p>
-      </div>
-      <div class="field">
-        <label  class="label is-invisible">Hidden</label>
-        <p class="control">
-          <button class="button is-danger is-light">Remove Payment</button>
-        </p>
-      </div>
+  <h2>PAYMENTS</h2>
+
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <label class="label">Date</label>
+      <p class="control">
+        <input class="input" type="date">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Notes</label>
+      <p class="control">
+        <input class="input" type="text">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label">Amount</label>
+      <p class="control">
+        <input class="input" type="text">
+      </p>
+    </div>
+    <div class="field">
+      <label  class="label is-invisible">Hidden</label>
+      <p class="control">
+        <button class="button is-danger is-light">Remove Payment</button>
+      </p>
     </div>
   </div>
 
@@ -293,26 +235,17 @@
 </fieldset>
 
 <fieldset class="fieldset">
-  <div class="content">
-    <h2>Meta Attributes</h2>
-  </div>
-  <div class="field is-horizontal">
-    <div class="field-body">
-      <div class="field">
-        <p class="control">
-          <input class="input" type="text" placeholder="Key">
-        </p>
-      </div>
-      <div class="field">
-        <p class="control">
-          <input class="input" type="text" placeholder="Value">
-        </p>
-      </div>
-      <div class="field">
-        <p class="control">
-          <button class="button is-danger is-light">Remove Attribute</button>
-        </p>
-      </div>
+  <h2>Meta Attributes</h2>
+
+  <div class="field is-horizontal field-body">
+    <div class="field control">
+      <input class="input" type="text" placeholder="Key">
+    </div>
+    <div class="field control">
+      <input class="input" type="text" placeholder="Value">
+    </div>
+    <div class="field control">
+      <button class="button is-danger is-light">Remove Attribute</button>
     </div>
   </div>
   <button class="button is-dark">Add Attribute</button>
