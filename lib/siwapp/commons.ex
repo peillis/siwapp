@@ -266,6 +266,33 @@ defmodule Siwapp.Commons do
     |> Repo.update()
   end
 
+    @doc """
+  Change the default tax, setting the attribute 'default' of the taxes
+  with the given 'tax_id' to true or false.
+
+  ## Examples
+
+      iex> set_default_tax(3)
+      {:ok, %Series{}}
+
+  """
+  @spec set_default_tax(non_neg_integer) :: {:ok, %Tax{}}
+  def set_default_tax(id) do
+    tax = get_tax!(id)
+    default = tax.default
+
+    case default do
+      false -> tax
+        |> Tax.changeset(%{"default" => true})
+        |> Repo.update()
+
+      true -> tax
+        |> Tax.changeset(%{"default" => false})
+        |> Repo.update()
+    end
+
+  end
+
   @doc """
   Change the default tax, setting the attribute 'default' of the taxes
   with the given 'tax_id' to true or false.
