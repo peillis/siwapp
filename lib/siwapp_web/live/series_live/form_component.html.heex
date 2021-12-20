@@ -47,19 +47,19 @@
         </div>
       </div>
 
-      <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-end">
-            <div class="navbar-item buttons">
-              <%= if @action == :edit do %>
-                <%= link "Delete", to: Routes.series_index_path(@socket, :index), phx_click: "delete", phx_value_id: @series.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
-              <% end %>
-              <%= link "Back", to: Routes.series_index_path(@socket, :index), class: "button is-dark" %>
-              <%= submit "Save", class: "button is-success" %>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <div class="field is-grouped is-pulled-right">
+        <p class="control">
+          <%= if @action == :edit do %>
+            <%= link "Delete", to: Routes.series_index_path(@socket, :index), phx_click: "delete", phx_value_id: @series.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+          <% end %>
+        </p>
+        <p class="control">
+          <%= link "Back", to: Routes.series_index_path(@socket, :index), class: "button is-dark" %>
+        </p>
+        <p class="control">
+          <%= submit "Save", class: "button is-success" %>
+        </p>
+      </div>
     
     </.form>
   </div>
