@@ -37,15 +37,18 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
-    case Customers.create( customer_params ) do
+    case Customers.create(customer_params) do
       {:ok, created_customer} ->
-        IO.inspect "created_customer"
-        IO.inspect created_customer
+        IO.inspect("created_customer")
+        IO.inspect(created_customer)
+
         {:noreply,
-          socket
-          |> put_flash(:info, "Customer was successfully created")
-          |> redirect(to: Routes.customer_index_path(socket, :index))}
-      {:error, _} -> {:noreply, socket}
+         socket
+         |> put_flash(:info, "Customer was successfully created")
+         |> redirect(to: Routes.customer_index_path(socket, :index))}
+
+      {:error, _} ->
+        {:noreply, socket}
     end
   end
 
