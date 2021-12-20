@@ -15,6 +15,10 @@ defmodule Siwapp.Invoices do
     Repo.all(Invoice)
   end
 
+  def list(:preload) do
+    Repo.all(from p in Invoice, preload: [:customer])
+  end
+
   @doc """
   Gets a list on the invoices that macht with the paramas
   """
@@ -52,6 +56,8 @@ defmodule Siwapp.Invoices do
   Gets an invoice by id
   """
   def get!(id), do: Repo.get!(Invoice, id)
+
+  def get!(id, :preload), do: Repo.get!(Invoice, id) |> Repo.preload(:customer)
 
   @doc """
   Get a single invoice by the params
