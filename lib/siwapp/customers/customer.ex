@@ -6,6 +6,17 @@ defmodule Siwapp.Customers.Customer do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
+  @derive {Jason.Encoder,
+           only: [
+             :name,
+             :identification,
+             :email,
+             :contact_person,
+             :active,
+             :invoicing_address,
+             :shipping_address
+           ]}
+
   @fields [
     :name,
     :identification,
