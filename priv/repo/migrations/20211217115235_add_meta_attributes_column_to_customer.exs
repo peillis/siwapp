@@ -3,7 +3,7 @@ defmodule Siwapp.Repo.Migrations.AddMetaAttributesColumnToCustomer do
 
   def change do
     alter table(:customers) do
-      add :meta_attributes, :jsonb
+      add :meta_attribute, :jsonb
     end
   end
 end
