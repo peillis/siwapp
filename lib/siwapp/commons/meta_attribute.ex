@@ -11,18 +11,19 @@ defmodule Siwapp.Commons.MetaAttribute do
 
   def changeset(meta_attribute, attrs) do
     meta_attribute
-    |> Map.put(:temp_id, (meta_attribute.temp_id || attrs["temp_id"]) ) #That way temp_id persists
+    # That way temp_id persists
+    |> Map.put(:temp_id, meta_attribute.temp_id || attrs["temp_id"])
     |> cast(attrs, [:key, :value, :delete])
     |> maybe_mark_for_deletion()
   end
 
   defp maybe_mark_for_deletion(%{data: %{id: nil}} = changeset), do: changeset
+
   defp maybe_mark_for_deletion(changeset) do
     if get_change(changeset, :delete) do
-      %{ changeset | action: :delete }
+      %{changeset | action: :delete}
     else
       changeset
     end
   end
-
 end

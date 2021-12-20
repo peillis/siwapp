@@ -14,7 +14,7 @@ defmodule Siwapp.Customers.Customer do
     :active,
     :deleted_at,
     :invoicing_address,
-    :shipping_address,
+    :shipping_address
   ]
 
   schema "customers" do

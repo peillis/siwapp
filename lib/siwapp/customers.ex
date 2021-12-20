@@ -41,11 +41,11 @@ defmodule Siwapp.Customers do
   Gets a customer by id
   """
   def get!(id) do
-    Repo.get!(Customer, id) 
-    |> Repo.preload([ meta_attributes: from( m in MetaAttribute, order_by: m.id )] )
+    Repo.get!(Customer, id)
+    |> Repo.preload(meta_attributes: from(m in MetaAttribute, order_by: m.id))
   end
 
-  def change(%Customer{} = customer, attrs \\ %{} ) do
-    Customer.changeset(customer, attrs )
+  def change(%Customer{} = customer, attrs \\ %{}) do
+    Customer.changeset(customer, attrs)
   end
 end

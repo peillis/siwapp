@@ -8,14 +8,16 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def mount(_params, session, socket) do
     customer = get_customer(session)
-    changeset = 
+
+    changeset =
       Customers.change(customer)
       |> put_embed(:meta_attributes, customer.meta_attributes)
-    assigns = 
-      [
-        changeset: changeset,
-        customer: customer
-      ]
+
+    assigns = [
+      changeset: changeset,
+      customer: customer
+    ]
+
     socket = assign(socket, assigns)
     {:ok, socket}
   end
@@ -35,51 +37,63 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
-    {:ok, created_customer} = 
+    {:ok, created_customer} =
       customer_params
       |> Customers.create()
+
     {:noreply, socket}
   end
 
-  def handle_event("validate", %{ "customer" => customer_params }, socket) do
-    changeset = 
+  def handle_event("validate", %{"customer" => customer_params}, socket) do
+    changeset =
       socket.assigns.customer
       |> Customers.change(customer_params)
       |> Map.put(:action, :insert)
+
     {:noreply, assign(socket, changeset: changeset)}
   end
-  
+
   def handle_event("add-meta-attribute", _params, socket) do
-    existing_meta_attributes = Map.get(socket.assigns.changeset.changes, :meta_attributes, socket.assigns.customer.meta_attributes)
+    existing_meta_attributes =
+      Map.get(
+        socket.assigns.changeset.changes,
+        :meta_attributes,
+        socket.assigns.customer.meta_attributes
+      )
+
     meta_attributes =
       existing_meta_attributes
-      |> Enum.concat([ 
-        Commons.create_meta_attribute() 
+      |> Enum.concat([
+        Commons.create_meta_attribute()
       ])
-    changeset = socket.assigns.changeset
-                |> put_embed(:meta_attributes, meta_attributes)
-    {:noreply, assign(socket, changeset: changeset)}
-  end
 
-  def handle_event("remove-meta-attribute", %{ "remove" => remove_id }, socket) do
-    meta_attributes =
-      socket.assigns.changeset.changes.meta_attributes
-      |> Enum.reject(fn %{ data: meta_attributes } -> meta_attributes.temp_id == remove_id end)
-    changeset = 
+    changeset =
       socket.assigns.changeset
       |> put_embed(:meta_attributes, meta_attributes)
+
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def get_customer(%{"id" => id}= _customer_params) do 
+  def handle_event("remove-meta-attribute", %{"remove" => remove_id}, socket) do
+    meta_attributes =
+      socket.assigns.changeset.changes.meta_attributes
+      |> Enum.reject(fn %{data: meta_attributes} -> meta_attributes.temp_id == remove_id end)
+
+    changeset =
+      socket.assigns.changeset
+      |> put_embed(:meta_attributes, meta_attributes)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def get_customer(%{"id" => id} = _customer_params) do
     Customers.get!(id)
   end
 
   def get_customer(_customer_params) do
     Customers.new()
-    |> Map.put(:meta_attributes, [ Commons.new_meta_attribute() ])
-    #%Customer{meta_attributes: []}
+    |> Map.put(:meta_attributes, [Commons.new_meta_attribute()])
+
+    # %Customer{meta_attributes: []}
   end
-
-
 end
