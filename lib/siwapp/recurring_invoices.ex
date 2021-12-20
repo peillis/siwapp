@@ -12,8 +12,7 @@ defmodule Siwapp.RecurringInvoices do
   def get!(id), do: Repo.get!(RecurringInvoice, id)
 
   def create(attrs \\ %{}) do
-    # %RecurringInvoice{}
-    attrs
+    %RecurringInvoice{}
     |> RecurringInvoice.changeset(attrs)
     |> Repo.insert()
   end
@@ -30,5 +29,9 @@ defmodule Siwapp.RecurringInvoices do
 
   def generate_invoices(id) do
     Repo.get!(RecurringInvoice, id)
+  end
+
+  def change(%RecurringInvoice{} = recurring_invoice, attrs \\ %{}) do
+    RecurringInvoice.changeset(recurring_invoice, attrs)
   end
 end

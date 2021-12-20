@@ -9,4 +9,5 @@ erl_crash.dump
 /config/*.secret.exs
 .elixir_ls/
 /priv/static/assets/
+/priv/plts/
 /priv/static/cache_manifest.json
