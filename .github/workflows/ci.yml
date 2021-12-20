@@ -22,6 +22,7 @@ jobs:
         with:
           elixir-version: ${{ matrix.elixir }} # Define the elixir version [required]
           otp-version: ${{ matrix.otp }} # Define the OTP version [required]
+          experimental-otp: true # See https://github.com/actions/setup-elixir/issues/49
 
       - name: Retrieve Mix Dependencies Cache
         uses: actions/cache@v1
