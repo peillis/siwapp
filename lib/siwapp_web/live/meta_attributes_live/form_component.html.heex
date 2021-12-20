@@ -12,15 +12,17 @@
     </div>
     
     <div class="form-group">
-      <%= label ff, :delete %>
+      <!-- <%= label ff, :delete %>
       <%= if is_nil(ff.data.temp_id) do %>
         <%= checkbox ff, :delete %>
-      <% else %>
+      <% else %> -->
         <%= hidden_input ff, :temp_id %>
-        <a href="#" phx-click="remove-meta-attribute" phx-value-remove={ff.data.temp_id}>&times</a>
-      <% end %>
+        <input type="button" phx-click="remove-meta-attribute" phx-value-remove={ff.data.temp_id} value="Remove Attribute"/>
+        <!-- <a href="#" phx-click="remove-meta-attribute" phx-value-remove={ff.data.temp_id}> Delete </a> -->
+      <!-- <% end %> -->
     </div>
 <% end %>
-<a href="#" phx-click="add-meta-attribute"> Add Attribute </a>
+<input type="button" phx-click="add-meta-attribute" value="Add Attribute" />
+<!-- <a href="#" phx-click="add-meta-attribute"> Add Attribute </a> -->
 
 

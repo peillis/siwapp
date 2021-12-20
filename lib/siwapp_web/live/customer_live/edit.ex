@@ -37,11 +37,16 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
-    {:ok, created_customer} =
-      customer_params
-      |> Customers.create()
-
-    {:noreply, socket}
+    case Customers.create( customer_params ) do
+      {:ok, created_customer} ->
+        IO.inspect "created_customer"
+        IO.inspect created_customer
+        {:noreply,
+          socket
+          |> put_flash(:info, "Customer was successfully created")
+          |> redirect(to: Routes.customer_index_path(socket, :index))}
+      {:error, _} -> {:noreply, socket}
+    end
   end
 
   def handle_event("validate", %{"customer" => customer_params}, socket) do
@@ -86,11 +91,15 @@ defmodule SiwappWeb.CustomerLive.Edit do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def get_customer(%{"id" => id} = _customer_params) do
+  def handle_event("back", _params, socket) do
+    {:noreply, redirect(socket, to: Routes.customer_index_path(socket, :index))}
+  end
+
+  defp get_customer(%{"id" => id} = _customer_params) do
     Customers.get!(id)
   end
 
-  def get_customer(_customer_params) do
+  defp get_customer(_customer_params) do
     Customers.new()
     |> Map.put(:meta_attributes, [Commons.new_meta_attribute()])
 
