@@ -1,8 +1,5 @@
 language: elixir
 
-before_install:
-  - mix local.hex --force
-
 elixir:
   - 1.13.0
 
