@@ -35,7 +35,7 @@
     <div class="field is-grouped is-pulled-right">
       <p class="control">
         <%= if @action == :edit do %>
-          <%= link "Delete", to: Routes.series_index_path(@socket, :index), phx_click: "delete", phx_value_id: @series.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+          <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @series.id, phx_target: @myself, data: [confirm: "Are you sure?"], class: "button is-danger" %>
         <% end %>
       </p>
       <p class="control">

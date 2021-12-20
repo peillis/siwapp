@@ -29,6 +29,16 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
     save_series(socket, socket.assigns.action, series_params)
   end
 
+  def handle_event("delete", %{"id" => id}, socket) do
+    series = Commons.get_series(id)
+    {:ok, _series} = Commons.delete_series(series)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Series was successfully destroyed.")
+     |> push_redirect(to: socket.assigns.return_to)}
+  end
+
   defp save_series(socket, :edit, series_params) do
     case Commons.update_series(socket.assigns.series, series_params) do
       {:ok, _series} ->
