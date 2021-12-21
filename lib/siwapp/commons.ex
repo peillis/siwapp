@@ -282,10 +282,9 @@ defmodule Siwapp.Commons do
   @spec set_default_tax(non_neg_integer) :: {:ok, %Tax{}}
   def set_default_tax(id) do
     tax = get_tax!(id)
-    default = tax.default
 
     tax
-    |> Tax.changeset(%{"default" => not default})
+    |> Tax.changeset(%{"default" => not tax.default})
     |> Repo.update()
   end
 
