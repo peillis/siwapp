@@ -281,17 +281,9 @@ defmodule Siwapp.Commons do
     tax = get_tax!(id)
     default = tax.default
 
-    case default do
-      false ->
-        tax
-        |> Tax.changeset(%{"default" => true})
-        |> Repo.update()
-
-      true ->
-        tax
-        |> Tax.changeset(%{"default" => false})
-        |> Repo.update()
-    end
+    tax
+    |> Tax.changeset(%{"default" => not default})
+    |> Repo.update()
   end
 
   @doc """
