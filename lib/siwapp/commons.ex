@@ -58,21 +58,23 @@ defmodule Siwapp.Commons do
       {:error, "You cannot directly assign..."}
 
   """
-  @spec create_series(%{optional(any()) => any()}) ::
+  @spec create_series(map) ::
           {:ok, %Series{}} | {:error, any()}
   def create_series(attrs \\ %{})
 
   def create_series(%{default: _}) do
     {:error,
-     "You cannot directly assign the default key. Use the set_default_series/1 function instead."}
+     "You cannot directly assign the default key. Use the change_default_series/1 function instead."}
   end
 
   def create_series(attrs) do
-    attrs = make_default_if_first(attrs, list_series())
+    result = insert_new_series(attrs)
 
-    %Series{}
-    |> Series.changeset(attrs)
-    |> Repo.insert()
+    with {:ok, series} <- result do
+      if length(list_series()) == 1, do: change_default_series(series)
+    end
+
+    result
   end
 
   @doc """
@@ -90,11 +92,11 @@ defmodule Siwapp.Commons do
       {:error, "You cannot directly assign..."}
 
   """
-  @spec update_series(%Series{}, %{optional(any()) => any()}) ::
+  @spec update_series(%Series{}, map) ::
           {:ok, %Series{}} | {:error, any()}
   def update_series(_series, %{default: _}) do
     {:error,
-     "You cannot directly assign the default key. Use the set_default_series/1 function instead."}
+     "You cannot directly assign the default key. Use the change_default_series/1 function instead."}
   end
 
   def update_series(%Series{} = series, attrs) do
@@ -104,44 +106,42 @@ defmodule Siwapp.Commons do
   end
 
   @doc """
-  Gets the unique series that has the default attribute set to 'true'
+  Choose a new series for being the default one. You can call this function without
+  parameters, so the default series will be the first one in the list of Series; or with
+  a 'series' given, so that series will be the default.
 
   ## Examples
 
-      iex> get_default_series
-      %Series{}
+      iex> change_default_series(series)
+      {:ok, %Series{}}
+        # That series now has the default attribute as true, and the others as false
 
-      iex> get_default_series
-      nil
-        # there is no default series
+      iex> change_default_series(series)
+      {:error, %Ecto.Changeset{}}
+        # That series doesn't exist
+
+      iex> change_default_series(series)
+      {:ok, %Series{}}
+        # The first series in the list now has its default attribute as true
 
   """
-  @spec get_default_series :: %Series{} | nil
-  def get_default_series do
-    Repo.get_by(Series, default: true)
+  @spec change_default_series(%Series{} | nil) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  def change_default_series(series \\ nil)
+
+  def change_default_series(nil) do
+    list_series()
+    |> List.first()
+    |> update_default_series(true)
   end
 
-  @doc """
-  Change the default series, setting the attribute 'default' of the series
-  with the given 'series_id' to true and the one of the current default series
-  to false.
+  def change_default_series(default_series) do
+    for series <- list_series() do
+      series
+      |> update_default_series(false)
+    end
 
-  ## Examples
-
-      iex> set_default_series(3)
-      {:ok, %Series{}}
-
-  """
-  @spec set_default_series(non_neg_integer) :: {:ok, %Series{}}
-  def set_default_series(series_id) do
-    get_default_series()
-    |> Series.changeset(%{"default" => false})
-    |> Repo.update()
-
-    series_id
-    |> get_series()
-    |> Series.changeset(%{"default" => true})
-    |> Repo.update()
+    default_series
+    |> update_default_series(true)
   end
 
   @doc """
@@ -159,8 +159,13 @@ defmodule Siwapp.Commons do
   """
   @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
   def delete_series(%Series{} = series) do
-    maybe_set_new_default_series(series)
-    Repo.delete(series)
+    result = Repo.delete(series)
+
+    with {:ok, _} <- result do
+      if length(list_series()) != 0, do: change_default_series()
+    end
+
+    result
   end
 
   @doc """
@@ -172,26 +177,24 @@ defmodule Siwapp.Commons do
       %Ecto.Changeset{data: %Series{}}
 
   """
-  @spec change_series(%Series{}, %{optional(any()) => any()}) :: %Ecto.Changeset{}
+  @spec change_series(%Series{}, map) :: %Ecto.Changeset{}
   def change_series(%Series{} = series, attrs \\ %{}) do
     Series.changeset(series, attrs)
   end
 
-  @spec maybe_set_new_default_series(%Series{}) :: {:ok, %Series{}}
-  defp maybe_set_new_default_series(series) do
-    first =
-      list_series()
-      |> List.delete(series)
-      |> List.first()
-
-    if first != nil and get_default_series() == series do
-      set_default_series(first.id)
-    end
+  @spec insert_new_series(map()) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  defp insert_new_series(attrs) do
+    %Series{}
+    |> Series.changeset(attrs)
+    |> Repo.insert()
   end
 
-  @spec make_default_if_first(%{optional(any()) => any()}, list()) :: %{optional(any()) => any()}
-  defp make_default_if_first(attrs, list) do
-    if list == [], do: Map.put(attrs, "default", true), else: attrs
+  @spec update_default_series(%Series{}, boolean()) ::
+          {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  defp update_default_series(series, value) do
+    series
+    |> Series.changeset(%{default: value})
+    |> Repo.update()
   end
 
   ### TAXES ###
@@ -239,7 +242,7 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
 
   """
-  @spec create_tax(%{optional(any()) => any()}) :: {:ok, %Tax{}} | {:error, %Ecto.Changeset{}}
+  @spec create_tax(map) :: {:ok, %Tax{}} | {:error, %Ecto.Changeset{}}
   def create_tax(attrs \\ %{}) do
     %Tax{}
     |> Tax.changeset(attrs)
@@ -258,7 +261,7 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
 
   """
-  @spec update_tax(%Tax{}, %{optional(any()) => any()}) ::
+  @spec update_tax(%Tax{}, map) ::
           {:ok, %Tax{}} | {:error, %Ecto.Changeset{}}
   def update_tax(%Tax{} = tax, attrs) do
     tax
@@ -313,7 +316,7 @@ defmodule Siwapp.Commons do
       %Ecto.Changeset{data: %Tax{}}
 
   """
-  @spec change_tax(%Tax{}, %{optional(any()) => any()}) :: %Ecto.Changeset{}
+  @spec change_tax(%Tax{}, map) :: %Ecto.Changeset{}
   def change_tax(%Tax{} = tax, attrs \\ %{}) do
     Tax.changeset(tax, attrs)
   end
