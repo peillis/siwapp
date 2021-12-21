@@ -1,8 +1,9 @@
 defmodule SiwappWeb.Api.InvoicesController do
   use SiwappWeb, :controller
-  alias Siwapp.Invoices
-  alias JSONAPI.Serializer
+  alias JSONAPI.{Serializer, Utils}
   alias SiwappWeb.Api.InvoicesView
+  alias Siwapp.Invoices
+  import Ecto.Changeset
 
   def index(conn, _params) do
     invoices = Invoices.list(:preload)
@@ -26,10 +27,18 @@ defmodule SiwappWeb.Api.InvoicesController do
     render(conn, show: json)
   end
 
-  def create(conn, %{"invoice" => invoice_params}) do
-    case Invoices.create(invoice_params) do
-      {:ok, _} -> json(conn, "The invoice was successfully created")
-      {:error, changeset} -> json(conn, changeset)
+  def create(conn, params) do
+    params = Utils.String.expand_fields(params, &Utils.String.underscore/1)
+
+    case Invoices.create(params) do
+      {:ok, invoice} ->
+        invoice = Invoices.get!(invoice.id, :preload)
+        json = Serializer.serialize(InvoicesView, invoice, conn)
+        render(conn, create: json)
+
+      {:error, changeset} ->
+        changeset = traverse_errors(changeset, fn {msg, _opt} -> msg end)
+        render(conn, create: %{"errors" => changeset})
     end
   end
 

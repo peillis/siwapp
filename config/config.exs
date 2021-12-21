@@ -61,7 +61,7 @@ import_config "#{config_env()}.exs"
 config :jsonapi,
   scheme: "https",
   namespace: "/api",
-  field_transformation: :underscore,
+  field_transformation: :dasherize,
   remove_links: false,
   json_library: Jason,
   paginator: nil
