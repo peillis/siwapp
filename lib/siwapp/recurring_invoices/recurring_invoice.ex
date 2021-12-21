@@ -5,7 +5,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Commons.Series
+  alias Siwapp.Commons.{Series, MetaAttribute}
 
   @fields [
     :net_amount,
@@ -23,7 +23,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     :deleted_at,
     :notes,
     :terms,
-    :meta_attributes,
     :items,
     :customer_id,
     :series_id
@@ -45,7 +44,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :deleted_at, :utc_datetime
     field :notes, :string
     field :terms, :string
-    field :meta_attributes, :map
+    embeds_many :meta_attributes, MetaAttribute
     field :items, {:array, :map}
     belongs_to :customer, Customer
     belongs_to :series, Series

@@ -21,7 +21,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :invoicing_address, :text
       add :shipping_address, :text
       add :meta_attributes, :jsonb
-
       timestamps()
     end
 

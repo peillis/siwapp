@@ -8,19 +8,14 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def mount(_params, session, socket) do
     customer = get_customer(session)
-
     changeset =
       Customers.change(customer)
       |> put_embed(:meta_attributes, customer.meta_attributes)
-
     assigns = [
       changeset: changeset,
       customer: customer,
-      copy: false
     ]
-
-    socket = assign(socket, assigns)
-    {:ok, socket}
+    {:ok, assign(socket, assigns)}
   end
 
   def handle_params(params, _url, socket) do
@@ -38,11 +33,9 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
+    require IEx; IEx.pry
     case Customers.create(customer_params) do
       {:ok, created_customer} ->
-        IO.inspect("created_customer")
-        IO.inspect(created_customer)
-
         {:noreply,
          socket
          |> put_flash(:info, "Customer was successfully created")
@@ -83,10 +76,10 @@ defmodule SiwappWeb.CustomerLive.Edit do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("remove-meta-attribute", %{"remove" => remove_id}, socket) do
+  def handle_event("remove-meta-attribute", %{"remove" => temp_id}, socket) do
     meta_attributes =
       socket.assigns.changeset.changes.meta_attributes
-      |> Enum.reject(fn %{data: meta_attributes} -> meta_attributes.temp_id == remove_id end)
+      |> Enum.reject(fn %{data: meta_attributes} -> meta_attributes.temp_id == temp_id end)
 
     changeset =
       socket.assigns.changeset
@@ -117,8 +110,6 @@ defmodule SiwappWeb.CustomerLive.Edit do
   defp get_customer(_customer_params) do
     Customers.new()
     |> Map.put(:meta_attributes, [Commons.new_meta_attribute()])
-
-    # %Customer{meta_attributes: []}
   end
 
   defp get_errors(changeset) do

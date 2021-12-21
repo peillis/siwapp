@@ -1,6 +1,6 @@
 <h1> <%= @page_title %> </h1>
 
-<.form  let={f} for={@changeset} phx-submit= "save", phx-change="validate">
+<.form let={f} for={@changeset} phx-submit="save", phx-change="validate">
   <%= checkbox(f, :active, checked_value: true, unchecked_value: false) %> This customer is active
   <br><br>
   <%= live_component SiwappWeb.CustomerLive.FormComponent, f: f %>

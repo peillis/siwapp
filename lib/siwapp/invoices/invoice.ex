@@ -3,7 +3,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   import Ecto.Changeset
 
-  alias Siwapp.Commons.Series
+  alias Siwapp.Commons.{Series, MetaAttribute}
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
@@ -30,7 +30,6 @@ defmodule Siwapp.Invoices.Invoice do
     :notes,
     :terms,
     :deleted_at,
-    :meta_attributes,
     :series_id,
     :customer_id,
     :recurring_invoice_id
@@ -58,7 +57,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :notes, :string
     field :terms, :string
     field :deleted_at, :utc_datetime
-    field :meta_attributes, :map
+    embeds_many :meta_attributes, MetaAttribute
     belongs_to :series, Series
     belongs_to :customer, Customer
     belongs_to :recurring_invoice, RecurringInvoice
@@ -70,6 +69,7 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
+    |> cast_embed(attrs, :meta_attributes)
     |> validate_required_invoice([:name, :identification, :issue_date])
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])

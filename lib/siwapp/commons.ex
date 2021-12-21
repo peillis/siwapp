@@ -16,7 +16,7 @@ defmodule Siwapp.Commons do
     %MetaAttribute{temp_id: get_temp_id()}
   end
 
-  def change_metattribute(%MetaAttribute{} = meta_attribute) do
+  def change_meta_attribute(%MetaAttribute{} = meta_attribute) do
     MetaAttribute.changeset(meta_attribute, %{})
   end
 
@@ -303,8 +303,6 @@ defmodule Siwapp.Commons do
   def change_tax(%Tax{} = tax, attrs \\ %{}) do
     Tax.changeset(tax, attrs)
   end
-
-  #### CALLBACKS ###
 
   defp get_temp_id do
     :crypto.strong_rand_bytes(5) |> Base.url_encode64() |> binary_part(0, 5)
