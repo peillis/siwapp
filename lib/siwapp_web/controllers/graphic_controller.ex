@@ -5,6 +5,8 @@ defmodule SiwappWeb.GraphicController do
   def plot() do
     options = [
       data_labels: false,
+      colour_palette: ["bbd5ec"],
+      default_style: false
     ]
 
     data =
@@ -13,7 +15,6 @@ defmodule SiwappWeb.GraphicController do
 
     data
     |> Plot.new(BarChart, 500, 400, options)
-    |> Plot.axis_labels("", "$")
     |> Plot.to_svg()
   end
 
