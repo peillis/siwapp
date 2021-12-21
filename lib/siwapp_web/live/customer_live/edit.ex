@@ -15,7 +15,8 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
     assigns = [
       changeset: changeset,
-      customer: customer
+      customer: customer,
+      copy: false
     ]
 
     socket = assign(socket, assigns)
@@ -47,8 +48,8 @@ defmodule SiwappWeb.CustomerLive.Edit do
          |> put_flash(:info, "Customer was successfully created")
          |> redirect(to: Routes.customer_index_path(socket, :index))}
 
-      {:error, _} ->
-        {:noreply, socket}
+      {:error, changeset} ->
+        {:noreply, put_flash(socket, :error, display_errors(changeset))}
     end
   end
 
@@ -98,6 +99,17 @@ defmodule SiwappWeb.CustomerLive.Edit do
     {:noreply, redirect(socket, to: Routes.customer_index_path(socket, :index))}
   end
 
+  def handle_event("copy", %{"copy" => invocing_address}, socket) do
+    changes = Map.put(socket.assigns.changeset.changes, :shipping_address, invocing_address)
+
+    changeset =
+      socket.assigns.customer
+      |> Customers.change(changes)
+      |> Map.put(:action, :insert)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
   defp get_customer(%{"id" => id} = _customer_params) do
     Customers.get!(id)
   end
@@ -107,5 +119,21 @@ defmodule SiwappWeb.CustomerLive.Edit do
     |> Map.put(:meta_attributes, [Commons.new_meta_attribute()])
 
     # %Customer{meta_attributes: []}
+  end
+
+  defp get_errors(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
+  end
+
+  defp display_errors(changeset) do
+    errors = get_errors(changeset)
+
+    errors
+    |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
+    |> Enum.join("\n")
   end
 end

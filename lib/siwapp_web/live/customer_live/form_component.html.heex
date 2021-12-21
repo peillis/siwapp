@@ -25,13 +25,14 @@
 <br>
   <div clas="form-group">
     <%= label @f, :invoicing_addres, "INVOICING ADDRESS"%>
-    <%= text_input @f, :invoicing_addres %>
-    <%= error_tag @f, :invoicing_addres %>
+    <%= text_input @f, :invoicing_address %>
+    <%= error_tag @f, :invoicing_address %>
   </div>
 <br>
   <div clas="form-group">
     <%= label @f, :shipping_addres, "SHIPPING ADDRESS" %>
-    <%= text_input @f, :shipping_addres %>
-    <%= error_tag @f, :shipping_addres %>
+    <%= text_input @f, :shipping_address %>
+    <%= error_tag @f, :shipping_address %>
   </div>
+  <input type="button" phx-click="copy" phx-value-copy={@f.params["invoicing_address"]} value="Copy Invoicing Address"/>
 </div>
