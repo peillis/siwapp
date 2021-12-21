@@ -19,30 +19,15 @@ td.table-span:not([align]){
   text-align: center;
 }
 
-.field-body > .field.description{
-  flex: 3 1 0;
-}
+@media screen and (max-width: 600px) {
+  .columns.is-multiline-mobile{
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-.field-body > .field.quantity{
-  flex: 1 1 0;
-}
-
-.field-body > .field.price{
-  flex: 1 1 0;
-}
-
-.field-body > .field.discount{
-  flex: 1 1 0;
-}
-
-.field-body > .field.taxes{
-  flex: 2 1 0;
-}
-
-.field-body > .field.total{
-  flex: 0 1 0;
-}
-
-.field-body > .field.hidden{
-  flex: 1 1 0;
+  .navbar-mobile{
+    position: fixed;
+    z-index: 30;
+    bottom: 0;
+  }
 }
