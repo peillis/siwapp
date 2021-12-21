@@ -78,7 +78,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     create table(:taxes) do
       add :name, :string, size: 50
       add :value, :integer
-      add :active, :boolean, default: true
+      add :enabled, :boolean, default: true
       add :default, :boolean, default: false
       add :deleted_at, :utc_datetime
     end

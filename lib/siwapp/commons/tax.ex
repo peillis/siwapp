@@ -5,12 +5,12 @@ defmodule Siwapp.Commons.Tax do
 
   alias Siwapp.Invoices.Item
 
-  @fields [:name, :value, :active, :default, :deleted_at]
+  @fields [:name, :value, :enabled, :default, :deleted_at]
 
   schema "taxes" do
     field :name, :string
     field :value, :integer
-    field :active, :boolean, default: true
+    field :enabled, :boolean, default: true
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
     many_to_many :items, Item, join_through: "items_taxes"
