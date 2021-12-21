@@ -62,6 +62,6 @@ jobs:
           MIX_ENV: dev
 
       - name: Run dialyzer
-        run: mix dialyzer --halt-exit-status
+        run: mix dialyzer
         env:
           MIX_ENV: dev
