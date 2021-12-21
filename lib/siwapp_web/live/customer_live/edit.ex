@@ -23,15 +23,34 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
     socket
     |> assign(:page_title, customer.name)
+    |> assign(:customer, customer)
     |> assign(:changeset, Customers.change(customer))
   end
 
   def handle_event("save", %{"customer" => customer_params}, socket) do
+    save(socket, socket.assigns.live_action, customer_params)
+  end
+
+  def save(socket, :new, customer_params) do
     case Customers.create(customer_params) do
       {:ok, _customer} ->
         socket =
           socket
           |> put_flash(:info, "Customer was successfully created")
+          |> push_redirect(to: "/customers/new")
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  def save(socket, :edit, customer_params) do
+    case Customers.update(socket.assigns.customer, customer_params) do
+      {:ok, _customer} ->
+        socket =
+          socket
+          |> put_flash(:info, "Customer was successfully updated")
           |> push_redirect(to: "/customers/new")
         {:noreply, socket}
 
