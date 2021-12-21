@@ -38,6 +38,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
           socket
           |> put_flash(:info, "Customer was successfully created")
           |> push_redirect(to: "/customers/new")
+
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -52,6 +53,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
           socket
           |> put_flash(:info, "Customer was successfully updated")
           |> push_redirect(to: "/customers/new")
+
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
