@@ -18,6 +18,7 @@ defmodule SiwappWeb.Api.InvoicesView do
       :identification,
       :inserted_at,
       :invoicing_address,
+      :items,
       :issue_date,
       :meta_attributes,
       :name,
@@ -26,7 +27,9 @@ defmodule SiwappWeb.Api.InvoicesView do
       :number,
       :paid,
       :paid_amount,
+      :recurring_invoices,
       :sent_by_email,
+      :series,
       :series_id,
       :shipping_address,
       :terms,
@@ -34,7 +37,10 @@ defmodule SiwappWeb.Api.InvoicesView do
     ]
 
   def relationships do
-    [customer: {SiwappWeb.Api.CustomersView, :include}]
+    [
+      customer: {SiwappWeb.Api.CustomersView, :include},
+      series: {SiwappWeb.Api.SeriesView, :include}
+    ]
   end
 
   def render("index.json", %{list: json}) do
@@ -42,6 +48,10 @@ defmodule SiwappWeb.Api.InvoicesView do
   end
 
   def render("show.json", %{show: json}) do
+    json
+  end
+
+  def render("create.json", %{create: json}) do
     json
   end
 end

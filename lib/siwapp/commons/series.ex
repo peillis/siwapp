@@ -6,6 +6,17 @@ defmodule Siwapp.Commons.Series do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
+  @derive {Jason.Encoder,
+           only: [
+             :default,
+             :deleted_at,
+             :enabled,
+             :first_number,
+             :id,
+             :name,
+             :value
+           ]}
+
   @fields [:name, :value, :enabled, :default, :deleted_at, :first_number]
 
   schema "series" do
