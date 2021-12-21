@@ -7,12 +7,15 @@
 /* Styling for tick text */
 .exc-tick text {
   fill: black;
+  font-weight: 300;
+  font-size: smaller;
   stroke: none;
 }
 
 /* Styling for axis line */
 .exc-domain {
   stroke:  black;
+  stroke-width: 0.5;
 }
 
 /* Styling for grid line */
@@ -36,7 +39,6 @@
 }
 
 /* Styling for title & subtitle of any plot */
-/* NOT IN USE */
 .exc-title {
   fill: darkslategray;
   font-size: 2.3rem;
