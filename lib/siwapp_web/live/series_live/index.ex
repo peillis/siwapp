@@ -6,8 +6,7 @@ defmodule SiwappWeb.SeriesLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    series_list = Commons.list_series()
-    {:ok, assign(socket, series_list: series_list)}
+    {:ok, assign(socket, series_list: Commons.list_series())}
   end
 
   @impl true
@@ -17,10 +16,10 @@ defmodule SiwappWeb.SeriesLive.Index do
 
   @impl true
   def handle_event("defaultClicked", %{"id" => id}, socket) do
-    Commons.set_default_series(id)
-    series_list = Commons.list_series()
+    Commons.get_series(id)
+    |> Commons.change_default_series()
 
-    {:noreply, assign(socket, series_list: series_list)}
+    {:noreply, assign(socket, series_list: Commons.list_series())}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
