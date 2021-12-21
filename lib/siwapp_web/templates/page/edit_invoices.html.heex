@@ -8,6 +8,24 @@
   </div>
 </nav>
 
+<div class="columns navbar-mobile is-multiline is-hidden-desktop is-mobile is-1 is-variable">
+  <div class="column is-narrow is-offset-one-quarter">
+    <button class="button is-small is-danger">Delete</button>
+  </div>
+  <div class="column is-narrow">
+    <button class="button is-small is-dark">Back</button>
+  </div>
+  <div class="column is-narrow">
+    <button class="button is-small is-info">Send Email</button>
+  </div>
+  <div class="column is-narrow is-offset-one-third">
+    <button class="button is-small is-info">Download PDF</button>
+  </div>
+  <div class="column is-narrow">
+    <input class="button is-small is-success" type="submit" value="Save">
+  </div>
+</div>
+
 <fieldset class="fieldset">
   <h2>CUSTOMER</h2>
 
@@ -121,58 +139,58 @@
     </div>
   </div>
 
-  <div class="field is-horizontal field-body">
-    <div class="field description">
+  <div class="columns is-multiline-mobile is-1 is-variable">
+    <div class="column is-4-desktop is-full-mobile">
       <label class="label">Descrition</label>
       <p class="control">
         <input class="input" type="text"  value="@Description">
       </p>
     </div>
-    <div class="field quantity">
+    <div class="column is-1-desktop is-half-mobile">
       <label class="label">Quantity</label>
       <p class="control">
         <input class="input" type="text"  value="@Quantity">
       </p>
     </div>
-    <div class="field price">
+    <div class="column is-2-desktop is-half-mobile">
       <label class="label">Price</label>
       <p class="control">
         <input class="input" type="text"  value="@Price">
       </p>
     </div>
-    <div class="field discount">
+    <div class="column is-1-desktop is-half-mobile">
       <label class="label">Discount</label>
       <p class="control">
         <input class="input" type="text"  value="@Discount">
       </p>
     </div>
-    <div class="field taxes">
+    <div class="column is-2-desktop is-half-mobile">
       <label class="label">Taxes</label>
       <p class="control">
         <input class="input" type="text" value="One,Two">
       </p>
     </div>
-    <div class="field total">
+    <div class="column is-1-desktop is-full-mobile">
       <label class="label">Total</label>
       <p class="control">
-        <a class="button is-static">
+        <a class="button is-static is-fullwidth">
           Total
         </a>
       </p>
     </div>
-    <div class="field hidden">
-      <label  class="label is-invisible">Hidden</label>
+    <div class="column is-narrow-desktop">
+      <label  class="label is-invisible is-hidden-mobile">invisible</label>
       <p class="control">
-        <button class="button is-danger is-light">Remove line</button>
+        <button class="button is-danger is-light is-fullwidth">Remove line</button>
       </p>
     </div>
   </div>
 
   <div class="columns is-desktop">
-    <div class="column">
-      <button class="button is-dark">Add Line</button>
+    <div class="column is-1">
+      <button class="button is-dark is-fullwidth">Add Line</button>
     </div>
-    <div class="column">
+    <div class="column is-3 is-offset-8">
       <table class="table is-fullwidth">
         <tbody>
           <tr>
@@ -220,14 +238,14 @@
       </p>
     </div>
     <div class="field">
-      <label  class="label is-invisible">Hidden</label>
+      <label  class="label is-invisible is-hidden-mobile">invisible</label>
       <p class="control">
-        <button class="button is-danger is-light">Remove Payment</button>
+        <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Payment</button>
       </p>
     </div>
   </div>
 
-  <button class="button is-dark">Add Payment</button>
+  <button class="column is-narrow-desktop button is-dark is-fullwidth">Add Payment</button>
   <label class="checkbox">
     <input type="checkbox">
     Payment collection failed
@@ -245,8 +263,8 @@
       <input class="input" type="text" placeholder="Value">
     </div>
     <div class="field control">
-      <button class="button is-danger is-light">Remove Attribute</button>
+      <button class=" column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Attribute</button>
     </div>
   </div>
-  <button class="button is-dark">Add Attribute</button>
+  <button class=" column is-narrow-desktop button is-dark is-fullwidth">Add Attribute</button>
 </fieldset>
