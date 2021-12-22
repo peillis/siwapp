@@ -1,23 +1,25 @@
-  <%= label @f, :name, "NAME" %>
+<fieldset>
+  <%= label @f, :name %>
   <%= text_input @f, :name %>
   <%= error_tag @f, :name %>
 
-  <%= label @f, :identification, "VAT ID" %>
+  <%= label @f, :identification %>
   <%= text_input @f, :identification %>
   <%= error_tag @f, :identification %>
 
-  <%= label @f, :contact_person, "CONTACT PERSON" %>
+  <%= label @f, :contact_person %>
   <%= text_input @f, :contact_person %>
   <%= error_tag @f, :contact_person %>
 
-  <%= label @f, :email, "EMAIL" %>
+  <%= label @f, :email %>
   <%= text_input @f, :email %>
   <%= error_tag @f, :email %>
 
-  <%= label @f, :invoicing_addres, "INVOICING ADDRESS"%>
+  <%= label @f, :invoicing_addres %>
   <%= text_input @f, :invoicing_addres %>
   <%= error_tag @f, :invoicing_addres %>
 
-  <%= label @f, :shipping_addres, "SHIPPING ADDRESS" %>
+  <%= label @f, :shipping_addres  %>
   <%= text_input @f, :shipping_addres %>
   <%= error_tag @f, :shipping_addres %>
+</fieldset>
