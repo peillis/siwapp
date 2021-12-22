@@ -13,11 +13,9 @@ defmodule SiwappWeb.LiveHelpers do
     live_component(SiwappWeb.ModalComponent, modal_opts)
   end
 
-  def checked?(checked, id) when is_map(checked) do
+  def checked?(checked, id) do
     Map.get(checked, Integer.to_string(id), false)
   end
-
-  def checked?(_, _), do: false
 
   def pending?(due_date) do
     Date.diff(due_date, Date.utc_today()) >= 0

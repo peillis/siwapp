@@ -6,45 +6,30 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:invoices, Invoices.list())
-     |> assign(:invisible, true)
-     |> assign(:checked, nil)
-     |> assign(:all, false)}
+     |> assign(:invisible_buttons, true)
+     |> assign(:checked, %{})}
   end
 
-  def handle_event("nav_render", %{"id" => id, "value" => "on"}, socket) do
-    if is_nil(socket.assigns.checked) do
-      updated_checked = %{id => true}
-
-      {:noreply,
-       assign(
-         socket,
-         invisible: false,
-         checked: updated_checked,
-         all: false
-       )}
-    else
-      update_checked = Map.put(socket.assigns.checked, id, true)
-
-      {:noreply,
-       assign(
-         socket,
-         invisible: false,
-         checked: update_checked,
-         all: false
-       )}
-    end
-  end
-
-  def handle_event("nav_render", %{"id" => id}, socket) do
-    update_checked = Map.replace!(socket.assigns.checked, id, false)
-    invisible = someone_checked?(update_checked)
+  def handle_event("show_buttons", %{"id" => id, "value" => "on"}, socket) do
+    update_checked = Map.put(socket.assigns.checked, id, true)
 
     {:noreply,
      assign(
        socket,
-       invisible: invisible,
-       checked: update_checked,
-       all: false
+       invisible_buttons: false,
+       checked: update_checked
+     )}
+  end
+
+  def handle_event("show_buttons", %{"id" => id}, socket) do
+    update_checked = Map.replace!(socket.assigns.checked, id, false)
+    invisible_buttons = someone_checked?(update_checked)
+
+    {:noreply,
+     assign(
+       socket,
+       invisible_buttons: invisible_buttons,
+       checked: update_checked
      )}
   end
 
