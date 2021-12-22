@@ -20,6 +20,7 @@ defmodule Siwapp.Customers.Customer do
   @fields [
     :name,
     :identification,
+    :hash_id,
     :email,
     :contact_person,
     :active,
@@ -32,6 +33,7 @@ defmodule Siwapp.Customers.Customer do
   schema "customers" do
     field :identification, :string
     field :name, :string
+    field :hash_id, :string
     field :email, :string
     field :contact_person, :string
     field :active, :boolean, default: true
@@ -50,10 +52,13 @@ defmodule Siwapp.Customers.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
+    |> change(%{hash_id: create_hash_id(attrs)})
     |> unique_constraint(:identification)
+    |> unique_constraint([:hash_id])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
+    |> validate_length(:identification, max: 32)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
   end
@@ -64,6 +69,14 @@ defmodule Siwapp.Customers.Customer do
       changeset
     else
       add_error(changeset, hd(fields), "Either name or identification are required")
+    end
+  end
+
+  defp create_hash_id(attrs) do
+    cond do
+      Map.has_key?(attrs, :name) and Map.has_key?(attrs, :identification) -> :crypto.hash(:md5, "#{attrs.name}#{attrs.identification}") |> Base.encode16()
+      Map.has_key?(attrs, :identification) -> :crypto.hash(:md5, "#{attrs.identification}") |> Base.encode16()
+      Map.has_key?(attrs, :name) -> :crypto.hash(:md5, "#{attrs.name}") |> Base.encode16()
     end
   end
 end
