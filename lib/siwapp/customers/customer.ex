@@ -74,9 +74,14 @@ defmodule Siwapp.Customers.Customer do
 
   defp create_hash_id(attrs) do
     cond do
-      Map.has_key?(attrs, :name) and Map.has_key?(attrs, :identification) -> :crypto.hash(:md5, "#{attrs.name}#{attrs.identification}") |> Base.encode16()
-      Map.has_key?(attrs, :identification) -> :crypto.hash(:md5, "#{attrs.identification}") |> Base.encode16()
-      Map.has_key?(attrs, :name) -> :crypto.hash(:md5, "#{attrs.name}") |> Base.encode16()
+      Map.has_key?(attrs, :name) and Map.has_key?(attrs, :identification) ->
+        :crypto.hash(:md5, "#{attrs.name}#{attrs.identification}") |> Base.encode16()
+
+      Map.has_key?(attrs, :identification) ->
+        :crypto.hash(:md5, "#{attrs.identification}") |> Base.encode16()
+
+      Map.has_key?(attrs, :name) ->
+        :crypto.hash(:md5, "#{attrs.name}") |> Base.encode16()
     end
   end
 end
