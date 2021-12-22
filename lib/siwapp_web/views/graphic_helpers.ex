@@ -1,4 +1,4 @@
-defmodule SiwappWeb.GraphicController do
+defmodule SiwappWeb.GraphicHelpers do
   alias Contex.{LinePlot, Plot, Dataset}
   alias Siwapp.Invoices
 

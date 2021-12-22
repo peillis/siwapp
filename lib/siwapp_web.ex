@@ -91,6 +91,8 @@ defmodule SiwappWeb do
       import SiwappWeb.ErrorHelpers
       import SiwappWeb.Gettext
       alias SiwappWeb.Router.Helpers, as: Routes
+
+      alias SiwappWeb.GraphicHelpers, as: Graphics
     end
   end
 
