@@ -98,8 +98,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :deleted_at, :utc_datetime
 
       timestamps()
-
-      end
     end
   end
 end
