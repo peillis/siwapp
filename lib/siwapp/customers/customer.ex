@@ -52,7 +52,11 @@ defmodule Siwapp.Customers.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
+<<<<<<< HEAD
     |> create_hash_id()
+=======
+    |> change(%{hash_id: create_hash_id(attrs)})
+>>>>>>> 77d1f30 (Creation of  an unique hash_id in the customer schema)
     |> unique_constraint(:identification)
     |> unique_constraint([:hash_id])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
