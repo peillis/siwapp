@@ -34,7 +34,9 @@ defmodule SiwappWeb.MetaAttributesComponent do
   end
 
   def handle_event("add", _params, socket) do
-    new = Map.put(socket.assigns.meta_attributes, socket.assigns.new_key, socket.assigns.new_value)
+    new =
+      Map.put(socket.assigns.meta_attributes, socket.assigns.new_key, socket.assigns.new_value)
+
     send_update(__MODULE__, id: "meta_attributes", meta_attributes: new)
 
     {:noreply, socket}
