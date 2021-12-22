@@ -47,18 +47,4 @@ defmodule SiwappWeb.CustomerLive.Edit do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
-
-  def handle_info({:remove_meta, key}, socket) do
-    customer = socket.assigns.customer
-    new_meta_attributes = Map.delete(customer.meta_attributes, key)
-    customer = Map.put(customer, :meta_attributes, new_meta_attributes)
-
-    changeset = Customers.change(customer)
-    #changeset = socket.assigns.changeset
-    #new_meta_attributes = Map.delete(changeset.data.meta_attributes, key)
-    #data = Map.put(changeset.data, :meta_attributes, new_meta_attributes)
-    #new_changeset = Map.put(changeset, :data, data)
-
-    {:noreply, assign(socket, :changeset, changeset)}
-  end
 end
