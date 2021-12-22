@@ -26,8 +26,8 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       timestamps()
     end
 
-    create index(:customers, [:identification],  unique: true)
-    create index(:customers, [:hash_id],  unique: true)
+    create index(:customers, [:identification], unique: true)
+    create index(:customers, [:hash_id], unique: true)
 
     create table(:invoices) do
       add :name, :string, size: 100
