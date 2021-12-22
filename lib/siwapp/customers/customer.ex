@@ -52,7 +52,7 @@ defmodule Siwapp.Customers.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
-    |> change(%{hash_id: create_hash_id(attrs)})
+    |> create_hash_id()
     |> unique_constraint(:identification)
     |> unique_constraint([:hash_id])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
@@ -72,16 +72,10 @@ defmodule Siwapp.Customers.Customer do
     end
   end
 
-  defp create_hash_id(attrs) do
-    cond do
-      Map.has_key?(attrs, :name) and Map.has_key?(attrs, :identification) ->
-        :crypto.hash(:md5, "#{attrs.name}#{attrs.identification}") |> Base.encode16()
-
-      Map.has_key?(attrs, :identification) ->
-        :crypto.hash(:md5, "#{attrs.identification}") |> Base.encode16()
-
-      Map.has_key?(attrs, :name) ->
-        :crypto.hash(:md5, "#{attrs.name}") |> Base.encode16()
-    end
+  defp create_hash_id(changeset) do
+    name = get_field(changeset, :name)
+    identification = get_field(changeset, :identification)
+    hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
+    change(changeset, %{hash_id: hash})
   end
 end
