@@ -91,7 +91,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     create table(:templates) do
       add :name, :string, size: 255
       add :template, :text
-      add :models, :string, size: 200
       add :print_default, :boolean, default: false
       add :email_default, :boolean, default: false
       add :subject, :string, size: 200

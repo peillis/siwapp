@@ -3,12 +3,11 @@ defmodule Siwapp.Templates.Template do
 
   import Ecto.Changeset
 
-  @fields [:name, :template, :models, :print_default, :email_default, :subject, :deleted_at]
+  @fields [:name, :template, :print_default, :email_default, :subject, :deleted_at]
 
   schema "templates" do
     field :name, :string
     field :template, :string
-    field :models, :string
     field :print_default, :boolean, default: false
     field :email_default, :boolean, default: false
     field :subject, :string
@@ -22,7 +21,6 @@ defmodule Siwapp.Templates.Template do
     |> cast(attrs, @fields)
     |> validate_required([:name, :template])
     |> validate_length(:name, max: 255)
-    |> validate_length(:models, max: 200)
     |> validate_length(:subject, max: 200)
   end
 end
