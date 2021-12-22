@@ -15,9 +15,11 @@ defmodule SiwappWeb.LiveHelpers do
 
   def checked?(checked, id) do
     string_id = Integer.to_string(id)
+
     checked_id =
       checked
-      |> Enum.find( fn n -> n == string_id end)
+      |> Enum.find(fn n -> n == string_id end)
+
     checked_id != nil
   end
 
