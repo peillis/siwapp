@@ -54,9 +54,7 @@ defmodule Siwapp.MixProject do
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:contex, "~> 0.4.0"},
-      {:datix, "~> 0.1.1"}
-    ]
+      {:contex, "~> 0.4.0"}    ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
