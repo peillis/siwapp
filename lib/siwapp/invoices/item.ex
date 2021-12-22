@@ -23,7 +23,11 @@ defmodule Siwapp.Invoices.Item do
     field :taxes_amount, :integer, virtual: true
     field :gross_amount, :integer, virtual: true
     belongs_to :invoice, Invoice
-    many_to_many :taxes, Tax, join_through: "items_taxes", join_keys: [items_id: :id, taxes_id: :id], on_replace: :delete
+
+    many_to_many :taxes, Tax,
+      join_through: "items_taxes",
+      join_keys: [items_id: :id, taxes_id: :id],
+      on_replace: :delete
   end
 
   def changeset(item, attrs \\ %{}) do
@@ -36,31 +40,22 @@ defmodule Siwapp.Invoices.Item do
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
   end
 
-  def changeset_update_taxes(item, tax) do
+  def put_into_database(item) do
     item
-    |> cast(%{}, @fields)
-    |> put_assoc(:taxes, tax)
+    |> Map.put(:base_amount, base_amount(item))
+    |> Map.put(:discount_amount, discount_amount(item))
+    |> Map.put(:net_amount, net_amount(item))
+    |> Map.put(:taxes_amount, taxes_amount(item))
+    |> Map.put(:gross_amount, gross_amount(item))
   end
 
-  def base_amount(item) do
-    Map.put(item, :base_amount, item.quantity * item.unitary_cost)
-  end
+  def base_amount(item), do: item.quantity * item.unitary_cost
 
-  def discount_amount(item) do
-    Map.put(item, :discount_amount, item.base_amount * item.discount / 100)
-  end
+  def discount_amount(item), do: base_amount(item) * item.discount / 100
 
-  def net_amount(item) do
-    Map.put(item, :net_amount, item.base_amount - item.discount_amount)
-  end
+  def net_amount(item), do: base_amount(item) - discount_amount(item)
 
-  def taxes_amount(item) do
-    taxes_list_amount = for tax <- item.taxes, do: tax.value * item.net_amount / 100
+  def taxes_amount(item), do: for(tax <- item.taxes, do: tax.value * net_amount(item) / 100)
 
-    Map.put(item, :taxes_amount, taxes_list_amount)
-  end
-
-  def gross_amount(item) do
-    Map.put(item, :gross_amount, item.net_amount + Enum.sum(item.taxes_amount))
-  end
+  def gross_amount(item), do: net_amount(item) + Enum.sum(taxes_amount(item))
 end
