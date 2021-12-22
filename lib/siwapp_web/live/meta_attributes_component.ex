@@ -7,6 +7,7 @@ defmodule SiwappWeb.MetaAttributesComponent do
     <%= for {k, v} <- meta_attributes do %>
       <input type="text" name="meta[keys][]" value={k} />
       <input type="text" name="meta[values][]" value={v} />
+      <a phx-click="remove" phx-value-key={k} phx-target={@myself}>Remove</a>
       <br/>
     <% end %>
       <input type="text" name="meta[keys][]" />
@@ -14,5 +15,10 @@ defmodule SiwappWeb.MetaAttributesComponent do
       <br/>
     </fieldset>
     """
+  end
+
+  def handle_event("remove", %{"key" => key}, socket) do
+    send self(), {:remove_meta, key}
+    {:noreply, socket}
   end
 end
