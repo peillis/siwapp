@@ -70,6 +70,7 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
+    |> cast_assoc(:customer)
     |> validate_required_invoice([:name, :identification, :issue_date])
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])
