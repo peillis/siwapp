@@ -21,7 +21,7 @@
 /* Styling for grid line */
 /* NOT IN USE */
 .exc-grid {
-  stroke: lightgrey;
+  stroke: red;
 }
 
 /* Styling for outline of colours in legend */
