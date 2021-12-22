@@ -14,7 +14,11 @@ defmodule SiwappWeb.LiveHelpers do
   end
 
   def checked?(checked, id) do
-    Map.get(checked, Integer.to_string(id), false)
+    string_id = Integer.to_string(id)
+    checked_id =
+      checked
+      |> Enum.find( fn n -> n == string_id end)
+    checked_id != nil
   end
 
   def pending?(due_date) do
