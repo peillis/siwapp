@@ -32,21 +32,33 @@ series = [
 invoices = [
   %{
     name: "First_Invoice",
-    paid_amount: 100,
+    gross_amount: 100,
     paid: true,
     sent_by_email: true,
     number: 1,
     issue_date: ~D[2021-10-08],
+    due_date: ~D[2021-12-25],
     series_id: 1,
     customer_id: 1
   },
   %{
     name: "Second_Invoice",
-    paid_amount: 400,
+    gross_amount: 400,
     number: 2,
     issue_date: ~D[2021-10-08],
+    due_date: ~D[2021-12-21],
     series_id: 1,
     customer_id: 2
+  },
+  %{
+    name: "Third_Invoice",
+    gross_amount: 1200,
+    sent_by_email: true,
+    number: 3,
+    issue_date: ~D[2021-10-08],
+    due_date: ~D[2021-12-25],
+    series_id: 1,
+    customer_id: 1
   }
 ]
 

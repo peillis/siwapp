@@ -1,4 +1,6 @@
-<nav class="navbar is-fixed-bottom is-invisible" role="navigation" aria-label="main navigation">
+<nav class={"navbar is-fixed-bottom
+             #{if @invisible, do: "is-invisible"}"}
+            role="navigation" aria-label="main navigation">
   <div class="navbar-menu">
     <div class="navbar-end">
       <div class="navbar-item buttons">
@@ -29,7 +31,7 @@
   <tbody>
     <%= for invoice <- @invoices do %>
       <tr>
-        <td><input type="checkbox"></td>
+        <td><input type="checkbox" phx-click="nav_render" checked={checked?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
         <td><a><%= invoice.series_id %></a></td>
         <td><%= invoice.name %></td>
         <td><%= invoice.issue_date %></td>
@@ -40,118 +42,21 @@
           <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
         <% end %>
 
-        <%= if invoice.paid do %>
-          <td class="table-span"><span class="tag is-success">Paid</span></td>
-          <td></td>
-        <% else %>
-          <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
-          <td>$ <%= invoice.paid_amount %></td>
+        <%= cond do %>
+          <%= invoice.paid -> %>
+            <td class="table-span"><span class="tag is-success">Paid</span></td>
+            <td></td>
+
+          <% pending?(invoice.due_date) -> %>
+            <td class="table-span"><span class="tag is-warning">Pending</span></td>
+            <td>$ <%= invoice.gross_amount %></td>
+
+          <% true -> %>
+            <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
+            <td>$ <%= invoice.gross_amount %></td>
         <% end %>
         <td>$ <%= invoice.gross_amount %></td>
       </tr>
     <% end %>
-  </tbody>
-
-  <%# <tbody>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-10</a></td>
-      <td>Name-10</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-9</a></td>
-      <td>Name-9</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-8</a></td>
-      <td>Name-8</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-7</a></td>
-      <td>Name-7</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-6</a></td>
-      <td>Name-6</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-5</a></td>
-      <td>Name-5</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-4</a></td>
-      <td>Name-4</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
-      <td class="table-span"><span class="tag is-success">Paid</span></td>
-      <td></td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-3</a></td>
-      <td>Name-3</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-warning">Pending</span></td>
-      <td>$ Amount</td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-2</a></td>
-      <td>Name-2</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
-      <td>$ Amount</td>
-      <td>$ TotalAmount</td>
-    </tr>
-    <tr>
-      <td><input type="checkbox"></td>
-      <td><a>A-1</a></td>
-      <td>Name-1</td>
-      <td>aaaa-mm-dd</td>
-      <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
-      <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
-      <td>$ Amount</td>
-      <td>$ TotalAmount</td>
-    </tr>
-  </tbody> %>
+  </tbody>  
 </table>
