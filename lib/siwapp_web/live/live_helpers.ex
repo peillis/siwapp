@@ -14,8 +14,7 @@ defmodule SiwappWeb.LiveHelpers do
   end
 
   def checked?(checked, id) do
-    string_id = Integer.to_string(id)
-    Enum.member?(checked, string_id)
+    Enum.member?(checked, id)
   end
 
   def status(paid, due_date) do

@@ -11,7 +11,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   def handle_event("click_checkbox", data, socket) do
     checked = update_checked(data, socket)
-
+    IO.inspect(checked)
     {:noreply,
      assign(
        socket,
@@ -20,14 +20,9 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
-    add_zero =
-      MapSet.new()
-      |> MapSet.put("0")
-
     socket.assigns.invoices
-    |> Enum.reduce(add_zero, fn invoice, mapset ->
-      MapSet.put(mapset, Integer.to_string(invoice.id))
-    end)
+    |> MapSet.new(fn invoice -> invoice.id end)
+    |> MapSet.put(0)
   end
 
   defp update_checked(%{"id" => "0"}, _) do
@@ -35,12 +30,12 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   defp update_checked(%{"id" => id, "value" => "on"}, socket) do
-    MapSet.put(socket.assigns.checked, id)
+    MapSet.put(socket.assigns.checked, String.to_integer(id))
   end
 
   defp update_checked(%{"id" => id}, socket) do
     socket.assigns.checked
-    |> MapSet.delete(id)
-    |> MapSet.delete("0")
+    |> MapSet.delete(String.to_integer(id))
+    |> MapSet.delete(0)
   end
 end
