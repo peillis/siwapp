@@ -40,13 +40,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_event("click_checkbox", %{"id" => id}, socket) do
     update_checked = MapSet.delete(socket.assigns.checked, id)
 
-    if MapSet.size(update_checked) == 1 do
-      update_checked = MapSet.delete(update_checked, "0")
-
+    if MapSet.size(update_checked) == 1 and MapSet.member?(update_checked, "0") do
       {:noreply,
        assign(
          socket,
-         checked: update_checked
+         checked: MapSet.new()
        )}
     else
       {:noreply,
