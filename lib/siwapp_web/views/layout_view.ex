@@ -7,11 +7,11 @@ defmodule SiwappWeb.LayoutView do
 
   def new_button(live_module) do
     live_module = to_string(live_module)
+
     cond do
       live_module =~ "Customers" -> "New Customer"
       live_module =~ "Invoices" -> "New Invoice"
       live_module =~ "Series" -> "New Series"
     end
   end
-
 end
