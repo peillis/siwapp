@@ -84,7 +84,7 @@ defmodule Siwapp.Templates do
       iex> update(template, %{email_default: true})
       {:error, "You cannot directly assign..."}
   """
-  @spec update_series(%Template{}, map) ::
+  @spec update(%Template{}, map) ::
           {:ok, %Template{}} | {:error, any()}
   def update(_template, attrs) when is_map_key(attrs, :print_default) or is_map_key(attrs, :email_default) do
     {:error,
@@ -172,12 +172,12 @@ defmodule Siwapp.Templates do
       %Ecto.Changeset{data: %Template{}}
 
   """
-  @spec change_series(%Template{}, map) :: %Ecto.Changeset{}
+  @spec change(%Template{}, map) :: %Ecto.Changeset{}
   def change(%Template{} = template, attrs \\ %{}) do
     Template.changeset(template, attrs)
   end
 
-  @spec update_default(%Template{}, String.t() | atom(), any()) ::
+  @spec update_by(%Template{}, String.t() | atom(), any()) ::
           {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
   defp update_by(template, key, value) do
     template
