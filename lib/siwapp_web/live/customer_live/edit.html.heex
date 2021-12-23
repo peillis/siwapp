@@ -1,10 +1,33 @@
 <h1> <%= @page_title %> </h1>
-
-<.form let={f} for={@customer} phx-submit="save">
+<.form let={f} for={@changeset} phx-submit="save">
   <%= checkbox(f, :active, checked_value: true, unchecked_value: false) %> This customer is active
+  <br><br>
   <%= live_component SiwappWeb.CustomerLive.FormComponent, f: f %>
-  <%= submit "Save" %>
-  <!-- in future we will redirect to customer listing -->
-  <%= live_patch "Back", to: Routes.customer_index_path(@socket, :index) %>
+<nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
+  <div class="navbar-end navbar-items buttons">
+    <button class="button is-danger" phx-click="delete">Delete</button>
+    <button class="button is-dark" phx-click="back">Back</button>
+    <button class="button is-info">Send Email</button>
+    <button class="button is-info">Download PDF</button>
+    <%= submit "Save", class: "button is-success", value: "save" %>
+  </div>
+</nav>
+<div class="columns navbar-mobile is-multiline is-hidden-desktop is-mobile is-1 is-variable">
+  <div class="column is-narrow is-offset-one-quarter">
+    <button class="button is-small is-danger" phx-click="delete">Delete</button>
+  </div>
+  <div class="column is-narrow">
+    <button class="button is-small is-dark" phx-click="back">Back</button>
+  </div>
+  <div class="column is-narrow">
+    <button class="button is-small is-info">Send Email</button>
+  </div>
+  <div class="column is-narrow is-offset-one-third">
+    <button class="button is-small is-info">Download PDF</button>
+  </div>
+  <div class="column is-narrow">
+    <%= submit "Save", class: "button is-small is-success", value: "save" %>
+  </div>
+</div>
 </.form>
 
