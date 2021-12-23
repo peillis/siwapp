@@ -9,8 +9,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:checked, MapSet.new())}
   end
 
-  def handle_event("show_buttons?", %{"id" => "0", "value" => "on"}, socket) do
-    update_checked = add_all_ids(socket.assigns.checked, socket.assigns.invoices)
+  def handle_event("click_checkbox", %{"id" => "0", "value" => "on"}, socket) do
+    update_checked = add_all_ids(socket.assigns.invoices)
 
     {:noreply,
      assign(
@@ -19,17 +19,15 @@ defmodule SiwappWeb.InvoicesLive.Index do
      )}
   end
 
-  def handle_event("show_buttons?", %{"id" => "0"}, socket) do
-    update_checked = del_all_ids(socket.assigns.checked, socket.assigns.invoices)
-
+  def handle_event("click_checkbox", %{"id" => "0"}, socket) do
     {:noreply,
      assign(
        socket,
-       checked: update_checked
+       checked: MapSet.new()
      )}
   end
 
-  def handle_event("show_buttons?", %{"id" => id, "value" => "on"}, socket) do
+  def handle_event("click_checkbox", %{"id" => id, "value" => "on"}, socket) do
     update_checked = MapSet.put(socket.assigns.checked, id)
 
     {:noreply,
@@ -39,7 +37,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      )}
   end
 
-  def handle_event("show_buttons?", %{"id" => id}, socket) do
+  def handle_event("click_checkbox", %{"id" => id}, socket) do
     update_checked = MapSet.delete(socket.assigns.checked, id)
 
     if MapSet.size(update_checked) == 1 do
@@ -59,23 +57,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     end
   end
 
-  defp add_all_ids(checked, invoices) do
+  defp add_all_ids(invoices) do
     add_zero =
-      checked
+      MapSet.new()
       |> MapSet.put("0")
 
     invoices
-    |> Enum.reduce(add_zero, fn invoice, acc -> MapSet.put(acc, Integer.to_string(invoice.id)) end)
-  end
-
-  defp del_all_ids(checked, invoices) do
-    del_zero =
-      checked
-      |> MapSet.delete("0")
-
-    invoices
-    |> Enum.reduce(del_zero, fn invoice, acc ->
-      MapSet.delete(acc, Integer.to_string(invoice.id))
+    |> Enum.reduce(add_zero, fn invoice, mapset ->
+      MapSet.put(mapset, Integer.to_string(invoice.id))
     end)
   end
 end

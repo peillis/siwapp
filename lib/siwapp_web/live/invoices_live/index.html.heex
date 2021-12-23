@@ -17,7 +17,7 @@
 <table class="table is-fullwidth is-striped is-bordered is-hoverable">
   <thead>
     <tr>
-      <th title=""><input type="checkbox" checked={checked?(@checked, 0)} phx-click="show_buttons?" phx-value-id="0"></th>
+      <th title=""><input type="checkbox" checked={checked?(@checked, 0)} phx-click="click_checkbox" phx-value-id="0"></th>
       <th title="Reference">Reference</th>
       <th title="Customer">Customer Name</th>
       <th title="Date">Date</th>
@@ -31,7 +31,7 @@
   <tbody>
     <%= for invoice <- @invoices do %>
       <tr>
-        <td><input type="checkbox" phx-click="show_buttons?" checked={checked?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
+        <td><input type="checkbox" phx-click="click_checkbox" checked={checked?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
         <td><a><%= invoice.series_id %></a></td>
         <td><%= invoice.name %></td>
         <td><%= invoice.issue_date %></td>
