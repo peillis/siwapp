@@ -27,6 +27,12 @@ defmodule Siwapp.Invoices do
     Repo.all(Invoice)
   end
 
+  def new(), do: %Invoice{}
+
+  def change(%Invoice{} = invoice, attrs \\ %{}) do
+    Invoice.changeset(invoice, attrs)
+  end
+
   @doc """
   Creates an invoice
   """

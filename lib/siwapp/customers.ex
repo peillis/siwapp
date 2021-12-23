@@ -2,8 +2,17 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
+  import Ecto.Query, warn: false
   alias Siwapp.Repo
   alias Siwapp.Customers.Customer
+
+  def list(), do: Repo.all(Customer)
+
+  def new(), do: %Customer{}
+
+  def change(customer, attrs \\ %{}) do
+    Customer.changeset(customer, attrs)
+  end
 
   @doc """
   Create a new customer
@@ -33,5 +42,8 @@ defmodule Siwapp.Customers do
   @doc """
   Gets a customer by id
   """
-  def get!(id), do: Repo.get!(Customer, id)
+  def get!(id) do 
+    Repo.get!(Customer, id)
+    |> Repo.preload(:invoices)
+  end
 end
