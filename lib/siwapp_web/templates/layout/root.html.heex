@@ -20,10 +20,7 @@
           </a>
 
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
-            <button class="button is-primary"> <strong> + </strong></button>
-          <!--  <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span> -->
+            <button class="button is-primary" phx-click="new"> <strong> + </strong></button>
           </a>
         </div>
 
@@ -75,9 +72,9 @@
 
           <div class="navbar-end">
             <div class="navbar-item">
-              <a class="button is-primary">
-                <strong> <%= new_button(@live_module) %> </strong>
-              </a>
+              <button phx-click= "new" class="button is-primary">
+                <strong> <%= new_button(assigns) %> </strong>
+              </button>
             </div>
           </div>
         </div>
