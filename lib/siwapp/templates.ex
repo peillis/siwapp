@@ -91,30 +91,37 @@ defmodule Siwapp.Templates do
       "You cannot directly assign a default key. Use the change_default/2 function instead."}
   end
 
-  def update_series(%Template{} = template, attrs) do
+  def update(%Template{} = template, attrs) do
     template
     |> Template.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Choose a new series for being the default one. You can call this function without
-  parameters, so the default series will be the first one in the list of Series; or with
-  a 'series' given, so that series will be the default.
+  Choose a new template for being the default one, either for printing or emails.
+
+  You'll have to indicate of which type this template will be the default: printing
+  (the parameter you need to pass is ':print') or email (':email').
+
+  You can call this function without parameters, so the default template will be
+  the first one in the list of Templates; or with a 'template' given, so that one
+  will be the default.
 
   ## Examples
 
-      iex> change_default_series(series)
-      {:ok, %Series{}}
-        # That series now has the default attribute as true, and the others as false
+      iex> change_default(:print, template)
+      {:ok, %Template{}}
+        # That template now has the default_print attribute as true,
+        and the others templates as false
 
-      iex> change_default_series(series)
+      iex> change_default(:print, template)
       {:error, %Ecto.Changeset{}}
-        # That series doesn't exist
+        # That template doesn't exist
 
-      iex> change_default_series(series)
-      {:ok, %Series{}}
-        # The first series in the list now has its default attribute as true
+      iex> change_default(:email)
+      {:ok, %Template{}}
+        # The first template in the list now has its default_email attribute
+        as true, and the other templates as false
 
   """
   @spec change_default(:print | :email, %Template{} | nil) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
@@ -139,41 +146,35 @@ defmodule Siwapp.Templates do
   end
 
   @doc """
-  Deletes a series.
+  Deletes a template.
 
   ## Examples
 
-      iex> delete_series(series)
-      {:ok, %Series{}}
+      iex> delete(template)
+      {:ok, %Template{}}
 
-      iex> delete_series(series)
+      iex> delete(template)
       {:error, %Ecto.Changeset{}}
-        # because that series doesn't exist
+        # because that template doesn't exist
 
   """
-  @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
-  def delete_series(%Series{} = series) do
-    result = Repo.delete(series)
-
-    with {:ok, _} <- result do
-      if length(list_series()) != 0, do: change_default_series()
-    end
-
-    result
+  @spec delete(%Template{}) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  def delete(%Template{} = template) do
+    Repo.delete(template)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking series changes.
+  Returns an `%Ecto.Changeset{}` for tracking template changes.
 
   ## Examples
 
-      iex> change_series(series)
-      %Ecto.Changeset{data: %Series{}}
+      iex> change(template)
+      %Ecto.Changeset{data: %Template{}}
 
   """
-  @spec change_series(%Series{}, map) :: %Ecto.Changeset{}
-  def change_series(%Series{} = series, attrs \\ %{}) do
-    Series.changeset(series, attrs)
+  @spec change_series(%Template{}, map) :: %Ecto.Changeset{}
+  def change(%Template{} = template, attrs \\ %{}) do
+    Template.changeset(template, attrs)
   end
 
   @spec update_default(%Template{}, String.t() | atom(), any()) ::
