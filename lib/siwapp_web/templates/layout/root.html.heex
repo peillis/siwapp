@@ -15,14 +15,15 @@
     <%= if @current_user do %>
       <nav class="navbar is-fixed-top"  role="navigation" aria-label="main navigation">
         <div class="navbar-brand ">
-          <a class="navbar-item" href="https://bulma.io">
+          <a class="navbar-item" href="/">
             <img src={Routes.static_path(@conn, "/images/logo.svg")} width="112" height="28">
           </a>
 
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
+            <button class="button is-primary"> <strong> + </strong></button>
+          <!--  <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span> -->
           </a>
         </div>
 
@@ -75,12 +76,13 @@
           <div class="navbar-end">
             <div class="navbar-item">
               <a class="button is-primary">
-                <strong>New Invoice</strong>
+                <strong> <%= new_button(@live_module) %> </strong>
               </a>
             </div>
           </div>
         </div>
       </nav>
+<hr>
     <% end %>
     <%= @inner_content %>
   </body>
