@@ -1,0 +1,31 @@
+<h1> <%= @page_title %> </h1>
+<table class="table is-responsive is-bordered is-striped is-hoverable is-fullwidth">
+    <thead>
+      <tr>
+        <th class="no-wrap" title="Customer name"> Customer name </th>
+        <th class="no-wrap" title="Identification"> Identification </th>
+        <th class="text-right" title="Due"> Due </th>
+        <th class="text-right" title="Total"> Total </th>
+        <th class="text-right" title=" "></th>
+      </tr>
+    </thead>
+
+    <tbody role="infinite-content">
+      <%= for customer <- @customers do%>
+        <%=if customer.active do %>
+        <tr>
+          <td class="no-wrap"> <a href={path_edit_customer(customer.id)}> <%= customer.name %> </a> </td>
+          <td class="no-wrap"> <a href={path_edit_customer(customer.id)}><%= customer.identification %> </a> </td>
+          <!-- my suggestion is creating total and due as helper functions receiving customer.invoices -->
+          <td class="text-right"> <a href={path_edit_customer(customer.id)}>VALUE </a> </td>
+          <td class="text-right"> <a href={path_edit_customer(customer.id)}>VALUE </a> </td>
+          <td class="text-center">
+            <%= live_patch " ", class: "icon fas fa-list", to: Routes.customer_show_invoices_path(@socket, :show, customer.id) %>
+          </td>
+        </tr>
+        <!-- <td phx-click="edit" phx-value-id={customer.id}class="no-wrap"> <%= customer.name %> </td> -->
+        <!-- </tr> -->
+        <% end %>
+      <% end %>
+    </tbody>
+</table>
