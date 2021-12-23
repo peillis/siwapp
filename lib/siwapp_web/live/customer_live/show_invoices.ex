@@ -3,7 +3,7 @@ defmodule SiwappWeb.CustomersLive.ShowInvoices do
 
   alias Siwapp.Customers
 
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
