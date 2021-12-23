@@ -73,9 +73,16 @@ defmodule Siwapp.Customers.Customer do
   end
 
   defp create_hash_id(changeset) do
-    name = get_field(changeset, :name)
-    identification = get_field(changeset, :identification)
+    name =
+      get_field(changeset, :name)
+      |> String.downcase()
+      |> String.replace(~r/ +/, "")
+
+    identification =
+      get_field(changeset, :identification)
+      |> String.trim()
+
     hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
-    change(changeset, %{hash_id: hash})
+    put_change(changeset, :hash_id, hash)
   end
 end
