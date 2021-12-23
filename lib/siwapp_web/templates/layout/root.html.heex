@@ -15,10 +15,10 @@
     <%= if @current_user do %>
       <nav class="navbar is-fixed-top"  role="navigation" aria-label="main navigation">
         <div class="navbar-brand ">
-          <a class="navbar-item" href="https://bulma.io">
-            <img src={Routes.static_path(@conn, "/images/logo.svg")} width="112" height="28">
-          </a>
-
+          <%="/images/logo.svg"
+              |> img_tag()
+              |> link(to: Routes.page_path(@conn, :invoices), class: "navbar-item")
+          %>
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
