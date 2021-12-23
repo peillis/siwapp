@@ -1,6 +1,8 @@
 defmodule SiwappWeb.CustomersLive.Edit do
   use SiwappWeb, :live_view
 
+  import SiwappWeb.Helpers
+
   alias Siwapp.Customers
 
   def mount(_params, _session, socket) do
