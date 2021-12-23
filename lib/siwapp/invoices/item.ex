@@ -17,8 +17,8 @@ defmodule Siwapp.Invoices.Item do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    field :net_amount, :integer, virtual: true
-    field :taxes_amount, {:array, :map}, virtual: true
+    field :net_amount, :float, virtual: true
+    field :taxes_amount, :map, virtual: true
     belongs_to :invoice, Invoice
 
     many_to_many :taxes, Tax,
@@ -36,7 +36,7 @@ defmodule Siwapp.Invoices.Item do
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
   end
 
-  def put_into_database(item) do
+  def set_virtual_fields(item) do
     item
     |> Map.put(:net_amount, net_amount(item))
     |> Map.put(:taxes_amount, taxes_amount(item))
@@ -50,10 +50,12 @@ defmodule Siwapp.Invoices.Item do
 
   def taxes_amount(item) do
     for tax <- item.taxes do
-      id = tax.id
-      value = tax.value * net_amount(item) / 100
-
-      Map.new([{id, value}])
+      Map.new([{tax.id, tax.value * net_amount(item) / 100}])
     end
+    |> Enum.reduce(fn x, acc ->
+      Map.merge(x, acc, fn _key, map1, map2 ->
+        for {k, v1} <- map1, into: %{}, do: {k, v1 + map2[k]}
+      end)
+    end)
   end
 end
