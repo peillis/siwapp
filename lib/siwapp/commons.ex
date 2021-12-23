@@ -106,6 +106,20 @@ defmodule Siwapp.Commons do
   end
 
   @doc """
+  Gets the unique series that has the default attribute set to 'true'
+  ## Examples
+      iex> get_default_series
+      %Series{}
+      iex> get_default_series
+      nil
+        # there is no default series
+  """
+  @spec get_default_series :: %Series{} | nil
+  def get_default_series do
+    Repo.get_by(Series, default: true)
+  end
+
+  @doc """
   Choose a new series for being the default one. You can call this function without
   parameters, so the default series will be the first one in the list of Series; or with
   a 'series' given, so that series will be the default.
@@ -120,7 +134,7 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
         # That series doesn't exist
 
-      iex> change_default_series(series)
+      iex> change_default_series()
       {:ok, %Series{}}
         # The first series in the list now has its default attribute as true
 
@@ -136,12 +150,10 @@ defmodule Siwapp.Commons do
 
   def change_default_series(default_series) do
     for series <- list_series() do
-      series
-      |> update_default_series(false)
+      update_default_series(series, false)
     end
 
-    default_series
-    |> update_default_series(true)
+    update_default_series(default_series, true)
   end
 
   @doc """
@@ -156,16 +168,20 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
         # because that series doesn't exist
 
+      iex> delete_series(series)
+      {:error, "The series you're aiming..."}
+        # because that series is the default one
+
   """
-  @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, any()}
   def delete_series(%Series{} = series) do
-    result = Repo.delete(series)
-
-    with {:ok, _} <- result do
-      if length(list_series()) != 0, do: change_default_series()
+    if get_default_series() == series do
+      {:error,
+     "The series you're aiming to delete is the default series. \
+      Change the default series first with change_default_series/1 function."}
+    else
+      Repo.delete(series)
     end
-
-    result
   end
 
   @doc """
