@@ -13,8 +13,6 @@ defmodule SiwappWeb.ModalComponent do
       phx-target={@myself}
       phx-page-loading>
 
-      <% IO.inspect assigns %>
-
       <div class="phx-modal-content">
         <%= live_patch raw("&times;"), to: @return_to, class: "phx-modal-close" %>
         <%= live_component @component, @opts %>

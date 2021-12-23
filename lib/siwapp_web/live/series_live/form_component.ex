@@ -5,6 +5,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
 
   @impl true
   def update(%{series: series} = assigns, socket) do
+
     changeset = Commons.change_series(series)
 
     socket =
@@ -41,7 +42,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
       {:error, _msg} ->
         {:noreply,
          socket
-         |> put_flash(:info, "You can't delete the default series. Change it first in the list.")}
+         |> put_flash(:error, "You can't delete the default series.")}
     end
 
   end
