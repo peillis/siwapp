@@ -17,17 +17,13 @@ defmodule Siwapp.Invoices.Item do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    field :base_amount, :integer, virtual: true
-    field :discount_amount, :integer, virtual: true
     field :net_amount, :integer, virtual: true
-    field :taxes_amount, :integer, virtual: true
-    field :gross_amount, :integer, virtual: true
+    field :taxes_amount, {:array, :map}, virtual: true
     belongs_to :invoice, Invoice
 
     many_to_many :taxes, Tax,
       join_through: "items_taxes",
-      join_keys: [items_id: :id, taxes_id: :id],
-      on_replace: :delete
+      on_delete: :delete_all
   end
 
   def changeset(item, attrs \\ %{}) do
@@ -42,11 +38,8 @@ defmodule Siwapp.Invoices.Item do
 
   def put_into_database(item) do
     item
-    |> Map.put(:base_amount, base_amount(item))
-    |> Map.put(:discount_amount, discount_amount(item))
     |> Map.put(:net_amount, net_amount(item))
     |> Map.put(:taxes_amount, taxes_amount(item))
-    |> Map.put(:gross_amount, gross_amount(item))
   end
 
   def base_amount(item), do: item.quantity * item.unitary_cost
@@ -55,7 +48,12 @@ defmodule Siwapp.Invoices.Item do
 
   def net_amount(item), do: base_amount(item) - discount_amount(item)
 
-  def taxes_amount(item), do: for(tax <- item.taxes, do: tax.value * net_amount(item) / 100)
+  def taxes_amount(item) do
+    for tax <- item.taxes do
+      id = tax.id
+      value = tax.value * net_amount(item) / 100
 
-  def gross_amount(item), do: net_amount(item) + Enum.sum(taxes_amount(item))
+      Map.new([{id, value}])
+    end
+  end
 end
