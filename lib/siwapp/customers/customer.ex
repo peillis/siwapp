@@ -84,6 +84,5 @@ defmodule Siwapp.Customers.Customer do
 
     hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
     put_change(changeset, :hash_id, hash)
-
   end
 end
