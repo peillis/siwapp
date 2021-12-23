@@ -11,6 +11,10 @@ defmodule SiwappWeb.CustomersLive.Index do
     {:noreply, push_redirect(socket, to: Routes.customers_show_invoices_path(socket, :show, id))}
   end
 
+  def handle_event("new", _, socket) do
+    {:noreply, push_redirect(socket, to: Routes.customers_edit_path(socket, :new))}
+  end
+
   def handle_event("edit", %{"id" => id} = params, socket) do
     {:noreply, push_redirect(socket, to: Routes.customers_edit_path(socket, :edit, id))}
   end
