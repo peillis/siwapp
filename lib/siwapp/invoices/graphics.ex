@@ -1,7 +1,8 @@
 defmodule Siwapp.Invoices.Graphics do
   alias SiwappWeb.GraphicHelpers
   alias Siwapp.Invoices
-@doc """
+
+  @doc """
   Draws a LinePlot with the sum of amounts of all the invoices per day.
   """
   @spec amount_per_day_chart :: {:safe, [...]}

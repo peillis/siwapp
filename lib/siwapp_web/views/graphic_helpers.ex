@@ -19,5 +19,4 @@ defmodule SiwappWeb.GraphicHelpers do
     |> Plot.new(LinePlot, 500, 200, options)
     |> Plot.to_svg()
   end
-
 end
