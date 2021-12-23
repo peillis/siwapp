@@ -16,10 +16,21 @@ defmodule SiwappWeb.LiveHelpers do
   def checked?(checked, id) do
     string_id = Integer.to_string(id)
     Enum.member?(checked, string_id)
-
   end
 
-  def pending?(due_date) do
+  def status(paid, due_date) do
+    cond do
+      paid -> :paid
+      pending?(due_date) -> :pending
+      true -> :past_due
+    end
+  end
+
+  def invisible?(checked) do
+    Enum.empty?(checked)
+  end
+
+  defp pending?(due_date) do
     Date.diff(due_date, Date.utc_today()) >= 0
   end
 end

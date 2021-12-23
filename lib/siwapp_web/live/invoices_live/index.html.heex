@@ -1,5 +1,5 @@
 <nav class={"navbar is-fixed-bottom
-             #{if @invisible_buttons, do: "is-invisible"}"}
+             #{if invisible?(@checked), do: "is-invisible"}"}
             role="navigation" aria-label="main navigation">
   <div class="navbar-menu">
     <div class="navbar-end">
@@ -31,7 +31,7 @@
   <tbody>
     <%= for invoice <- @invoices do %>
       <tr>
-        <td><input type="checkbox" phx-click="show_buttons" checked={checked?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
+        <td><input type="checkbox" phx-click="show_buttons?" checked={checked?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
         <td><a><%= invoice.series_id %></a></td>
         <td><%= invoice.name %></td>
         <td><%= invoice.issue_date %></td>
@@ -42,16 +42,16 @@
           <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
         <% end %>
 
-        <%= cond do %>
-          <%= invoice.paid -> %>
+        <%= case status(invoice.paid, invoice.due_date) do %>
+          <%= :paid -> %>
             <td class="table-span"><span class="tag is-success">Paid</span></td>
             <td></td>
 
-          <% pending?(invoice.due_date) -> %>
+          <% :pending -> %>
             <td class="table-span"><span class="tag is-warning">Pending</span></td>
             <td>$ <%= invoice.gross_amount %></td>
 
-          <% true -> %>
+          <% :past_due -> %>
             <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
             <td>$ <%= invoice.gross_amount %></td>
         <% end %>
