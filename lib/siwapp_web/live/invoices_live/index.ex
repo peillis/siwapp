@@ -7,11 +7,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
      socket
      |> assign(:invoices, Invoices.list())
      |> assign(:invisible_buttons, true)
-     |> assign(:checked, [])}
+     |> assign(:checked, MapSet.new())}
   end
 
   def handle_event("show_buttons", %{"id" => id, "value" => "on"}, socket) do
-    update_checked = socket.assigns.checked ++ [id]
+    update_checked = MapSet.put(socket.assigns.checked, id)
 
     {:noreply,
      assign(
@@ -22,8 +22,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   def handle_event("show_buttons", %{"id" => id}, socket) do
-    update_checked = List.delete(socket.assigns.checked, id)
-    invisible_buttons = someone_checked?(update_checked)
+    update_checked = MapSet.delete(socket.assigns.checked, id)
+    invisible_buttons = none_checked?(update_checked)
 
     {:noreply,
      assign(
@@ -33,7 +33,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      )}
   end
 
-  defp someone_checked?(checked) do
+  defp none_checked?(checked) do
     checked
     |> Enum.empty?()
   end
