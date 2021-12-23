@@ -5,6 +5,12 @@ defmodule Siwapp.Customers do
   alias Siwapp.Repo
   alias Siwapp.Customers.Customer
 
+  def list(), do: Repo.all(Customer) |> Repo.preload(:invoices)
+
+  def change(customer, attrs \\ %{}) do
+    Customer.changeset(customer, attrs)
+  end
+
   @doc """
   Create a new customer
   """
