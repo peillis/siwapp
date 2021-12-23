@@ -176,8 +176,7 @@ defmodule Siwapp.Commons do
   @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, any()}
   def delete_series(%Series{} = series) do
     if get_default_series() == series do
-      {:error,
-     "The series you're aiming to delete is the default series. \
+      {:error, "The series you're aiming to delete is the default series. \
       Change the default series first with change_default_series/1 function."}
     else
       Repo.delete(series)

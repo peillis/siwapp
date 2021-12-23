@@ -5,7 +5,6 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
 
   @impl true
   def update(%{series: series} = assigns, socket) do
-
     changeset = Commons.change_series(series)
 
     socket =
@@ -33,18 +32,18 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
   def handle_event("delete", %{"id" => id}, socket) do
     series = Commons.get_series(id)
 
-    case  Commons.delete_series(series) do
+    case Commons.delete_series(series) do
       {:ok, _series} ->
         {:noreply,
          socket
          |> put_flash(:info, "Series was successfully destroyed.")
          |> push_redirect(to: socket.assigns.return_to)}
+
       {:error, _msg} ->
         {:noreply,
          socket
          |> put_flash(:error, "You can't delete the default series.")}
     end
-
   end
 
   defp save_series(socket, :edit, series_params) do
