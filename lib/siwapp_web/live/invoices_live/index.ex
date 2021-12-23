@@ -12,6 +12,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_event("click_checkbox", data, socket) do
     checked = update_checked(data, socket)
     IO.inspect(checked)
+
     {:noreply,
      assign(
        socket,
