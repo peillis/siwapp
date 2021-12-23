@@ -99,12 +99,14 @@ defmodule SiwappWeb.Router do
     live "/taxes", TaxesLive.Index, :index
     live "/taxes/new", TaxesLive.Index, :new
     live "/taxes/:id/edit", TaxesLive.Index, :edit
-    get "/invoices/edit", PageController, :edit_invoices
-    get "/invoices", PageController, :invoices
-
-    live "/customers/new", CustomerLive.Edit, :new
-    live "/customers/:id/edit", CustomerLive.Edit, :edit
-    live "/customers/", CustomerLive.Index, :index
+    
+    live "/customers/new", CustomersLive.Edit, :new
+    live "/customers/:id/edit", CustomersLive.Edit, :edit
+    live "/customers/", CustomersLive.Index, :index
+    live "/customers/:id/invoices", CustomersLive.ShowInvoices, :show
+    
+    get "/invoices_static/edit", PageController, :edit_invoices
+    get "/invoices_static", PageController, :invoices
   end
 
   scope "/", SiwappWeb do
