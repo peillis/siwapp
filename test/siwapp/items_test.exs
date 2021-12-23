@@ -26,22 +26,11 @@ defmodule Siwapp.ItemsTest do
   describe "taxes_amount(item) Takes the taxes value for those taxes associated to the correspondent item and calculate the taxes amount" do
     test "return a list if a tax or a group of tax exists" do
       assert Item.taxes_amount(%Item{
-               taxes: [%Tax{value: 20}],
+               taxes: [%Tax{id: 1, value: 20}],
                quantity: 2,
                unitary_cost: 10,
                discount: 50
-             }) == [2]
-    end
-  end
-
-  describe "gross_amount(item) Sume betwwen net_amount and taxes_amount" do
-    test "return the gross amount if either net_amount/1 and taxes_amount/1 does not return errors" do
-      assert Item.gross_amount(%Item{
-               taxes: [%Tax{value: 20}],
-               quantity: 2,
-               unitary_cost: 10,
-               discount: 50
-             }) == 12
+             }) == [%{1 => 2}]
     end
   end
 end
