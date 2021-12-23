@@ -28,14 +28,14 @@
 
         <div class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item">
-              Invoices
+            <a class="navbar-item" data-phx-link="redirect" data-phx-link-state="push" href="/invoices">
+             Invoices
             </a>
             <a class="navbar-item">
               Recurring Invoices
             </a>
             <a class="navbar-item">
-              Customers
+              <%= live_redirect "Customers", to: Routes.customer_index_path(@conn, :index) %>
             </a>
 
             <div class="navbar-item has-dropdown is-hoverable">
@@ -51,10 +51,10 @@
                   Global Settings
                 </a>
                 <hr class="navbar-divider">
-                <a class="navbar-item">
+                <a class="navbar-item" data-phx-link="redirect" data-phx-link-state="push" href="/series">
                   Series
                 </a>
-                <a class="navbar-item">
+                <a class="navbar-item" data-phx-link="redirect" data-phx-link-state="push" href="/taxes">
                   Taxes
                 </a>
                 <a class="navbar-item">
