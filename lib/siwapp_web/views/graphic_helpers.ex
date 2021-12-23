@@ -2,18 +2,33 @@ defmodule SiwappWeb.GraphicHelpers do
   alias Contex.{LinePlot, Plot, Dataset}
   alias Siwapp.Invoices
 
-  def plot() do
+  @doc """
+  Draws a LinePlot with the sum of amounts of all the invoices per day.
+  """
+  @spec amount_per_day_chart :: {:safe, [...]}
+  def amount_per_day_chart() do
+    Invoices.list()
+    |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
+    |> get_data_for_a_month()
+    |> date_to_Naive_type()
+    |> accumulate_amounts()
+    |> line_plot()
+  end
+
+  @doc """
+  Returns a SVG graphic of a line plot (500x200 size) with the given 'data'.
+
+  'data' must be a list of tuples with size of 2.
+  """
+  @spec line_plot([{any(), any()}]) :: {:safe, [...]}
+  def line_plot(data) do
     options = [
       data_labels: false,
       default_style: false,
       smoothed: false
     ]
 
-    Invoices.list()
-    |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
-    |> get_data_for_a_month()
-    |> date_to_Naive_type()
-    |> accumulate_amounts()
+    data
     |> Dataset.new()
     |> Plot.new(LinePlot, 500, 200, options)
     |> Plot.to_svg()
