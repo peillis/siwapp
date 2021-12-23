@@ -105,6 +105,8 @@ defmodule SiwappWeb.Router do
     live "/customers/", CustomersLive.Index, :index
     live "/customers/:id/invoices", CustomersLive.ShowInvoices, :show
 
+    live "/invoices", InvoicesLive.Index, :index
+
     get "/invoices_static/edit", PageController, :edit_invoices
     get "/invoices_static", PageController, :invoices
   end
