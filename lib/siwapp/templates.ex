@@ -117,23 +117,25 @@ defmodule Siwapp.Templates do
         # The first series in the list now has its default attribute as true
 
   """
-  @spec change_default_series(%Series{} | nil) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
-  def change_default(series \\ nil)
+  @spec change_default(:print | :email, %Template{} | nil) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  def change_default(type, template \\ nil)
 
-  def change_default_series(nil) do
-    list_series()
+  def change_default(type, nil) do
+    key = "#{type}_default"
+
+    list()
     |> List.first()
-    |> update_default_series(true)
+    |> update_by(key, true)
   end
 
-  def change_default_series(default_series) do
-    for series <- list_series() do
-      series
-      |> update_default_series(false)
+  def change_default(type, default_template) do
+    key = "#{type}_default"
+
+    for template <- list() do
+      update_by(template, key, false)
     end
 
-    default_series
-    |> update_default_series(true)
+    update_by(default_template, key, true)
   end
 
   @doc """
@@ -174,11 +176,11 @@ defmodule Siwapp.Templates do
     Series.changeset(series, attrs)
   end
 
-  @spec update_default_series(%Series{}, boolean()) ::
-          {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
-  defp update_default_series(series, value) do
-    series
-    |> Series.changeset(%{default: value})
+  @spec update_default(%Template{}, String.t() | atom(), any()) ::
+          {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  defp update_by(template, key, value) do
+    template
+    |> Template.changeset(%{key => value})
     |> Repo.update()
   end
 
