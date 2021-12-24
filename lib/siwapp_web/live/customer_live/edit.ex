@@ -3,6 +3,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
+  alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -13,11 +14,9 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
-    customer = Customer.changeset(%Customer{}, %{})
-
     socket
     |> assign(:page_title, "New Customer")
-    |> assign(:customer, customer)
+    |> assign(:changeset, Customers.change(%Customer{}))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -26,12 +25,29 @@ defmodule SiwappWeb.CustomerLive.Edit do
     socket
     |> assign(:page_title, customer.name)
     |> assign(:customer, customer)
+    |> assign(:changeset, Customers.change(customer))
   end
 
-  def handle_event("save", %{"customer" => customer_params}, socket) do
-    customer_params
-    |> Customers.create()
+  def handle_event("save", %{"customer" => params, "meta" => meta}, socket) do
+    params = MetaAttributesComponent.merge(params, meta)
 
-    {:noreply, socket}
+    result =
+      case socket.assigns.live_action do
+        :new -> Customers.create(params)
+        :edit -> Customers.update(socket.assigns.customer, params)
+      end
+
+    case result do
+      {:ok, _customer} ->
+        socket =
+          socket
+          |> put_flash(:info, "Customer successfully saved")
+          |> push_redirect(to: Routes.customer_index_path(socket, :index))
+
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
   end
 end

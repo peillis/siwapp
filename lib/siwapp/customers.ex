@@ -34,4 +34,8 @@ defmodule Siwapp.Customers do
   Gets a customer by id
   """
   def get!(id), do: Repo.get!(Customer, id)
+
+  def change(%Customer{} = customer, attrs \\ %{}) do
+    Customer.changeset(customer, attrs)
+  end
 end

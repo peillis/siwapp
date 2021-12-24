@@ -1,8 +1,9 @@
-<h1> <%= @page_title %> </h1>
+<h1><%= @page_title %></h1>
 
-<.form let={f} for={@customer} phx-submit="save">
-  <%= checkbox(f, :active, checked_value: true, unchecked_value: false) %> This customer is active
-  <%= live_component SiwappWeb.CustomerLive.FormComponent, f: f %>
+<.form let={f} for={@changeset} phx-submit="save">
+<%= #require IEx; IEx.pry %>
+  <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer" f={f} />
+  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
   <%= submit "Save" %>
   <!-- in future we will redirect to customer listing -->
   <%= live_patch "Back", to: Routes.customer_index_path(@socket, :index) %>
