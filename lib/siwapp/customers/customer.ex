@@ -52,17 +52,9 @@ defmodule Siwapp.Customers.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
-<<<<<<< HEAD
-<<<<<<< HEAD
     |> create_hash_id()
-=======
-    |> change(%{hash_id: create_hash_id(attrs)})
->>>>>>> 77d1f30 (Creation of  an unique hash_id in the customer schema)
-=======
-    |> create_hash_id()
->>>>>>> 0e2557b (Changes in the create_hash_id function)
     |> unique_constraint(:identification)
-    |> unique_constraint([:hash_id])
+    |> unique_constraint(:hash_id)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
@@ -81,21 +73,23 @@ defmodule Siwapp.Customers.Customer do
   end
 
   defp create_hash_id(changeset) do
-<<<<<<< HEAD
     name =
       changeset
-      |> get_field(:name) ||
-        ""
-        |> String.downcase()
-        |> String.replace(~r/ +/, "")
+      |> get_field_or_empty(:name)
+      |> String.downcase()
+      |> String.replace(~r/ +/, "")
 
     identification =
       changeset
-      |> get_field(:identification) ||
-        ""
-        |> String.trim()
+      |> get_field_or_empty(:identification)
+      |> String.trim()
 
     hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
     put_change(changeset, :hash_id, hash)
+  end
+
+  defp get_field_or_empty(changeset, field) do
+    changeset
+    |> get_field(field) || ""
   end
 end
