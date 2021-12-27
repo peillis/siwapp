@@ -111,8 +111,8 @@ defmodule SiwappWeb.Router do
     live "/customers/", CustomerLive.Index, :index
 
     live "/templates", TemplatesLive.Index, :index
-    live "/templates/new", TemplatesLive.Index, :new
-    live "/templates/:id/edit", TemplatesLive.Index, :edit
+    live "/templates/new", TemplatesLive.Edit, :new
+    live "/templates/:id/edit", TemplatesLive.Edit, :edit
 
 
   end
