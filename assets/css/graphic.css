@@ -1,0 +1,64 @@
+/* Styling for tick line */
+/* NOT IN USE */
+.exc-tick {
+  stroke: black;
+}
+
+/* Styling for tick text */
+.exc-tick text {
+  fill: black;
+  font-weight: 300;
+  font-size: smaller;
+  stroke: none;
+}
+
+/* Styling for axis line */
+.exc-domain {
+  stroke:  black;
+  stroke-width: 0.5;
+}
+
+/* Styling for grid line */
+/* NOT IN USE */
+.exc-grid {
+  stroke: red;
+}
+
+/* Styling for outline of colours in legend */
+/* NOT IN USE */
+.exc-legend {
+  stroke: black;
+}
+
+/* Styling for text of colours in legend */
+/* NOT IN USE */
+.exc-legend text {
+  fill: grey;
+  font-size: 0.8rem;
+  stroke: none;
+}
+
+/* Styling for title & subtitle of any plot */
+.exc-title {
+  fill: darkslategray;
+  font-size: 2.3rem;
+  stroke: none;
+}
+.exc-subtitle {
+  fill: darkgrey;
+  font-size: 1.0rem;
+  stroke: none;
+}
+
+/* Styling for label printed inside a bar on a barchart */
+/* NOT IN USE */
+.exc-barlabel-in {
+  fill: white;
+  font-size: 0.7rem;
+}
+
+/* Styling for label printed outside of a bar (e.g. if bar is too small) */
+.exc-barlabel-out {
+  fill: grey;
+  font-size: 0.7rem;
+}
