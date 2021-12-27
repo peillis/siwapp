@@ -65,16 +65,14 @@ defmodule Siwapp.Templates do
   end
 
   def create(attrs) do
-    result = insert_new(attrs)
-
-    with {:ok, template} <- result do
-      if length(list()) == 1 do
-        change_default(:print, template)
-        change_default(:email, template)
-      end
+    with {:ok, template} <- insert_new(attrs),
+         {:yes, template} <- check_if_its_the_first(template),
+         {:ok, template} <- change_default(:print, template),
+         {:ok, template} <- change_default(:email, template) do
+          {:ok, template}
+    else
+      any -> any
     end
-
-    result
   end
 
   @doc """
@@ -216,6 +214,10 @@ defmodule Siwapp.Templates do
     %Template{}
     |> Template.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def check_if_its_the_first(template) do
+    if length(list()) == 1, do: {:yes, template}, else: {:ok, template}
   end
 
   @spec update_by(%Template{}, String.t() | atom(), any()) ::
