@@ -105,7 +105,6 @@ defmodule SiwappWeb.Router do
     live "/customers/new", CustomerLive.Edit, :new
     live "/customers/:id/edit", CustomerLive.Edit, :edit
     live "/customers/", CustomerLive.Index, :index
-    live "/customers/:id/invoices", CustomerLive.ShowInvoices, :show
   end
 
   scope "/", SiwappWeb do
