@@ -133,21 +133,8 @@ defmodule Siwapp.Commons do
       iex> change_default_series(series)
       {:error, %Ecto.Changeset{}}
         # That series doesn't exist
-
-      iex> change_default_series()
-      {:ok, %Series{}}
-        # The first series in the list now has its default attribute as true
-
   """
-  @spec change_default_series(%Series{} | nil) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
-  def change_default_series(series \\ nil)
-
-  def change_default_series(nil) do
-    list_series()
-    |> List.first()
-    |> update_default_series(true)
-  end
-
+  @spec change_default_series(%Series{}) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
   def change_default_series(default_series) do
     for series <- list_series() do
       update_default_series(series, false)
