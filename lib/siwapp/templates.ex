@@ -59,9 +59,14 @@ defmodule Siwapp.Templates do
           {:ok, %Template{}} | {:error, any()}
   def create(attrs \\ %{})
 
-  def create(attrs) when is_map_key(attrs, :print_default) or is_map_key(attrs, :email_default) do
+  def create(%{print_default: _}) do
     {:error,
-     "You cannot directly assign a default key. Use the change_default/2 function instead."}
+     "You cannot directly assign the print_default key. Use change_default(:print, template) function instead."}
+  end
+
+  def create(%{email_default: _}) do
+    {:error,
+     "You cannot directly assign the email_default key. Use change_default(:email, template) function instead."}
   end
 
   def create(attrs) do
@@ -92,10 +97,14 @@ defmodule Siwapp.Templates do
   """
   @spec update(%Template{}, map) ::
           {:ok, %Template{}} | {:error, any()}
-  def update(_template, attrs)
-      when is_map_key(attrs, :print_default) or is_map_key(attrs, :email_default) do
+  def update(_template, %{print_default: _}) do
     {:error,
-     "You cannot directly assign a default key. Use the change_default/2 function instead."}
+      "You cannot directly assign the print_default key. Use change_default(:print, template) function instead."}
+  end
+
+  def update(_template, %{email_default: _}) do
+    {:error,
+      "You cannot directly assign the email_default key. Use change_default(:email, template) function instead."}
   end
 
   def update(%Template{} = template, attrs) do
