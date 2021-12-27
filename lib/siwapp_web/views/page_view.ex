@@ -15,8 +15,6 @@ defmodule SiwappWeb.PageView do
   @spec date_to_Naive_type([map()]) :: [map()]
   defp date_to_Naive_type(data) do
     data
-    |> Enum.map(fn %{issue_date: x} = day_data ->
-      %{day_data | issue_date: NaiveDateTime.new!(x, ~T[00:00:00])}
-    end)
+    |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
   end
 end

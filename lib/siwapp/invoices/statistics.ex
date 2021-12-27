@@ -12,8 +12,8 @@ defmodule Siwapp.Invoices.Statistics do
   def get_data(%{days: days}) do
     Invoices.list()
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
-    |> set_time_scale(days)
     |> accumulate_amounts()
+    |> set_time_scale(days)
     |> to_tuple()
   end
 
