@@ -99,12 +99,12 @@ defmodule Siwapp.Templates do
           {:ok, %Template{}} | {:error, any()}
   def update(_template, %{print_default: _}) do
     {:error,
-      "You cannot directly assign the print_default key. Use change_default(:print, template) instead."}
+     "You cannot directly assign the print_default key. Use change_default(:print, template) instead."}
   end
 
   def update(_template, %{email_default: _}) do
     {:error,
-      "You cannot directly assign the email_default key. Use change_default(:email, template) instead."}
+     "You cannot directly assign the email_default key. Use change_default(:email, template) instead."}
   end
 
   def update(%Template{} = template, attrs) do
