@@ -7,10 +7,6 @@ defmodule Siwapp.Customers do
 
   def list(), do: Repo.all(Customer)
 
-  def change(customer, attrs \\ %{}) do
-    Customer.changeset(customer, attrs)
-  end
-
   @doc """
   Create a new customer
   """
