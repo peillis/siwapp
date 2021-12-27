@@ -113,8 +113,6 @@ defmodule SiwappWeb.Router do
     live "/templates", TemplatesLive.Index, :index
     live "/templates/new", TemplatesLive.Edit, :new
     live "/templates/:id/edit", TemplatesLive.Edit, :edit
-
-
   end
 
   scope "/", SiwappWeb do
