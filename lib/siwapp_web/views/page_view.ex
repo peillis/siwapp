@@ -4,6 +4,9 @@ defmodule SiwappWeb.PageView do
   alias SiwappWeb.GraphicHelpers
   alias Siwapp.Invoices
 
+  @doc """
+  Creates the dashboard chart with information about invoices (amounts of money per day).
+  """
   @spec dashboard_chart :: {:safe, [...]}
   def dashboard_chart() do
     Invoices.Statistics.get_data()
