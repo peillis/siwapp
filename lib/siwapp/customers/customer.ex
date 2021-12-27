@@ -84,6 +84,7 @@ defmodule Siwapp.Customers.Customer do
       |> get_field_or_empty(:identification)
       |> String.trim()
 
+
     hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
     put_change(changeset, :hash_id, hash)
   end
