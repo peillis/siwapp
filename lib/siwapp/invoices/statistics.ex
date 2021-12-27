@@ -7,9 +7,7 @@ defmodule Siwapp.Invoices.Statistics do
   by default).
   """
   @spec get_data(pos_integer()) :: [tuple()]
-  def get_data(days \\ 31)
-
-  def get_data(days) do
+  def get_data(days \\ 31) do
     Invoices.list()
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
