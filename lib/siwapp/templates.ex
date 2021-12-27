@@ -1,5 +1,5 @@
 defmodule Siwapp.Templates do
-   @moduledoc """
+  @moduledoc """
   The Templates context. It handles Templates.
   """
 
@@ -20,6 +20,7 @@ defmodule Siwapp.Templates do
   @spec list() :: [%Template{}]
   def list() do
     Template
+    |> order_by(asc: :id)
     |> Repo.all()
   end
 
@@ -51,7 +52,7 @@ defmodule Siwapp.Templates do
       {:error, %Ecto.Changeset{}}
         # because template field is required
 
-      iex> create_series(%{print_default: true})
+      iex> create(%{print_default: true})
       {:error, "You cannot directly assign..."}
   """
   @spec create(map) ::
@@ -60,13 +61,20 @@ defmodule Siwapp.Templates do
 
   def create(attrs) when is_map_key(attrs, :print_default) or is_map_key(attrs, :email_default) do
     {:error,
-      "You cannot directly assign a default key. Use the change_default/2 function instead."}
+     "You cannot directly assign a default key. Use the change_default/2 function instead."}
   end
 
   def create(attrs) do
-    %Template{}
-    |> Template.changeset(attrs)
-    |> Repo.insert()
+    result = insert_new(attrs)
+
+    with {:ok, template} <- result do
+      if length(list()) == 1 do
+        change_default(:print, template)
+        change_default(:email, template)
+      end
+    end
+
+    result
   end
 
   @doc """
@@ -86,15 +94,30 @@ defmodule Siwapp.Templates do
   """
   @spec update(%Template{}, map) ::
           {:ok, %Template{}} | {:error, any()}
-  def update(_template, attrs) when is_map_key(attrs, :print_default) or is_map_key(attrs, :email_default) do
+  def update(_template, attrs)
+      when is_map_key(attrs, :print_default) or is_map_key(attrs, :email_default) do
     {:error,
-      "You cannot directly assign a default key. Use the change_default/2 function instead."}
+     "You cannot directly assign a default key. Use the change_default/2 function instead."}
   end
 
   def update(%Template{} = template, attrs) do
     template
     |> Template.changeset(attrs)
     |> Repo.update()
+  end
+
+  @doc """
+  Gets the unique template that has the default attribute set to 'true', for the given 'type'
+  ## Examples
+      iex> get_default(:email)
+      %Template{}
+      iex> get_default(:email)
+      nil
+        # there is no default template for emails
+  """
+  @spec get_default(:print | :email) :: %Template{} | nil
+  def get_default(type) do
+    Repo.get_by(Template, %{"#{type}_default" => true})
   end
 
   @doc """
@@ -124,7 +147,8 @@ defmodule Siwapp.Templates do
         as true, and the other templates as false
 
   """
-  @spec change_default(:print | :email, %Template{} | nil) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  @spec change_default(:print | :email, %Template{} | nil) ::
+          {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
   def change_default(type, template \\ nil)
 
   def change_default(type, nil) do
@@ -157,10 +181,20 @@ defmodule Siwapp.Templates do
       {:error, %Ecto.Changeset{}}
         # because that template doesn't exist
 
+      iex> delete(template)
+      {:error, "The template you're aiming..."}
+        # because that template is the default one
+
   """
   @spec delete(%Template{}) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
   def delete(%Template{} = template) do
-    Repo.delete(template)
+    if get_default(:print) == template or get_default(:email) == template do
+      {:error, "The series you're aiming to delete is a default template,  \
+      either for printing or emails. Change the default template first with \
+      change_default/2 function."}
+    else
+      Repo.delete(template)
+    end
   end
 
   @doc """
@@ -177,6 +211,13 @@ defmodule Siwapp.Templates do
     Template.changeset(template, attrs)
   end
 
+  @spec insert_new(map()) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  defp insert_new(attrs) do
+    %Template{}
+    |> Template.changeset(attrs)
+    |> Repo.insert()
+  end
+
   @spec update_by(%Template{}, String.t() | atom(), any()) ::
           {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
   defp update_by(template, key, value) do
@@ -184,5 +225,4 @@ defmodule Siwapp.Templates do
     |> Template.changeset(%{key => value})
     |> Repo.update()
   end
-
 end
