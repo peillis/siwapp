@@ -6,19 +6,15 @@ defmodule Siwapp.Invoices.Statistics do
   per day. You can pass a param 'days' with the time scale you want this data to be scaled to (31
   by default).
   """
-  @spec get_data(map()) :: [tuple()]
-  def get_data(params \\ %{})
+  @spec get_data(pos_integer()) :: [tuple()]
+  def get_data(days \\ 31)
 
-  def get_data(%{days: days}) do
+  def get_data(days) do
     Invoices.list()
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
     |> set_time_scale(days)
     |> to_tuple()
-  end
-
-  def get_data(_params) do
-    get_data(%{days: 31})
   end
 
   # We need this function so we have data (with amount = 0) for those days we have no invoices.
