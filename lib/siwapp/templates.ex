@@ -69,7 +69,7 @@ defmodule Siwapp.Templates do
          {:yes, template} <- check_if_its_the_first(template),
          {:ok, template} <- change_default(:print, template),
          {:ok, template} <- change_default(:email, template) do
-          {:ok, template}
+      {:ok, template}
     else
       any -> any
     end
