@@ -20,7 +20,8 @@
             <td class="text-right">  <%= live_patch "DUE", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
             <td class="text-right">  <%= live_patch "TOTAL", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
             <td class="text-center">
-              <%= live_patch " ", class: "icon fas fa-list", to: Routes.customer_show_invoices_path(@socket, :show, customer.id) %>
+              <%= live_patch " ", class: "icon fas fa-list", to: Routes.customer_index_path(@socket, :show, customer.id) %>
+              <!-- this link will redirect to customer's invoices list, not ready yet -->
             </td>
           </tr>
         <% end %>
