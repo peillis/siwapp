@@ -1,5 +1,5 @@
 <h1> <%= @page_title %> </h1>
-<table class="table is-responsive is-bordered is-striped is-hoverable is-fullwidth">
+  <table class="table is-responsive is-bordered is-striped is-hoverable is-fullwidth">
     <thead>
       <tr>
         <th class="no-wrap" title="Customer name"> Customer name </th>
@@ -13,19 +13,17 @@
     <tbody role="infinite-content">
       <%= for customer <- @customers do%>
         <%=if customer.active do %>
-        <tr>
-          <td class="no-wrap"> <a href={path_edit_customer(customer.id)}> <%= customer.name %> </a> </td>
-          <td class="no-wrap"> <a href={path_edit_customer(customer.id)}><%= customer.identification %> </a> </td>
-          <!-- my suggestion is creating total and due as helper functions receiving customer.invoices -->
-          <td class="text-right"> <a href={path_edit_customer(customer.id)}>VALUE </a> </td>
-          <td class="text-right"> <a href={path_edit_customer(customer.id)}>VALUE </a> </td>
-          <td class="text-center">
-            <%= live_patch " ", class: "icon fas fa-list", to: Routes.customer_show_invoices_path(@socket, :show, customer.id) %>
-          </td>
-        </tr>
-        <!-- <td phx-click="edit" phx-value-id={customer.id}class="no-wrap"> <%= customer.name %> </td> -->
-        <!-- </tr> -->
+          <tr>
+            <td class="no-wrap"> <%= live_patch customer.name, to: Routes.customer_edit_path(@socket, :edit, customer.id) %> </td>
+            <td class="no-wrap"> <%= live_patch customer.identification, to: Routes.customer_edit_path(@socket, :edit, customer.id) %> </td>
+            <!-- my suggestion is creating total and due as helper functions receiving customer.invoices -->
+            <td class="text-right">  <%= live_patch "DUE", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+            <td class="text-right">  <%= live_patch "TOTAL", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+            <td class="text-center">
+              <%= live_patch " ", class: "icon fas fa-list", to: Routes.customer_show_invoices_path(@socket, :show, customer.id) %>
+            </td>
+          </tr>
         <% end %>
       <% end %>
     </tbody>
-</table>
+  </table>
