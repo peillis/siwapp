@@ -15,10 +15,13 @@ defmodule SiwappWeb.TemplatesLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
+    template = %Template{}
+
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Template")
-    |> assign(:changeset, Templates.change(%Template{}))
+    |> assign(:template, template)
+    |> assign(:changeset, Templates.change(template))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -32,56 +35,56 @@ defmodule SiwappWeb.TemplatesLive.Edit do
   end
 
   @impl true
-  def handle_event("validate", %{"series" => series_params}, socket) do
+  def handle_event("validate", %{"template" => template_params}, socket) do
     changeset =
-      socket.assigns.series
-      |> Commons.change_series(series_params)
+      socket.assigns.template
+      |> Templates.change(template_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("save", %{"series" => series_params}, socket) do
-    save_series(socket, socket.assigns.action, series_params)
+  def handle_event("save", %{"template" => template_params}, socket) do
+    save_template(socket, socket.assigns.action, template_params)
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    series = Commons.get_series(id)
+    template = Templates.get(id)
 
-    case Commons.delete_series(series) do
-      {:ok, _series} ->
+    case Templates.delete(template) do
+      {:ok, _template} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Series was successfully destroyed.")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> put_flash(:info, "Template was successfully destroyed.")
+         |> push_redirect(to: Routes.templates_index_path(socket, :index))}
 
       {:error, _msg} ->
         {:noreply,
          socket
-         |> put_flash(:error, "You can't delete the default series.")}
+         |> put_flash(:error, "You can't delete the default template.")}
     end
   end
 
-  defp save_series(socket, :edit, series_params) do
-    case Commons.update_series(socket.assigns.series, series_params) do
-      {:ok, _series} ->
+  defp save_template(socket, :edit, template_params) do
+    case Templates.update(socket.assigns.template, template_params) do
+      {:ok, _template} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Series was successfully updated")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> put_flash(:info, "Template was successfully updated")
+         |> push_redirect(to: Routes.templates_index_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
   end
 
-  defp save_series(socket, :new, series_params) do
-    case Commons.create_series(series_params) do
-      {:ok, _series} ->
+  defp save_template(socket, :new, template_params) do
+    case Templates.create(template_params) do
+      {:ok, _template} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Series was successfully created")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> put_flash(:info, "Template was successfully created")
+         |> push_redirect(to: Routes.templates_index_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
