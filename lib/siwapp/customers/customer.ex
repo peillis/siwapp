@@ -20,6 +20,7 @@ defmodule Siwapp.Customers.Customer do
   @fields [
     :name,
     :identification,
+    :hash_id,
     :email,
     :contact_person,
     :active,
@@ -32,6 +33,7 @@ defmodule Siwapp.Customers.Customer do
   schema "customers" do
     field :identification, :string
     field :name, :string
+    field :hash_id, :string
     field :email, :string
     field :contact_person, :string
     field :active, :boolean, default: true
@@ -50,7 +52,9 @@ defmodule Siwapp.Customers.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
+    |> create_hash_id()
     |> unique_constraint(:identification)
+    |> unique_constraint(:hash_id)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
@@ -65,5 +69,26 @@ defmodule Siwapp.Customers.Customer do
     else
       add_error(changeset, hd(fields), "Either name or identification are required")
     end
+  end
+
+  defp create_hash_id(changeset) do
+    name =
+      changeset
+      |> get_field_or_empty(:name)
+      |> String.downcase()
+      |> String.replace(~r/ +/, "")
+
+    identification =
+      changeset
+      |> get_field_or_empty(:identification)
+      |> String.trim()
+
+    hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
+    put_change(changeset, :hash_id, hash)
+  end
+
+  defp get_field_or_empty(changeset, field) do
+    changeset
+    |> get_field(field) || ""
   end
 end
