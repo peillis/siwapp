@@ -216,6 +216,7 @@ defmodule Siwapp.Templates do
     |> Repo.insert()
   end
 
+  @spec check_if_its_the_first(%Template{}) :: {:ok, %Template{}} | {:yes, %Template{}}
   def check_if_its_the_first(template) do
     if length(list()) == 1, do: {:yes, template}, else: {:ok, template}
   end
