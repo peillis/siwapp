@@ -96,12 +96,10 @@ defmodule Siwapp.Invoices.Invoice do
 
   defp validate_required_series(changeset) do
     with true <- get_field(changeset, :draft),
-         false <- is_nil( get_field(changeset, :series_id) )
-    do
+         false <- is_nil(get_field(changeset, :series_id)) do
       changeset
     else
       _ -> add_error(changeset, :series_id, "can't be blank")
     end
   end
-
 end
