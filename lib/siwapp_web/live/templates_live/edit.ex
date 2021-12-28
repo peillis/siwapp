@@ -25,7 +25,7 @@ defmodule SiwappWeb.TemplatesLive.Edit do
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
-    template = Templates.get(id)
+    template = id |> String.to_integer() |> Templates.get()
 
     socket
     |> assign(:action, :edit)
@@ -49,7 +49,7 @@ defmodule SiwappWeb.TemplatesLive.Edit do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    template = Templates.get(id)
+    template = id |> String.to_integer() |> Templates.get()
 
     case Templates.delete(template) do
       {:ok, _template} ->

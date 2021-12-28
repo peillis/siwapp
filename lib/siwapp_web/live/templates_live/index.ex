@@ -10,8 +10,8 @@ defmodule SiwappWeb.TemplatesLive.Index do
 
   @impl true
   def handle_event("defaultClicked", %{"id" => id, "type" => type}, socket) do
-    template = Templates.get(id)
-    Templates.change_default(type, template)
+    template = id |> String.to_integer() |> Templates.get()
+    Templates.set_default(String.to_atom(type), template)
 
     {:noreply, assign(socket, templates: Templates.list())}
   end
