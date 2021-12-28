@@ -90,21 +90,29 @@ defmodule SiwappWeb.Router do
   scope "/", SiwappWeb do
     pipe_through [:browser, :require_authenticated_user]
     get "/", PageController, :index
+
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
     live "/series", SeriesLive.Index, :index
     live "/series/new", SeriesLive.Index, :new
     live "/series/:id/edit", SeriesLive.Index, :edit
+
     live "/taxes", TaxesLive.Index, :index
     live "/taxes/new", TaxesLive.Index, :new
     live "/taxes/:id/edit", TaxesLive.Index, :edit
+
     get "/invoices/edit", PageController, :edit_invoices
     get "/invoices", PageController, :invoices
 
     live "/customers/new", CustomerLive.Edit, :new
     live "/customers/:id/edit", CustomerLive.Edit, :edit
     live "/customers/", CustomerLive.Index, :index
+
+    live "/templates", TemplatesLive.Index, :index
+    live "/templates/new", TemplatesLive.Edit, :new
+    live "/templates/:id/edit", TemplatesLive.Edit, :edit
   end
 
   scope "/", SiwappWeb do
