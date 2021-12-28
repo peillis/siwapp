@@ -7,7 +7,7 @@ defmodule Siwapp.InvoicesTest do
 
   describe "saving restrictions" do
     test "not draft cannot be saved if does not have an associated series" do
-      {:ok, c} = Customers.create(%{name: "James"})
+      {:ok, c} = Customers.create(%{name: "Melissa"})
 
       changeset =
         Invoice.changeset(%Invoice{}, %{
@@ -35,7 +35,7 @@ defmodule Siwapp.InvoicesTest do
     end
 
     test "draft can be saved if does not have an associated series" do
-      {:ok, c} = Customers.create(%{name: "Mery"})
+      {:ok, c} = Customers.create(%{name: "Melissa"})
 
       changeset =
         Invoice.changeset(%Invoice{}, %{
