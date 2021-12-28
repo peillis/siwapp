@@ -25,11 +25,16 @@ defmodule Siwapp.Templates do
   end
 
   @doc """
-  Gets a single template.
+  Gets a single template. You can call it with its id as parameter, or
+  by indicating that you want to get a default template, giving the
+  corresponding atom (':print_default' or ':email_default')
 
   ## Examples
 
       iex> get(2)
+      %Template{}
+
+      iex> get(:print_default)
       %Template{}
 
       iex> get(5)
@@ -37,8 +42,11 @@ defmodule Siwapp.Templates do
         # because that template doesn't exist
 
   """
-  @spec get(non_neg_integer) :: %Template{} | nil
-  def get(id), do: Repo.get(Template, id)
+  @spec get(non_neg_integer() | :print_default | :email_default) :: %Template{} | nil
+  def get(id) when is_number(id), do: Repo.get(Template, id)
+
+  def get(default_key) when is_atom(default_key),
+    do: Repo.get_by(Template, %{default_key => true})
 
   @doc """
   Creates a template.
@@ -61,19 +69,19 @@ defmodule Siwapp.Templates do
 
   def create(%{print_default: _}) do
     {:error,
-     "You cannot directly assign the print_default key. Use change_default(:print, template) instead."}
+     "You cannot directly assign the print_default key. Use set_default(:print, template) instead."}
   end
 
   def create(%{email_default: _}) do
     {:error,
-     "You cannot directly assign the email_default key. Use change_default(:email, template) instead."}
+     "You cannot directly assign the email_default key. Use set_default(:email, template) instead."}
   end
 
   def create(attrs) do
     with {:ok, template} <- insert_new(attrs),
          {:yes, template} <- check_if_its_the_first(template),
-         {:ok, template} <- change_default(:print, template),
-         {:ok, template} <- change_default(:email, template) do
+         {:ok, template} <- set_default(:print, template),
+         {:ok, template} <- set_default(:email, template) do
       {:ok, template}
     else
       any -> any
@@ -99,12 +107,12 @@ defmodule Siwapp.Templates do
           {:ok, %Template{}} | {:error, any()}
   def update(_template, %{print_default: _}) do
     {:error,
-     "You cannot directly assign the print_default key. Use change_default(:print, template) instead."}
+     "You cannot directly assign the print_default key. Use set_default(:print, template) instead."}
   end
 
   def update(_template, %{email_default: _}) do
     {:error,
-     "You cannot directly assign the email_default key. Use change_default(:email, template) instead."}
+     "You cannot directly assign the email_default key. Use set_default(:email, template) instead."}
   end
 
   def update(%Template{} = template, attrs) do
@@ -114,67 +122,27 @@ defmodule Siwapp.Templates do
   end
 
   @doc """
-  Gets the unique template that has the default attribute set to 'true', for the given 'type'
-  ## Examples
-      iex> get_default(:email)
-      %Template{}
-      iex> get_default(:email)
-      nil
-        # there is no default template for emails
-  """
-  @spec get_default(:print | :email) :: %Template{} | nil
-  def get_default(type) do
-    Repo.get_by(Template, %{"#{type}_default" => true})
-  end
-
-  @doc """
   Choose a new template for being the default one, either for printing or emails.
 
   You'll have to indicate of which type this template will be the default: printing
   (the parameter you need to pass is ':print') or email (':email').
 
-  You can call this function without parameters, so the default template will be
-  the first one in the list of Templates; or with a 'template' given, so that one
-  will be the default.
-
   ## Examples
 
-      iex> change_default(:print, template)
+      iex> set_default(:print, template)
       {:ok, %Template{}}
         # That template now has the default_print attribute as true,
         and the others templates as false
 
-      iex> change_default(:print, template)
+      iex> set_default(:print, template)
       {:error, %Ecto.Changeset{}}
         # That template doesn't exist
 
-      iex> change_default(:email)
-      {:ok, %Template{}}
-        # The first template in the list now has its default_email attribute
-        as true, and the other templates as false
-
   """
-  @spec change_default(:print | :email, %Template{} | nil) ::
+  @spec set_default(:print | :email, %Template{} | nil) ::
           {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
-  def change_default(type, template \\ nil)
-
-  def change_default(type, nil) do
-    key = "#{type}_default"
-
-    list()
-    |> List.first()
-    |> update_by(key, true)
-  end
-
-  def change_default(type, default_template) do
-    key = "#{type}_default"
-
-    for template <- list() do
-      update_by(template, key, false)
-    end
-
-    update_by(default_template, key, true)
-  end
+  def set_default(:print, template), do: change_default(:print_default, template)
+  def set_default(:email, template), do: change_default(:email_default, template)
 
   @doc """
   Deletes a template.
@@ -195,10 +163,10 @@ defmodule Siwapp.Templates do
   """
   @spec delete(%Template{}) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
   def delete(%Template{} = template) do
-    if get_default(:print) == template or get_default(:email) == template do
+    if get(:print_default) == template or get(:email_default) == template do
       {:error, "The series you're aiming to delete is a default template,  \
       either for printing or emails. Change the default template first with \
-      change_default/2 function."}
+      set_default/2 function."}
     else
       Repo.delete(template)
     end
@@ -226,7 +194,7 @@ defmodule Siwapp.Templates do
   end
 
   @spec check_if_its_the_first(%Template{}) :: {:ok, %Template{}} | {:yes, %Template{}}
-  def check_if_its_the_first(template) do
+  defp check_if_its_the_first(template) do
     if length(list()) == 1, do: {:yes, template}, else: {:ok, template}
   end
 
@@ -236,5 +204,15 @@ defmodule Siwapp.Templates do
     template
     |> Template.changeset(%{key => value})
     |> Repo.update()
+  end
+
+  @spec change_default(:print_default | :email_default, %Template{}) ::
+          {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  defp change_default(key, default_template) do
+    for template <- list() do
+      update_by(template, key, false)
+    end
+
+    update_by(default_template, key, true)
   end
 end
