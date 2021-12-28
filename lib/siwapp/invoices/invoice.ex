@@ -71,6 +71,7 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> validate_required_invoice([:name, :identification, :issue_date])
+    |> validate_required_series()
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])
     |> foreign_key_constraint(:series_id)
@@ -90,6 +91,14 @@ defmodule Siwapp.Invoices.Invoice do
       changeset
     else
       add_error(changeset, hd(fields), "Either name or identification are required")
+    end
+  end
+
+  defp validate_required_series(changeset) do
+    if get_field(changeset, :draft) do
+      changeset
+    else
+      validate_required(changeset, [:series_id])
     end
   end
 end
