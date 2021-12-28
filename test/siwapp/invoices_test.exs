@@ -3,7 +3,7 @@ defmodule Siwapp.InvoicesTest do
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Customers
-  alias Siwapp.Series
+  alias Siwapp.Commons
 
   describe "saving restrictions" do
     test "not draft cannot be saved if does not have an associated series" do
@@ -21,7 +21,7 @@ defmodule Siwapp.InvoicesTest do
 
     test "not draft can be saved if has an associated series" do
       {:ok, c} = Customers.create(%{name: "Melissa"})
-      {:ok, s} = Series.create(%{value: "L-"})
+      {:ok, s} = Commons.create_series(%{value: "L-"})
 
       changeset =
         Invoice.changeset(%Invoice{}, %{
