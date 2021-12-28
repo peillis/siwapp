@@ -36,7 +36,7 @@ defmodule Siwapp.Customers do
   def get!(id), do: Repo.get!(Customer, id)
 
   def get_by(:name, name) do
-    hash_id = create_hash_id_when_iden_is_nil(name)
+    hash_id = create_hash_id(name)
     get_by(:hash_id, hash_id)
   end
 
@@ -47,25 +47,22 @@ defmodule Siwapp.Customers do
     Customer.changeset(customer, attrs)
   end
 
-  def exist_identification?(identification) do
+  def identification_exist?(identification) do
     Customer.query_by(:identification, identification)
     |> Repo.exists?()
   end
 
-  def exist_name_when_iden_is_nil?(name) do
-    hash_id = create_hash_id_when_iden_is_nil(name)
+  def name_exist?(name) do
+    hash_id = create_hash_id(name)
 
     Customer.query_by(:hash_id, hash_id)
     |> Repo.exists?()
   end
 
-  defp create_hash_id_when_iden_is_nil(name) do
-    name =
-      name
-      |> String.downcase()
-      |> String.replace(~r/ +/, "")
-
-    :crypto.hash(:md5, name)
-    |> Base.encode16()
+  defp create_hash_id(name) do
+    %Customer{name: name}
+    |> Ecto.Changeset.change(%{})
+    |> Customer.create_hash_id()
+    |> Ecto.Changeset.get_change(:hash_id)
   end
 end
