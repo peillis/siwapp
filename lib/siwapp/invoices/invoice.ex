@@ -95,10 +95,10 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   defp validate_required_series(changeset) do
-    if get_field(changeset, :draft) == false do
-      validate_required(changeset, [:series_id])
-    else
+    if get_field(changeset, :draft) do
       changeset
+    else
+      validate_required(changeset, [:series_id])
     end
   end
 end
