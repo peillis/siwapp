@@ -19,9 +19,6 @@ defmodule SiwappWeb.GlobalSettingsController do
 
   def act(key, value) do
     schema = GlobalSettings.schema_for_key(key)
-    require IEx
-    IEx.pry()
-
     cond do
       is_nil(schema) && value == "" -> nil
       is_nil(schema) -> GlobalSettings.create({key, value})
