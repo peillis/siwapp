@@ -5,6 +5,7 @@ defmodule Siwapp.Customers.Customer do
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  import Ecto.Query
 
   @derive {Jason.Encoder,
            only: [
@@ -60,6 +61,10 @@ defmodule Siwapp.Customers.Customer do
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
+  end
+
+  def query_by(field, value) do
+    where(Customer, ^[{field, value}])
   end
 
   # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.

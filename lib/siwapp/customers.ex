@@ -4,7 +4,6 @@ defmodule Siwapp.Customers do
   """
   alias Siwapp.Repo
   alias Siwapp.Customers.Customer
-  alias Siwapp.Customers.Query
 
   @doc """
   Create a new customer
@@ -40,23 +39,23 @@ defmodule Siwapp.Customers do
     hash_id = create_hash_id_when_iden_is_nil(name)
     get_by(:hash_id, hash_id)
   end
+
   def get_by(field, value),
     do: Repo.get_by!(Customer, [{field, value}])
-
 
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
   end
 
   def exist_identification?(identification) do
-    Query.by(:identification, identification)
+    Customer.query_by(:identification, identification)
     |> Repo.exists?()
   end
 
   def exist_name_when_iden_is_nil?(name) do
     hash_id = create_hash_id_when_iden_is_nil(name)
 
-    Query.by(:hash_id, hash_id)
+    Customer.query_by(:hash_id, hash_id)
     |> Repo.exists?()
   end
 
