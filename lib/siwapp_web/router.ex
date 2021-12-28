@@ -93,9 +93,6 @@ defmodule SiwappWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-
-    get "/settings", SettingsController, :edit
-    post "/settings", SettingsController, :update
     live "/series", SeriesLive.Index, :index
     live "/series/new", SeriesLive.Index, :new
     live "/series/:id/edit", SeriesLive.Index, :edit
@@ -107,6 +104,8 @@ defmodule SiwappWeb.Router do
     live "/customers/new", CustomerLive.Edit, :new
     live "/customers/:id/edit", CustomerLive.Edit, :edit
     live "/customers/", CustomerLive.Index, :index
+    get "/settings", SettingsController, :edit
+    post "/settings", SettingsController, :update
   end
 
   scope "/", SiwappWeb do
