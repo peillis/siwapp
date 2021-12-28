@@ -95,7 +95,7 @@ defmodule Siwapp.Customers.Customer do
   end
 
   def query_by(field, value) do
-    where(Customer, ^[{field, value}])
+    where(Siwapp.Customers.Customer, ^[{field, value}])
   end
 
   # Validates if either a name or an identification is set
