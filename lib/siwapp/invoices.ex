@@ -6,6 +6,7 @@ defmodule Siwapp.Invoices do
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Repo
+  alias Siwapp.Invoices.Query
 
   @doc """
   Gets a list of invoices by updated date
@@ -16,15 +17,36 @@ defmodule Siwapp.Invoices do
   end
 
   def list(:preload) do
-    Repo.all(from p in Invoice, preload: [:customer])
+    Repo.all(Query.list_preload())
   end
 
   @doc """
   Gets a list on the invoices that macht with the paramas
   """
-  def list_by(_key, _value) do
-    # query = Query.invoices_by(key, value)
-    Repo.all(Invoice)
+
+  def list_by(key, value) do
+    query =
+      case {key, value} do
+        {:with_terms, value} ->
+          Query.with_terms(value)
+
+        {:customer_id, value} ->
+          Query.by(:customer_id, value)
+
+        {:issue_date_gteq, value} ->
+          Query.issue_date_gteq(value)
+
+        {:issue_date_lteq, value} ->
+          Query.issue_date_lteq(value)
+
+        {:series_id, value} ->
+          Query.by(:series_id, value)
+
+        {:with_status, value} ->
+          Query.by(:paid, value)
+      end
+
+    Repo.all(query)
   end
 
   @doc """

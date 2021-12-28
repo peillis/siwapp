@@ -8,6 +8,7 @@ defmodule Siwapp.Customers.Customer do
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  import Ecto.Query
 
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
@@ -93,7 +94,12 @@ defmodule Siwapp.Customers.Customer do
     |> String.replace(~r/ +/, "")
   end
 
+  def query_by(field, value) do
+    where(Customer, ^[{field, value}])
+  end
+
   # Validates if either a name or an identification is set
+  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
   defp validate_required_customer(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do
       changeset
