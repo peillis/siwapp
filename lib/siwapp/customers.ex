@@ -35,13 +35,14 @@ defmodule Siwapp.Customers do
   """
   def get!(id), do: Repo.get!(Customer, id)
 
+  def get(nil, nil), do: nil
+  def get(nil, name), do: get_by_hash_id("", name)
+  def get(identification, nil), do: get(identification, "")
+
   def get(identification, name) do
     case Repo.get_by(Customer, identification: identification) do
-      nil ->
-        get_by_hash_id(identification, name)
-
-      customer ->
-        customer
+      nil -> get_by_hash_id(identification, name)
+      customer -> customer
     end
   end
 
