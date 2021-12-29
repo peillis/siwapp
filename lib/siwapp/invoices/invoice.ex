@@ -70,8 +70,8 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
-    |> validate_required_invoice([:name, :identification, :issue_date])
-    |> validate_required_series()
+    |> validate_required_invoice([:name, :identification])
+    |> validate_required_draft()
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])
     |> foreign_key_constraint(:series_id)
@@ -94,11 +94,11 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
-  defp validate_required_series(changeset) do
+  defp validate_required_draft(changeset) do
     if get_field(changeset, :draft) do
       changeset
     else
-      validate_required(changeset, [:series_id])
+      validate_required(changeset, [:series_id, :customer_id, :issue_date])
     end
   end
 end
