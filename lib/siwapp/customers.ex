@@ -35,7 +35,27 @@ defmodule Siwapp.Customers do
   """
   def get!(id), do: Repo.get!(Customer, id)
 
+  def get(nil, nil), do: nil
+  def get(nil, name), do: get_by_hash_id("", name)
+  def get(identification, nil), do: get(identification, "")
+
+  def get(identification, name) do
+    case Repo.get_by(Customer, identification: identification) do
+      nil -> get_by_hash_id(identification, name)
+      customer -> customer
+    end
+  end
+
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
+  end
+
+  defp get_by_hash_id(identification, name) do
+    hash_id = Customer.create_hash_id(identification, name)
+
+    case Repo.get_by(Customer, hash_id: hash_id) do
+      nil -> nil
+      customer -> customer
+    end
   end
 end

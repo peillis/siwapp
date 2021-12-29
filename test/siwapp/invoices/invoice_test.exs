@@ -8,7 +8,6 @@ defmodule Siwapp.InvoiceTest do
       changeset = Invoice.changeset(%Invoice{}, %{name: "Melissa"})
 
       assert %{series_id: ["can't be blank"]} = errors_on(changeset)
-      assert %{customer_id: ["can't be blank"]} = errors_on(changeset)
       assert %{issue_date: ["can't be blank"]} = errors_on(changeset)
     end
 
@@ -16,7 +15,6 @@ defmodule Siwapp.InvoiceTest do
       changeset =
         Invoice.changeset(%Invoice{}, %{
           name: "Melissa",
-          customer_id: 1,
           series_id: 1,
           issue_date: Date.utc_today()
         })

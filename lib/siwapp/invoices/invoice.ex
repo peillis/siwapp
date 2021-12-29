@@ -5,6 +5,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
+  alias Siwapp.Customers
   alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
@@ -70,7 +71,7 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
-    |> validate_required_invoice([:name, :identification])
+    |> find_customer_or_new()
     |> validate_required_draft()
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])
@@ -85,20 +86,32 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:currency, max: 100)
   end
 
-  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Invoice struct.
-  defp validate_required_invoice(changeset, fields) do
-    if Enum.any?(fields, &get_field(changeset, &1)) do
-      changeset
-    else
-      add_error(changeset, hd(fields), "Either name or identification are required")
-    end
-  end
-
+  # When draft there are few restrictions
   defp validate_required_draft(changeset) do
     if get_field(changeset, :draft) do
       changeset
     else
-      validate_required(changeset, [:series_id, :customer_id, :issue_date])
+      changeset
+      |> validate_required([:series_id, :issue_date])
+      |> assoc_constraint(:customer)
+    end
+  end
+
+  defp find_customer_or_new(changeset) do
+    if is_nil(get_field(changeset, :customer_id)) do
+      identification = get_field(changeset, :identification)
+      name = get_field(changeset, :name)
+
+      case Customers.get(identification, name) do
+        nil ->
+          customer = Customer.changeset(%Customer{}, changeset.changes)
+          put_assoc(changeset, :customer, customer)
+
+        customer ->
+          put_change(changeset, :customer_id, customer.id)
+      end
+    else
+      changeset
     end
   end
 end

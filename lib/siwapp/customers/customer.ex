@@ -52,7 +52,7 @@ defmodule Siwapp.Customers.Customer do
     customer
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
-    |> create_hash_id()
+    |> put_hash_id()
     |> unique_constraint(:identification)
     |> unique_constraint(:hash_id)
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
@@ -60,6 +60,16 @@ defmodule Siwapp.Customers.Customer do
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
+  end
+
+  def create_hash_id(identification, name) do
+    :crypto.hash(:md5, "#{normalize(identification)}#{normalize(name)}") |> Base.encode16()
+  end
+
+  defp normalize(string) do
+    string
+    |> String.downcase()
+    |> String.replace(~r/ +/, "")
   end
 
   # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
@@ -71,24 +81,14 @@ defmodule Siwapp.Customers.Customer do
     end
   end
 
-  defp create_hash_id(changeset) do
-    name =
-      changeset
-      |> get_field_or_empty(:name)
-      |> String.downcase()
-      |> String.replace(~r/ +/, "")
+  defp put_hash_id(changeset) do
+    name = get_field_or_empty(changeset, :name)
+    identification = get_field_or_empty(changeset, :identification)
 
-    identification =
-      changeset
-      |> get_field_or_empty(:identification)
-      |> String.trim()
-
-    hash = :crypto.hash(:md5, "#{name}#{identification}") |> Base.encode16()
-    put_change(changeset, :hash_id, hash)
+    put_change(changeset, :hash_id, create_hash_id(identification, name))
   end
 
   defp get_field_or_empty(changeset, field) do
-    changeset
-    |> get_field(field) || ""
+    get_field(changeset, field) || ""
   end
 end
