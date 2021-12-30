@@ -9,7 +9,6 @@ defmodule Siwapp.Commons.Series do
   @derive {Jason.Encoder,
            only: [
              :default,
-             :deleted_at,
              :enabled,
              :first_number,
              :id,

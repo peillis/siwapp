@@ -58,8 +58,7 @@ defmodule Siwapp.Commons do
       {:error, "You cannot directly assign..."}
 
   """
-  @spec create_series(map) ::
-          {:ok, %Series{}} | {:error, any()}
+  @spec create_series(map) :: {:ok, %Series{}} | {:error, any()}
   def create_series(attrs \\ %{})
 
   def create_series(%{default: _}) do
@@ -92,8 +91,7 @@ defmodule Siwapp.Commons do
       {:error, "You cannot directly assign..."}
 
   """
-  @spec update_series(%Series{}, map) ::
-          {:ok, %Series{}} | {:error, any()}
+  @spec update_series(%Series{}, map) :: {:ok, %Series{}} | {:error, any()}
   def update_series(_series, %{default: _}) do
     {:error,
      "You cannot directly assign the default key. Use the change_default_series/1 function instead."}

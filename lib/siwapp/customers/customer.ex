@@ -62,10 +62,12 @@ defmodule Siwapp.Customers.Customer do
     |> validate_length(:contact_person, max: 100)
   end
 
+  @spec create_hash_id(binary, binary) :: binary
   def create_hash_id(identification, name) do
     :crypto.hash(:md5, "#{normalize(identification)}#{normalize(name)}") |> Base.encode16()
   end
 
+  @spec normalize(binary) :: binary
   defp normalize(string) do
     string
     |> String.downcase()
