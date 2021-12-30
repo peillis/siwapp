@@ -19,7 +19,6 @@ defmodule Siwapp.Commons.Tax do
   def changeset(tax, attrs \\ %{}) do
     tax
     |> cast(attrs, @fields)
-    |> cast_assoc(:items)
     |> validate_required([:name, :value])
     |> validate_length(:name, max: 50)
   end

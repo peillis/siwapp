@@ -12,7 +12,7 @@ defmodule Siwapp.Invoices.Statistics do
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
     |> set_time_scale(days)
-    |> to_tuple()
+    |> Enum.map(&{&1.issue_date, &1.gross_amount})
   end
 
   # We need this function so we have data (with amount = 0) for those days we have no invoices.
@@ -41,10 +41,5 @@ defmodule Siwapp.Invoices.Statistics do
   @spec sum_amounts([map()]) :: non_neg_integer()
   defp sum_amounts(day) do
     Enum.sum(Enum.map(day, & &1.gross_amount))
-  end
-
-  @spec to_tuple([map()]) :: [tuple()]
-  defp to_tuple(data) do
-    Enum.map(data, &{&1.issue_date, &1.gross_amount})
   end
 end
