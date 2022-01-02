@@ -1,4 +1,6 @@
 defmodule Siwapp.ApiToken do
+  @moduledoc false
+
   @signing_salt "bm9YQ9J68CJqnM3P6S62x6htopuZ4Wp5vtVOP5IdUlQcVq/d+KuAr6FEkqn3Yibg"
 
   # 3 hours

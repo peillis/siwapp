@@ -1,10 +1,13 @@
 defmodule Siwapp.Invoices.Item do
+  @moduledoc """
+  Item
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  alias Siwapp.Invoices.Invoice
   alias Siwapp.Commons.Tax
+  alias Siwapp.Invoices.Invoice
 
   @fields [:quantity, :discount, :description, :unitary_cost, :deleted_at, :invoice_id]
 
@@ -23,7 +26,7 @@ defmodule Siwapp.Invoices.Item do
     |> cast(attrs, @fields)
     |> cast_assoc(:taxes)
     |> foreign_key_constraint(:invoice_id)
-    |> validate_length(:description, max: 20000)
+    |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0)
   end

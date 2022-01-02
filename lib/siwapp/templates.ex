@@ -17,8 +17,8 @@ defmodule Siwapp.Templates do
       [%Template{}, ...]
 
   """
-  @spec list() :: [%Template{}]
-  def list() do
+  @spec list :: [Template.t()]
+  def list do
     Template
     |> order_by(asc: :id)
     |> Repo.all()
@@ -42,7 +42,7 @@ defmodule Siwapp.Templates do
         # because that template doesn't exist
 
   """
-  @spec get(non_neg_integer() | :print_default | :email_default) :: %Template{} | nil
+  @spec get(non_neg_integer() | :print_default | :email_default) :: Template.t() | nil
   def get(id) when is_number(id), do: Repo.get(Template, id)
 
   def get(default_key) when is_atom(default_key),
@@ -63,8 +63,7 @@ defmodule Siwapp.Templates do
       iex> create(%{print_default: true})
       {:error, "You cannot directly assign..."}
   """
-  @spec create(map) ::
-          {:ok, %Template{}} | {:error, any()}
+  @spec create(map) :: {:ok, Template.t()} | {:error, any()}
   def create(attrs \\ %{})
 
   def create(%{print_default: _}) do
@@ -103,8 +102,7 @@ defmodule Siwapp.Templates do
       iex> update(template, %{email_default: true})
       {:error, "You cannot directly assign..."}
   """
-  @spec update(%Template{}, map) ::
-          {:ok, %Template{}} | {:error, any()}
+  @spec update(Template.t(), map) :: {:ok, Template.t()} | {:error, any()}
   def update(_template, %{print_default: _}) do
     {:error,
      "You cannot directly assign the print_default key. Use set_default(:print, template) instead."}
@@ -139,8 +137,8 @@ defmodule Siwapp.Templates do
         # That template doesn't exist
 
   """
-  @spec set_default(:print | :email, %Template{} | nil) ::
-          {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  @spec set_default(:print | :email, Template.t() | nil) ::
+          {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
   def set_default(:print, template), do: change_default(:print_default, template)
   def set_default(:email, template), do: change_default(:email_default, template)
 
@@ -161,7 +159,7 @@ defmodule Siwapp.Templates do
         # because that template is the default one
 
   """
-  @spec delete(%Template{}) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  @spec delete(Template.t()) :: {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
   def delete(%Template{} = template) do
     if get(:print_default) == template or get(:email_default) == template do
       {:error, "The series you're aiming to delete is a default template,  \
@@ -181,33 +179,33 @@ defmodule Siwapp.Templates do
       %Ecto.Changeset{data: %Template{}}
 
   """
-  @spec change(%Template{}, map) :: %Ecto.Changeset{}
+  @spec change(Template.t(), map) :: Ecto.Changeset.t()
   def change(%Template{} = template, attrs \\ %{}) do
     Template.changeset(template, attrs)
   end
 
-  @spec insert_new(map()) :: {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  @spec insert_new(map()) :: {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
   defp insert_new(attrs) do
     %Template{}
     |> Template.changeset(attrs)
     |> Repo.insert()
   end
 
-  @spec check_if_its_the_first(%Template{}) :: {:ok, %Template{}} | {:yes, %Template{}}
+  @spec check_if_its_the_first(Template.t()) :: {:ok, Template.t()} | {:yes, Template.t()}
   defp check_if_its_the_first(template) do
     if length(list()) == 1, do: {:yes, template}, else: {:ok, template}
   end
 
-  @spec update_by(%Template{}, String.t() | atom(), any()) ::
-          {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  @spec update_by(Template.t(), String.t() | atom(), any()) ::
+          {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
   defp update_by(template, key, value) do
     template
     |> Template.changeset(%{key => value})
     |> Repo.update()
   end
 
-  @spec change_default(:print_default | :email_default, %Template{}) ::
-          {:ok, %Template{}} | {:error, %Ecto.Changeset{}}
+  @spec change_default(:print_default | :email_default, Template.t()) ::
+          {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
   defp change_default(key, default_template) do
     for template <- list() do
       update_by(template, key, false)

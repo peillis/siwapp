@@ -35,10 +35,12 @@ defmodule Siwapp.MixProject do
     [
       {:bcrypt_elixir, "~> 2.0"},
       {:bulma, "0.9.3"},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},

@@ -4,13 +4,13 @@ defmodule Siwapp.Invoices do
   """
   import Ecto.Query, warn: false
 
-  alias Siwapp.Repo
   alias Siwapp.Invoices.Invoice
+  alias Siwapp.Repo
 
   @doc """
   Gets a list of invoices by updated date
   """
-  def list() do
+  def list do
     # query = Query.invoices()
     Repo.all(Invoice)
   end

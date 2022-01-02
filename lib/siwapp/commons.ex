@@ -19,7 +19,7 @@ defmodule Siwapp.Commons do
       [%Series{}, ...]
 
   """
-  @spec list_series :: [%Series{}]
+  @spec list_series :: [Series.t()]
   def list_series do
     Series
     |> order_by(asc: :id)
@@ -39,7 +39,7 @@ defmodule Siwapp.Commons do
         # because that series doesn't exist
 
   """
-  @spec get_series(non_neg_integer) :: %Series{} | nil
+  @spec get_series(non_neg_integer) :: Series.t() | nil
   def get_series(id), do: Repo.get(Series, id)
 
   @doc """
@@ -58,7 +58,7 @@ defmodule Siwapp.Commons do
       {:error, "You cannot directly assign..."}
 
   """
-  @spec create_series(map) :: {:ok, %Series{}} | {:error, any()}
+  @spec create_series(map) :: {:ok, Series.t()} | {:error, any()}
   def create_series(attrs \\ %{})
 
   def create_series(%{default: _}) do
@@ -91,7 +91,7 @@ defmodule Siwapp.Commons do
       {:error, "You cannot directly assign..."}
 
   """
-  @spec update_series(%Series{}, map) :: {:ok, %Series{}} | {:error, any()}
+  @spec update_series(Series.t(), map) :: {:ok, Series.t()} | {:error, any()}
   def update_series(_series, %{default: _}) do
     {:error,
      "You cannot directly assign the default key. Use the change_default_series/1 function instead."}
@@ -112,7 +112,7 @@ defmodule Siwapp.Commons do
       nil
         # there is no default series
   """
-  @spec get_default_series :: %Series{} | nil
+  @spec get_default_series :: Series.t() | nil
   def get_default_series do
     Repo.get_by(Series, default: true)
   end
@@ -132,7 +132,7 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
         # That series doesn't exist
   """
-  @spec change_default_series(%Series{}) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  @spec change_default_series(Series.t()) :: {:ok, Series.t()} | {:error, Ecto.Changeset.t()}
   def change_default_series(default_series) do
     for series <- list_series() do
       update_default_series(series, false)
@@ -158,7 +158,7 @@ defmodule Siwapp.Commons do
         # because that series is the default one
 
   """
-  @spec delete_series(%Series{}) :: {:ok, %Series{}} | {:error, any()}
+  @spec delete_series(Series.t()) :: {:ok, Series.t()} | {:error, any()}
   def delete_series(%Series{} = series) do
     if get_default_series() == series do
       {:error, "The series you're aiming to delete is the default series. \
@@ -177,20 +177,20 @@ defmodule Siwapp.Commons do
       %Ecto.Changeset{data: %Series{}}
 
   """
-  @spec change_series(%Series{}, map) :: %Ecto.Changeset{}
+  @spec change_series(Series.t(), map) :: Ecto.Changeset.t()
   def change_series(%Series{} = series, attrs \\ %{}) do
     Series.changeset(series, attrs)
   end
 
-  @spec insert_new_series(map()) :: {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  @spec insert_new_series(map()) :: {:ok, Series.t()} | {:error, Ecto.Changeset.t()}
   defp insert_new_series(attrs) do
     %Series{}
     |> Series.changeset(attrs)
     |> Repo.insert()
   end
 
-  @spec update_default_series(%Series{}, boolean()) ::
-          {:ok, %Series{}} | {:error, %Ecto.Changeset{}}
+  @spec update_default_series(Series.t(), boolean()) ::
+          {:ok, Series.t()} | {:error, Ecto.Changeset.t()}
   defp update_default_series(series, value) do
     series
     |> Series.changeset(%{default: value})
@@ -208,7 +208,7 @@ defmodule Siwapp.Commons do
       [%Tax{}, ...]
 
   """
-  @spec list_taxes :: [%Tax{}]
+  @spec list_taxes :: [Tax.t()]
   def list_taxes do
     Repo.all(Tax)
   end
@@ -227,7 +227,7 @@ defmodule Siwapp.Commons do
       ** (Ecto.NoResultsError)
 
   """
-  @spec get_tax!(non_neg_integer) :: %Tax{}
+  @spec get_tax!(non_neg_integer) :: Tax.t()
   def get_tax!(id), do: Repo.get!(Tax, id)
 
   @doc """
@@ -242,7 +242,7 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
 
   """
-  @spec create_tax(map) :: {:ok, %Tax{}} | {:error, %Ecto.Changeset{}}
+  @spec create_tax(map) :: {:ok, Tax.t()} | {:error, Ecto.Changeset.t()}
   def create_tax(attrs \\ %{}) do
     %Tax{}
     |> Tax.changeset(attrs)
@@ -261,8 +261,8 @@ defmodule Siwapp.Commons do
       {:error, %Ecto.Changeset{}}
 
   """
-  @spec update_tax(%Tax{}, map) ::
-          {:ok, %Tax{}} | {:error, %Ecto.Changeset{}}
+  @spec update_tax(Tax.t(), map) ::
+          {:ok, Tax.t()} | {:error, Ecto.Changeset.t()}
   def update_tax(%Tax{} = tax, attrs) do
     tax
     |> Tax.changeset(attrs)
@@ -279,7 +279,7 @@ defmodule Siwapp.Commons do
       {:ok, %Series{}}
 
   """
-  @spec set_default_tax(non_neg_integer) :: {:ok, %Tax{}}
+  @spec set_default_tax(non_neg_integer) :: {:ok, Tax.t()}
   def set_default_tax(id) do
     tax = get_tax!(id)
 
@@ -301,7 +301,7 @@ defmodule Siwapp.Commons do
         # because that tax doesn't exist
 
   """
-  @spec delete_tax(%Tax{}) :: {:ok, %Tax{}} | {:error, %Ecto.Changeset{}}
+  @spec delete_tax(Tax.t()) :: {:ok, Tax.t()} | {:error, Ecto.Changeset.t()}
   def delete_tax(%Tax{} = tax) do
     Repo.delete(tax)
   end
@@ -315,7 +315,7 @@ defmodule Siwapp.Commons do
       %Ecto.Changeset{data: %Tax{}}
 
   """
-  @spec change_tax(%Tax{}, map) :: %Ecto.Changeset{}
+  @spec change_tax(Tax.t(), map) :: Ecto.Changeset.t()
   def change_tax(%Tax{} = tax, attrs \\ %{}) do
     Tax.changeset(tax, attrs)
   end

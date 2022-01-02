@@ -1,9 +1,11 @@
 defmodule SiwappWeb.Api.InvoicesController do
   use SiwappWeb, :controller
-  alias JSONAPI.{Serializer, Utils}
-  alias SiwappWeb.Api.InvoicesView
-  alias Siwapp.Invoices
+
   import Ecto.Changeset
+
+  alias JSONAPI.{Serializer, Utils}
+  alias Siwapp.Invoices
+  alias SiwappWeb.Api.InvoicesView
 
   def index(conn, _params) do
     invoices = Invoices.list(:preload)

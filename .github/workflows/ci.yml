@@ -65,3 +65,8 @@ jobs:
         run: mix dialyzer
         env:
           MIX_ENV: dev
+
+      - name: Run credo
+        run: mix credo --strict
+        env:
+          MIX_ENV: dev

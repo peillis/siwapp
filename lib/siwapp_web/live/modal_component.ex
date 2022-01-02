@@ -1,4 +1,5 @@
 defmodule SiwappWeb.ModalComponent do
+  @moduledoc false
   use SiwappWeb, :live_component
 
   @impl true

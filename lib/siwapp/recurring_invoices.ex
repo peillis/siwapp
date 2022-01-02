@@ -1,10 +1,13 @@
 defmodule Siwapp.RecurringInvoices do
+  @moduledoc """
+  Recurring Invoices context.
+  """
   import Ecto.Query, warn: false
 
-  alias Siwapp.Repo
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.Repo
 
-  def list() do
+  def list do
     # query = Query.invoices()
     Repo.all(RecurringInvoice)
   end

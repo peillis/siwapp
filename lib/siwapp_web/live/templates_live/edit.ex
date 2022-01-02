@@ -1,4 +1,6 @@
 defmodule SiwappWeb.TemplatesLive.Edit do
+  @moduledoc false
+
   use SiwappWeb, :live_view
 
   alias Siwapp.Templates

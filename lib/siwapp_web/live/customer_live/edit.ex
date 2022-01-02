@@ -1,4 +1,5 @@
 defmodule SiwappWeb.CustomerLive.Edit do
+  @moduledoc false
   use SiwappWeb, :live_view
 
   alias Siwapp.Customers
