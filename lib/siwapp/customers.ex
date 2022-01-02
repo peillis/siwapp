@@ -2,8 +2,8 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
-  alias Siwapp.Repo
   alias Siwapp.Customers.Customer
+  alias Siwapp.Repo
 
   @doc """
   Create a new customer
@@ -35,7 +35,7 @@ defmodule Siwapp.Customers do
   """
   def get!(id), do: Repo.get!(Customer, id)
 
-  @spec get(binary | nil, binary | nil) :: %Customer{} | nil
+  @spec get(binary | nil, binary | nil) :: Customer.t() | nil
   def get(nil, nil), do: nil
   def get(nil, name), do: get_by_hash_id("", name)
   def get(identification, nil), do: get(identification, "")
@@ -51,7 +51,7 @@ defmodule Siwapp.Customers do
     Customer.changeset(customer, attrs)
   end
 
-  @spec get_by_hash_id(binary, binary) :: %Customer{} | nil
+  @spec get_by_hash_id(binary, binary) :: Customer.t() | nil
   defp get_by_hash_id(identification, name) do
     hash_id = Customer.create_hash_id(identification, name)
 

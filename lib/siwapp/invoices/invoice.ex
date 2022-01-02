@@ -1,11 +1,14 @@
 defmodule Siwapp.Invoices.Invoice do
+  @moduledoc """
+  Invoice
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
   alias Siwapp.Commons.Series
-  alias Siwapp.Customers.Customer
   alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
 

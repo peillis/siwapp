@@ -1,10 +1,23 @@
 defmodule Siwapp.Commons.Series do
+  @moduledoc """
+  Series
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
+
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          name: binary | nil,
+          value: binary | nil,
+          enabled: boolean(),
+          default: boolean(),
+          first_number: pos_integer() | nil,
+          deleted_at: DateTime.t() | nil
+        }
 
   @derive {Jason.Encoder,
            only: [

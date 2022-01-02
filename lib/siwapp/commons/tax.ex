@@ -1,9 +1,21 @@
 defmodule Siwapp.Commons.Tax do
+  @moduledoc """
+  Tax
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
   alias Siwapp.Invoices.Item
+
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          name: binary | nil,
+          value: binary | nil,
+          enabled: boolean(),
+          default: boolean(),
+          deleted_at: DateTime.t() | nil
+        }
 
   @fields [:name, :value, :enabled, :default, :deleted_at]
 

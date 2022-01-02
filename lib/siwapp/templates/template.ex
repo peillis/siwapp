@@ -1,8 +1,22 @@
 defmodule Siwapp.Templates.Template do
+  @moduledoc """
+  Template
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          name: binary | nil,
+          template: binary | nil,
+          print_default: boolean(),
+          email_default: boolean(),
+          subject: binary | nil,
+          deleted_at: DateTime.t() | nil,
+          inserted_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil
+        }
   @fields [:name, :template, :print_default, :email_default, :subject, :deleted_at]
 
   schema "templates" do

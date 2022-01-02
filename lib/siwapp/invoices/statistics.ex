@@ -1,4 +1,7 @@
 defmodule Siwapp.Invoices.Statistics do
+  @moduledoc """
+  Statistics utils.
+  """
   alias Siwapp.Invoices
 
   @doc """

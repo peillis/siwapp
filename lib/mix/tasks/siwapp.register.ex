@@ -29,7 +29,7 @@ defmodule Mix.Tasks.Siwapp.Register do
         :ok
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset.errors)
+        IO.puts(changeset.errors)
         Mix.raise("Sorry. The user hasn't been created.")
     end
   end

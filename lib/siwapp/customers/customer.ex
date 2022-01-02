@@ -1,10 +1,29 @@
 defmodule Siwapp.Customers.Customer do
+  @moduledoc """
+  Customer
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
+
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          name: binary | nil,
+          identification: binary | nil,
+          hash_id: binary | nil,
+          email: binary | nil,
+          contact_person: binary | nil,
+          active: boolean(),
+          deleted_at: DateTime.t() | nil,
+          invoicing_address: binary | nil,
+          shipping_address: binary | nil,
+          meta_attributes: map,
+          inserted_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil
+        }
 
   @derive {Jason.Encoder,
            only: [
@@ -74,7 +93,7 @@ defmodule Siwapp.Customers.Customer do
     |> String.replace(~r/ +/, "")
   end
 
-  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
+  # Validates if either a name or an identification is set
   defp validate_required_customer(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do
       changeset

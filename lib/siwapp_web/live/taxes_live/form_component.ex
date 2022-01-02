@@ -1,4 +1,6 @@
 defmodule SiwappWeb.TaxesLive.FormComponent do
+  @moduledoc false
+
   use SiwappWeb, :live_component
 
   alias Siwapp.Commons

@@ -1,4 +1,5 @@
 defmodule SiwappWeb.Plugs.Authenticate do
+  @moduledoc false
   import Plug.Conn
   require Logger
 

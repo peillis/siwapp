@@ -1,4 +1,6 @@
 defmodule SiwappWeb.SeriesLive.Index do
+  @moduledoc false
+
   use SiwappWeb, :live_view
 
   alias Siwapp.Commons

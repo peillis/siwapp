@@ -1,4 +1,7 @@
 defmodule Siwapp.Accounts.User do
+  @moduledoc """
+  User
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

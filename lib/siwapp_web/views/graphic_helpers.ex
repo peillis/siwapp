@@ -1,5 +1,6 @@
 defmodule SiwappWeb.GraphicHelpers do
-  alias Contex.{LinePlot, Plot, Dataset}
+  @moduledoc false
+  alias Contex.{Dataset, LinePlot, Plot}
 
   @doc """
   Returns a SVG graphic of a line plot (500x200 size) with the given 'data'.

@@ -6,7 +6,7 @@ defmodule Siwapp.Accounts do
   import Ecto.Query, warn: false
   alias Siwapp.Repo
 
-  alias Siwapp.Accounts.{User, UserToken, UserNotifier}
+  alias Siwapp.Accounts.{User, UserNotifier, UserToken}
 
   ## Database getters
 

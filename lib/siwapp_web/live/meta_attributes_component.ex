@@ -1,4 +1,6 @@
 defmodule SiwappWeb.MetaAttributesComponent do
+  @moduledoc false
+
   use SiwappWeb, :live_component
 
   def mount(socket) do
