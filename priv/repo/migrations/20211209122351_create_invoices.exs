@@ -88,7 +88,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     end
 
     create table(:items_taxes, primary_key: false) do
-      add :item_id, references(:items)
+      add :item_id, references(:items, on_delete: :delete_all)
       add :tax_id, references(:taxes)
     end
 

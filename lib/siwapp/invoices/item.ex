@@ -21,9 +21,7 @@ defmodule Siwapp.Invoices.Item do
     field :taxes_amount, :map, virtual: true
     belongs_to :invoice, Invoice
 
-    many_to_many :taxes, Tax,
-      join_through: "items_taxes",
-      on_delete: :delete_all
+    many_to_many :taxes, Tax, join_through: "items_taxes"
   end
 
   def changeset(item, attrs \\ %{}) do
