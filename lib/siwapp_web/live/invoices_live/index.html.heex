@@ -42,7 +42,7 @@
           <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
         <% end %>
 
-        <%= case @status[invoice.id] do %>
+        <%= case Invoices.status(invoice) do %>
           <%= :paid -> %>
             <td class="table-span"><span class="tag is-success">Paid</span></td>
             <td></td>

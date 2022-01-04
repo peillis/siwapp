@@ -6,8 +6,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:invoices, Invoices.list())
-     |> assign(:checked, MapSet.new())
-     |> assign(:status, Invoices.status_per_id())}
+     |> assign(:checked, MapSet.new())}
   end
 
   def handle_event("click_checkbox", params, socket) do

@@ -66,15 +66,10 @@ defmodule Siwapp.Invoices do
     Repo.get_by!(Invoice, %{key => value})
   end
 
-  def status_per_id() do
-    list()
-    |> Map.new(fn invoice -> {invoice.id, status(invoice.paid, invoice.due_date)} end)
-  end
-
-  defp status(paid, due_date) do
+  def status(invoice) do
     cond do
-      paid -> :paid
-      Date.diff(due_date, Date.utc_today()) >= 0 -> :pending
+      invoice.paid -> :paid
+      Date.diff(invoice.due_date, Date.utc_today()) >= 0 -> :pending
       true -> :past_due
     end
   end
