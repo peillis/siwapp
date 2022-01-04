@@ -17,7 +17,7 @@
         <div class="navbar-brand ">
           <%=
             img_tag(Routes.static_path(@conn, "/images/logo.svg"))
-            |> live_redirect(to: Routes.page_path(@conn, :invoices), class: "navbar-item")
+            |> live_redirect(to: Routes.page_path(@conn, :index), class: "navbar-item")
           %>
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
             <span aria-hidden="true"></span>
@@ -28,7 +28,7 @@
 
         <div class="navbar-menu">
           <div class="navbar-start">
-            <%= live_redirect "Invoices", to: Routes.page_path(@conn, :invoices), class: "navbar-item" %>
+            <%= live_redirect "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
             <a class="navbar-item">
               Recurring Invoices
             </a>
