@@ -15,9 +15,9 @@
     <%= if @current_user do %>
       <nav class="navbar is-fixed-top"  role="navigation" aria-label="main navigation">
         <div class="navbar-brand ">
-          <%="/images/logo.svg"
-              |> img_tag()
-              |> link(to: Routes.page_path(@conn, :invoices), class: "navbar-item")
+          <%=
+            img_tag(Routes.static_path(@conn, "/images/logo.svg"))
+            |> live_redirect(to: Routes.page_path(@conn, :invoices), class: "navbar-item")
           %>
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
             <span aria-hidden="true"></span>
