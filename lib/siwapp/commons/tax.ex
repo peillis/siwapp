@@ -25,6 +25,7 @@ defmodule Siwapp.Commons.Tax do
     field :enabled, :boolean, default: true
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
+
     many_to_many :items, Item, join_through: "items_taxes"
   end
 
