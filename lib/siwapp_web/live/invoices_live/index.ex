@@ -6,23 +6,19 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:invoices, Invoices.list())
-     |> assign(:checked, MapSet.new())}
+     |> assign(:checked, MapSet.new())
+     |> assign(:status, Invoices.status_per_id())}
   end
 
-  def handle_event("click_checkbox", data, socket) do
-    checked = update_checked(data, socket)
-    IO.inspect(checked)
+  def handle_event("click_checkbox", params, socket) do
+    checked = update_checked(params, socket)
 
-    {:noreply,
-     assign(
-       socket,
-       checked: checked
-     )}
+    {:noreply, assign(socket, checked: checked)}
   end
 
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
     socket.assigns.invoices
-    |> MapSet.new(fn invoice -> invoice.id end)
+    |> MapSet.new(& &1.id)
     |> MapSet.put(0)
   end
 

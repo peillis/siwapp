@@ -12,24 +12,4 @@ defmodule SiwappWeb.LiveHelpers do
     modal_opts = [id: :modal, return_to: path, component: component, opts: opts]
     live_component(SiwappWeb.ModalComponent, modal_opts)
   end
-
-  def checked?(checked, id) do
-    Enum.member?(checked, id)
-  end
-
-  def status(paid, due_date) do
-    cond do
-      paid -> :paid
-      pending?(due_date) -> :pending
-      true -> :past_due
-    end
-  end
-
-  def invisible?(checked) do
-    Enum.empty?(checked)
-  end
-
-  defp pending?(due_date) do
-    Date.diff(due_date, Date.utc_today()) >= 0
-  end
 end
