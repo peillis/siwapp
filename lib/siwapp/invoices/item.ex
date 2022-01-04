@@ -34,28 +34,45 @@ defmodule Siwapp.Invoices.Item do
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
+    |> set_net_amount()
+    |> set_taxes_amount()
   end
 
-  def set_virtual_fields(item) do
-    item
-    |> Map.put(:net_amount, net_amount(item))
-    |> Map.put(:taxes_amount, taxes_amount(item))
+  def set_net_amount(changeset) do
+    quantity = get_field_or_empty(changeset, :quantity)
+    unitary_cost = get_field_or_empty(changeset, :unitary_cost)
+    discount = get_field_or_empty(changeset, :discount)
+
+    changeset
+    |> put_change(:net_amount, quantity * unitary_cost - quantity * unitary_cost * discount / 100)
   end
 
-  def base_amount(item), do: item.quantity * item.unitary_cost
+  def set_taxes_amount(changeset) do
+    taxes = get_field_or_empty(changeset, :taxes)
 
-  def discount_amount(item), do: base_amount(item) * item.discount / 100
+    if taxes == [] do
+      changeset
+    else
+      changeset
+      |> put_change(:taxes_amount, taxes_amount(changeset))
+    end
+  end
 
-  def net_amount(item), do: base_amount(item) - discount_amount(item)
+  defp taxes_amount(changeset) do
+    net_amount = get_field_or_empty(changeset, :net_amount)
+    taxes = get_field_or_empty(changeset, :taxes)
 
-  def taxes_amount(item) do
-    for tax <- item.taxes do
-      Map.new([{tax.id, tax.value * net_amount(item) / 100}])
+    for tax <- taxes do
+      Map.new([{tax.id, tax.value * net_amount / 100}])
     end
     |> Enum.reduce(fn x, acc ->
       Map.merge(x, acc, fn _key, map1, map2 ->
         for {k, v1} <- map1, into: %{}, do: {k, v1 + map2[k]}
       end)
     end)
+  end
+
+  defp get_field_or_empty(changeset, field) do
+    get_field(changeset, field) || ""
   end
 end
