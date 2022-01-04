@@ -65,4 +65,12 @@ defmodule Siwapp.Invoices do
   def get_by!(key, value) do
     Repo.get_by!(Invoice, %{key => value})
   end
+
+  def status(invoice) do
+    cond do
+      invoice.paid -> :paid
+      Date.diff(invoice.due_date, Date.utc_today()) >= 0 -> :pending
+      true -> :past_due
+    end
+  end
 end
