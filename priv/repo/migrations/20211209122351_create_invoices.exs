@@ -87,6 +87,8 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :deleted_at, :utc_datetime
     end
 
+    create index(:taxes, [:name, :enabled], unique: true)
+
     create table(:items_taxes, primary_key: false) do
       add :item_id, references(:items, on_delete: :delete_all)
       add :tax_id, references(:taxes)
