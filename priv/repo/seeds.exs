@@ -9,24 +9,21 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-alias Siwapp.Invoices
-alias Siwapp.Customers
-alias Siwapp.Commons
+
+alias Siwapp.{Commons, Customers, Invoices}
 
 customers = [
-  %{
-    name: "Pablo"
-  },
-  %{
-    name: "Rodri"
-  }
+  %{name: "Pablo"},
+  %{name: "Rodri"}
 ]
 
 series = [
-  %{
-    "name" => "A-series",
-    "value" => "A"
-  }
+  %{name: "A-series", value: "A"}
+]
+
+taxes = [
+  %{name: "VAT", value: 21, default: true},
+  %{name: "RETENTION", value: -15}
 ]
 
 invoices = [
@@ -62,14 +59,7 @@ invoices = [
   }
 ]
 
-Enum.each(customers, fn customer ->
-  Customers.create(customer)
-end)
-
-Enum.each(series, fn serie ->
-  Commons.create_series(serie)
-end)
-
-Enum.each(invoices, fn invoice ->
-  Invoices.create(invoice)
-end)
+Enum.each(customers, &Customers.create(&1))
+Enum.each(series, &Commons.create_series(&1))
+Enum.each(taxes, &Commons.create_tax(&1))
+Enum.each(invoices, &Invoices.create(&1))
