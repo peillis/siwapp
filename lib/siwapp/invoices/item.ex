@@ -39,16 +39,16 @@ defmodule Siwapp.Invoices.Item do
   end
 
   def set_net_amount(changeset) do
-    quantity = get_field_or_empty(changeset, :quantity)
-    unitary_cost = get_field_or_empty(changeset, :unitary_cost)
-    discount = get_field_or_empty(changeset, :discount)
+    quantity = get_field(changeset, :quantity)
+    unitary_cost = get_field(changeset, :unitary_cost)
+    discount = get_field(changeset, :discount)
 
     changeset
     |> put_change(:net_amount, quantity * unitary_cost - quantity * unitary_cost * discount / 100)
   end
 
   def set_taxes_amount(changeset) do
-    taxes = get_field_or_empty(changeset, :taxes)
+    taxes = get_field(changeset, :taxes)
 
     if taxes == [] do
       changeset
@@ -59,20 +59,11 @@ defmodule Siwapp.Invoices.Item do
   end
 
   defp taxes_amount(changeset) do
-    net_amount = get_field_or_empty(changeset, :net_amount)
-    taxes = get_field_or_empty(changeset, :taxes)
+    net_amount = get_field(changeset, :net_amount)
+    taxes = get_field(changeset, :taxes)
 
-    for tax <- taxes do
-      Map.new([{tax.id, tax.value * net_amount / 100}])
+    for tax <- taxes, id = tax.id, value = tax.value, into: %{} do
+      {id, value * net_amount / 100}
     end
-    |> Enum.reduce(fn x, acc ->
-      Map.merge(x, acc, fn _key, map1, map2 ->
-        for {k, v1} <- map1, into: %{}, do: {k, v1 + map2[k]}
-      end)
-    end)
-  end
-
-  defp get_field_or_empty(changeset, field) do
-    get_field(changeset, field) || ""
   end
 end
