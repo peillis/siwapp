@@ -6,6 +6,7 @@ defmodule Siwapp.Invoices.Item do
 
   import Ecto.Changeset
 
+  alias Siwapp.Commons
   alias Siwapp.Commons.Tax
   alias Siwapp.Invoices.Invoice
 
@@ -18,7 +19,7 @@ defmodule Siwapp.Invoices.Item do
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
     field :net_amount, :float, virtual: true
-    field :taxes_amount, :map, virtual: true
+    field :taxes_amount, :map, virtual: true, default: %{}
     belongs_to :invoice, Invoice
 
     many_to_many :taxes, Tax, join_through: "items_taxes"
@@ -27,16 +28,25 @@ defmodule Siwapp.Invoices.Item do
   def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, @fields)
-    |> cast_assoc(:taxes)
+    |> find_taxes()
     |> foreign_key_constraint(:invoice_id)
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
+    |> calculate()
+  end
+
+  @doc """
+  Performs the totals calculations for net_amount and taxes_amount fields.
+  """
+  @spec calculate(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def calculate(changeset) do
+    changeset
     |> set_net_amount()
     |> set_taxes_amount()
   end
 
-  def set_net_amount(changeset) do
+  defp set_net_amount(changeset) do
     quantity = get_field(changeset, :quantity)
     unitary_cost = get_field(changeset, :unitary_cost)
     discount = get_field(changeset, :discount)
@@ -46,7 +56,7 @@ defmodule Siwapp.Invoices.Item do
     put_change(changeset, :net_amount, net_amount)
   end
 
-  def set_taxes_amount(changeset) do
+  defp set_taxes_amount(changeset) do
     case get_field(changeset, :taxes) do
       [] ->
         changeset
@@ -56,10 +66,21 @@ defmodule Siwapp.Invoices.Item do
 
         taxes_amounts =
           for tax <- taxes, into: %{} do
-            {tax.id, tax.value * net_amount / 100}
+            {tax.name, tax.value * net_amount / 100}
           end
 
         put_change(changeset, :taxes_amount, taxes_amounts)
     end
+  end
+
+  defp find_taxes(changeset) do
+    tax_names =
+      changeset
+      |> cast_assoc(:taxes)
+      |> get_field(:taxes)
+      |> Enum.map(& &1.name)
+
+    taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in tax_names))
+    put_assoc(changeset, :taxes, taxes_assoc)
   end
 end
