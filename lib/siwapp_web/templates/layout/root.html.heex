@@ -17,7 +17,9 @@
         <div class="navbar-brand ">
           <%=
             img_tag(Routes.static_path(@conn, "/images/logo.svg"))
-            |> live_redirect(to: Routes.page_path(@conn, :index), class: "navbar-item")
+
+            |> link(to: Routes.invoices_index_path(@conn, :index), class: "navbar-item")
+
           %>
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
             <span aria-hidden="true"></span>
@@ -28,42 +30,44 @@
 
         <div class="navbar-menu">
           <div class="navbar-start">
-            <%= live_redirect "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
+
+            <%= link "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
+
             <a class="navbar-item">
               Recurring Invoices
             </a>
-            <%= live_redirect "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
+            <%= link "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">
                 Account
               </a>
               <div class="navbar-dropdown">
+
                 <%= link "Profile", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
+
                 <hr class="navbar-divider">
                 <a class="navbar-item">
                   Global Settings
                 </a>
                 <hr class="navbar-divider">
-                <%= live_redirect "Series", to: Routes.series_index_path(@conn, :index), class: "navbar-item" %>
-                <%= live_redirect "Taxes", to: Routes.taxes_index_path(@conn, :index), class: "navbar-item" %>
-                <a class="navbar-item">
-                  Templates
-                </a>
+                <%= link "Series", to: Routes.series_index_path(@conn, :index), class: "navbar-item" %>
+                <%= link "Taxes", to: Routes.taxes_index_path(@conn, :index), class: "navbar-item" %>
+                <%= link "Templates", to: Routes.templates_index_path(@conn, :index), class: "navbar-item" %>
                 <hr class="navbar-divider">
                 <a class="navbar-item">
                   Hooks
                 </a>
                 <hr class="navbar-divider">
+
                 <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item" %>
+
               </div>
             </div>
           </div>
 
           <div class="navbar-end">
             <div class="navbar-item">
-              <a class="button is-primary">
-                <strong>New Invoice</strong>
-              </a>
+              <%= render "_shared_button.html", assigns %>
             </div>
           </div>
         </div>
