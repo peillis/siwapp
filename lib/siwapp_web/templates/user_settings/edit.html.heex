@@ -1,4 +1,4 @@
-<h1>Settings</h1>
+<h1>Profile</h1>
 
 <h3>Change email</h3>
 
@@ -11,16 +11,20 @@
 
   <%= hidden_input f, :action, name: "action", value: "update_email" %>
 
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-  <%= error_tag f, :email %>
+  <div class="field">
+    <%= label f, :email, class: "label" %>
+    <%= email_input f, :email, required: true, class: "input" %>
+    <%= error_tag f, :email %>
+  </div>
 
-  <%= label f, :current_password, for: "current_password_for_email" %>
-  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email" %>
-  <%= error_tag f, :current_password %>
+  <div class="field">
+    <%= label f, :current_password, for: "current_password_for_email", class: "label" %>
+    <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email", class: "input" %>
+    <%= error_tag f, :current_password %>
+  </div>
 
   <div>
-    <%= submit "Change email" %>
+    <%= submit "Change email", class: "button is-info" %>
   </div>
 </.form>
 
@@ -35,19 +39,25 @@
 
   <%= hidden_input f, :action, name: "action", value: "update_password" %>
 
-  <%= label f, :password, "New password" %>
-  <%= password_input f, :password, required: true %>
-  <%= error_tag f, :password %>
+  <div class="field">
+    <%= label f, :password, "New password", class: "label" %>
+    <%= password_input f, :password, required: true, class: "input" %>
+    <%= error_tag f, :password %>
+  </div>
 
-  <%= label f, :password_confirmation, "Confirm new password" %>
-  <%= password_input f, :password_confirmation, required: true %>
-  <%= error_tag f, :password_confirmation %>
+  <div class="field">
+    <%= label f, :password_confirmation, "Confirm new password", class: "label" %>
+    <%= password_input f, :password_confirmation, required: true, class: "input" %>
+    <%= error_tag f, :password_confirmation %>
+  </div>
 
-  <%= label f, :current_password, for: "current_password_for_password" %>
-  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password" %>
-  <%= error_tag f, :current_password %>
+  <div class="field">
+    <%= label f, :current_password, for: "current_password_for_password", class: "label" %>
+    <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password", class: "input" %>
+    <%= error_tag f, :current_password %>
+  </div>
 
   <div>
-    <%= submit "Change password" %>
+    <%= submit "Change password", class: "button is-info" %>
   </div>
 </.form>
