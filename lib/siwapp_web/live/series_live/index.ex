@@ -40,7 +40,7 @@ defmodule SiwappWeb.SeriesLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "SERIES")
+    |> assign(:page_title, "Series")
     |> assign(:series, nil)
   end
 end

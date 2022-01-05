@@ -38,9 +38,7 @@
                 Account
               </a>
               <div class="navbar-dropdown">
-                <a class="navbar-item">
-                  Profile
-                </a>
+                <%= link "Profile", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
                 <hr class="navbar-divider">
                 <a class="navbar-item">
                   Global Settings
@@ -56,9 +54,7 @@
                   Hooks
                 </a>
                 <hr class="navbar-divider">
-                <div class="navbar-item">
-                  <%= render "_user_menu.html", assigns %>
-                </div>
+                <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item" %>
               </div>
             </div>
           </div>
