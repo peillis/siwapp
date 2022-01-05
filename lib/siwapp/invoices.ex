@@ -4,7 +4,7 @@ defmodule Siwapp.Invoices do
   """
   import Ecto.Query, warn: false
 
-  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.{Invoice, Item}
   alias Siwapp.Repo
 
   @doc """
@@ -72,5 +72,11 @@ defmodule Siwapp.Invoices do
       Date.diff(invoice.due_date, Date.utc_today()) >= 0 -> :pending
       true -> :past_due
     end
+  end
+
+  def create_item(attrs \\ %{}) do
+    %Item{}
+    |> Item.changeset(attrs)
+    |> Repo.insert()
   end
 end

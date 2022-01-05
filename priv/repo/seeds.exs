@@ -26,6 +26,14 @@ taxes = [
   %{name: "RETENTION", value: -15}
 ]
 
+items = [
+  %{
+    quantity: 2,
+    unitary_cost: 10,
+    discount: 5
+  }
+]
+
 invoices = [
   %{
     name: "First_Invoice",
@@ -63,3 +71,4 @@ Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
 Enum.each(invoices, &Invoices.create(&1))
+Enum.each(items, &Invoices.create_item(&1))
