@@ -52,7 +52,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :items, {:array, :map}
     belongs_to :customer, Customer
     belongs_to :series, Series
-    has_many :invoices, Invoice
+    has_many :invoices, Invoice, on_replace: :delete
 
     timestamps()
   end

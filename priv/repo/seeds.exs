@@ -10,7 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Siwapp.{Commons, Customers, Invoices}
+alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices}
 
 customers = [
   %{name: "Pablo"},
@@ -24,6 +24,16 @@ series = [
 taxes = [
   %{name: "VAT", value: 21, default: true},
   %{name: "RETENTION", value: -15}
+]
+
+recurring_invoices = [
+  %{
+    period: 3,
+    period_type: "Monthly",
+    starting_date: ~D[2021-10-08],
+    customer_id: 1,
+    series_id: 1
+  }
 ]
 
 invoices = [
@@ -63,3 +73,4 @@ Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
 Enum.each(invoices, &Invoices.create(&1))
+Enum.each(recurring_invoices, &RecurringInvoices.create(&1))

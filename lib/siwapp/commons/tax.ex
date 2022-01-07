@@ -26,7 +26,9 @@ defmodule Siwapp.Commons.Tax do
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
 
-    many_to_many :items, Item, join_through: "items_taxes"
+    many_to_many :items, Item,
+      join_through: "items_taxes",
+      on_replace: :delete
   end
 
   def changeset(tax, attrs \\ %{}) do

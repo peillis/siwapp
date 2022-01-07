@@ -73,7 +73,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :description, :string, size: 20000
       add :unitary_cost, :integer, default: 0
       add :deleted_at, :utc_datetime
-      add :invoice_id, references(:invoices, type: :integer)
+      add :invoice_id, references(:invoices, type: :integer, on_delete: :delete_all)
     end
 
     create index(:items, [:description])
@@ -91,7 +91,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
 
     create table(:items_taxes, primary_key: false) do
       add :item_id, references(:items, on_delete: :delete_all)
-      add :tax_id, references(:taxes)
+      add :tax_id, references(:taxes, on_delete: :delete_all)
     end
 
     create table(:templates) do
