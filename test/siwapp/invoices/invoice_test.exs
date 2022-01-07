@@ -1,6 +1,7 @@
 defmodule Siwapp.InvoiceTest do
   use Siwapp.DataCase
 
+  alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
 
   describe "Saving restrictions, and draft exception" do
@@ -22,17 +23,31 @@ defmodule Siwapp.InvoiceTest do
       assert changeset.valid?
     end
 
-    test "An invoice cannot be saved as draft unless it's new" do
-      invoice = %Invoice{name: "Melissa", series_id: 1, issue_date: Date.utc_today()}
-      changeset = Invoice.changeset(invoice, %{draft: true})
-
-      assert %{draft: ["can't be enabled, it's not new"]} = errors_on(changeset)
-    end
-
-    test "A new invoice saved as draft is valid always" do
+    test "A draft is valid always" do
       changeset = Invoice.changeset(%Invoice{}, %{name: "Melissa", draft: true})
 
       assert changeset.valid?
     end
   end
+
+  describe "Limited draft enablement" do
+    test "An existing regular invoice cannot be converted to draft" do
+      {:ok, invoice} = Invoices.create(%{name: "Melissa", series_id: 1, issue_date: Date.utc_today()})
+      changeset = Invoice.changeset(invoice, %{draft: true})
+
+      assert %{draft: ["can't be enabled, invoice is not new"]} = errors_on(changeset)
+    end
+
+    test "An existing draft can be re-marked as draft" do
+      {:ok, invoice} = Invoices.create(%{name: "Melissa", draft: true})
+      changeset = Invoice.changeset(invoice, %{draft: true})
+
+      assert changeset.valid?
+    end
+
+    test "A new invoice can be saved as draft" do
+      assert {:ok, %Invoice{}} = Invoices.create(%{name: "Melissa", draft: true})
+    end
+  end
+
 end
