@@ -60,8 +60,8 @@ defmodule Siwapp.Customers.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map, default: %{}
-    has_many :recurring_invoices, RecurringInvoice
-    has_many :invoices, Invoice
+    has_many :recurring_invoices, RecurringInvoice, on_delete: :delete_all
+    has_many :invoices, Invoice, on_delete: :delete_all
 
     timestamps()
   end
