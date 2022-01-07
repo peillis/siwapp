@@ -5,8 +5,8 @@ defmodule Siwapp.Invoices do
   import Ecto.Query, warn: false
 
   alias Siwapp.Invoices.{Invoice, Item}
-  alias Siwapp.Repo
   alias Siwapp.Invoices.Query
+  alias Siwapp.Repo
 
   @doc """
   Gets a list of invoices by updated date

@@ -99,7 +99,6 @@ defmodule Siwapp.Customers.Customer do
   end
 
   # Validates if either a name or an identification is set
-  # Validates if either a name or an identification of a customer is contained either in the changeset or in the Customer struct.
   defp validate_required_customer(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do
       changeset
