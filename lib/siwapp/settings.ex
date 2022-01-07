@@ -40,10 +40,10 @@ defmodule Siwapp.Settings do
   def prepare_current_settings() do
     for key <- @current_labels do
       if first_value?(key) do
-        %Setting{key: key}
+        %Setting{key: String.to_atom(key)}
       else
         value = get(key).value
-        %Setting{key: key, value: value}
+        %Setting{key: String.to_atom(key), value: value}
       end
     end
   end

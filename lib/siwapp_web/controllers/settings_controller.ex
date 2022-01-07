@@ -2,7 +2,32 @@ defmodule SiwappWeb.SettingsController do
   use SiwappWeb, :controller
 
   alias Siwapp.Settings
+  alias Siwapp.SettingsForm
 
+  def edit(conn, _params) do
+    settings = Settings.prepare_current_settings()
+    changeset = SettingsForm.changeset(%{})
+    IO.inspect "settings"
+    IO.inspect settings
+    IO.inspect "changeset"
+    IO.inspect changeset
+    conn
+    |> assign(:changeset, changeset )
+    |> assign(:settings,settings )
+    |> render("edit.html")
+  end
+
+  def update(conn, params) do
+    settings = Settings.prepare_current_settings()
+    changeset = SettingsForm.changeset(%{})
+    IO.inspect params
+    conn
+    |> assign(:settings, settings)
+    |> assign(:changeset, changeset)
+    |> render("edit.html")
+  end
+
+  """
   def edit(conn, _params) do
     conn
     |> assign(:settings, Settings.prepare_current_settings())
@@ -30,4 +55,5 @@ defmodule SiwappWeb.SettingsController do
       end
     end
   end
+  """
 end
