@@ -19,10 +19,10 @@ defmodule Siwapp.Invoices.Query do
   def with_terms(terms) do
     from(i in Invoice,
       join: it in Siwapp.Invoices.Item,
-      where: like(it.description, ^"%#{terms}%"),
-      or_where: like(i.email, ^"%#{terms}%"),
-      or_where: like(i.name, ^"%#{terms}%"),
-      or_where: like(i.identification, ^"%#{terms}%")
+      where: ilike(it.description, ^"%#{terms}%"),
+      or_where: ilike(i.email, ^"%#{terms}%"),
+      or_where: ilike(i.name, ^"%#{terms}%"),
+      or_where: ilike(i.identification, ^"%#{terms}%")
     )
   end
 
