@@ -8,8 +8,4 @@ defmodule SiwappWeb.PageController do
   def edit_invoices(conn, _params) do
     render(conn, "edit_invoices.html")
   end
-
-  def invoices(conn, _params) do
-    render(conn, "invoices.html")
-  end
 end
