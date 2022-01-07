@@ -17,7 +17,7 @@ defmodule Siwapp.Invoices.Query do
     from(i in Invoice,
       join: it in Siwapp.Invoices.Item,
       where: it.description == ^terms,
-      or_where: i.email == ^terms,
+      or_where: like(i.email, ^terms),
       or_where: i.name == ^terms,
       or_where: i.identification == ^terms
     )
