@@ -1,5 +1,6 @@
 defmodule Siwapp.SettingsForm do
-  import Ecto.Changeset 
+  
+  alias Siwapp.Settings.Form
 
   @current_labels [
     "Company",
@@ -14,26 +15,33 @@ defmodule Siwapp.SettingsForm do
     "Days to due"
   ]
 
-  @current_types [
-    :string,
-    :string,
-    :string,
-    :integer,
-    :string,
-    :string,
-    :string,
-    :string,
-    :integer
-  ]
 
-  defp labels_in_atoms(labels), do: for label <- labels, do: String.to_atom(label)
+  def change, do: change(%Form{}, %{})
 
-  defp get_types, do: Map.new( Enum.zip( labels_in_atoms(@current_labels), @current_types ) )
+  def change(%Form{} = form, attrs \\ %{}) do
+    Form.changeset(form, attrs)
+  end
 
-  def changeset(settingsform, attrs \\ %{}) do
+  def apply_user_settings(changeset, attrs) do
+    """
+    Still to be done
+    """
+  end
+
+"""
+  def changeset(%{}, attrs \\ %{}) do
+    types = get_types
+    {prepare_data, types}
+    |> cast(attrs, Map.keys(types))
+  end
+  def changeset(settingsform, attrs) do
     types = get_types
     {settingsform, types}
     |> cast(attrs, Map.keys(types))
   end
+
+  defp prepare_data, do: Map.new(get_labels, fn label -> {label, nil} end)
+  defp get_labels, do: for label <- @current_labels, do: String.to_atom(label)
+"""  
 end
 
