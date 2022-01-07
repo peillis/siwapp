@@ -1,0 +1,16 @@
+<h1> Settings </h1>
+<!-- <%= form_for @changeset, Routes.settings_path(@conn, :update), [as: :settings_params] , fn f-> %> -->
+ <!-- Content -->
+<!-- <% end %> -->
+<%= form_for :key_values, Routes.settings_path(@conn, :update), fn f-> %>
+  <%= for setting <- @settings do %>
+    <p>
+      <br>
+      <%= label do setting.key end %>
+      <br>
+      <%= text_input f, setting.key , value: setting.value %>
+      <br>
+    </p>
+  <% end %>
+  <%= submit "Save" %> 
+<% end %>
