@@ -35,7 +35,6 @@ defmodule Siwapp.Commons.Tax do
     tax
     |> cast(attrs, @fields)
     |> unique_constraint([:name, :enabled])
-    |> cast_assoc(:items)
     |> validate_required([:name, :value])
     |> validate_length(:name, max: 50)
   end
