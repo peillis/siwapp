@@ -1,0 +1,53 @@
+<nav class="navbar is-fixed-bottom" role="navigation" aria-label="main navigation">
+  <div class="navbar-menu">
+    <div class="navbar-end">
+      <div class="navbar-item buttons">
+        <button class={"button is-danger #{if Enum.empty?(@checked), do: "is-invisible"}"}>Delete</button>
+        <button class="button is-info">Build Pending Invoices</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<table class="table is-fullwidth is-striped is-bordered is-hoverable">
+  <thead>
+    <tr>
+      <th title=""><input type="checkbox" checked={Enum.member?(@checked, 0)} phx-click="click_checkbox" phx-value-id="0"></th>
+      <th title="Series">Series</th>
+      <th title="Customer">Customer</th>
+      <th title="Frecuency">Frecuency</th>
+      <th title="Enabled">Enabled</th>
+      <th class="wider" title="Send">Send Email</th>
+      <th title="Total">Total</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= for recurring_invoice <- @recurring_invoices do %>
+      <tr>
+        <td><input type="checkbox" phx-click="click_checkbox" checked={Enum.member?(@checked, recurring_invoice.id)} phx-value-id={recurring_invoice.id}></td>
+        <td><a><%= recurring_invoice.series_id %></a></td>
+        <td><a><%= recurring_invoice.customer_id %></a></td>
+        <td>
+          <%= recurring_invoice.period %>
+          <%= type_of_period(recurring_invoice.period_type, recurring_invoice.period) %>
+        </td>
+
+        <%= if recurring_invoice.enabled do%>
+          <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
+        <% else %>
+          <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
+        <% end %>
+
+        <%= if recurring_invoice.send_by_email do%>
+          <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
+        <% else %>
+          <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
+        <% end %>
+
+        <td>$ <%= recurring_invoice.gross_amount %></td>
+      </tr>
+    <% end %>
+
+  </tbody>
+</table>

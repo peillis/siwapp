@@ -20,6 +20,10 @@ td.table-span:not([align]){
   text-align: center;
 }
 
+.content table .wider{
+  width: 150px;  
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile{
     display: flex;

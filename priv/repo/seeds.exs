@@ -69,6 +69,23 @@ invoices = [
   }
 ]
 
+recurring_invoices = [
+  %{
+    period: 1,
+    period_type: "Monthly",
+    starting_date: ~D[2022-01-07],
+    series_id: 1,
+    customer_id: 1
+  },
+  %{
+    period: 2,
+    period_type: "Yearly",
+    starting_date: ~D[2022-01-10],
+    series_id: 1,
+    customer_id: 2
+  }
+]
+
 Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
