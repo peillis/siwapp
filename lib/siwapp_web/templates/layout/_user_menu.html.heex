@@ -1,6 +1,8 @@
 <div class="navbar-item">
-  <%= @current_user.email %> 
-</div> 
+  <%= @current_user.email %>
+</div>
+<%= link "Settings", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
 <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item"%>
+
 
 
