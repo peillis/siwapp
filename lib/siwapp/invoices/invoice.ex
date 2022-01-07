@@ -66,7 +66,7 @@ defmodule Siwapp.Invoices.Invoice do
     belongs_to :series, Series
     belongs_to :customer, Customer
     belongs_to :recurring_invoice, RecurringInvoice
-    has_many :items, Item, on_delete: :delete_all
+    has_many :items, Item
 
     timestamps()
   end

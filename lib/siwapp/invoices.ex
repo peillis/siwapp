@@ -74,9 +74,33 @@ defmodule Siwapp.Invoices do
     end
   end
 
-  def create_item(attrs \\ %{}) do
-    %Item{}
+  @doc """
+  Gets an item by id
+  """
+  def get_item_by_id!(id), do: Repo.get!(Item, id)
+
+  @doc """
+  Creates an item associated to an invoice
+  """
+  def create_item(%Invoice{} = invoice, attrs \\ %{}) do
+    invoice
+    |> Ecto.build_assoc(:items)
     |> Item.changeset(attrs)
     |> Repo.insert()
   end
+
+  @doc """
+  Updates an item
+  """
+  def update_item(%Item{} = item, attrs) do
+    item
+    |> Repo.preload(:taxes)
+    |> Item.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes an item
+  """
+  def delete_item(%Item{} = item), do: Repo.delete(item)
 end
