@@ -66,7 +66,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     |> foreign_key_constraint(:customer_id)
     |> validate_inclusion(:period_type, ["Daily", "Monthly", "Yearly"])
     |> validate_number(:period, greater_than_or_equal_to: 0)
-    |> validate_length(:period_type, max: 8)
     |> validate_length(:currency, max: 3)
   end
 end

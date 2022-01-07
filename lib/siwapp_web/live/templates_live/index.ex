@@ -6,6 +6,11 @@ defmodule SiwappWeb.TemplatesLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    socket =
+      socket
+      |> assign(templates: Templates.list())
+      |> assign(page_title: "Templates")
+
     {:ok, assign(socket, templates: Templates.list())}
   end
 
