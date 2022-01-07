@@ -5,19 +5,19 @@ defmodule SiwappWeb.LayoutView do
   # so we instruct Elixir to not warn if the dashboard route is missing.
   @compile {:no_warn_undefined, {Routes, :live_dashboard_path, 2}}
 
-  def redirect_path(request_path) do
-    case request_path do
+  def shared_button(conn) do
+    case conn.request_path do
       n when n in ["/invoices", "/invoices/edit", "/users/settings", "/"] ->
-        :invoices
+        button("New Invoice", to: Routes.page_path(conn, :edit_invoices), method: :get, class: "button is-primary")
 
       n when n in ["/series", "/series/new"] ->
-        :series
+        button("New Series", to: Routes.series_index_path(conn, :new), method: :get, class: "button is-primary")
 
       n when n in ["/taxes", "/taxes/new"] ->
-        :taxes
+        button("New Tax", to: Routes.taxes_index_path(conn, :new), method: :get, class: "button is-primary")
 
       n when n in ["/templates", "/templates/new"] ->
-        :templates
+        button("New Template", to: Routes.templates_edit_path(conn, :new), method: :get, class: "button is-primary")
     end
   end
 end
