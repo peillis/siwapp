@@ -29,9 +29,7 @@
         <div class="navbar-menu">
           <div class="navbar-start">
             <%= link "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
-            <a class="navbar-item">
-              Recurring Invoices
-            </a>
+            <%= link "Recurring Invoices", to: Routes.recurring_invoices_index_path(@conn, :index), class: "navbar-item" %>
             <%= link "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">

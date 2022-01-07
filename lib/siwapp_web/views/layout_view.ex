@@ -34,6 +34,13 @@ defmodule SiwappWeb.LayoutView do
           method: :get,
           class: "button is-primary"
         )
+
+      "/recurring_invoices" ->
+        button("New Recurring Invoice",
+          to: Routes.recurring_invoices_index_path(conn, :index),
+          method: :get,
+          class: "button is-primary"
+        )
     end
   end
 end
