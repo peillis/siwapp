@@ -19,7 +19,6 @@
             img_tag(Routes.static_path(@conn, "/images/logo.svg"))
 
             |> link(to: Routes.invoices_index_path(@conn, :index), class: "navbar-item")
-
           %>
           <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
             <span aria-hidden="true"></span>
@@ -30,9 +29,7 @@
 
         <div class="navbar-menu">
           <div class="navbar-start">
-
             <%= link "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
-
             <a class="navbar-item">
               Recurring Invoices
             </a>
@@ -42,11 +39,7 @@
                 Account
               </a>
               <div class="navbar-dropdown">
-
-
                 <%= link "Profile", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
-
-
                 <hr class="navbar-divider">
                 <a class="navbar-item">
                   Global Settings
@@ -60,9 +53,7 @@
                   Hooks
                 </a>
                 <hr class="navbar-divider">
-
                 <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item" %>
-
               </div>
             </div>
           </div>
