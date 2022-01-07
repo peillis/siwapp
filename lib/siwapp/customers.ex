@@ -8,7 +8,7 @@ defmodule Siwapp.Customers do
   @doc """
   Lists customers in database
   """
-  def list(), do: Repo.all(Customer)
+  def list, do: Repo.all(Customer)
 
   @doc """
   Create a new customer
