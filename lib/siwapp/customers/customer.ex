@@ -5,6 +5,7 @@ defmodule Siwapp.Customers.Customer do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Ecto.Query
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
@@ -91,6 +92,10 @@ defmodule Siwapp.Customers.Customer do
     string
     |> String.downcase()
     |> String.replace(~r/ +/, "")
+  end
+
+  def query_by(field, value) do
+    where(__MODULE__, ^[{field, value}])
   end
 
   # Validates if either a name or an identification is set
