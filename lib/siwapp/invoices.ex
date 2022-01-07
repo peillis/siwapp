@@ -68,9 +68,19 @@ defmodule Siwapp.Invoices do
 
   def status(invoice) do
     cond do
+      invoice.draft -> :draft
+      invoice.failed -> :failed
       invoice.paid -> :paid
-      Date.diff(invoice.due_date, Date.utc_today()) >= 0 -> :pending
-      true -> :past_due
+      !is_nil(invoice.due_date) -> due_date_status(invoice.due_date)
+      true -> :pending
+    end
+  end
+
+  defp due_date_status(due_date) do
+    if Date.diff(due_date, Date.utc_today()) > 0 do
+      :pending
+    else
+      :past_due
     end
   end
 end

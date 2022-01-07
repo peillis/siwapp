@@ -43,7 +43,15 @@
         <% end %>
 
         <%= case Invoices.status(invoice) do %>
-          <%= :paid -> %>
+          <% :draft -> %>
+            <td class="table-span"><span class="tag is-info">Draft</span></td>
+            <td></td>
+
+          <% :failed -> %>
+            <td class="table-span"><span class="tag is-danger">Failed</span></td>
+            <td></td>
+
+          <% :paid -> %>
             <td class="table-span"><span class="tag is-success">Paid</span></td>
             <td></td>
 
