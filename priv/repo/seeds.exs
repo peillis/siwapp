@@ -12,6 +12,8 @@
 
 alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices}
 
+today = Date.utc_today()
+
 customers = [
   %{name: "Pablo"},
   %{name: "Rodri"}
@@ -43,8 +45,7 @@ invoices = [
     paid: true,
     sent_by_email: true,
     number: 1,
-    issue_date: ~D[2021-10-08],
-    due_date: ~D[2021-12-25],
+    issue_date: Date.add(today, -2),
     series_id: 1,
     customer_id: 1
   },
@@ -52,8 +53,8 @@ invoices = [
     name: "Second_Invoice",
     gross_amount: 400,
     number: 2,
-    issue_date: ~D[2021-10-08],
-    due_date: ~D[2021-12-21],
+    issue_date: today,
+    due_date: Date.add(today, 30),
     series_id: 1,
     customer_id: 2
   },
@@ -62,8 +63,8 @@ invoices = [
     gross_amount: 1200,
     sent_by_email: true,
     number: 3,
-    issue_date: ~D[2021-10-08],
-    due_date: ~D[2021-12-25],
+    issue_date: today,
+    due_date: Date.add(today, 30),
     series_id: 1,
     customer_id: 1
   }
