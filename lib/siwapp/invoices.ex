@@ -86,6 +86,13 @@ defmodule Siwapp.Invoices do
     Repo.get_by!(Invoice, %{key => value})
   end
 
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking invoice changes.
+  """
+  def change(%Invoice{} = invoice, attrs \\ %{}) do
+    Invoice.changeset(invoice, attrs)
+  end
+
   def status(invoice) do
     cond do
       invoice.draft -> :draft

@@ -62,7 +62,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :notes, :string
     field :terms, :string
     field :deleted_at, :utc_datetime
-    field :meta_attributes, :map
+    field :meta_attributes, :map, default: %{}
     belongs_to :series, Series
     belongs_to :customer, Customer
     belongs_to :recurring_invoice, RecurringInvoice
