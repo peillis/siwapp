@@ -90,6 +90,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:currency, max: 100)
   end
 
+  # you can't convert an existing invoice to draft
   defp validate_draft_enablement(changeset) do
     if get_field(changeset, :id) and
          fetch_field(changeset, :draft) == {:changes, true} do
