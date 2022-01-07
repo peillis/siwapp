@@ -2,9 +2,8 @@
 
 <.form let={f} for={@changeset} phx-submit="save">
   <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
-  <!--<.live_component module={SiwappWeb.InvoicesLive.DetailsComponent} id="details" f={f} />
+  <.live_component module={SiwappWeb.InvoicesLive.DetailsComponent} id="details" f={f} series={Siwapp.Commons.list_series}/>
   <.live_component module={SiwappWeb.InvoicesLive.PaymentsComponent} id="payments" f={f} />
-  -->
   <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
   <%= submit "Save" %>
   <!-- in future we will redirect to customer listing -->
