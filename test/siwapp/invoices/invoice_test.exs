@@ -22,7 +22,14 @@ defmodule Siwapp.InvoiceTest do
       assert changeset.valid?
     end
 
-    test "A draft is valid always" do
+    test "An invoice cannot be saved as draft unless it's new" do
+      invoice = %Invoice{name: "Melissa", series_id: 1, issue_date: Date.utc_today()}
+      changeset = Invoice.changeset(invoice, %{draft: true})
+
+      assert %{draft: ["can't be enabled, it's not new"]} = errors_on(changeset)
+    end
+
+    test "A new invoice saved as draft is valid always" do
       changeset = Invoice.changeset(%Invoice{}, %{name: "Melissa", draft: true})
 
       assert changeset.valid?
