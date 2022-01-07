@@ -1,0 +1,28 @@
+<h1><%= @page_title %></h1>
+<table class="table is-responsive is-bordered is-striped is-hoverable is-fullwidth">
+  <thead>
+    <tr>
+      <th class="no-wrap" title="Customer name">Customer name</th>
+      <th class="no-wrap" title="Identification">Identification</th>
+      <th class="text-right" title="Due">Due</th>
+      <th class="text-right" title="Total">Total</th>
+      <th class="text-right" title=" "></th>
+    </tr>
+  </thead>
+
+  <tbody role="infinite-content">
+    <%= for customer <- @customers do%>
+      <%=if customer.active do %>
+        <tr>
+          <td class="no-wrap"><%= live_redirect customer.name, to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+          <td class="no-wrap"><%= live_redirect customer.identification, to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+          <!-- my suggestion is creating total and due as helper functions receiving customer.invoices -->
+          <td class="text-right"><%= live_redirect"DUE", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+          <td class="text-right"><%= live_redirect "TOTAL", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+          <td class="text-center"><%= live_redirect " ", class: "icon fas fa-list", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+          <!-- we will change last redirection to invoices for customer -->
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

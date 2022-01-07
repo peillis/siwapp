@@ -6,6 +6,11 @@ defmodule Siwapp.Customers do
   alias Siwapp.Repo
 
   @doc """
+  Lists customers in database
+  """
+  def list, do: Repo.all(Customer)
+
+  @doc """
   Create a new customer
   """
   def create(attrs \\ %{}) do
