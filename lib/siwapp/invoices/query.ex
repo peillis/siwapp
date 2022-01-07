@@ -1,9 +1,12 @@
 defmodule Siwapp.Invoices.Query do
+  @moduledoc """
+  Invoices Querys
+  """
   alias Siwapp.Invoices.Invoice
 
   import Ecto.Query
 
-  def list_preload() do
+  def list_preload do
     from i in Invoice,
       join: c in assoc(i, :customer),
       preload: [customer: c]
