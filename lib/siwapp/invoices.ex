@@ -71,7 +71,7 @@ defmodule Siwapp.Invoices do
       invoice.draft -> :draft
       invoice.failed -> :failed
       invoice.paid -> :paid
-      is_map(invoice.due_date)-> due_date_status(invoice.due_date)
+      is_map(invoice.due_date) -> due_date_status(invoice.due_date)
       true -> :pending
     end
   end
