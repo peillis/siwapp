@@ -44,11 +44,11 @@
 
         <%= case Invoices.status(invoice) do %>
           <% :draft -> %>
-            <td class="table-span"><span class="tag is-success">Draft</span></td>
+            <td class="table-span"><span class="tag is-info">Draft</span></td>
             <td></td>
 
           <% :failed -> %>
-            <td class="table-span"><span class="tag is-success">Failed</span></td>
+            <td class="table-span"><span class="tag is-danger">Failed</span></td>
             <td></td>
 
           <% :paid -> %>
