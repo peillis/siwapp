@@ -75,6 +75,7 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> find_customer_or_new()
+    |> validate_draft_enablement()
     |> validate_required_draft()
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])
@@ -87,6 +88,15 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 100)
+  end
+
+  defp validate_draft_enablement(changeset) do
+    if get_field(changeset, :id) and
+         fetch_field(changeset, :draft) == {:changes, true} do
+      add_error(changeset, :draft, "can't be enabled, invoice is not new")
+    else
+      changeset
+    end
   end
 
   # When draft there are few restrictions
