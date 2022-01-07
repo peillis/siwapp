@@ -1,35 +1,24 @@
 <h1> Settings </h1>
-<%= form_for @changeset, Routes.settings_path(@conn, :update), [as: :settings_as] , fn f-> %>
+<.form let={f} for={@changeset} action={Routes.settings_path(@conn, :update)} >
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
 
-  <%= hidden_input f, :action, name: "action", value: "inserting_settings" %>
-    <%= for setting <- @settings do %>
+  <%= hidden_input f, :action, name: "action", value: "edit_settings" %>
+    <%= for label <- @labels do %>
       <p>
       <br>
-      <%= label do setting.key end %>
+        <%= label f, label %>
       <br>
-        <%= text_input f, setting.key , value: setting.value %>
+        <%= text_input f, label %>
       <br>
+        <%= error_tag f, label%>
       </p>
     <% end %>
   <div>
     <%= submit "Save" %>
   </div>
-<% end %>
+</.form>
 
-<!-- <%= form_for :key_values, Routes.settings_path(@conn, :update), fn f-> %> -->
-  <!-- <%= for setting <- @settings do %> -->
-    <!-- <p> -->
-      <!-- <br> -->
-      <!-- <%= label do setting.key end %> -->
-      <!-- <br> -->
-      <!-- <%= text_input f, setting.key , value: setting.value %> -->
-      <!-- <br> -->
-    <!-- </p> -->
-  <!-- <% end %> -->
-<!-- <%= submit "Save" %> -->
-<!-- <% end %> -->
