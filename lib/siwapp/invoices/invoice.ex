@@ -92,7 +92,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   # you can't convert an existing invoice to draft
   defp validate_draft_enablement(changeset) do
-    if get_field(changeset, :id) and
+    if get_field(changeset, :id) != nil and
          fetch_field(changeset, :draft) == {:changes, true} do
       add_error(changeset, :draft, "can't be enabled, invoice is not new")
     else
