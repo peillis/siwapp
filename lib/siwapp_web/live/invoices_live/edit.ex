@@ -4,10 +4,13 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
+  alias Siwapp.Commons
   alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok,
+      socket
+      |> assign(:series, Commons.list_series()) }
   end
 
   def handle_params(params, _url, socket) do
@@ -16,14 +19,16 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def apply_action(socket, :new, _params) do
     socket
+    |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
     |> assign(:changeset, Invoices.change(%Invoice{}))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
-    invoice = Invoices.get!(String.to_integer(id))
+    invoice = Invoices.get!(String.to_integer(id), :preload)
 
     socket
+    |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
     |> assign(:changeset, Invoices.change(invoice))
