@@ -31,14 +31,21 @@ defmodule Siwapp.Customers do
   @doc """
   Delete a customer
   """
-  def delete(%Customer{} = customer) do
-    Repo.delete(customer)
-  end
+  def delete(%Customer{:invoices => [], :recurring_invoices => []} = customer),
+    do: Repo.delete(customer)
+
+  def delete(%Customer{} = customer), do: {:error, customer}
 
   @doc """
   Gets a customer by id
   """
   def get!(id), do: Repo.get!(Customer, id)
+  def get!(id, :preload), do: Repo.get!(Customer, id) |> Repo.preload([:invoices])
+
+  def get_by_id(id), do: Repo.get(Customer, id)
+
+  def get_by_id(id, :preload),
+    do: Repo.get(Customer, id) |> Repo.preload([:invoices, :recurring_invoices])
 
   @spec get(binary | nil, binary | nil) :: Customer.t() | nil
   def get(nil, nil), do: nil
