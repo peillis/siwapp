@@ -28,7 +28,7 @@ defmodule SiwappWeb.Api.CustomersController do
     end
   end
 
-  def update(conn, customers_params = %{"id" => id}) do
+  def update(conn, %{"id" => id} = customers_params) do
     customer = Customers.get_by_id(id)
 
     if customer == nil do
