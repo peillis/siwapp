@@ -120,6 +120,72 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 100)
+    |> maybe_set_amounts()
+  end
+
+  def maybe_set_amounts(changeset) do
+    if are_items_set?(changeset) do
+      changeset
+      |> set_net_amount()
+      |> set_gross_amount()
+    else
+      changeset
+    end
+  end
+
+  defp set_net_amount(changeset) do
+    net_amount =
+      changeset
+      |> calculate_net_amount()
+
+    put_change(changeset, :net_amount, net_amount)
+  end
+
+  def set_gross_amount(changeset) do
+    taxes_amount =
+      changeset
+      |> calculate_taxes_amount()
+
+    net_amount = get_field(changeset, :net_amount)
+
+    put_change(changeset, :gross_amount, net_amount + taxes_amount)
+  end
+
+  defp calculate_net_amount(changeset) do
+    item_changeset =
+      changeset
+      |> get_field(:items)
+
+    net_amount = for val <- item_changeset, do: val.net_amount
+
+    Enum.sum(net_amount)
+    |> round()
+  end
+
+  defp calculate_taxes_amount(changeset) do
+    item_changeset =
+      changeset
+      |> get_field(:items)
+
+    taxes_amount =
+      for val <- item_changeset do
+        val.taxes_amount
+      end
+
+    Enum.reduce(taxes_amount, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
+    |> Map.values()
+    |> Enum.sum()
+    |> round()
+  end
+
+  defp are_items_set?(changeset) do
+    items = get_field(changeset, :items)
+
+    if items == [] or items == nil do
+      false
+    else
+      true
+    end
   end
 
   # you can't convert an existing invoice to draft
