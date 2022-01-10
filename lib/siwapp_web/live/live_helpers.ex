@@ -16,13 +16,13 @@ defmodule SiwappWeb.LiveHelpers do
 
   def type_of_period(period_type, period) do
     case period_type do
-      "Daily" -> sing_or_plur(period, "day")
-      "Monthly" -> sing_or_plur(period, "month")
-      "Yearly" -> sing_or_plur(period, "year")
+      "Daily" -> singular_or_plural(period, "day")
+      "Monthly" -> singular_or_plural(period, "month")
+      "Yearly" -> singular_or_plural(period, "year")
     end
   end
 
-  def sing_or_plur(period, str) do
+  defp singular_or_plural(period, str) do
     if period > 1 do
       str <> "s"
     else
