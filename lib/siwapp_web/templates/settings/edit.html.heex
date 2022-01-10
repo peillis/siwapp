@@ -7,12 +7,12 @@
   <% end %>
 
   <%= hidden_input f, :action, name: "action", value: "edit_settings" %>
-    <%= for label <- @labels do %>
+    <%= for {label, type} <- @pairs do %>
       <p>
       <br>
         <%= label f, label %>
       <br>
-        <%= text_input f, label %>
+        <%= adequate_input(label, type, f) %>
       <br>
         <%= error_tag f, label%>
       </p>

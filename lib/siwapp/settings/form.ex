@@ -15,11 +15,12 @@ defmodule Siwapp.Settings.Form do
     :days_to_due
   ]
   
-  @current_types [
+  @types [
     :string,
     :string,
     :string,
     :integer,
+    :string,
     :string,
     :string,
     :string,
@@ -31,12 +32,14 @@ defmodule Siwapp.Settings.Form do
   defstruct @labels
 
   def changeset(form, attrs \\ %{}) do
-    types = get_types
-    {form, types}
-    |> cast(attrs, Map.keys(types))
+    {form, fields_map}
+    |> cast(attrs, Map.keys(fields_map))
+    |> validate_format(:company_email, ~r/@/)
+    |> validate_inclusion(:currency, ["USD", "EUR"])  #Lista de ejemplo, ya se incluirán todas como constantes
   end
-  
-  
-  defp get_types, do: Map.new( Enum.zip( @labels, @current_types ) )
+
+  def labels, do: @labels
+  def pairs, do: Enum.zip( @labels, @types )
+  defp fields_map, do: Map.new(pairs)
 
 end

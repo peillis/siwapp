@@ -106,6 +106,8 @@ defmodule SiwappWeb.Router do
     live "/customers/", CustomerLive.Index, :index
     get "/settings", SettingsController, :edit
     post "/settings", SettingsController, :update
+    get "/settings/old", OldSettingsController, :edit
+    post "/settings/old", OldSettingsController, :update
   end
 
   scope "/", SiwappWeb do

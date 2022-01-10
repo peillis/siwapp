@@ -1,47 +1,45 @@
 defmodule Siwapp.SettingsForm do
   
+  alias Siwapp.Settings
   alias Siwapp.Settings.Form
 
-  @current_labels [
-    "Company",
-    "Company VAT ID",
-    "Company address",
-    "Company phone",
-    "Company email",
-    "Company website",
-    "Company logo",
-    "Currency",
-    "Legal terms",
-    "Days to due"
-  ]
-
+  def get_pairs, do: Form.pairs
 
   def change, do: change(%Form{}, %{})
-
   def change(%Form{} = form, attrs \\ %{}) do
     Form.changeset(form, attrs)
   end
 
-  def apply_user_settings(changeset, attrs) do
-    """
-    Still to be done
-    """
+  def prepare_data do
+    case Settings.list do
+      [] -> %Form{}
+      _  -> struct(Form, Enum.zip(Form.labels, values)) 
+    end
   end
 
-"""
-  def changeset(%{}, attrs \\ %{}) do
-    types = get_types
-    {prepare_data, types}
-    |> cast(attrs, Map.keys(types))
-  end
-  def changeset(settingsform, attrs) do
-    types = get_types
-    {settingsform, types}
-    |> cast(attrs, Map.keys(types))
+  def apply_user_settings(changeset) do
+    if changeset.errors != [] do 
+      {:error, changeset}
+    else
+      changes = Map.to_list(changeset.changes)
+      data = changeset.data
+      Enum.each(changes, fn {k,v} -> Settings.act({k,v}) end)
+      {:ok, changeset}
+    end
+ end
+ 
+  def prepare_current_settings() do
+    for key <- Form.labels do
+      if Settings.first_value?(key) do
+        Settings.new(key)
+      else
+        value = Settings.get(key).value
+        Settings.new(key, value)
+      end
+    end
   end
 
-  defp prepare_data, do: Map.new(get_labels, fn label -> {label, nil} end)
-  defp get_labels, do: for label <- @current_labels, do: String.to_atom(label)
-"""  
+  def values, do: for key <- Enum.reject(Form.labels, &(Settings.first_value?(&1) ) ), do: Settings.get(key).value
+
 end
 

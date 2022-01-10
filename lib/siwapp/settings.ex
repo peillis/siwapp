@@ -2,20 +2,10 @@ defmodule Siwapp.Settings do
   alias Siwapp.Repo
   alias Siwapp.Settings.Setting
 
-  @current_labels [
-    "Company",
-    "Company VAT ID",
-    "Company address",
-    "Company phone",
-    "Company email",
-    "Company website",
-    "Company logo",
-    "Currency",
-    "Legal terms",
-    "Days to due"
-  ]
+  def new, do: %Setting{}
+  def new(key, value \\ nil), do: %Setting{ key: to_string(key), value: value }
 
-  def list(), do: Repo.all(Setting) |> Enum.sort_by(fn setting -> setting.id end)
+  def list, do: Repo.all(Setting) |> Enum.sort_by(fn setting -> setting.id end)
 
   def create(attrs \\ %{}) do
     %Setting{}
@@ -29,6 +19,14 @@ defmodule Siwapp.Settings do
     |> Repo.update()
   end
 
+  def act({key, value}) do
+    IO.inspect {key, value}
+    case get(key) do
+      nil -> create({to_string(key), to_string(value)})
+      _ -> update(get(key), to_string(value))
+    end
+  end
+
   def delete(%Setting{} = setting) do
     Repo.delete(setting)
   end
@@ -36,27 +34,16 @@ defmodule Siwapp.Settings do
   def change(%Setting{} = setting, attrs \\ %{}) do
     Setting.changeset(setting, adequate_attrs(attrs))
   end
-
-  def prepare_current_settings() do
-    for key <- @current_labels do
-      if first_value?(key) do
-        %Setting{key: String.to_atom(key)}
-      else
-        value = get(key).value
-        %Setting{key: String.to_atom(key), value: value}
-      end
-    end
-  end
-
-  defp first_value?(key),
-    do: length(Enum.filter(list(), fn setting -> setting.key == key end)) == 0
-
+  
   def get(key), do: if(first_value?(key), do: nil, else: get!(key))
 
   defp get!(key),
-    do: Enum.filter(list(), fn setting -> setting.key == key end) |> List.first()
-
+    do: Enum.filter(list(), fn setting -> setting.key == to_string(key) end) |> List.first()
+    
   defp adequate_attrs(%{}), do: %{}
   defp adequate_attrs(value) when is_binary(value), do: %{"value" => value}
-  defp adequate_attrs({key, value}), do: %{"key" => key, "value" => value}
+  defp adequate_attrs({key, value}), do: %{"key" => to_string(key), "value" => value}
+  
+  def first_value?(key),
+    do: length(Enum.filter(list(), fn setting -> setting.key == to_string(key) end)) == 0
 end
