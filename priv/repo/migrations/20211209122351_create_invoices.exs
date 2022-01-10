@@ -4,7 +4,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
   def change do
     create table(:series) do
       add :name, :string, size: 255
-      add :value, :string, size: 255
+      add :code, :string, size: 255
       add :enabled, :boolean, default: true
       add :default, :boolean, default: false
       add :deleted_at, :utc_datetime
