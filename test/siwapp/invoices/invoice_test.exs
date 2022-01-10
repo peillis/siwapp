@@ -34,7 +34,7 @@ defmodule Siwapp.InvoiceTest do
 
   describe "Limited draft enablement" do
     test "An existing regular invoice cannot be converted to draft" do
-      {:ok, series} = Commons.create_series(%{name: "A-Series", value: "A-"})
+      {:ok, series} = Commons.create_series(%{name: "A-Series", code: "A-"})
 
       {:ok, invoice} =
         Invoices.create(%{name: "Melissa", series_id: series.id, issue_date: Date.utc_today()})
