@@ -14,7 +14,7 @@
     <tr>
       <th title="Default">Default</th>
       <th title="Name">Name</th>
-      <th title="Value">Value</th>
+      <th title="Code">Code</th>
       <th title="First Number">First Number</th>
       <th title="Enabled">Enabled</th>
     </tr>
@@ -25,7 +25,7 @@
       <tr>
         <td class="icon table-icon"><input type="radio" phx-click="defaultClicked" phx-value-id={series.id} checked={series.default}></td>
         <td><%= live_patch "#{series.name}", to: Routes.series_index_path(@socket, :edit, series) %></td>
-        <td><%= series.value %></td>
+        <td><%= series.code %></td>
         <td><%= series.first_number %></td>
         <%= if series.enabled do %>
           <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>

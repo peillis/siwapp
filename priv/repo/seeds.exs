@@ -20,7 +20,7 @@ customers = [
 ]
 
 series = [
-  %{name: "A-series", value: "A"}
+  %{name: "A-series", code: "A"}
 ]
 
 taxes = [

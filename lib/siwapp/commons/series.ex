@@ -12,7 +12,7 @@ defmodule Siwapp.Commons.Series do
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
           name: binary | nil,
-          value: binary | nil,
+          code: binary | nil,
           enabled: boolean(),
           default: boolean(),
           first_number: pos_integer() | nil,
@@ -26,14 +26,14 @@ defmodule Siwapp.Commons.Series do
              :first_number,
              :id,
              :name,
-             :value
+             :code
            ]}
 
-  @fields [:name, :value, :enabled, :default, :deleted_at, :first_number]
+  @fields [:name, :code, :enabled, :default, :deleted_at, :first_number]
 
   schema "series" do
     field :name, :string
-    field :value, :string
+    field :code, :string
     field :enabled, :boolean, default: true
     field :default, :boolean, default: false
     field :deleted_at, :utc_datetime
@@ -45,8 +45,8 @@ defmodule Siwapp.Commons.Series do
   def changeset(series, attrs \\ %{}) do
     series
     |> cast(attrs, @fields)
-    |> validate_required([:value])
+    |> validate_required([:code])
     |> validate_length(:name, max: 255)
-    |> validate_length(:value, max: 255)
+    |> validate_length(:code, max: 255)
   end
 end
