@@ -17,7 +17,7 @@ defmodule SiwappWeb.LayoutView do
         new_button("New Template", Routes.templates_edit_path(conn, :new))
 
       _ ->
-        new_button("New Invoice", Routes.page_path(conn, :edit_invoices))
+        new_button("New Invoice", Routes.invoices_edit_path(conn, :new))
     end
   end
 
