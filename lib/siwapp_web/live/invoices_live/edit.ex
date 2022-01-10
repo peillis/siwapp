@@ -3,14 +3,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias Siwapp.Invoices
-  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.{Invoice, Item}
   alias Siwapp.Commons
   alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
     {:ok,
-      socket
-      |> assign(:series, Commons.list_series()) }
+     socket
+     |> assign(:series, Commons.list_series())}
   end
 
   def handle_params(params, _url, socket) do
@@ -21,6 +21,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
+    |> assign(:invoice, %Invoice{items: []})
     |> assign(:changeset, Invoices.change(%Invoice{}))
   end
 
@@ -55,5 +56,25 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  def handle_event("add_item", _, socket) do
+    items =
+      Map.get(socket.assigns.changeset.changes, :items, []) ++ [Invoices.change_item(%Item{})]
+
+    changeset =
+      socket.assigns.changeset
+      |> Map.put(:changes, %{items: items})
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("validate", %{"invoice" => params}, socket) do
+    changeset =
+      %Invoice{}
+      |> Invoices.change(params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 end

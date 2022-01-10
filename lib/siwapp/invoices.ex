@@ -140,4 +140,8 @@ defmodule Siwapp.Invoices do
   Deletes an item
   """
   def delete_item(%Item{} = item), do: Repo.delete(item)
+
+  def change_item(%Item{} = item, attrs \\ %{}) do
+    Item.changeset(item, attrs)
+  end
 end
