@@ -66,7 +66,7 @@ defmodule Siwapp.Invoices do
   Update an invoice
   """
 
-  @spec update(Invoice.t(), map() | nil) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
+  @spec update(Invoice.t(), map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def update(%Invoice{} = invoice, attrs) do
     invoice
     |> Invoice.changeset(attrs)
@@ -150,7 +150,7 @@ defmodule Siwapp.Invoices do
   Updates an item
   """
 
-  @spec update_item(Item.t(), map() | nil) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
+  @spec update_item(Item.t(), map()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def update_item(%Item{} = item, attrs) do
     item
     |> Repo.preload(:taxes)
