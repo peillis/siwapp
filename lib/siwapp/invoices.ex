@@ -10,6 +10,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Gets a list of invoices by updated date
   """
+
+  @spec list(none() | :preload) :: [Invoice.t()]
   def list do
     # query = Query.invoices()
     Repo.all(Invoice)
@@ -20,8 +22,10 @@ defmodule Siwapp.Invoices do
   end
 
   @doc """
-  Gets a list on the invoices that macht with the paramas
+  Gets a list on the invoices that match with the params
   """
+
+  @spec list_by(atom(), any()) :: [Invoice.t()]
   def list_by(key, value) do
     query =
       case {key, value} do
@@ -75,6 +79,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Gets an invoice by id
   """
+
+  @spec get!(pos_integer(), none() | :preload) :: Invoice.t()
   def get!(id), do: Repo.get!(Invoice, id)
 
   def get!(id, :preload),
@@ -83,9 +89,12 @@ defmodule Siwapp.Invoices do
   @doc """
   Get a single invoice by the params
   """
+
+  @spec get_by!(atom(), any()) :: Invoice.t()
   def get_by!(key, value) do
     Repo.get_by!(Invoice, %{key => value})
   end
+
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking invoice changes.
@@ -94,6 +103,7 @@ defmodule Siwapp.Invoices do
     Invoice.changeset(invoice, attrs)
   end
 
+  @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
   def status(invoice) do
     cond do
       invoice.draft -> :draft
@@ -115,6 +125,7 @@ defmodule Siwapp.Invoices do
   @doc """
   Gets an item by id
   """
+  @spec get_item_by_id!(pos_integer()) :: Item.t()
   def get_item_by_id!(id), do: Repo.get!(Item, id)
 
   @doc """
