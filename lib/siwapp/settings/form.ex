@@ -2,43 +2,31 @@ defmodule Siwapp.Settings.Form do
   import Ecto.Changeset
 
   @moduledoc false
-  @labels [
-    :company,
-    :company_vat_id,
-    :company_address,
-    :company_phone,
-    :company_email,
-    :company_website,
-    :company_logo,
-    :currency,
-    :legal_terms,
-    :days_to_due
-  ]
-
-  @types [
-    :string,
-    :string,
-    :string,
-    :integer,
-    :string,
-    :string,
-    :string,
-    :string,
-    :string,
-    :integer
-  ]
+  @fields_map %{
+    company: :string,
+    company_vat_id: :string,
+    company_address: :string,
+    company_phone: :integer,
+    company_email: :string,
+    company_website: :string,
+    company_logo: :string,
+    currency: :string,
+    legal_terms: :string,
+    days_to_due: :integer
+  }
+  @labels Map.keys(@fields_map)
 
   defstruct @labels
 
   def changeset(form, attrs \\ %{}) do
-    {form, fields_map}
-    |> cast(attrs, Map.keys(fields_map))
+    {form, @fields_map}
+    |> cast(attrs, labels())
     |> validate_format(:company_email, ~r/@/)
     # Lista de ejemplo, ya se incluirán todas como constantes
     |> validate_inclusion(:currency, ["USD", "EUR"])
   end
 
   def labels, do: @labels
-  def pairs, do: Enum.zip(@labels, @types)
-  defp fields_map, do: Map.new(pairs)
+  def pairs, do: Enum.zip(labels(), types())
+  defp types, do: for(key <- labels(), do: Map.get(@fields_map, key))
 end
