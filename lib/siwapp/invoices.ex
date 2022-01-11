@@ -166,7 +166,7 @@ defmodule Siwapp.Invoices do
   @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def delete_item(%Item{} = item), do: Repo.delete(item)
 
-  @spec change_item(Item.t(), map()) :: Ecto.Changeset.t()
+
   def change_item(%Item{} = item, attrs \\ %{}) do
     Item.changeset(item, attrs)
   end
