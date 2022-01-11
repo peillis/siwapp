@@ -166,19 +166,19 @@ defmodule Siwapp.Invoices.Invoice do
     net_amount = get_field(changeset, :net_amount)
 
     taxes_amount =
-    for item <- list_items do
-      taxes_amount = Map.get(item, :taxes_amount)
+      for item <- list_items do
+        taxes_amount = Map.get(item, :taxes_amount)
 
-      if taxes_amount == %{} do
-        taxes = Map.get(item, :taxes)
+        if taxes_amount == %{} do
+          taxes = Map.get(item, :taxes)
 
-        for tax <- taxes, into: %{} do
-          {tax.name, tax.value * net_amount / 100}
+          for tax <- taxes, into: %{} do
+            {tax.name, tax.value * net_amount / 100}
+          end
+        else
+          item.taxes_amount
         end
-      else
-        item.taxes_amount
       end
-    end
 
     Enum.reduce(taxes_amount, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
     |> Map.values()
