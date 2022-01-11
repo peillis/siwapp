@@ -7,7 +7,7 @@
     <div class="field">
       <%= label @f, :terms, "Legal terms and conditions", class: "label" %>
       <p class="control">
-        <%= textarea @f, :terms, class: "textarea" %>
+        <%= textarea @f, :terms, phx_debounce: "blur", class: "textarea" %>
       </p>
       <%= error_tag @f, :terms %>
     </div>
@@ -15,7 +15,7 @@
     <div class="field">
       <%= label @f, :notes, class: "label" %>
       <p class="control">
-        <%= textarea @f, :notes, class: "textarea" %>
+        <%= textarea @f, :notes, phx_debounce: "blur", class: "textarea" %>
       </p>
       <%= error_tag @f, :notes %>
     </div>

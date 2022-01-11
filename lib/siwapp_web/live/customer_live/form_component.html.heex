@@ -1,25 +1,25 @@
 <fieldset>
   <%= label @f, :name %>
-  <%= text_input @f, :name %>
+  <%= text_input @f, :name, phx_debounce: "blur" %>
   <%= error_tag @f, :name %>
 
   <%= label @f, :identification %>
-  <%= text_input @f, :identification %>
+  <%= text_input @f, :identification, phx_debounce: "blur" %>
   <%= error_tag @f, :identification %>
 
   <%= label @f, :contact_person %>
-  <%= text_input @f, :contact_person %>
+  <%= text_input @f, :contact_person, phx_debounce: "blur" %>
   <%= error_tag @f, :contact_person %>
 
   <%= label @f, :email %>
-  <%= text_input @f, :email %>
+  <%= text_input @f, :email, phx_debounce: "blur" %>
   <%= error_tag @f, :email %>
 
   <%= label @f, :invoicing_addres %>
-  <%= text_input @f, :invoicing_addres %>
+  <%= text_input @f, :invoicing_addres, phx_debounce: "blur" %>
   <%= error_tag @f, :invoicing_addres %>
 
   <%= label @f, :shipping_addres  %>
-  <%= text_input @f, :shipping_addres %>
+  <%= text_input @f, :shipping_addres, phx_debounce: "blur" %>
   <%= error_tag @f, :shipping_addres %>
 </fieldset>

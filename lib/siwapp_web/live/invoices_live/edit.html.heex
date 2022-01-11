@@ -5,7 +5,7 @@
   <%= if @live_action == :new do %>
     <div class="field">
       <label class="checkbox">
-        <%= checkbox f, :draft, class: "checkbox" %> Save as draft
+        <%= checkbox f, :draft, phx_debounce: "blur", class: "checkbox" %> Save as draft
       </label>
     </div>
   <% end %>
@@ -19,14 +19,14 @@
       <div class="field">
         <%= label f, :series_id, class: "label" %>
         <p class=" control select is-fullwidth">
-          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}) %>
+          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur" %>
         </p>
       </div>
       <%= if @live_action == :edit do %>
         <div class="field">
             <%= label f, :number, class: "label" %>
             <p class="control">
-              <%= number_input f, :number, class: "input" %>
+              <%= number_input f, :number, phx_debounce: "blur", class: "input" %>
             </p>
             <%= error_tag f, :number %>
         </div>
@@ -34,7 +34,7 @@
       <div class="field">
         <%= label f, :currency, class: "label" %>
         <p class="control select is-fullwidth">
-          <%= select f, :currency, ["USD", "EUR", "GBP"] %>
+          <%= select f, :currency, ["USD", "EUR", "GBP"], phx_debounce: "blur" %>
         </p>
       </div>
     </div>
@@ -43,14 +43,14 @@
       <div class="field">
           <%= label f, :issue_date, class: "label" %>
           <p class="control">
-            <%= date_input f, :issue_date, class: "input" %>
+            <%= date_input f, :issue_date, phx_debounce: "blur", class: "input" %>
           </p>
           <%= error_tag f, :issue_date %>
       </div>
       <div class="field">
           <%= label f, :due_date, class: "label" %>
           <p class="control">
-            <%= date_input f, :due_date, class: "input" %>
+            <%= date_input f, :due_date, phx_debounce: "blur", class: "input" %>
           </p>
           <%= error_tag f, :due_date %>
       </div>
@@ -61,14 +61,14 @@
         <div class="column is-4-desktop is-full-mobile">
           <%= label fi, :description, class: "label" %>
           <p class="control">
-            <%= text_input fi, :description, class: "input" %>
+            <%= text_input fi, :description, phx_debounce: "blur", class: "input" %>
           </p>
           <%= error_tag fi, :description %>
         </div>
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :quantity, class: "label" %>
           <p class="control">
-            <%= text_input fi, :quantity, class: "input" %>
+            <%= text_input fi, :quantity, phx_debounce: "blur", class: "input" %>
           </p>
           <%= error_tag fi, :quantity %>
 
@@ -76,14 +76,14 @@
         <div class="column is-2-desktop is-half-mobile">
           <%= label fi, :unitary_cost, "Price", class: "label" %>
           <p class="control">
-            <%= text_input fi, :unitary_cost, class: "input" %>
+            <%= text_input fi, :unitary_cost, phx_debounce: "blur", class: "input" %>
           </p>
           <%= error_tag fi, :unitary_cost %>
         </div>
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :discount, class: "label" %>
           <p class="control">
-            <%= text_input fi, :discount, class: "input" %>
+            <%= text_input fi, :discount, phx_debounce: "blur", class: "input" %>
           </p>
           <%= error_tag fi, :discount %>
         </div>
