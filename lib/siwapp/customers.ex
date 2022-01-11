@@ -33,12 +33,20 @@ defmodule Siwapp.Customers do
   """
   def delete(%Customer{} = customer) do
     Repo.delete(customer)
+  rescue
+    e in Ecto.ConstraintError -> {:error, e.message}
   end
 
   @doc """
   Gets a customer by id
   """
   def get!(id), do: Repo.get!(Customer, id)
+  def get!(id, :preload), do: Repo.get!(Customer, id) |> Repo.preload([:invoices])
+
+  @doc """
+  Gets a customer by id
+  """
+  def get(id), do: Repo.get(Customer, id)
 
   @spec get(binary | nil, binary | nil) :: Customer.t() | nil
   def get(nil, nil), do: nil
