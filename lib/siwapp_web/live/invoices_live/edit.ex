@@ -18,11 +18,13 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
+    new_invoice = %Invoice{items: [%Item{}]}
+
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
-    |> assign(:invoice, %Invoice{items: []})
-    |> assign(:changeset, Invoices.change(%Invoice{}))
+    |> assign(:invoice, new_invoice)
+    |> assign(:changeset, Invoices.change(new_invoice))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -58,9 +60,19 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     end
   end
 
+  def handle_event("validate", %{"invoice" => params}, socket) do
+    IO.inspect params
+
+    changeset =
+      socket.assigns.invoice
+      |> Invoices.change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
+  end
+
   def handle_event("add_item", _, socket) do
     items =
-      Map.get(socket.assigns.changeset.changes, :items, []) ++ [Invoices.change_item(%Item{})]
+      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items) ++ [Invoices.change_item(%Item{})]
 
     changeset =
       socket.assigns.changeset
@@ -69,12 +81,16 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("validate", %{"invoice" => params}, socket) do
-    changeset =
-      %Invoice{}
-      |> Invoices.change(params)
-      |> Map.put(:action, :validate)
+  def handle_event("remove_item", %{"item-id" => item_id}, socket) do
+    items =
+      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items)
+      |> List.delete_at(String.to_integer(item_id))
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    changeset =
+      socket.assigns.changeset
+      |> Map.put(:changes, %{items: items})
+
+    {:noreply, assign(socket, changeset: changeset)}
   end
+
 end

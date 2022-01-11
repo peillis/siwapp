@@ -1,6 +1,7 @@
 <h1><%= @page_title %></h1>
 
 <.form let={f} for={@changeset} phx-change="validate" phx-submit="save" >
+
   <%= if @live_action == :new do %>
     <div class="field">
       <label class="checkbox">
@@ -8,7 +9,9 @@
       </label>
     </div>
   <% end %>
+
   <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
+
   <fieldset class="fieldset">
     <h2>INVOICE DETAILS</h2>
 
@@ -101,8 +104,7 @@
         <div class="column is-narrow-desktop">
           <label class="label is-invisible is-hidden-mobile">invisible</label>
           <p class="control">
-            <% IO.inspect fi %>
-            <%= link "Remove Line", to: "#", phx_click: "remove_item", phx_value_item_id: fi.data.id, class: "button is-danger is-light is-fullwidth" %>
+            <%= link "Remove Line", to: "#", phx_click: "remove_item", phx_value_item_id: fi.index, class: "button is-danger is-light is-fullwidth" %>
           </p>
         </div>
       </div>
@@ -137,8 +139,46 @@
       </div>
     </div>
   </fieldset>  
-  <.live_component module={SiwappWeb.InvoicesLive.PaymentsComponent} id="payments" f={f} />
+  
+  <fieldset class="fieldset">
+    <h2>PAYMENTS</h2>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <label class="label">Date</label>
+        <p class="control">
+          <input class="input" type="date">
+        </p>
+      </div>
+      <div class="field">
+        <label class="label">Notes</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+      <div class="field">
+        <label class="label">Amount</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+      <div class="field">
+        <label  class="label is-invisible is-hidden-mobile">invisible</label>
+        <p class="control">
+          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Payment</button>
+        </p>
+      </div>
+    </div>
+
+    <button class="column is-narrow-desktop button is-dark is-fullwidth">Add Payment</button>
+    <label class="checkbox">
+      <input type="checkbox">
+      Payment collection failed
+    </label>
+  </fieldset>
+
   <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
+  
   <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
     <div class="navbar-end navbar-items buttons">
       <%= if @live_action == :edit do %>

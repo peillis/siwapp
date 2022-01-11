@@ -66,7 +66,7 @@ defmodule Siwapp.Invoices.Invoice do
     belongs_to :series, Series
     belongs_to :customer, Customer
     belongs_to :recurring_invoice, RecurringInvoice
-    has_many :items, Item
+    has_many :items, Item, on_replace: :delete
 
     timestamps()
   end
@@ -74,6 +74,7 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
+    |> cast_assoc(:items)
     |> find_customer_or_new()
     |> validate_draft_enablement()
     |> validate_required_draft()
