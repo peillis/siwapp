@@ -3,7 +3,7 @@ defmodule SiwappWeb.OldSettingsController do
 
   alias Siwapp.Settings
   alias Siwapp.SettingsForm
-  
+
   def edit(conn, _params) do
     conn
     |> assign(:settings, SettingsForm.prepare_current_settings())
@@ -22,8 +22,8 @@ defmodule SiwappWeb.OldSettingsController do
     current = Settings.get(key)
 
     if is_nil(current) do
-      if value != "" do 
-        IO.inspect {key,value}
+      if value != "" do
+        IO.inspect({key, value})
         Settings.create({key, value})
       end
     else
