@@ -104,6 +104,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking invoice changes.
   """
+
+  @spec change(Invoice.t(), map()) :: Ecto.Changeset.t()
   def change(%Invoice{} = invoice, attrs \\ %{}) do
     Invoice.changeset(invoice, attrs)
   end
