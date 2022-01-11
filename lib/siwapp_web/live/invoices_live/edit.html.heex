@@ -1,0 +1,191 @@
+<h1><%= @page_title %></h1>
+
+<.form let={f} for={@changeset} phx-change="validate" phx-submit="save" >
+
+  <%= if @live_action == :new do %>
+    <div class="field">
+      <label class="checkbox">
+        <%= checkbox f, :draft, class: "checkbox" %> Save as draft
+      </label>
+    </div>
+  <% end %>
+
+  <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
+
+  <fieldset class="fieldset">
+    <h2>INVOICE DETAILS</h2>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :series_id, class: "label" %>
+        <p class=" control select is-fullwidth">
+          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}) %>
+        </p>
+      </div>
+      <%= if @live_action == :edit do %>
+        <div class="field">
+            <%= label f, :number, class: "label" %>
+            <p class="control">
+              <%= number_input f, :number, class: "input" %>
+            </p>
+            <%= error_tag f, :number %>
+        </div>
+      <% end %>
+      <div class="field">
+        <%= label f, :currency, class: "label" %>
+        <p class="control select is-fullwidth">
+          <%= select f, :currency, ["USD", "EUR", "GBP"] %>
+        </p>
+      </div>
+    </div>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+          <%= label f, :issue_date, class: "label" %>
+          <p class="control">
+            <%= date_input f, :issue_date, class: "input" %>
+          </p>
+          <%= error_tag f, :issue_date %>
+      </div>
+      <div class="field">
+          <%= label f, :due_date, class: "label" %>
+          <p class="control">
+            <%= date_input f, :due_date, class: "input" %>
+          </p>
+          <%= error_tag f, :due_date %>
+      </div>
+    </div>
+
+    <%= inputs_for f, :items, fn fi -> %>
+      <div class="columns is-multiline-mobile is-1 is-variable">
+        <div class="column is-4-desktop is-full-mobile">
+          <%= label fi, :description, class: "label" %>
+          <p class="control">
+            <%= text_input fi, :description, class: "input" %>
+          </p>
+          <%= error_tag fi, :description %>
+        </div>
+        <div class="column is-1-desktop is-half-mobile">
+          <%= label fi, :quantity, class: "label" %>
+          <p class="control">
+            <%= text_input fi, :quantity, class: "input" %>
+          </p>
+          <%= error_tag fi, :quantity %>
+
+        </div>
+        <div class="column is-2-desktop is-half-mobile">
+          <%= label fi, :unitary_cost, "Price", class: "label" %>
+          <p class="control">
+            <%= text_input fi, :unitary_cost, class: "input" %>
+          </p>
+          <%= error_tag fi, :unitary_cost %>
+        </div>
+        <div class="column is-1-desktop is-half-mobile">
+          <%= label fi, :discount, class: "label" %>
+          <p class="control">
+            <%= text_input fi, :discount, class: "input" %>
+          </p>
+          <%= error_tag fi, :discount %>
+        </div>
+        <div class="column is-2-desktop is-half-mobile">
+          <label class="label">Taxes</label>
+          <p class="control">
+            <input class="input" type="text" value="One,Two">
+          </p>
+        </div>
+        <div class="column is-1-desktop is-full-mobile">
+          <label class="label">Total</label>
+          <p class="control">
+            <a class="button is-static is-fullwidth">
+              Total
+            </a>
+          </p>
+        </div>
+        <div class="column is-narrow-desktop">
+          <label class="label is-invisible is-hidden-mobile">invisible</label>
+          <p class="control">
+            <%= link "Remove Line", to: "#", phx_click: "remove_item", phx_value_item_id: fi.index, class: "button is-danger is-light is-fullwidth" %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="columns is-desktop">
+      <div class="column is-2">
+        <%= link "Add Line", to: "#", phx_click: "add_item", class: "button is-dark is-fullwidth" %>
+      </div>
+
+      <div class="column is-3 is-offset-8">
+        <table class="table is-fullwidth">
+          <tbody>
+            <tr>
+              <th>Subtotal:</th>
+              <td>Amount</td>
+            </tr>
+            <tr>
+              <th>VAT</th>
+              <td>Amount</td>
+            </tr>
+            <tr>
+              <th>RETENTION</th>
+              <td>Amount</td>
+            </tr>
+            <tr>
+              <th>TOTAL</th>
+              <td>Amount</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </fieldset>  
+  
+  <fieldset class="fieldset">
+    <h2>PAYMENTS</h2>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <label class="label">Date</label>
+        <p class="control">
+          <input class="input" type="date">
+        </p>
+      </div>
+      <div class="field">
+        <label class="label">Notes</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+      <div class="field">
+        <label class="label">Amount</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+      <div class="field">
+        <label  class="label is-invisible is-hidden-mobile">invisible</label>
+        <p class="control">
+          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Payment</button>
+        </p>
+      </div>
+    </div>
+
+    <button class="column is-narrow-desktop button is-dark is-fullwidth">Add Payment</button>
+    <label class="checkbox">
+      <input type="checkbox">
+      Payment collection failed
+    </label>
+  </fieldset>
+
+  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
+  
+  <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
+    <div class="navbar-end navbar-items buttons">
+      <%= if @live_action == :edit do %>
+        <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @invoice.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+      <% end %>
+      <%= live_redirect "Back", to: Routes.invoices_index_path(@socket, :index), class: "button is-dark" %>
+      <%= submit "Save", class: "button is-success" %>
+    </div>
+  </nav>
+</.form>

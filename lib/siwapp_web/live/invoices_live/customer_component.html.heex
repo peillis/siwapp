@@ -1,0 +1,24 @@
+<fieldset class="fieldset">
+  <h2>CUSTOMER</h2>
+
+  <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer-form" f={@f} />
+
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <%= label @f, :terms, "Legal terms and conditions", class: "label" %>
+      <p class="control">
+        <%= textarea @f, :terms, class: "textarea" %>
+      </p>
+      <%= error_tag @f, :terms %>
+    </div>
+
+    <div class="field">
+      <%= label @f, :notes, class: "label" %>
+      <p class="control">
+        <%= textarea @f, :notes, class: "textarea" %>
+      </p>
+      <%= error_tag @f, :notes %>
+    </div>
+  </div>
+
+</fieldset>

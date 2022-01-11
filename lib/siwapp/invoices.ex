@@ -77,13 +77,21 @@ defmodule Siwapp.Invoices do
   """
   def get!(id), do: Repo.get!(Invoice, id)
 
-  def get!(id, :preload), do: Repo.get!(Invoice, id) |> Repo.preload([:customer, :items, :series])
+  def get!(id, :preload),
+    do: Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
 
   @doc """
   Get a single invoice by the params
   """
   def get_by!(key, value) do
     Repo.get_by!(Invoice, %{key => value})
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking invoice changes.
+  """
+  def change(%Invoice{} = invoice, attrs \\ %{}) do
+    Invoice.changeset(invoice, attrs)
   end
 
   def status(invoice) do
@@ -133,4 +141,8 @@ defmodule Siwapp.Invoices do
   Deletes an item
   """
   def delete_item(%Item{} = item), do: Repo.delete(item)
+
+  def change_item(%Item{} = item, attrs \\ %{}) do
+    Item.changeset(item, attrs)
+  end
 end
