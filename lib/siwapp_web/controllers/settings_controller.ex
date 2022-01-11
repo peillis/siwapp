@@ -26,6 +26,9 @@ defmodule SiwappWeb.SettingsController do
     end
   end
 
+  @doc """
+  Function to assign the {label, type} pairs and changeset to connexion
+  """
   def assign_changeset_and_labels(conn) do
     pairs = SettingsForm.get_pairs()
     data = SettingsForm.prepare_data()
