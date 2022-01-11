@@ -5,8 +5,7 @@
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
-
-  <%= hidden_input f, :action, name: "action", value: "edit_settings" %>
+  <%= hidden_input f, :action, name: "action", value: "insert" %>
     <%= for {label, type} <- @pairs do %>
       <p>
       <br>

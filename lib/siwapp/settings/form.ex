@@ -1,5 +1,4 @@
 defmodule Siwapp.Settings.Form do
-
   import Ecto.Changeset
 
   @labels [
@@ -14,7 +13,7 @@ defmodule Siwapp.Settings.Form do
     :legal_terms,
     :days_to_due
   ]
-  
+
   @types [
     :string,
     :string,
@@ -28,18 +27,17 @@ defmodule Siwapp.Settings.Form do
     :integer
   ]
 
-
   defstruct @labels
 
   def changeset(form, attrs \\ %{}) do
     {form, fields_map}
     |> cast(attrs, Map.keys(fields_map))
     |> validate_format(:company_email, ~r/@/)
-    |> validate_inclusion(:currency, ["USD", "EUR"])  #Lista de ejemplo, ya se incluirán todas como constantes
+    # Lista de ejemplo, ya se incluirán todas como constantes
+    |> validate_inclusion(:currency, ["USD", "EUR"])
   end
 
   def labels, do: @labels
-  def pairs, do: Enum.zip( @labels, @types )
+  def pairs, do: Enum.zip(@labels, @types)
   defp fields_map, do: Map.new(pairs)
-
 end
