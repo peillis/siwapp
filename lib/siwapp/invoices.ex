@@ -54,6 +54,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Creates an invoice
   """
+
+  @spec create(map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %Invoice{}
     |> Invoice.changeset(attrs)
@@ -63,6 +65,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Update an invoice
   """
+
+  @spec update(Invoice.t(), map() | nil) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def update(%Invoice{} = invoice, attrs) do
     invoice
     |> Invoice.changeset(attrs)
@@ -72,6 +76,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Delete an invoice
   """
+
+  @spec delete(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def delete(%Invoice{} = invoice) do
     Repo.delete(invoice)
   end
@@ -122,6 +128,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Creates an item associated to an invoice
   """
+
+  @spec create_item(Invoice.t(), map()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def create_item(%Invoice{} = invoice, attrs \\ %{}) do
     invoice
     |> Ecto.build_assoc(:items)
@@ -132,6 +140,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Updates an item
   """
+
+  @spec update_item(Item.t(), map() | nil) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def update_item(%Item{} = item, attrs) do
     item
     |> Repo.preload(:taxes)
@@ -142,5 +152,7 @@ defmodule Siwapp.Invoices do
   @doc """
   Deletes an item
   """
+
+  @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def delete_item(%Item{} = item), do: Repo.delete(item)
 end
