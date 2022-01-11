@@ -32,11 +32,9 @@ defmodule Siwapp.Customers do
   Delete a customer
   """
   def delete(%Customer{} = customer) do
-    try do
       Repo.delete(customer)
     rescue
       e in Ecto.ConstraintError -> {:error, e.message}
-    end
   end
 
   @doc """
