@@ -11,6 +11,12 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   alias Siwapp.Invoices.Invoice
 
   @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :invoicing_address,
+    :shipping_address,
     :net_amount,
     :gross_amount,
     :send_by_email,
@@ -33,6 +39,12 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   ]
 
   schema "recurring_invoices" do
+    field :identification, :string
+    field :name, :string
+    field :email, :string
+    field :contact_person, :string
+    field :invoicing_address, :string
+    field :shipping_address, :string
     field :net_amount, :integer, default: 0
     field :gross_amount, :integer, default: 0
     field :send_by_email, :boolean, default: false
