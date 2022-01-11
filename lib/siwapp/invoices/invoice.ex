@@ -12,6 +12,37 @@ defmodule Siwapp.Invoices.Invoice do
   alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
+  @type t :: %__MODULE__{
+          id: pos_integer(),
+          name: binary() | nil,
+          identification: binary() | nil,
+          email: binary() | nil,
+          contact_person: binary() | nil,
+          net_amount: non_neg_integer(),
+          gross_amount: non_neg_integer(),
+          paid_amount: non_neg_integer(),
+          draft: boolean(),
+          paid: boolean(),
+          sent_by_email: boolean(),
+          number: pos_integer() | nil,
+          issue_date: Date.t() | nil,
+          due_date: Date.t() | nil,
+          failed: boolean(),
+          deleted_number: pos_integer() | nil,
+          currency: binary() | nil,
+          invoicing_address: binary() | nil,
+          shipping_address: binary() | nil,
+          notes: binary() | nil,
+          terms: binary() | nil,
+          deleted_at: DateTime.t() | nil,
+          meta_attributes: map() | nil,
+          series_id: pos_integer() | nil,
+          customer_id: pos_integer(),
+          recurring_invoice_id: pos_integer() | nil,
+          inserted_at: DateTime.t(),
+          updated_at: DateTime.t()
+        }
+
   @fields [
     :name,
     :identification,

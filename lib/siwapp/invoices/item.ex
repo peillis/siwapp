@@ -10,6 +10,16 @@ defmodule Siwapp.Invoices.Item do
   alias Siwapp.Commons.Tax
   alias Siwapp.Invoices.Invoice
 
+  @type t :: %__MODULE__{
+          id: pos_integer(),
+          quantity: pos_integer(),
+          discount: non_neg_integer(),
+          description: binary() | nil,
+          unitary_cost: integer(),
+          deleted_at: DateTime.t() | nil,
+          invoice_id: pos_integer() | nil
+        }
+
   @fields [:quantity, :discount, :description, :unitary_cost, :deleted_at, :invoice_id]
 
   schema "items" do
