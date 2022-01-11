@@ -2,9 +2,9 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   @moduledoc false
   use SiwappWeb, :live_view
 
+  alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
-  alias Siwapp.Commons
   alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
