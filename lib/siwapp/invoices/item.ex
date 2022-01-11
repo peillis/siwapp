@@ -15,7 +15,7 @@ defmodule Siwapp.Invoices.Item do
           quantity: pos_integer(),
           discount: non_neg_integer(),
           description: binary() | nil,
-          unitary_cost: non_neg_integer(),
+          unitary_cost: integer(),
           deleted_at: DateTime.t() | nil,
           invoice_id: pos_integer() | nil
         }
