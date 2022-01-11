@@ -5,12 +5,19 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Siwapp.InvoiceHelper
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Invoice
 
   @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :invoicing_address,
+    :shipping_address,
     :net_amount,
     :gross_amount,
     :send_by_email,
@@ -33,6 +40,12 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   ]
 
   schema "recurring_invoices" do
+    field :identification, :string
+    field :name, :string
+    field :email, :string
+    field :contact_person, :string
+    field :invoicing_address, :string
+    field :shipping_address, :string
     field :net_amount, :integer, default: 0
     field :gross_amount, :integer, default: 0
     field :send_by_email, :boolean, default: false
@@ -61,6 +74,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   def changeset(recurring_invoice, attrs) do
     recurring_invoice
     |> cast(attrs, @fields)
+    |> find_customer_or_new()
     |> validate_required([:starting_date, :period, :period_type])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
