@@ -5,9 +5,9 @@ defmodule Siwapp.Invoices.Invoice do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Siwapp.InvoiceHelper
 
   alias Siwapp.Commons.Series
-  alias Siwapp.Customers
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
@@ -143,21 +143,4 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
-  defp find_customer_or_new(changeset) do
-    if is_nil(get_field(changeset, :customer_id)) do
-      identification = get_field(changeset, :identification)
-      name = get_field(changeset, :name)
-
-      case Customers.get(identification, name) do
-        nil ->
-          customer = Customer.changeset(%Customer{}, changeset.changes)
-          put_assoc(changeset, :customer, customer)
-
-        customer ->
-          put_change(changeset, :customer_id, customer.id)
-      end
-    else
-      changeset
-    end
-  end
 end

@@ -5,6 +5,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Siwapp.InvoiceHelper
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
@@ -73,6 +74,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   def changeset(recurring_invoice, attrs) do
     recurring_invoice
     |> cast(attrs, @fields)
+    |> find_customer_or_new()
     |> validate_required([:starting_date, :period, :period_type])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
