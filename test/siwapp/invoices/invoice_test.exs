@@ -39,14 +39,19 @@ defmodule Siwapp.InvoiceTest do
       {:ok, invoice} =
         Invoices.create(%{name: "Melissa", series_id: series.id, issue_date: Date.utc_today()})
 
-      changeset = Invoice.changeset(invoice, %{draft: true})
+      changeset =
+        Repo.preload(invoice, :items)
+        |> Invoice.changeset(%{draft: true})
 
       assert %{draft: ["can't be enabled, invoice is not new"]} = errors_on(changeset)
     end
 
     test "An existing draft can be re-marked as draft" do
       {:ok, invoice} = Invoices.create(%{name: "Melissa", draft: true})
-      changeset = Invoice.changeset(invoice, %{draft: true})
+
+      changeset =
+        Repo.preload(invoice, :items)
+        |> Invoice.changeset(%{draft: true})
 
       assert changeset.valid?
     end
