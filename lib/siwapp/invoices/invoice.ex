@@ -110,7 +110,7 @@ defmodule Siwapp.Invoices.Invoice do
     put_change(changeset, :net_amount, net_amount)
   end
 
-  def set_gross_amount(changeset) do
+  defp set_gross_amount(changeset) do
     taxes_amount =
       changeset
       |> calculate_taxes_amount()
