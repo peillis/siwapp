@@ -61,8 +61,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do
-    IO.inspect params
-
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
@@ -72,7 +70,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def handle_event("add_item", _, socket) do
     items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items) ++ [Invoices.change_item(%Item{})]
+      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items) ++
+        [Invoices.change_item(%Item{})]
 
     changeset =
       socket.assigns.changeset
@@ -92,5 +91,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     {:noreply, assign(socket, changeset: changeset)}
   end
-
 end

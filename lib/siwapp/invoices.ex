@@ -77,7 +77,8 @@ defmodule Siwapp.Invoices do
   """
   def get!(id), do: Repo.get!(Invoice, id)
 
-  def get!(id, :preload), do: Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
+  def get!(id, :preload),
+    do: Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
 
   @doc """
   Get a single invoice by the params
