@@ -7,6 +7,12 @@ defmodule SiwappWeb.Api.CustomersController do
   alias Siwapp.Customers
   alias SiwappWeb.Api.CustomersView
 
+  def show(conn, %{"id" => id}) do
+    customer = Customers.get(id)
+    json = Serializer.serialize(CustomersView, customer, conn)
+    render(conn, show: json)
+  end
+
   def create(conn, params) do
     params = Utils.String.expand_fields(params, &Utils.String.underscore/1)
 
@@ -29,7 +35,7 @@ defmodule SiwappWeb.Api.CustomersController do
   end
 
   def update(conn, %{"id" => id} = customers_params) do
-    customer = Customers.get_by_id(id)
+    customer = Customers.get(id)
 
     if customer == nil do
       conn
@@ -38,7 +44,7 @@ defmodule SiwappWeb.Api.CustomersController do
     else
       case Customers.update(customer, customers_params) do
         {:ok, customer} ->
-          customer = Customers.get!(customer.id, :preload)
+          customer = Customers.get(customer.id)
           json = Serializer.serialize(CustomersView, customer, conn)
           render(conn, update: json)
 
@@ -53,12 +59,12 @@ defmodule SiwappWeb.Api.CustomersController do
   end
 
   def delete(conn, %{"id" => id}) do
-    customer = Customers.get_by_id(id, :preload)
+    customer = Customers.get(id)
 
     if customer == nil do
       conn
       |> Plug.Conn.put_status(404)
-      |> render(not_found: id)
+      |> render(error: :not_found)
     else
       case Customers.delete(customer) do
         {:ok, _response} ->

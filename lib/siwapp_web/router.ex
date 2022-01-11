@@ -45,7 +45,7 @@ defmodule SiwappWeb.Router do
         Api.RecurringInvoicesController,
         :generate_invoices
 
-    resources "/customers", Api.CustomersController, except: [:new, :edit, :index, :show]
+    resources "/customers", Api.CustomersController, except: [:new, :edit, :index]
   end
 
   # Enables LiveDashboard only for development
