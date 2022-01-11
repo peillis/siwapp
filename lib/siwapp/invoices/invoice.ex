@@ -39,8 +39,8 @@ defmodule Siwapp.Invoices.Invoice do
           series_id: pos_integer() | nil,
           customer_id: pos_integer(),
           recurring_invoice_id: pos_integer() | nil,
-          inserted_at: NaiveDateTime.t(),
-          updated_at: NaiveDateTime.t()
+          inserted_at: DateTime.t(),
+          updated_at: DateTime.t()
         }
 
   @fields [
