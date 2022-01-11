@@ -18,7 +18,7 @@ defmodule SiwappWeb.Api.CustomersController do
 
     case Customers.create(params) do
       {:ok, customer} ->
-        customer = Customers.get!(customer.id, :preload)
+        customer = Customers.get(customer.id)
         json = Serializer.serialize(CustomersView, customer, conn)
 
         conn
