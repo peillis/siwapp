@@ -25,5 +25,4 @@ defmodule Siwapp.InvoiceHelper do
       changeset
     end
   end
-
 end

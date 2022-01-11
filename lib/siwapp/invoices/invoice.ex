@@ -142,5 +142,4 @@ defmodule Siwapp.Invoices.Invoice do
       |> assoc_constraint(:customer)
     end
   end
-
 end
