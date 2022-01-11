@@ -10,6 +10,7 @@ defmodule SiwappWeb.MultiselectComponent do
       socket
       |> assign(selected: MapSet.new())
       |> assign(options: MapSet.new(assigns.options))
+
     {:ok, socket}
   end
 
