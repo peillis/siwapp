@@ -133,18 +133,11 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
-  defp set_net_amount(changeset) do
-    net_amount =
-      changeset
-      |> calculate_net_amount()
-
-    put_change(changeset, :net_amount, net_amount)
-  end
+  defp set_net_amount(changeset),
+    do: put_change(changeset, :net_amount, calculate_net_amount(changeset))
 
   defp set_gross_amount(changeset) do
-    taxes_amount =
-      changeset
-      |> calculate_taxes_amount()
+    taxes_amount = calculate_taxes_amount(changeset)
 
     net_amount = get_field(changeset, :net_amount)
 
@@ -152,25 +145,40 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   defp calculate_net_amount(changeset) do
-    item_changeset =
-      changeset
-      |> get_field(:items)
+    list_items = get_field(changeset, :items)
 
-    net_amount = for val <- item_changeset, do: val.net_amount
+    for item <- list_items do
+      net_amount = Map.get(item, :net_amount)
 
-    Enum.sum(net_amount)
+      if net_amount == nil do
+        item.quantity * item.unitary_cost -
+          item.quantity * item.unitary_cost * item.discount / 100
+      else
+        item.net_amount
+      end
+    end
+    |> Enum.sum()
     |> round()
   end
 
   defp calculate_taxes_amount(changeset) do
-    item_changeset =
-      changeset
-      |> get_field(:items)
+    list_items = get_field(changeset, :items)
+    net_amount = get_field(changeset, :net_amount)
 
     taxes_amount =
-      for val <- item_changeset do
-        val.taxes_amount
+    for item <- list_items do
+      taxes_amount = Map.get(item, :taxes_amount)
+
+      if taxes_amount == %{} do
+        taxes = Map.get(item, :taxes)
+
+        for tax <- taxes, into: %{} do
+          {tax.name, tax.value * net_amount / 100}
+        end
+      else
+        item.taxes_amount
       end
+    end
 
     Enum.reduce(taxes_amount, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
     |> Map.values()
@@ -181,7 +189,7 @@ defmodule Siwapp.Invoices.Invoice do
   defp are_items_set?(changeset) do
     items = get_field(changeset, :items)
 
-    if items == [] or items == nil do
+    if items == [] do
       false
     else
       true
