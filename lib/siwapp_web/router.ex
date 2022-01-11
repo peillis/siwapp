@@ -113,6 +113,9 @@ defmodule SiwappWeb.Router do
     live "/templates", TemplatesLive.Index, :index
     live "/templates/new", TemplatesLive.Edit, :new
     live "/templates/:id/edit", TemplatesLive.Edit, :edit
+
+    get "/settings", SettingsController, :edit
+    post "/settings", SettingsController, :update
   end
 
   scope "/", SiwappWeb do
