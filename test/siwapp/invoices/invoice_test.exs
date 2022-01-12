@@ -71,7 +71,7 @@ defmodule Siwapp.InvoiceTest do
     test "Total taxes amounts of an invoice without items is an empty map" do
       {:ok, invoice} = Invoices.create(%{name: "Melissa", draft: true})
 
-      assert invoice.taxes_amount == %{}
+      assert invoice.taxes_amounts == %{}
     end
 
     test "Total taxes amounts of an invoice whose items don't have any taxes associated is an empty map" do
@@ -79,7 +79,7 @@ defmodule Siwapp.InvoiceTest do
 
       Invoices.create_item(invoice, %{quantity: 1, unitary_cost: 133, discount: 10})
 
-      assert invoice.taxes_amount == %{}
+      assert invoice.taxes_amounts == %{}
     end
 
     test "Total gross amount of an invoice without items is 0" do
@@ -113,6 +113,8 @@ defmodule Siwapp.InvoiceTest do
     end
 
     test "Total taxes amounts is a map with the total amount per tax" do
+      IO.puts "ESTE"
+
       {:ok, invoice} =
         Invoices.create(%{
           name: "Melissa",

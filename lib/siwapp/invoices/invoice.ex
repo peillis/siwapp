@@ -121,6 +121,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 100)
+    |> calculate()
   end
 
   # you can't convert an existing invoice to draft
@@ -142,5 +143,35 @@ defmodule Siwapp.Invoices.Invoice do
       |> validate_required([:series_id, :issue_date])
       |> assoc_constraint(:customer)
     end
+  end
+
+  @doc """
+  Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
+  """
+  @spec calculate(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def calculate(changeset) do
+    changeset
+    |> set_net_amount()
+    |> set_taxes_amounts()
+    # |> set_gross_amount()
+  end
+
+  defp set_net_amount(changeset) do
+    total_net_amount =
+      get_field(changeset, :items)
+      |> Enum.map(&(&1.net_amount))
+      |> Enum.sum()
+      |> round()
+
+    put_change(changeset, :net_amount, total_net_amount)
+  end
+
+  defp set_taxes_amounts(changeset) do
+    total_taxes_amounts =
+      get_field(changeset, :items)
+
+    IO.inspect total_taxes_amounts
+
+    changeset
   end
 end
