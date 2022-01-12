@@ -7,10 +7,13 @@ defmodule Siwapp.CustomersFixtures do
 
   def unique_customer_identification, do: "#{System.unique_integer()}"
 
+  def unique_customer_email, do: "customer#{System.unique_integer()}@example.com"
+
   def valid_customer_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
-      name: unique_customer_name(),
-      identification: unique_customer_identification()
+      email: unique_customer_email(),
+      identification: unique_customer_identification(),
+      name: unique_customer_name()
     })
   end
 
