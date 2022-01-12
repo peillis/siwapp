@@ -97,8 +97,19 @@ defmodule Siwapp.InvoiceTest do
     test "Total taxes amounts is a map with the total amount per tax" do
       {:ok, invoice} = Invoices.create(%{name: "Melissa", draft: true})
 
-      Invoices.create_item(invoice, %{quantity: 1, unitary_cost: 133, discount: 10, taxes: [%{name: "VAT"}]})
-      Invoices.create_item(invoice, %{quantity: 1, unitary_cost: 133, discount: 10, taxes: [%{name: "VAT"}, %{name: "RETENTION"}]})
+      Invoices.create_item(invoice, %{
+        quantity: 1,
+        unitary_cost: 133,
+        discount: 10,
+        taxes: [%{name: "VAT"}]
+      })
+
+      Invoices.create_item(invoice, %{
+        quantity: 1,
+        unitary_cost: 133,
+        discount: 10,
+        taxes: [%{name: "VAT"}, %{name: "RETENTION"}]
+      })
 
       # 119.70 (net_amount per item)
       # 119.70*(21/100) = 25.137 (VAT per item)
@@ -109,14 +120,24 @@ defmodule Siwapp.InvoiceTest do
     test "Total gross amount is the rounded sum of the total net amount and the taxes amounts" do
       {:ok, invoice} = Invoices.create(%{name: "Melissa", draft: true})
 
-      Invoices.create_item(invoice, %{quantity: 1, unitary_cost: 133, discount: 10, taxes: [%{name: "VAT"}]})
-      Invoices.create_item(invoice, %{quantity: 1, unitary_cost: 133, discount: 10, taxes: [%{name: "VAT"}, %{name: "RETENTION"}]})
+      Invoices.create_item(invoice, %{
+        quantity: 1,
+        unitary_cost: 133,
+        discount: 10,
+        taxes: [%{name: "VAT"}]
+      })
+
+      Invoices.create_item(invoice, %{
+        quantity: 1,
+        unitary_cost: 133,
+        discount: 10,
+        taxes: [%{name: "VAT"}, %{name: "RETENTION"}]
+      })
 
       # 239 (total net_amount)
       # %{"RETENTION" => -17.955, "VAT" => 50.274} (total taxes amounts)
       # 239 + 2*25.137 - 17.955 = 271.319 (total gross_amount)
       assert invoice.gross_amount = 271
     end
-
   end
 end
