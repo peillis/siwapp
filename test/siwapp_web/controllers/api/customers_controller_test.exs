@@ -95,7 +95,7 @@ defmodule SiwappWeb.Api.CustomersControllerTest do
       assert json_response(conn, 200)
     end
 
-    test "send 404 response if the customer is Not found", %{conn: conn} do
+    test "send 404 response if the customer id is Not found", %{conn: conn} do
       conn = delete(conn, Routes.customers_path(conn, :delete, 0))
       assert json_response(conn, 404)
     end
