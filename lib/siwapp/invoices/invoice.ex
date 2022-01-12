@@ -79,6 +79,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :net_amount, :integer, default: 0
     field :gross_amount, :integer, default: 0
     field :paid_amount, :integer, default: 0
+    field :taxes_amounts, :map, virtual: true, default: %{}
     field :draft, :boolean, default: false
     field :paid, :boolean, default: false
     field :sent_by_email, :boolean, default: false
