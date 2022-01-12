@@ -12,20 +12,20 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Invoice
 
-  @type currency :: <<_::8, _::_*3>>
+  @type currency :: <<_::24>>
   @typedoc """
     "Monthly" | "Daily" | "Yearly"
   """
-  @type period :: :binary
+  @type period_type :: binary
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           id: nil | integer,
-          identification: nil | String.t(),
-          name: nil | String.t(),
-          email: nil | String.t(),
-          contact_person: nil | String.t(),
-          invoicing_address: nil | String.t(),
-          shipping_address: nil | String.t(),
+          identification: nil | binary,
+          name: nil | binary,
+          email: nil | binary,
+          contact_person: nil | binary,
+          invoicing_address: nil | binary,
+          shipping_address: nil | binary,
           net_amount: integer,
           gross_amount: integer,
           send_by_email: boolean,
@@ -34,13 +34,13 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           max_ocurrences: nil | pos_integer,
           min_ocurrences: nil | pos_integer,
           period: nil | integer,
-          period_type: nil | period,
+          period_type: nil | period_type,
           starting_date: nil | Date,
           finishing_date: nil | Date,
           currency: nil | currency,
           deleted_at: nil | Date,
-          notes: nil | String.t(),
-          terms: nil | String.t(),
+          notes: nil | binary,
+          terms: nil | binary,
           meta_attributes: nil | map,
           items: nil | [map],
           customer: Ecto.Association.NotLoaded.t() | %Siwapp.Customers.Customer{},
