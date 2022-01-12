@@ -118,6 +118,9 @@ defmodule SiwappWeb.Router do
     live "/templates/:id/edit", TemplatesLive.Edit, :edit
 
     live "/recurring_invoices", RecurringInvoicesLive.Index, :index
+
+    get "/settings", SettingsController, :edit
+    post "/settings", SettingsController, :update
   end
 
   scope "/", SiwappWeb do
