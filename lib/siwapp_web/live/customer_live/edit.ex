@@ -15,8 +15,11 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
+    new_customer = %Customer{}
+
     socket
     |> assign(:page_title, "New Customer")
+    |> assign(:customer, new_customer)
     |> assign(:changeset, Customers.change(%Customer{}))
   end
 
@@ -27,6 +30,14 @@ defmodule SiwappWeb.CustomerLive.Edit do
     |> assign(:page_title, customer.name)
     |> assign(:customer, customer)
     |> assign(:changeset, Customers.change(customer))
+  end
+
+  def handle_event("validate", %{"customer" => params}, socket) do
+    changeset =
+      socket.assigns.customer
+      |> Customers.change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_event("save", %{"customer" => params, "meta" => meta}, socket) do
@@ -50,5 +61,48 @@ defmodule SiwappWeb.CustomerLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  def handle_event("delete", _params, socket) do
+    result = Customers.delete(socket.assigns.customer)
+
+    case result do
+      {:ok, _customer} ->
+        socket =
+          socket
+          |> put_flash(:info, "Customer succesfully deleted")
+          |> push_redirect(to: Routes.customer_index_path(socket, :index))
+
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  def handle_event("copy", _params, socket) do
+    invoicing_address =
+      Map.get(
+        socket.assigns.changeset.changes,
+        :invoicing_address,
+        socket.assigns.customer.invoicing_address
+      )
+
+    changeset =
+      socket.assigns.changeset
+      |> Map.put(:changes, %{shipping_address: invoicing_address})
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("active", _params, socket) do
+    new_active =
+      !Map.get(socket.assigns.changeset.changes, :active, socket.assigns.customer.active)
+
+    changeset =
+      socket.assigns.changeset
+      |> Map.put(:changes, %{active: new_active})
+
+    {:noreply, assign(socket, changeset: changeset)}
   end
 end

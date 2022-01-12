@@ -1,25 +1,47 @@
-<fieldset>
-  <%= label @f, :name %>
-  <%= text_input @f, :name, phx_debounce: "blur" %>
-  <%= error_tag @f, :name %>
+<fieldset class="fieldset">
+  <%= checkbox @f, :active, phx_click: "active" %> This customer is active
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <%= label @f, :name, class: "label" %>
+      <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
+      <%= error_tag @f, :name %>
+    </div>
 
-  <%= label @f, :identification %>
-  <%= text_input @f, :identification, phx_debounce: "blur" %>
-  <%= error_tag @f, :identification %>
+    <div class="field">
+      <%= label @f, :identification, class: "label" %>
+      <%= text_input @f, :identification, phx_debounce: "blur", class: "input" %>
+      <%= error_tag @f, :identification %>
+    </div>
+  </div>
 
-  <%= label @f, :contact_person %>
-  <%= text_input @f, :contact_person, phx_debounce: "blur" %>
-  <%= error_tag @f, :contact_person %>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <%= label @f, :contact_person, class: "label" %>
+      <%= text_input @f, :contact_person, phx_debounce: "blur", class: "input" %>
+      <%= error_tag @f, :contact_person %>
+    </div>
 
-  <%= label @f, :email %>
-  <%= text_input @f, :email, phx_debounce: "blur" %>
-  <%= error_tag @f, :email %>
+    <div class="field">
+      <%= label @f, :email, class: "label" %>
+      <%= text_input @f, :email, phx_debounce: "blur", class: "input" %>
+      <%= error_tag @f, :email %>
+    </div>
+  </div>
 
-  <%= label @f, :invoicing_addres %>
-  <%= text_input @f, :invoicing_addres, phx_debounce: "blur" %>
-  <%= error_tag @f, :invoicing_addres %>
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <%= label @f, :invoicing_address, class: "label" %>
+      <%= textarea @f, :invoicing_address, phx_debounce: "blur", class: "textarea" %>
+      <%= error_tag @f, :invoicing_address %>
+    </div>
 
-  <%= label @f, :shipping_addres  %>
-  <%= text_input @f, :shipping_addres, phx_debounce: "blur" %>
-  <%= error_tag @f, :shipping_addres %>
+    <div class="field">
+      <%= label @f, :shipping_address, class: "label"  %>
+      <%= textarea @f, :shipping_address, phx_debounce: "blur", class: "textarea" %>
+      <%= error_tag @f, :shipping_address %>
+      <p class="help">
+        <a phx-click="copy"> Copy Invoicing Address </a>
+      </p>
+    </div>
+  </div>
 </fieldset>
