@@ -2,6 +2,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   @moduledoc """
   Recurring Invoice
   """
+
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -10,6 +11,46 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Invoice
+
+  @type currency :: <<_::8, _::_*3>>
+  @typedoc """
+    "Monthly" | "Daily" | "Yearly"
+  """
+  @type period :: :binary
+  @type t() :: %__MODULE__{
+          __meta__: Ecto.Schema.Metadata.t(),
+          id: nil | integer,
+          identification: nil | String.t(),
+          name: nil | String.t(),
+          email: nil | String.t(),
+          contact_person: nil | String.t(),
+          invoicing_address: nil | String.t(),
+          shipping_address: nil | String.t(),
+          net_amount: integer,
+          gross_amount: integer,
+          send_by_email: boolean,
+          days_to_due: nil | integer,
+          enabled: boolean,
+          max_ocurrences: nil | pos_integer,
+          min_ocurrences: nil | pos_integer,
+          period: nil | integer,
+          period_type: nil | period,
+          starting_date: nil | Date,
+          finishing_date: nil | Date,
+          currency: nil | currency,
+          deleted_at: nil | Date,
+          notes: nil | String.t(),
+          terms: nil | String.t(),
+          meta_attributes: nil | map,
+          items: nil | [map],
+          customer: Ecto.Association.NotLoaded.t() | %Siwapp.Customers.Customer{},
+          series: Ecto.Association.NotLoaded.t() | [%Siwapp.Commons.Series{}],
+          invoices: Ecto.Association.NotLoaded.t() | [%Siwapp.Invoices.Invoice{}],
+          updated_at: nil | DateTime,
+          inserted_at: nil | DateTime,
+          customer_id: nil | integer,
+          series_id: nil | integer
+        }
 
   @fields [
     :name,
@@ -70,6 +111,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     timestamps()
   end
 
+  @spec changeset(t, map) :: Ecto.Changeset.t()
   @doc false
   def changeset(recurring_invoice, attrs) do
     recurring_invoice
