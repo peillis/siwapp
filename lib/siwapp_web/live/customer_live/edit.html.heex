@@ -1,11 +1,50 @@
 <h1><%= @page_title %></h1>
 
 <.form let={f} for={@changeset} phx-submit="save">
-<%= #require IEx; IEx.pry %>
-  <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer" f={f} />
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
-  <%= submit "Save" %>
-  <!-- in future we will redirect to customer listing -->
-  <%= live_patch "Back", to: Routes.customer_index_path(@socket, :index) %>
-</.form>
+  <fieldset class="fieldset">
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :name, class: "label" %>
+        <%= text_input f, :name, class: "input" %>
+        <%= error_tag f, :name %>
+      </div>
 
+      <div class="field">
+        <%= label f, :identification, class: "label" %>
+        <%= text_input f, :identification, class: "input" %>
+        <%= error_tag f, :identification %>
+      </div>
+    </div>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :contact_person, class: "label" %>
+        <%= text_input f, :contact_person, class: "input" %>
+        <%= error_tag f, :contact_person %>
+      </div>
+
+      <div class="field">
+        <%= label f, :email, class: "label" %>
+        <%= text_input f, :email, class: "input" %>
+        <%= error_tag f, :email %>
+      </div>
+    </div>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :invoicing_address, class: "label" %>
+        <%= text_input f, :invoicing_address, class: "input" %>
+        <%= error_tag f, :invoicing_address %>
+      </div>
+
+      <div class="field">
+        <%= label f, :shipping_address, class: "label"  %>
+        <%= text_input f, :shipping_address, class: "input" %>
+        <%= error_tag f, :shipping_address %>
+      </div>
+    </div>
+  </fieldset>
+  <.live_component module={SiwappWeb.CustomerLive.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes}/>
+  <%= submit "Save", class: "button is-success" %>
+  <%= button "Back", to: Routes.customer_index_path(@socket, :index), method: :get, class: "button is-info" %>
+</.form>

@@ -1,0 +1,17 @@
+<fieldset class="fieldset">
+  <%= for {k, v} <- @meta_attributes do %>
+    <div class="field is-horizontal field-body">
+      <input class="field input" type="text" name="meta[keys][]" value={k}/>
+      <input class="field input" type="text" name="meta[values][]" value={v}/>
+      <button class="button is-danger" phx-click="remove" phx-value-key={k} phx-target={@myself}> Remove </button>
+      <br/>
+    </div>
+  <% end %>
+
+  <div class="field is-horizontal field-body">
+    <input class="field input" type="text" name="meta[keys][]" phx-blur="changing-key" phx-target={@myself} placeholder="Key" />
+    <input class="field input" type="text" name="meta[values][]" phx-blur="changing-value" phx-target={@myself} placeholder="Value" />
+    <button class="button is-success" phx-click="add" phx-target={@myself}> Add </button>
+  </div>
+</fieldset>
+
