@@ -15,7 +15,7 @@ defmodule SiwappWeb.SettingsController do
     changeset = SettingsForm.change(data, attrs)
 
     case SettingsForm.apply_user_settings(changeset) do
-      {:ok, changeset} ->
+      {:ok, _changeset} ->
         conn
         |> assign_changeset_and_labels()
         |> put_flash(:info, "Settings saved succesfully")

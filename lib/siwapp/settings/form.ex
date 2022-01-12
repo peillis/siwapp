@@ -22,7 +22,7 @@ defmodule Siwapp.Settings.Form do
     {form, @fields_map}
     |> cast(attrs, labels())
     |> validate_format(:company_email, ~r/@/)
-    # Lista de ejemplo, ya se incluirán todas como constantes
+    # Example list of currency, will be updated in future
     |> validate_inclusion(:currency, ["USD", "EUR"])
   end
 
