@@ -30,7 +30,7 @@ defmodule Siwapp.Settings.SettingBundle do
   @spec labels :: [atom]
   def labels, do: @labels
   @spec fields_map :: map
-  def fields_map, do: Map.new(@fields_keywordlist)
+  defp fields_map, do: Map.new(@fields_keywordlist)
 
   defp validate_email(changeset) do
     changeset

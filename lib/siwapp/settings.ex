@@ -4,16 +4,6 @@ defmodule Siwapp.Settings do
 
   @moduledoc false
 
-  def list, do: Repo.all(Setting)
-
-  @doc """
-  Function to make setting changeset with adequate_attrs
-  """
-  @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()
-  def change(%Setting{} = setting, attrs) do
-    Setting.changeset(setting, adequate_attrs(attrs))
-  end
-
   @doc """
   Creates a setting given a key
   """
@@ -23,23 +13,6 @@ defmodule Siwapp.Settings do
     |> change({to_string(key), value})
     |> Repo.insert()
   end
-
-  @doc """
-  Updates associated setting to key with given value
-  """
-  @spec update({atom, any}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
-  def update({key, value}) do
-    get(key)
-    |> change({to_string(key), to_string(value)})
-    |> Repo.update()
-  end
-
-  @doc """
-  Gets setting for given key
-  """
-  @spec get(atom) :: Setting.t()
-  def get(key),
-    do: Enum.filter(list(), fn setting -> setting.key == to_string(key) end) |> List.first()
 
   def change_bundle(%SettingBundle{} = setting_bundle, attrs \\ %{}) do
     SettingBundle.changeset(setting_bundle, attrs)
@@ -65,11 +38,27 @@ defmodule Siwapp.Settings do
     end
   end
 
-  @doc """
-  Function to get values saved in database
-  """
+  @spec list :: Setting.t()
+  defp list, do: Repo.all(Setting)
+
+  @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()
+  defp change(%Setting{} = setting, attrs) do
+    Setting.changeset(setting, adequate_attrs(attrs))
+  end
+
+  @spec update({atom, any}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
+  defp update({key, value}) do
+    get(key)
+    |> change({to_string(key), to_string(value)})
+    |> Repo.update()
+  end
+
+  @spec get(atom) :: Setting.t()
+  defp get(key),
+    do: Enum.filter(list(), fn setting -> setting.key == to_string(key) end) |> List.first()
+
   @spec values :: [nil | binary]
-  def values do
+  defp values do
     for key <- SettingBundle.labels(), do: get(key).value
   end
 
