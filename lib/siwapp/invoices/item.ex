@@ -28,7 +28,7 @@ defmodule Siwapp.Invoices.Item do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    field :net_amount, :float, virtual: true
+    field :net_amount, :float, virtual: true, default: 0.0
     field :taxes_amount, :map, virtual: true, default: %{}
     belongs_to :invoice, Invoice
 
@@ -40,7 +40,7 @@ defmodule Siwapp.Invoices.Item do
   def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, @fields)
-    |> find_taxes()
+    |> find_taxes(attrs)
     |> foreign_key_constraint(:invoice_id)
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
@@ -85,14 +85,9 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  defp find_taxes(changeset) do
-    tax_names =
-      changeset
-      |> cast_assoc(:taxes)
-      |> get_field(:taxes)
-      |> Enum.map(& &1.name)
-
-    taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in tax_names))
+  defp find_taxes(changeset, attrs) do
+    taxes = Map.get(attrs, :taxes, [])
+    taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in taxes))
     put_assoc(changeset, :taxes, taxes_assoc)
   end
 end

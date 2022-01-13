@@ -125,13 +125,13 @@ defmodule Siwapp.InvoiceTest do
               quantity: 1,
               unitary_cost: 133,
               discount: 10,
-              taxes: [%{name: "VAT"}]
+              taxes: ["VAT"]
             },
             %{
               quantity: 1,
               unitary_cost: 133,
               discount: 10,
-              taxes: [%{name: "VAT"}, %{name: "RETENTION"}]
+              taxes: ["VAT", "RETENTION"]
             }
           ]
         })
@@ -155,13 +155,13 @@ defmodule Siwapp.InvoiceTest do
               quantity: 1,
               unitary_cost: 133,
               discount: 10,
-              taxes: [%{name: "VAT"}]
+              taxes: ["VAT"]
             },
             %{
               quantity: 1,
               unitary_cost: 133,
               discount: 10,
-              taxes: [%{name: "VAT"}, %{name: "RETENTION"}]
+              taxes: ["VAT", "RETENTION"]
             }
           ]
         })
