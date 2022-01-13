@@ -15,11 +15,8 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
-    new_customer = %Customer{}
-
     socket
     |> assign(:page_title, "New Customer")
-    |> assign(:customer, new_customer)
     |> assign(:changeset, Customers.change(%Customer{}))
   end
 
@@ -34,7 +31,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def handle_event("validate", %{"customer" => params}, socket) do
     changeset =
-      socket.assigns.customer
+      socket.assigns.changeset.data
       |> Customers.change(params)
 
     {:noreply, assign(socket, :changeset, changeset)}
@@ -85,7 +82,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
       Map.get(
         socket.assigns.changeset.changes,
         :invoicing_address,
-        socket.assigns.customer.invoicing_address
+        socket.assigns.changeset.data.invoicing_address
       )
 
     changeset =
@@ -97,7 +94,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   def handle_event("active", _params, socket) do
     new_active =
-      !Map.get(socket.assigns.changeset.changes, :active, socket.assigns.customer.active)
+      !Map.get(socket.assigns.changeset.changes, :active, socket.assigns.changeset.data.active)
 
     changeset =
       socket.assigns.changeset
