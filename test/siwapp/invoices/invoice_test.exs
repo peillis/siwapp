@@ -1,9 +1,9 @@
 defmodule Siwapp.InvoiceTest do
   use Siwapp.DataCase
 
+  alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Commons
 
   import Siwapp.InvoicesFixtures
 

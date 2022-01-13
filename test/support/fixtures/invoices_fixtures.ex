@@ -4,10 +4,10 @@ defmodule Siwapp.InvoicesFixtures do
   entities via the `Siwapp.Invoices` context.
   """
 
+  alias Siwapp.Commons
   alias Siwapp.CustomersFixtures
   alias Siwapp.Invoices
   alias Siwapp.Repo
-  alias Siwapp.Commons
 
   def valid_item_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
