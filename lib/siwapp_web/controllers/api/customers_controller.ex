@@ -9,8 +9,15 @@ defmodule SiwappWeb.Api.CustomersController do
 
   def show(conn, %{"id" => id}) do
     customer = Customers.get(id)
-    json = Serializer.serialize(CustomersView, customer, conn)
-    render(conn, show: json)
+
+    if customer == nil do
+      conn
+      |> Plug.Conn.put_status(404)
+      |> render(show: %{"errors" => "Customer not found"})
+    else
+      json = Serializer.serialize(CustomersView, customer, conn)
+      render(conn, show: json)
+    end
   end
 
   def create(conn, params) do
