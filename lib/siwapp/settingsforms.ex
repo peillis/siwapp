@@ -1,16 +1,16 @@
 defmodule Siwapp.SettingsForm do
   alias Siwapp.Settings
-  alias Siwapp.Settings.Form
+  alias Siwapp.SettingsForms.SettingsForm
 
   @moduledoc false
 
   @spec get_pairs :: list
-  def get_pairs, do: Form.pairs()
+  def get_pairs, do: SettingsForm.pairs()
 
-  def change, do: change(%Form{}, %{})
+  def change, do: change(%SettingsForm{}, %{})
 
-  def change(%Form{} = form, attrs \\ %{}) do
-    Form.changeset(form, attrs)
+  def change(%SettingsForm{} = form, attrs \\ %{}) do
+    SettingsForm.changeset(form, attrs)
   end
 
   @doc """
@@ -19,8 +19,8 @@ defmodule Siwapp.SettingsForm do
   @spec prepare_data :: struct
   def prepare_data do
     case Settings.list() do
-      [] -> %Form{}
-      _ -> struct(Form, Enum.zip(Form.labels(), values()))
+      [] -> %SettingsForm{}
+      _ -> struct(SettingsForm, Enum.zip(SettingsForm.labels(), values()))
     end
   end
 
@@ -35,7 +35,6 @@ defmodule Siwapp.SettingsForm do
     else
       changes = Map.to_list(changeset.changes)
       Enum.each(changes, fn {k, v} -> Settings.act({k, v}) end)
-      changeset = change(prepare_data())
       {:ok, changeset}
     end
   end
@@ -45,7 +44,7 @@ defmodule Siwapp.SettingsForm do
   """
   @spec values :: [nil | binary]
   def values do
-    for key <- Form.labels() do
+    for key <- SettingsForm.labels() do
       case Settings.get(key) do
         nil -> nil
         settingform -> settingform.value

@@ -32,7 +32,7 @@ defmodule Siwapp.Settings do
       _ ->
         case value do
           nil -> delete(get(key))
-          value -> update(get(key), to_string(value))
+          value -> update(get(key), {to_string(key), to_string(value)})
         end
     end
   end
@@ -54,9 +54,9 @@ defmodule Siwapp.Settings do
   @doc """
   Returns correct attrs to apply changeset to {key, value}
   """
-  @spec adequate_attrs(map | binary | tuple) :: map
+  @spec adequate_attrs(map | tuple) :: map
   def adequate_attrs(%{}), do: %{}
-  def adequate_attrs(value) when is_binary(value), do: %{"value" => value}
+  # def adequate_attrs(value) when is_binary(value), do: %{"value" => value}
   def adequate_attrs({key, value}), do: %{"key" => to_string(key), "value" => value}
 
   @doc """
