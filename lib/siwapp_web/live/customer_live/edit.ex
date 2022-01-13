@@ -61,20 +61,14 @@ defmodule SiwappWeb.CustomerLive.Edit do
   end
 
   def handle_event("delete", _params, socket) do
-    result = Customers.delete(socket.assigns.customer)
+    Customers.delete(socket.assigns.customer)
 
-    case result do
-      {:ok, _customer} ->
-        socket =
-          socket
-          |> put_flash(:info, "Customer succesfully deleted")
-          |> push_redirect(to: Routes.customer_index_path(socket, :index))
+    socket =
+      socket
+      |> put_flash(:info, "Customer succesfully deleted")
+      |> push_redirect(to: Routes.customer_index_path(socket, :index))
 
-        {:noreply, socket}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+    {:noreply, socket}
   end
 
   def handle_event("copy", _params, socket) do
