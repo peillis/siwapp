@@ -12,7 +12,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Invoice
 
-  @type currency :: <<_::24>>
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           id: nil | pos_integer(),
@@ -33,7 +32,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           period_type: nil | binary,
           starting_date: nil | Date.t(),
           finishing_date: nil | Date.t(),
-          currency: nil | currency,
+          currency: nil | <<_::24>>,
           deleted_at: nil | Date.t(),
           notes: nil | binary,
           terms: nil | binary,
