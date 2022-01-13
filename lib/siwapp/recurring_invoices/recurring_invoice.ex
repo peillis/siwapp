@@ -13,13 +13,9 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   alias Siwapp.Invoices.Invoice
 
   @type currency :: <<_::24>>
-  @typedoc """
-    "Monthly" | "Daily" | "Yearly"
-  """
-  @type period_type :: binary
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
-          id: nil | integer,
+          id: nil | pos_integer(),
           identification: nil | binary,
           name: nil | binary,
           email: nil | binary,
@@ -31,25 +27,25 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           send_by_email: boolean,
           days_to_due: nil | integer,
           enabled: boolean,
-          max_ocurrences: nil | pos_integer,
-          min_ocurrences: nil | pos_integer,
+          max_ocurrences: nil | pos_integer(),
+          min_ocurrences: nil | pos_integer(),
           period: nil | integer,
-          period_type: nil | period_type,
-          starting_date: nil | Date,
-          finishing_date: nil | Date,
+          period_type: nil | binary,
+          starting_date: nil | Date.t(),
+          finishing_date: nil | Date.t(),
           currency: nil | currency,
-          deleted_at: nil | Date,
+          deleted_at: nil | Date.t(),
           notes: nil | binary,
           terms: nil | binary,
           meta_attributes: nil | map,
           items: nil | [map],
-          customer: Ecto.Association.NotLoaded.t() | %Siwapp.Customers.Customer{},
-          series: Ecto.Association.NotLoaded.t() | [%Siwapp.Commons.Series{}],
-          invoices: Ecto.Association.NotLoaded.t() | [%Siwapp.Invoices.Invoice{}],
-          updated_at: nil | DateTime,
-          inserted_at: nil | DateTime,
-          customer_id: nil | integer,
-          series_id: nil | integer
+          customer: Ecto.Association.NotLoaded.t() | Customer.t(),
+          series: Ecto.Association.NotLoaded.t() | [Series.t()],
+          invoices: Ecto.Association.NotLoaded.t() | [Invoice.t()],
+          updated_at: nil | DateTime.t(),
+          inserted_at: nil | DateTime.t(),
+          customer_id: nil | pos_integer(),
+          series_id: nil | pos_integer()
         }
 
   @fields [
