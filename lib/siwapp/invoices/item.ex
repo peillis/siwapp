@@ -78,7 +78,7 @@ defmodule Siwapp.Invoices.Item do
 
         taxes_amounts =
           for tax <- taxes, into: %{} do
-            {tax.name, tax.value * net_amount / 100}
+            {tax.name, net_amount * (tax.value / 100)}
           end
 
         put_change(changeset, :taxes_amount, taxes_amounts)
