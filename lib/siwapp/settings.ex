@@ -1,6 +1,6 @@
 defmodule Siwapp.Settings do
   alias Siwapp.Repo
-  alias Siwapp.Settings.Setting
+  alias Siwapp.Settings.{Setting, SettingBundle}
 
   @moduledoc false
 
@@ -9,7 +9,7 @@ defmodule Siwapp.Settings do
   @doc """
   Function to make setting changeset with adequate_attrs
   """
-  @spec change(Setting.t(), atom | tuple) :: Ecto.Changeset.t()
+  @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()
   def change(%Setting{} = setting, attrs) do
     Setting.changeset(setting, adequate_attrs(attrs))
   end
@@ -17,17 +17,17 @@ defmodule Siwapp.Settings do
   @doc """
   Creates a setting given a key
   """
-  @spec create(atom) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
-  def create(key) when is_atom(key) do
+  @spec create({atom, binary}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
+  def create({key, value}) do
     %Setting{}
-    |> change(key)
+    |> change({to_string(key), value})
     |> Repo.insert()
   end
 
   @doc """
   Updates associated setting to key with given value
   """
-  @spec update(tuple) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
+  @spec update({atom, any}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def update({key, value}) do
     get(key)
     |> change({to_string(key), to_string(value)})
@@ -41,10 +41,38 @@ defmodule Siwapp.Settings do
   def get(key),
     do: Enum.filter(list(), fn setting -> setting.key == to_string(key) end) |> List.first()
 
+  def change_bundle(%SettingBundle{} = setting_bundle, attrs \\ %{}) do
+    SettingBundle.changeset(setting_bundle, attrs)
+  end
+
   @doc """
-  Returns correct attrs to apply changeset to {key, value}
+  Function to prepare_data which will be changed to fill the form
   """
-  @spec adequate_attrs(tuple | atom) :: map
-  def adequate_attrs(key) when is_atom(key), do: %{"key" => to_string(key)}
-  def adequate_attrs({key, value}), do: %{"key" => to_string(key), "value" => value}
+  def prepare_data, do: struct(SettingBundle, Enum.zip(SettingBundle.labels(), values()))
+
+  @doc """
+  Function which takes the filled form changeset and applies proper actions
+  """
+  @spec apply_user_settings(Ecto.Changeset.t()) ::
+          {:ok, Ecto.Changeset.t()} | {:error, Ecto.Changeset.t()}
+  def apply_user_settings(changeset) do
+    if changeset.errors != [] do
+      {:error, changeset}
+    else
+      changes = Map.to_list(changeset.changes)
+      Enum.each(changes, fn {k, v} -> update({k, v}) end)
+      {:ok, changeset}
+    end
+  end
+
+  @doc """
+  Function to get values saved in database
+  """
+  @spec values :: [nil | binary]
+  def values do
+    for key <- SettingBundle.labels(), do: get(key).value
+  end
+
+  @spec adequate_attrs({binary, binary}) :: map
+  defp adequate_attrs({key, value}), do: %{"key" => key, "value" => value}
 end

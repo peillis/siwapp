@@ -1,22 +1,22 @@
 defmodule SiwappWeb.SettingsController do
   use SiwappWeb, :controller
 
-  alias Siwapp.SettingsForm
+  alias Siwapp.Settings
 
   def edit(conn, _params) do
-    data = SettingsForm.prepare_data()
-    changeset = SettingsForm.change(data)
+    data = Settings.prepare_data()
+    changeset = Settings.change_bundle(data)
 
     conn
     |> assign(:changeset, changeset)
     |> render("edit.html")
   end
 
-  def update(conn, %{"settings_form" => attrs}) do
-    data = SettingsForm.prepare_data()
-    changeset = SettingsForm.change(data, attrs)
+  def update(conn, %{"setting_bundle" => attrs}) do
+    data = Settings.prepare_data()
+    changeset = Settings.change_bundle(data, attrs)
 
-    case SettingsForm.apply_user_settings(changeset) do
+    case Settings.apply_user_settings(changeset) do
       {:ok, changeset} ->
         conn
         |> assign(:changeset, changeset)

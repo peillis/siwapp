@@ -1,4 +1,4 @@
-defmodule Siwapp.SettingsForms.SettingsForm do
+defmodule Siwapp.Settings.SettingBundle do
   import Ecto.Changeset
 
   @moduledoc false
@@ -9,7 +9,6 @@ defmodule Siwapp.SettingsForms.SettingsForm do
     company_phone: :string,
     company_email: :string,
     company_website: :string,
-    company_logo: :string,
     currency: :string,
     days_to_due: :integer,
     company_address: :string,
@@ -20,8 +19,8 @@ defmodule Siwapp.SettingsForms.SettingsForm do
 
   defstruct @labels
 
-  def changeset(settingsform, attrs \\ %{}) do
-    {settingsform, fields_map()}
+  def changeset(setting_bundle, attrs \\ %{}) do
+    {setting_bundle, fields_map()}
     |> cast(attrs, labels())
     |> validate_email()
     # Example list of currency, will be updated to whole
@@ -35,7 +34,9 @@ defmodule Siwapp.SettingsForms.SettingsForm do
 
   defp validate_email(changeset) do
     changeset
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
-    |> validate_length(:email, max: 160)
+    |> validate_format(:company_email, ~r/^[^\s]+@[^\s]+$/,
+      message: "must have the @ sign and no spaces"
+    )
+    |> validate_length(:company_email, max: 160)
   end
 end
