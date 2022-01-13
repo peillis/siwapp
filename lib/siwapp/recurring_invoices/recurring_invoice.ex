@@ -2,6 +2,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   @moduledoc """
   Recurring Invoice
   """
+
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -10,6 +11,41 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.Invoice
+
+  @type t() :: %__MODULE__{
+          __meta__: Ecto.Schema.Metadata.t(),
+          id: nil | pos_integer(),
+          identification: nil | binary,
+          name: nil | binary,
+          email: nil | binary,
+          contact_person: nil | binary,
+          invoicing_address: nil | binary,
+          shipping_address: nil | binary,
+          net_amount: integer,
+          gross_amount: integer,
+          send_by_email: boolean,
+          days_to_due: nil | integer,
+          enabled: boolean,
+          max_ocurrences: nil | pos_integer(),
+          min_ocurrences: nil | pos_integer(),
+          period: nil | integer,
+          period_type: nil | binary,
+          starting_date: nil | Date.t(),
+          finishing_date: nil | Date.t(),
+          currency: nil | <<_::24>>,
+          deleted_at: nil | Date.t(),
+          notes: nil | binary,
+          terms: nil | binary,
+          meta_attributes: nil | map,
+          items: nil | [map],
+          customer: Ecto.Association.NotLoaded.t() | Customer.t(),
+          series: Ecto.Association.NotLoaded.t() | [Series.t()],
+          invoices: Ecto.Association.NotLoaded.t() | [Invoice.t()],
+          updated_at: nil | DateTime.t(),
+          inserted_at: nil | DateTime.t(),
+          customer_id: nil | pos_integer(),
+          series_id: nil | pos_integer()
+        }
 
   @fields [
     :name,
@@ -70,6 +106,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     timestamps()
   end
 
+  @spec changeset(t, map) :: Ecto.Changeset.t()
   @doc false
   def changeset(recurring_invoice, attrs) do
     recurring_invoice
