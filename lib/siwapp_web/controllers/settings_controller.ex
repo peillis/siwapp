@@ -4,38 +4,27 @@ defmodule SiwappWeb.SettingsController do
   alias Siwapp.SettingsForm
 
   def edit(conn, _params) do
+    data = SettingsForm.prepare_data()
+    changeset = SettingsForm.change(data)
+
     conn
-    |> assign_changeset_and_labels()
+    |> assign(:changeset, changeset)
     |> render("edit.html")
   end
 
-  def update(conn, %{"form" => attrs}) do
-    conn = assign_changeset_and_labels(conn)
-    data = conn.assigns.changeset.data
+  def update(conn, %{"settings_form" => attrs}) do
+    data = SettingsForm.prepare_data()
     changeset = SettingsForm.change(data, attrs)
 
     case SettingsForm.apply_user_settings(changeset) do
-      {:ok, _changeset} ->
+      {:ok, changeset} ->
         conn
-        |> assign_changeset_and_labels()
+        |> assign(:changeset, changeset)
         |> put_flash(:info, "Settings saved succesfully")
         |> render("edit.html")
 
       {:error, changeset} ->
         render(conn, "edit.html", changeset: %{changeset | action: :insert})
     end
-  end
-
-  @doc """
-  Function to assign the {label, type} pairs and changeset to connexion
-  """
-  def assign_changeset_and_labels(conn) do
-    pairs = SettingsForm.get_pairs()
-    data = SettingsForm.prepare_data()
-    changeset = SettingsForm.change(data)
-
-    conn
-    |> assign(:pairs, pairs)
-    |> assign(:changeset, changeset)
   end
 end
