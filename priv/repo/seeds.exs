@@ -15,6 +15,8 @@ alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings, Templat
 
 today = Date.utc_today()
 
+{:ok, file} = File.read("/home/pablo/Escritorio/elixir/siwapp/priv/repo/fixtures/print_default.html.heex")
+
 customers = [
   %{name: "Pablo"},
   %{name: "Rodri"}
@@ -104,7 +106,7 @@ settings = [
 templates = [
   %{
     name: "Print Default",
-    template: "#{__DIR__}/fixtures/print_default.html.heex"
+    template: file
   }
 ]
 
