@@ -85,15 +85,4 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
     {:noreply, assign(socket, changeset: changeset)}
   end
-
-  def handle_event("active", _params, socket) do
-    new_active =
-      !Map.get(socket.assigns.changeset.changes, :active, socket.assigns.changeset.data.active)
-
-    changeset =
-      socket.assigns.changeset
-      |> Map.put(:changes, %{active: new_active})
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
 end
