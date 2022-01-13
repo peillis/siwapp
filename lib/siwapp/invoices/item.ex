@@ -28,7 +28,7 @@ defmodule Siwapp.Invoices.Item do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    field :net_amount, :float, virtual: true
+    field :net_amount, :float, virtual: true, default: 0.0
     field :taxes_amount, :map, virtual: true, default: %{}
     belongs_to :invoice, Invoice
 
