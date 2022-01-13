@@ -88,17 +88,15 @@ recurring_invoices = [
 ]
 
 settings = [
-  :company,
-  :company_vat_id,
-  :company_phone,
-  :company_phone,
-  :company_email,
-  :company_website,
-  :company_logo,
-  :currency,
-  :days_to_due,
-  :company_address,
-  :legal_terms
+  company: "Doofinder",
+  company_vat_id: "1fg5t7",
+  company_phone: "632778941",
+  company_email: "demo@example.com",
+  company_website: "www.mywebsite.com",
+  currency: "USD",
+  days_to_due: "0",
+  company_address: "Newton Avenue, 32. NY",
+  legal_terms: "Clauses of our contract"
 ]
 
 Enum.each(customers, &Customers.create(&1))

@@ -48,11 +48,11 @@
         <%=error_tag f, :company_website %> 
       </div>
       <div class="field">
-        <%=label f, :company_logo, class: "label"%>
+        <%=label f, :days_to_due, class: "label"%>
         <p class="control">
-          <%=text_input(f, :company_logo, class: "input", type: "text")%>
+          <%=number_input(f, :days_to_due, class: "input")%>
         </p>
-        <%=error_tag f, :company_logo %> 
+        <%=error_tag f, :days_to_due %>
       </div>
     </div>
     <div class="field is-horizontal field-body">
@@ -62,13 +62,6 @@
           <%=select(f, :currency, ["USD", "EUR"])%>
         </p>
         <%=error_tag f, :currency %>
-      </div>
-      <div class="field">
-        <%=label f, :days_to_due, class: "label"%>
-        <p class="control">
-          <%=number_input(f, :days_to_due, class: "input")%>
-        </p>
-        <%=error_tag f, :days_to_due %>
       </div>
     </div>
     <div class="field is-horizontal field-body">
