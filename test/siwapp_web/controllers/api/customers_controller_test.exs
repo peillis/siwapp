@@ -22,7 +22,7 @@ defmodule SiwappWeb.Api.CustomersControllerTest do
       assert json_response(conn, 200)
     end
 
-    test "send response 404 it the customer is 'Not found'", %{conn: conn} do
+    test "send response 404 if the customer is 'Not found'", %{conn: conn} do
       conn = get(conn, Routes.customers_path(conn, :show, 0))
       assert json_response(conn, 404)
     end
@@ -34,20 +34,14 @@ defmodule SiwappWeb.Api.CustomersControllerTest do
       %{customer_params: customer_params}
     end
 
-    test "send 201 response after a customer creation", %{
-      conn: conn,
-      customer_params: customer_params
-    } do
-      conn = post(conn, Routes.customers_path(conn, :create, customer_params))
-      assert json_response(conn, 201)
-    end
-
-    test "do a query of customer after being created", %{
-      conn: conn,
-      customer_params: customer_params
-    } do
+    test "send 201 response after a customer creation and do a query of customer after being created",
+         %{
+           conn: conn,
+           customer_params: customer_params
+         } do
       conn = post(conn, Routes.customers_path(conn, :create, customer_params))
       id = conn.assigns.create.data.attributes["id"]
+      assert json_response(conn, 201)
       assert Customers.get(id) !== nil
     end
 
