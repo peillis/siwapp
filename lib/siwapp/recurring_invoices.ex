@@ -16,7 +16,7 @@ defmodule Siwapp.RecurringInvoices do
   @spec get!(pos_integer()) :: RecurringInvoice.t()
   def get!(id), do: Repo.get!(RecurringInvoice, id)
 
-  @spec get!(pos_integer(), :preload) ::RecurringInvoice.t()
+  @spec get!(pos_integer(), :preload) :: RecurringInvoice.t()
   def get!(id, :preload),
     do: Repo.get!(RecurringInvoice, id) |> Repo.preload([:customer, :series])
 
