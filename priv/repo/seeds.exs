@@ -10,7 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices}
+alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings}
 
 today = Date.utc_today()
 
@@ -87,8 +87,23 @@ recurring_invoices = [
   }
 ]
 
+settings = [
+  :company,
+  :company_vat_id,
+  :company_phone,
+  :company_phone,
+  :company_email,
+  :company_website,
+  :company_logo,
+  :currency,
+  :days_to_due,
+  :company_address,
+  :legal_terms
+]
+
 Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
 Enum.each(invoices, &Invoices.create(&1))
 Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
+Enum.each(settings, &Settings.create(&1))
