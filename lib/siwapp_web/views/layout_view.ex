@@ -16,6 +16,9 @@ defmodule SiwappWeb.LayoutView do
       n when n in ["/templates", "/templates/new"] ->
         new_button("New Template", Routes.templates_edit_path(conn, :new))
 
+      n when n in ["/recurring_invoices", "/recurring_invoices/new"] ->
+        new_button("New Recurring Invoice", Routes.recurring_invoices_edit_path(conn, :new))
+
       _ ->
         new_button("New Invoice", Routes.invoices_edit_path(conn, :new))
     end

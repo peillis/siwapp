@@ -1,0 +1,215 @@
+<h1><%= @page_title %></h1>
+
+<.form let={f} for={@changeset} phx-change="validate" phx-submit="save" >
+
+  <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
+
+  <fieldset class="fieldset">
+    <h2>Configuration</h2>
+
+    <div class="field">
+      <label class="checkbox">
+        <%= checkbox f, :enabled, phx_debounce: "blur", class: "checkbox" %> Enable this recurring invoice
+      </label>
+    </div>
+    <div class="field">
+      <label class="checkbox">
+        <%= checkbox f, :send_by_email, phx_debounce: "blur", class: "checkbox" %> Automatically send generated invoices by email
+      </label>
+    </div>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+          <%= label f, :starting_date, class: "label" %>
+          <p class="control">
+            <%= date_input f, :starting_date, class: "input" %>
+          </p>
+          <%= error_tag f, :starting_date %>
+      </div>
+      <div class="field">
+          <%= label f, :finishing_date, class: "label" %>
+          <p class="control">
+            <%= date_input f, :finishing_date, class: "input" %>
+          </p>
+          <%= error_tag f, :finishing_date %>
+      </div>
+    </div>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :period, class: "label" %>
+        <p class="control">
+          <%= number_input f, :period, class: "input" %>
+        </p>
+        <%= error_tag f, :period %>
+      </div>
+      <div class="field">
+        <%= label f, :period_type, class: "label" %>
+        <p class="control select is-fullwidth">
+          <%= select f, :period_type, ["Daily", "Monthly", "Yearly"] %>
+        </p>
+      </div>
+    </div>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :max_ocurrences, class: "label" %>
+        <p class="control">
+          <%= number_input f, :max_ocurrences, class: "input" %>
+        </p>
+        <%= error_tag f, :max_ocurrences %>
+      </div>
+    </div>
+  </fieldset>
+
+
+  <fieldset class="fieldset">
+    <h2>Invoice Details</h2>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label f, :series_id, class: "label" %>
+        <p class=" control select is-fullwidth">
+          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}) %>
+        </p>
+      </div>
+      <div class="field">
+          <%= label f, :days_to_due, class: "label" %>
+          <p class="control">
+            <%= number_input f, :days_to_due, class: "input" %>
+          </p>
+          <%= error_tag f, :days_to_due %>
+      </div>
+      <div class="field">
+        <%= label f, :currency, class: "label" %>
+        <p class="control select is-fullwidth">
+          <%= select f, :currency, ["USD", "EUR", "GBP"] %>
+        </p>
+      </div>
+    </div>
+    <div class="columns is-multiline-mobile is-1 is-variable">
+      <div class="column is-4-desktop is-full-mobile">
+        <label class= "label" >Description</label>
+        <p class="control">
+          <input type="text" class="input" />
+        </p>
+      </div>
+      <div class="column is-1-desktop is-half-mobile">
+        <label class= "label" >Quantity</label>
+        <p class="control">
+          <input type="text" class="input"/>
+        </p>
+      </div>
+      <div class="column is-2-desktop is-half-mobile">
+        <label class= "label" >Price</label>
+        <p class="control">
+          <input type="text" class="input"/>
+        </p>
+      </div>
+      <div class="column is-1-desktop is-half-mobile">
+        <label class= "label" >Discount</label>
+        <p class="control">
+          <input type="text" class="input"/>
+        </p>
+      </div>
+      <div class="column is-2-desktop is-half-mobile">
+        <label class="label">Taxes</label>
+        <p class="control">
+          <input class="input" type="text" value="One,Two">
+        </p>
+      </div>
+      <div class="column is-1-desktop is-full-mobile">
+        <label class="label">Total</label>
+        <p class="control">
+          <a class="button is-static is-fullwidth">
+            Total
+          </a>
+        </p>
+      </div>
+      <div class="column is-narrow-desktop">
+        <label class="label is-invisible is-hidden-mobile">invisible</label>
+        <p class="control">
+          <a class="button is-danger is-ligth is-fullwidth">Remove Line</a>
+        </p>
+      </div>
+    </div>
+    
+    <div class="columns is-desktop">
+      <div class="column is-2">
+        <%= link "Add Line", to: "#", phx_click: "add_item", class: "button is-dark is-fullwidth" %>
+      </div>
+
+      <div class="column is-3 is-offset-8">
+        <table class="table is-fullwidth">
+          <tbody>
+            <tr>
+              <th>Subtotal:</th>
+              <td>Amount</td>
+            </tr>
+            <tr>
+              <th>VAT</th>
+              <td>Amount</td>
+            </tr>
+            <tr>
+              <th>RETENTION</th>
+              <td>Amount</td>
+            </tr>
+            <tr>
+              <th>TOTAL</th>
+              <td>Amount</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </fieldset>  
+  
+  <fieldset class="fieldset">
+    <h2>PAYMENTS</h2>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <label class="label">Date</label>
+        <p class="control">
+          <input class="input" type="date">
+        </p>
+      </div>
+      <div class="field">
+        <label class="label">Notes</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+      <div class="field">
+        <label class="label">Amount</label>
+        <p class="control">
+          <input class="input" type="text">
+        </p>
+      </div>
+      <div class="field">
+        <label  class="label is-invisible is-hidden-mobile">invisible</label>
+        <p class="control">
+          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Payment</button>
+        </p>
+      </div>
+    </div>
+
+    <button class="column is-narrow-desktop button is-dark is-fullwidth">Add Payment</button>
+    <label class="checkbox">
+      <input type="checkbox">
+      Payment collection failed
+    </label>
+  </fieldset>
+
+  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
+  
+  <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
+    <div class="navbar-end navbar-items buttons">
+      <%= if @live_action == :edit do %>
+        <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @recurring_invoice.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+      <% end %>
+      <%= live_redirect "Back", to: Routes.recurring_invoices_index_path(@socket, :index), class: "button is-dark" %>
+      <%= submit "Save", class: "button is-success" %>
+    </div>
+  </nav>
+</.form>

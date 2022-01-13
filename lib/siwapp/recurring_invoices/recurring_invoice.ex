@@ -61,8 +61,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :deleted_at, :utc_datetime
     field :notes, :string
     field :terms, :string
-    field :meta_attributes, :map
-    field :items, {:array, :map}
+    field :meta_attributes, :map, default: %{}
+    field :items, {:array, :map}, default: [%{}]
     belongs_to :customer, Customer
     belongs_to :series, Series
     has_many :invoices, Invoice, on_replace: :delete
