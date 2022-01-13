@@ -10,8 +10,6 @@ defmodule Siwapp.InvoicesFixtures do
   alias Siwapp.Commons
 
   def valid_item_attributes(attrs \\ %{}) do
-    IO.inspect Commons.list_taxes()
-
     Enum.into(attrs, %{
       quantity: 1,
       unitary_cost: 133,

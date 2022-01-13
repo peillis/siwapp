@@ -118,70 +118,16 @@ defmodule Siwapp.InvoiceTest do
       assert invoice.net_amount == 239
     end
 
-<<<<<<< HEAD
-    test "Total taxes amounts is a map with the total amount per tax" do
-      Commons.create_tax(%{name: "VAT", value: 21, default: true})
-      Commons.create_tax(%{name: "RETENTION", value: -15})
-
-      {:ok, invoice} =
-        Invoices.create(%{
-          name: "Melissa",
-          draft: true,
-          items: [
-            %{
-              quantity: 1,
-              unitary_cost: 133,
-              discount: 10,
-              taxes: ["VAT"]
-            },
-            %{
-              quantity: 1,
-              unitary_cost: 133,
-              discount: 10,
-              taxes: ["VAT", "RETENTION"]
-            }
-          ]
-        })
-
-=======
     test "Total taxes amounts is a map with the total amount per tax", %{invoice: invoice} do
->>>>>>> e39d38a (Invoices tests adapted to fixtures)
       # 119.70 (net_amount per item)
       # 119.70*(21/100) = 25.137 (VAT per item)
       # 119.70*(-15/100) = -17.955 (RETENTION for 2nd item)
       assert invoice.taxes_amounts == %{"RETENTION" => -17.955, "VAT" => 50.274}
     end
 
-<<<<<<< HEAD
-    test "Total gross amount is the rounded sum of the total net amount and the taxes amounts" do
-      Commons.create_tax(%{name: "VAT", value: 21, default: true})
-      Commons.create_tax(%{name: "RETENTION", value: -15})
-
-      {:ok, invoice} =
-        Invoices.create(%{
-          name: "Melissa",
-          draft: true,
-          items: [
-            %{
-              quantity: 1,
-              unitary_cost: 133,
-              discount: 10,
-              taxes: ["VAT"]
-            },
-            %{
-              quantity: 1,
-              unitary_cost: 133,
-              discount: 10,
-              taxes: ["VAT", "RETENTION"]
-            }
-          ]
-        })
-
-=======
     test "Total gross amount is the rounded sum of the total net amount and the taxes amounts", %{
       invoice: invoice
     } do
->>>>>>> e39d38a (Invoices tests adapted to fixtures)
       # 239 (total net_amount)
       # %{"RETENTION" => -17.955, "VAT" => 50.274} (total taxes amounts)
       # 239 + 50.274 - 17.955 = 271.319 (total gross_amount)
