@@ -15,7 +15,7 @@ defmodule Siwapp.RecurringInvoices do
   def get!(id), do: Repo.get!(RecurringInvoice, id)
 
   def get!(id, :preload),
-  do: Repo.get!(RecurringInvoice, id) |> Repo.preload([:customer, {:invoices, :items}, :series])
+    do: Repo.get!(RecurringInvoice, id) |> Repo.preload([:customer, {:invoices, :items}, :series])
 
   def create(attrs \\ %{}) do
     %RecurringInvoice{}
