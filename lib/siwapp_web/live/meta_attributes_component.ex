@@ -15,7 +15,7 @@ defmodule SiwappWeb.MetaAttributesComponent do
         <div class="field is-horizontal field-body">
           <input class="input field" type="text" name="meta[keys][]" value={k} />
           <input class="input field" type="text" name="meta[values][]" value={v} />
-          <button class="button is-danger field" phx-click="remove field" phx-value-key={k} phx-target={@myself}>Remove</button>
+          <button class="button is-danger field" phx-click="remove" phx-value-key={k} phx-target={@myself}>Remove</button>
           <br/>
         </div>
       <% end %>
