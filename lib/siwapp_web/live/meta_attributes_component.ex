@@ -10,16 +10,21 @@ defmodule SiwappWeb.MetaAttributesComponent do
   def render(assigns) do
     ~H"""
     <fieldset>
+      <h2>Meta Attributes</h2>
       <%= for {k, v} <- @meta_attributes do %>
-        <input type="text" name="meta[keys][]" value={k} />
-        <input type="text" name="meta[values][]" value={v} />
-        <a phx-click="remove" phx-value-key={k} phx-target={@myself}>Remove</a>
-        <br/>
+        <div class="field is-horizontal field-body">
+          <input class="input field" type="text" name="meta[keys][]" value={k} />
+          <input class="input field" type="text" name="meta[values][]" value={v} />
+          <a class="button is-danger field" phx-click="remove" phx-value-key={k} phx-target={@myself}>Remove</a>
+          <br/>
+        </div>
       <% end %>
-      <input type="text" name="meta[keys][]" phx-blur="changing-key" phx-target={@myself} />
-      <input type="text" name="meta[values][]" phx-blur="changing-value" phx-target={@myself} />
-      <a phx-click="add" phx-target={@myself}>Add</a>
-      <br/>
+      <div class="field is-horizontal field-body">
+        <input class="input field" type="text" name="meta[keys][]" phx-blur="changing-key" phx-target={@myself} placeholder="Key"/>
+        <input class="input field" type="text" name="meta[values][]" phx-blur="changing-value" phx-target={@myself} placeholder="Value"/>
+        <a class="button is-success field" phx-click="add" phx-target={@myself}>Add</a>
+        <br/>
+      </div>
     </fieldset>
     """
   end

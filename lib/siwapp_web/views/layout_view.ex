@@ -10,6 +10,9 @@ defmodule SiwappWeb.LayoutView do
       n when n in ["/series", "/series/new"] ->
         new_button("New Series", Routes.series_index_path(conn, :new))
 
+      n when n in ["/customers", "/customers/:id/edit", "/customers/new"] ->
+        new_button("New Customer", Routes.customer_edit_path(conn, :new))
+
       n when n in ["/taxes", "/taxes/new"] ->
         new_button("New Tax", Routes.taxes_index_path(conn, :new))
 

@@ -29,6 +29,14 @@ defmodule SiwappWeb.CustomerLive.Edit do
     |> assign(:changeset, Customers.change(customer))
   end
 
+  def handle_event("validate", %{"customer" => params}, socket) do
+    changeset =
+      socket.assigns.changeset.data
+      |> Customers.change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
+  end
+
   def handle_event("save", %{"customer" => params, "meta" => meta}, socket) do
     params = MetaAttributesComponent.merge(params, meta)
 
@@ -50,5 +58,31 @@ defmodule SiwappWeb.CustomerLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  def handle_event("delete", _params, socket) do
+    Customers.delete(socket.assigns.customer)
+
+    socket =
+      socket
+      |> put_flash(:info, "Customer succesfully deleted")
+      |> push_redirect(to: Routes.customer_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
+  def handle_event("copy", _params, socket) do
+    invoicing_address =
+      Map.get(
+        socket.assigns.changeset.changes,
+        :invoicing_address,
+        socket.assigns.changeset.data.invoicing_address
+      )
+
+    changeset =
+      socket.assigns.changeset
+      |> Map.put(:changes, %{shipping_address: invoicing_address})
+
+    {:noreply, assign(socket, changeset: changeset)}
   end
 end
