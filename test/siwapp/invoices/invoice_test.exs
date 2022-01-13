@@ -114,7 +114,7 @@ defmodule Siwapp.InvoiceTest do
 
     test "Total taxes amounts is a map with the total amount per tax" do
       Commons.create_tax(%{name: "VAT", value: 21, default: true})
-      Commons.create_tax(%{name: "VAT", value: 21, default: true})
+      Commons.create_tax(%{name: "RETENTION", value: -15})
 
       {:ok, invoice} =
         Invoices.create(%{
@@ -144,7 +144,7 @@ defmodule Siwapp.InvoiceTest do
 
     test "Total gross amount is the rounded sum of the total net amount and the taxes amounts" do
       Commons.create_tax(%{name: "VAT", value: 21, default: true})
-      Commons.create_tax(%{name: "VAT", value: 21, default: true})
+      Commons.create_tax(%{name: "RETENTION", value: -15})
 
       {:ok, invoice} =
         Invoices.create(%{
@@ -168,7 +168,7 @@ defmodule Siwapp.InvoiceTest do
 
       # 239 (total net_amount)
       # %{"RETENTION" => -17.955, "VAT" => 50.274} (total taxes amounts)
-      # 239 + 2*25.137 - 17.955 = 271.319 (total gross_amount)
+      # 239 + 50.274 - 17.955 = 271.319 (total gross_amount)
       assert invoice.gross_amount == 271
     end
   end
