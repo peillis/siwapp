@@ -3,66 +3,48 @@ defmodule Siwapp.Settings do
   alias Siwapp.Settings.Setting
 
   @moduledoc false
-  def new, do: %Setting{}
-  def new(key, value \\ nil), do: %Setting{key: to_string(key), value: value}
 
-  def list, do: Repo.all(Setting) |> Enum.sort_by(fn setting -> setting.id end)
+  def list, do: Repo.all(Setting)
 
-  def create(attrs \\ %{}) do
+  @doc """
+  Function to make setting changeset with adequate_attrs
+  """
+  @spec change(Setting.t(), atom | tuple) :: Ecto.Changeset.t()
+  def change(%Setting{} = setting, attrs) do
+    Setting.changeset(setting, adequate_attrs(attrs))
+  end
+
+  @doc """
+  Creates a setting given a key
+  """
+  @spec create(atom) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
+  def create(key) when is_atom(key) do
     %Setting{}
-    |> Setting.changeset(adequate_attrs(attrs))
+    |> change(key)
     |> Repo.insert()
   end
 
-  def update(%Setting{} = setting, attrs) do
-    setting
-    |> Setting.changeset(adequate_attrs(attrs))
+  @doc """
+  Updates associated setting to key with given value
+  """
+  @spec update(tuple) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
+  def update({key, value}) do
+    get(key)
+    |> change({to_string(key), to_string(value)})
     |> Repo.update()
   end
 
   @doc """
-  Function which decides what should be done with certain tuple of key and value received from form
+  Gets setting for given key
   """
-  @spec act(tuple) :: {:ok, Ecto.Changeset.t()} | {:error, Ecto.Changeset.t()}
-  def act({key, value}) do
-    case get(key) do
-      nil ->
-        create({to_string(key), to_string(value)})
-
-      _ ->
-        case value do
-          nil -> delete(get(key))
-          value -> update(get(key), {to_string(key), to_string(value)})
-        end
-    end
-  end
-
-  def delete(%Setting{} = setting) do
-    Repo.delete(setting)
-  end
-
-  def change(%Setting{} = setting, attrs \\ %{}) do
-    Setting.changeset(setting, adequate_attrs(attrs))
-  end
-
-  @spec get(atom) :: nil | struct
-  def get(key), do: if(first_value?(key), do: nil, else: get!(key))
-
-  defp get!(key),
+  @spec get(atom) :: Setting.t()
+  def get(key),
     do: Enum.filter(list(), fn setting -> setting.key == to_string(key) end) |> List.first()
 
   @doc """
   Returns correct attrs to apply changeset to {key, value}
   """
-  @spec adequate_attrs(map | tuple) :: map
-  def adequate_attrs(%{}), do: %{}
-  # def adequate_attrs(value) when is_binary(value), do: %{"value" => value}
+  @spec adequate_attrs(tuple | atom) :: map
+  def adequate_attrs(key) when is_atom(key), do: %{"key" => to_string(key)}
   def adequate_attrs({key, value}), do: %{"key" => to_string(key), "value" => value}
-
-  @doc """
-  Returns if a key isn't in database yet
-  """
-  @spec first_value?(atom) :: boolean
-  def first_value?(key),
-    do: Enum.empty?(Enum.filter(list(), fn setting -> setting.key == to_string(key) end))
 end

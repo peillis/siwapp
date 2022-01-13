@@ -28,7 +28,7 @@ defmodule Siwapp.SettingsForms.SettingsForm do
   end
 
   def labels, do: @labels
-  def pairs, do: Enum.zip(labels(), types())
+  # def pairs, do: Enum.zip(labels(), types())
   def fields_map, do: Map.new(@fields_keywordlist)
-  defp types, do: for(key <- labels(), do: Map.get(fields_map(), key))
+  # defp types, do: for(key <- labels(), do: Map.get(fields_map(), key))
 end

@@ -3,6 +3,15 @@ defmodule Siwapp.Settings.Setting do
 
   import Ecto.Changeset
 
+  @type t() :: %__MODULE__{
+          __meta__: Ecto.Schema.Metadata.t(),
+          id: nil | integer,
+          key: nil | binary,
+          value: nil | binary,
+          inserted_at: nil | DateTime.t(),
+          updated_at: nil | DateTime.t()
+        }
+
   @moduledoc false
 
   schema "settings" do
@@ -12,6 +21,7 @@ defmodule Siwapp.Settings.Setting do
     timestamps()
   end
 
+  @spec changeset(t, map) :: Ecto.Changeset.t()
   def changeset(setting, attrs \\ %{}) do
     setting
     |> cast(attrs, [:key, :value])
