@@ -6,7 +6,7 @@ defmodule Siwapp.SettingsForms.SettingsForm do
   @fields_keywordlist [
     company: :string,
     company_vat_id: :string,
-    company_phone: :integer,
+    company_phone: :string,
     company_email: :string,
     company_website: :string,
     company_logo: :string,
@@ -15,6 +15,7 @@ defmodule Siwapp.SettingsForms.SettingsForm do
     company_address: :string,
     legal_terms: :string
   ]
+
   @labels Keyword.keys(@fields_keywordlist)
 
   defstruct @labels
@@ -22,13 +23,19 @@ defmodule Siwapp.SettingsForms.SettingsForm do
   def changeset(settingsform, attrs \\ %{}) do
     {settingsform, fields_map()}
     |> cast(attrs, labels())
-    |> validate_format(:company_email, ~r/@/)
+    |> validate_email()
     # Example list of currency, will be updated to whole
     |> validate_inclusion(:currency, ["USD", "EUR"])
   end
 
+  @spec labels :: [atom]
   def labels, do: @labels
-  # def pairs, do: Enum.zip(labels(), types())
+  @spec fields_map :: map
   def fields_map, do: Map.new(@fields_keywordlist)
-  # defp types, do: for(key <- labels(), do: Map.get(fields_map(), key))
+
+  defp validate_email(changeset) do
+    changeset
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> validate_length(:email, max: 160)
+  end
 end
