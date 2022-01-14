@@ -89,7 +89,7 @@
         </div>
         <div class="column is-3-desktop is-half-mobile">
           <label class="label">Taxes</label>
-            <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.id}"} options={["IVA": 1, "RETENTION": 2]} />
+            <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.id}"} options={Siwapp.Commons.list_taxes_for_multiselect()} />
         </div>
         <div class="column is-1-desktop is-full-mobile">
           <label class="label">Total</label>
