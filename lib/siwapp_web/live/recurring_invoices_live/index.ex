@@ -17,7 +17,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
 
     {:noreply, assign(socket, checked: checked)}
   end
-
+  
+  def handle_event("edit", %{"id" => id}, socket) do
+    {:noreply, push_redirect(socket, to: Routes.recurring_invoices_edit_path(socket, :edit, id))}
+  end
+  
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
     socket.assigns.recurring_invoices
     |> MapSet.new(& &1.id)

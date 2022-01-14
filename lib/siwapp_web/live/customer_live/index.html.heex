@@ -13,12 +13,12 @@
   <tbody role="infinite-content">
     <%= for customer <- @customers do%>
       <%=if customer.active do %>
-        <tr>
-          <td class="no-wrap"><%= live_redirect customer.name, to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
-          <td class="no-wrap"><%= live_redirect customer.identification, to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+        <tr phx-click="edit" phx-value-id={customer.id} class="is-clickable">
+          <td class="no-wrap"><%= customer.name%></td>
+          <td class="no-wrap"><%= customer.identification%></td>
           <!-- my suggestion is creating total and due as helper functions receiving customer.invoices -->
-          <td class="text-right"><%= live_redirect"DUE", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
-          <td class="text-right"><%= live_redirect "TOTAL", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
+          <td class="text-right">DUE</td>
+          <td class="text-right">TOTAL</td>
           <td class="text-center"><%= live_redirect " ", class: "icon fas fa-list", to: Routes.customer_edit_path(@socket, :edit, customer.id) %></td>
           <!-- we will change last redirection to invoices for customer -->
         </tr>

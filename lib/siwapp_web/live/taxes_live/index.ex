@@ -25,6 +25,10 @@ defmodule SiwappWeb.TaxesLive.Index do
     {:noreply, assign(socket, taxes: taxes)}
   end
 
+  def handle_event("edit", %{"id" => id}, socket) do
+    {:noreply, push_redirect(socket, to: Routes.taxes_index_path(socket, :edit, id))}
+  end
+
   defp apply_action(socket, :edit, %{"id" => id}) do
     tax = Commons.get_tax!(id)
 
