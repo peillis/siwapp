@@ -22,9 +22,9 @@
 
   <tbody>
     <%= for series <- @series_list do %>
-      <tr>
+      <tr phx-click="edit" phx-value-id={series.id} class="is-clickable">
         <td class="icon table-icon"><input type="radio" phx-click="defaultClicked" phx-value-id={series.id} checked={series.default}></td>
-        <td><%= live_patch "#{series.name}", to: Routes.series_index_path(@socket, :edit, series) %></td>
+        <td><%= series.name %></td>
         <td><%= series.code %></td>
         <td><%= series.first_number %></td>
         <%= if series.enabled do %>

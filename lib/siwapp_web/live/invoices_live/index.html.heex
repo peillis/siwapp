@@ -30,9 +30,9 @@
 
   <tbody>
     <%= for invoice <- @invoices do %>
-      <tr>
+      <tr phx-click="edit" phx-value-id={invoice.id} class="is-clickable">
         <td><input type="checkbox" phx-click="click_checkbox" checked={Enum.member?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
-        <td><%= live_patch invoice.series_id, to: Routes.invoices_edit_path(@socket, :edit, invoice) %></td>
+        <td><%=invoice.series_id%></td>
         <td><%= invoice.name %></td>
         <td><%= invoice.issue_date %></td>
 
