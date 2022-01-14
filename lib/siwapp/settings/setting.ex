@@ -26,5 +26,6 @@ defmodule Siwapp.Settings.Setting do
     setting
     |> cast(attrs, [:key, :value])
     |> validate_required([:key])
+    |> unique_constraint(:key)
   end
 end
