@@ -24,10 +24,10 @@
 
   <tbody>
     <%= for recurring_invoice <- @recurring_invoices do %>
-      <tr>
+      <tr phx-click="edit" phx-value-id={recurring_invoice.id} class="is-clickable">
         <td><input type="checkbox" phx-click="click_checkbox" checked={Enum.member?(@checked, recurring_invoice.id)} phx-value-id={recurring_invoice.id}></td>
-        <td><a><%= recurring_invoice.series_id %></a></td>
-        <td><a><%= recurring_invoice.customer_id %></a></td>
+        <td><%= recurring_invoice.series_id %></td>
+        <td><%= recurring_invoice.customer_id %></td>
         <td>
           <%= recurring_invoice.period %>
           <%= type_of_period(recurring_invoice.period_type, recurring_invoice.period) %>

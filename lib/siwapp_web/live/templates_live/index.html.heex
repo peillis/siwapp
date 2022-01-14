@@ -11,10 +11,10 @@
 
   <tbody>
     <%= for template <- @templates do %>
-      <tr>
+      <tr phx-click="edit" phx-value-id={template.id} class="is-clickable">
         <td class="icon table-icon"><input type="radio" phx-click="defaultClicked" phx-value-id={template.id} phx-value-type="email" checked={template.email_default}></td>
         <td class="icon table-icon"><input type="radio" phx-click="defaultClicked" phx-value-id={template.id} phx-value-type="print" checked={template.print_default}></td>
-        <td><%= live_redirect "#{template.name}", to: Routes.templates_edit_path(@socket, :edit, template) %></td>
+        <td><%= template.name %></td>
       </tr>
     <% end %>
   </tbody>

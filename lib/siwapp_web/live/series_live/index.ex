@@ -24,6 +24,10 @@ defmodule SiwappWeb.SeriesLive.Index do
     {:noreply, assign(socket, series_list: Commons.list_series())}
   end
 
+  def handle_event("edit", %{"id" => id}, socket) do
+    {:noreply, push_redirect(socket, to: Routes.series_index_path(socket, :edit, id))}
+  end
+
   defp apply_action(socket, :edit, %{"id" => id}) do
     series = Commons.get_series(id)
 
