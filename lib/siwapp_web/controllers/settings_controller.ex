@@ -13,10 +13,7 @@ defmodule SiwappWeb.SettingsController do
   end
 
   def update(conn, %{"setting_bundle" => attrs}) do
-    data = Settings.prepare_data()
-    changeset = Settings.change_bundle(data, attrs)
-
-    case Settings.apply_user_settings(changeset) do
+    case Settings.apply_user_settings(attrs) do
       {:ok, changeset} ->
         conn
         |> assign(:changeset, changeset)
