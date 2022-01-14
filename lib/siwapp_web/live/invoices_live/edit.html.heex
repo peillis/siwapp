@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <%= inputs_for f, :items, fn fi -> %>
+    <%= for fi <- inputs_for(f, :items) do %>
       <div class="columns is-multiline-mobile is-1 is-variable">
         <div class="column is-4-desktop is-full-mobile">
           <%= label fi, :description, class: "label" %>
@@ -73,7 +73,7 @@
           <%= error_tag fi, :quantity %>
 
         </div>
-        <div class="column is-2-desktop is-half-mobile">
+        <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :unitary_cost, "Price", class: "label" %>
           <p class="control">
             <%= text_input fi, :unitary_cost, phx_debounce: "blur", class: "input" %>
@@ -87,11 +87,9 @@
           </p>
           <%= error_tag fi, :discount %>
         </div>
-        <div class="column is-2-desktop is-half-mobile">
+        <div class="column is-3-desktop is-half-mobile">
           <label class="label">Taxes</label>
-          <p class="control">
-            <input class="input" type="text" value="One,Two">
-          </p>
+            <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.id}"} options={["IVA": 1, "RETENTION": 2]} />
         </div>
         <div class="column is-1-desktop is-full-mobile">
           <label class="label">Total</label>
