@@ -24,22 +24,19 @@ defmodule Siwapp.Settings do
   def prepare_data, do: struct(SettingBundle, Enum.zip(SettingBundle.labels(), values()))
 
   @doc """
-  Function which takes the filled form changeset and applies proper actions
+  Function which takes the filled form and applies proper actions
   """
-  @spec apply_user_settings(Ecto.Changeset.t()) ::
-          {:ok, Ecto.Changeset.t()} | {:error, Ecto.Changeset.t()}
-  def apply_user_settings(changeset) do
-    if changeset.errors != [] do
-      {:error, changeset}
-    else
+  def apply_user_settings(attrs) do
+    changeset = change_bundle(prepare_data(), attrs)
+
+    if changeset.valid? do
       changes = Map.to_list(changeset.changes)
       Enum.each(changes, fn {k, v} -> update({k, v}) end)
       {:ok, changeset}
+    else
+      {:error, changeset}
     end
   end
-
-  @spec list :: Setting.t()
-  defp list, do: Repo.all(Setting)
 
   @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()
   defp change(%Setting{} = setting, attrs) do
@@ -55,7 +52,7 @@ defmodule Siwapp.Settings do
 
   @spec get(atom) :: Setting.t()
   defp get(key),
-    do: Enum.filter(list(), fn setting -> setting.key == to_string(key) end) |> List.first()
+    do: Repo.get_by(Setting, key: to_string(key))
 
   @spec values :: [nil | binary]
   defp values do
