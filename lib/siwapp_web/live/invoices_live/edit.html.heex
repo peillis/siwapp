@@ -12,50 +12,9 @@
 
   <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
 
+  <%= live_component SiwappWeb.InvoicesLive.InvoiceDetails, f: f, series: @series, socket: @socket, live_action: @live_action %>
+
   <fieldset class="fieldset">
-    <h2>Invoice Details</h2>
-
-    <div class="field is-horizontal field-body">
-      <div class="field">
-        <%= label f, :series_id, class: "label" %>
-        <p class=" control select is-fullwidth">
-          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur" %>
-        </p>
-      </div>
-      <%= if @live_action == :edit do %>
-        <div class="field">
-            <%= label f, :number, class: "label" %>
-            <p class="control">
-              <%= number_input f, :number, phx_debounce: "blur", class: "input" %>
-            </p>
-            <%= error_tag f, :number %>
-        </div>
-      <% end %>
-      <div class="field">
-        <%= label f, :currency, class: "label" %>
-        <p class="control select is-fullwidth">
-          <%= select f, :currency, ["USD", "EUR", "GBP"], phx_debounce: "blur" %>
-        </p>
-      </div>
-    </div>
-
-    <div class="field is-horizontal field-body">
-      <div class="field">
-          <%= label f, :issue_date, class: "label" %>
-          <p class="control">
-            <%= date_input f, :issue_date, phx_debounce: "blur", class: "input" %>
-          </p>
-          <%= error_tag f, :issue_date %>
-      </div>
-      <div class="field">
-          <%= label f, :due_date, class: "label" %>
-          <p class="control">
-            <%= date_input f, :due_date, phx_debounce: "blur", class: "input" %>
-          </p>
-          <%= error_tag f, :due_date %>
-      </div>
-    </div>
-
     <%= inputs_for f, :items, fn fi -> %>
       <div class="columns is-multiline-mobile is-1 is-variable">
         <div class="column is-4-desktop is-full-mobile">

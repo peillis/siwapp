@@ -1,0 +1,55 @@
+ <fieldset class="fieldset">
+    <h2>Invoice Details</h2>
+
+    <div class="field is-horizontal field-body">
+      <div class="field">
+        <%= label @f, :series_id, class: "label" %>
+        <p class=" control select is-fullwidth">
+          <%= select @f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur" %>
+        </p>
+      </div>
+      <%= if @socket.view == SiwappWeb.InvoicesLive.Edit and @live_action == :edit do %>
+        <div class="field">
+            <%= label @f, :number, class: "label" %>
+            <p class="control">
+              <%= number_input @f, :number, phx_debounce: "blur", class: "input" %>
+            </p>
+            <%= error_tag @f, :number %>
+        </div>
+      <% end %>
+      <%= if @socket.view == SiwappWeb.RecurringInvoicesLive.Edit do %>
+      <div class="field">
+        <%= label @f, :days_to_due, class: "label" %>
+        <p class="control">
+            <%= number_input @f, :days_to_due, class: "input" %>
+        </p>
+        <%= error_tag @f, :days_to_due %>
+      </div>
+      <% end %>
+      <div class="field">
+        <%= label @f, :currency, class: "label" %>
+        <p class="control select is-fullwidth">
+          <%= select @f, :currency, ["USD", "EUR", "GBP"], phx_debounce: "blur" %>
+        </p>
+      </div>
+    </div>
+
+    <%= if @socket.view == SiwappWeb.InvoicesLive.Edit do  %>
+    <div class="field is-horizontal field-body">
+      <div class="field">
+          <%= label @f, :issue_date, class: "label" %>
+          <p class="control">
+            <%= date_input @f, :issue_date, phx_debounce: "blur", class: "input" %>
+          </p>
+          <%= error_tag @f, :issue_date %>
+      </div>
+      <div class="field">
+          <%= label @f, :due_date, class: "label" %>
+          <p class="control">
+            <%= date_input @f, :due_date, phx_debounce: "blur", class: "input" %>
+          </p>
+          <%= error_tag @f, :due_date %>
+      </div>
+    </div>
+    <% end %>
+  </fieldset>  
