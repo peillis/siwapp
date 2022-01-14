@@ -8,5 +8,7 @@ defmodule Siwapp.Repo.Migrations.CreateSettings do
 
       timestamps()
     end
+
+    create unique_index(:settings, [:key])
   end
 end
