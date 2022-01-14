@@ -20,7 +20,7 @@ defmodule SiwappWeb.MultiselectComponent do
       <%= for {_k, v} <- @selected do %>
         <input type="hidden" value={v}>
       <% end %>
-      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list")}>
+      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@myself.cid}")}>
         <span class="placeholder"></span>
         <%= for {k, v} <- @selected do %>
           <div class="tag-badge">
@@ -29,9 +29,9 @@ defmodule SiwappWeb.MultiselectComponent do
           </div>
         <% end %>
       </div>
-      <ul id="tag-list" style="display: none;">
+      <ul id={"tag-list-#{@myself.cid}"} class="tag-list" style="display: none;">
         <%= for {k, v} <- not_selected(@options, @selected) do %>
-          <li phx-click={JS.push("add", target: @myself, value: %{key: k, val: v}) |> JS.toggle(to: "#tag-list")}><%= k %></li>
+          <li phx-click={JS.push("add", target: @myself, value: %{key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@myself.cid}")}><%= k %></li>
         <% end %>
       </ul>
     </div>
