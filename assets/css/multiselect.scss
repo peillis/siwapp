@@ -3,8 +3,6 @@ $blue: hsl(217, 71%, 53%);
 
 .msa-wrapper {
 
-width: 400px;
-
 &:focus-within {
     .input-presentation {
     border-bottom-right-radius: 0;
@@ -23,10 +21,8 @@ width: 400px;
     gap: 6px;
     align-items: center;
     min-height: 40px;
-    padding: 6px 40px 6px 12px;
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 6px 35px 6px 0px;
     font-size: 1rem;
-    border-radius: 10px;
     position: relative;
     cursor: pointer;
     
@@ -54,10 +50,10 @@ width: 400px;
 
     .tag-badge {
     background-color: $blue;
-    padding-left: 14px;
-    padding-right: 28px;
+    padding-left: 10px;
+    padding-right: 25px;
     color: white;
-    border-radius: 14px;
+    border-radius: 10px;
     position: relative;
 
     span {

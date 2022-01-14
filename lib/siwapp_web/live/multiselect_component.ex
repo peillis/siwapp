@@ -16,12 +16,12 @@ defmodule SiwappWeb.MultiselectComponent do
 
   def render(assigns) do
     ~H"""
-    <div class="msa-wrapper">
+    <div class="control msa-wrapper">
       <%= for {_k, v} <- @selected do %>
         <input type="hidden" value={v}>
       <% end %>
-      <div class="input-presentation" phx-click={JS.toggle(to: "#tag-list")}>
-        <span class="placeholder">Select Tags</span>
+      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list")}>
+        <span class="placeholder"></span>
         <%= for {k, v} <- @selected do %>
           <div class="tag-badge">
             <span><%= k %></span>
