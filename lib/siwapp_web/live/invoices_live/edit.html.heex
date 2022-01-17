@@ -15,6 +15,23 @@
   <%= live_component SiwappWeb.InvoicesLive.InvoiceDetails, f: f, series: @series, socket: @socket, live_action: @live_action %>
 
   <fieldset class="fieldset">
+    <div class="field is-horizontal field-body">
+      <div class="field">
+          <%= label f, :issue_date, class: "label" %>
+          <p class="control">
+            <%= date_input f, :issue_date, phx_debounce: "blur", class: "input" %>
+          </p>
+          <%= error_tag f, :issue_date %>
+      </div>
+      <div class="field">
+          <%= label f, :due_date, class: "label" %>
+          <p class="control">
+            <%= date_input f, :due_date, phx_debounce: "blur", class: "input" %>
+          </p>
+          <%= error_tag f, :due_date %>
+      </div>
+    </div>
+
     <%= inputs_for f, :items, fn fi -> %>
       <div class="columns is-multiline-mobile is-1 is-variable">
         <div class="column is-4-desktop is-full-mobile">

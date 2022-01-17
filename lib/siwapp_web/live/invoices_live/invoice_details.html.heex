@@ -33,23 +33,4 @@
         </p>
       </div>
     </div>
-
-    <%= if @socket.view == SiwappWeb.InvoicesLive.Edit do  %>
-    <div class="field is-horizontal field-body">
-      <div class="field">
-          <%= label @f, :issue_date, class: "label" %>
-          <p class="control">
-            <%= date_input @f, :issue_date, phx_debounce: "blur", class: "input" %>
-          </p>
-          <%= error_tag @f, :issue_date %>
-      </div>
-      <div class="field">
-          <%= label @f, :due_date, class: "label" %>
-          <p class="control">
-            <%= date_input @f, :due_date, phx_debounce: "blur", class: "input" %>
-          </p>
-          <%= error_tag @f, :due_date %>
-      </div>
-    </div>
-    <% end %>
   </fieldset>  
