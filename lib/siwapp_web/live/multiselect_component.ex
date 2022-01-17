@@ -8,7 +8,9 @@ defmodule SiwappWeb.MultiselectComponent do
   def update(assigns, socket) do
     socket =
       socket
-      |> assign(selected: MapSet.new())
+      |> assign(selected: MapSet.new(assigns.selected))
+      |> assign(name: assigns.name)
+      |> assign(id: assigns.id)
       |> assign(options: MapSet.new(assigns.options))
 
     {:ok, socket}
@@ -17,10 +19,10 @@ defmodule SiwappWeb.MultiselectComponent do
   def render(assigns) do
     ~H"""
     <div class="control msa-wrapper">
-      <%= for {_k, v} <- @selected do %>
-        <input type="hidden" value={v}>
+      <%= for {k, _v} <- @selected do %>
+        <input type="hidden" id="hidden_input" name={"#{@name}[]"} value={k}>
       <% end %>
-      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@myself.cid}")}>
+      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@id}")}>
         <span class="placeholder"></span>
         <%= for {k, v} <- @selected do %>
           <div class="tag-badge">
@@ -29,9 +31,9 @@ defmodule SiwappWeb.MultiselectComponent do
           </div>
         <% end %>
       </div>
-      <ul id={"tag-list-#{@myself.cid}"} class="tag-list" style="display: none;">
+      <ul id={"tag-list-#{@id}"} class="tag-list" style="display: none;">
         <%= for {k, v} <- not_selected(@options, @selected) do %>
-          <li phx-click={JS.push("add", target: @myself, value: %{key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@myself.cid}")}><%= k %></li>
+          <li phx-click={JS.push("add", target: @myself, value: %{key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@id}")}><%= k %></li>
         <% end %>
       </ul>
     </div>
