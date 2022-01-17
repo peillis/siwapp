@@ -227,7 +227,7 @@ defmodule Siwapp.Commons do
   @spec list_taxes_for_multiselect :: [String.t()]
   def list_taxes_for_multiselect do
     Repo.all(Tax)
-    |> Enum.map(&({&1.name, &1.id}))
+    |> Enum.map(&{&1.name, &1.id})
   end
 
   @doc """
