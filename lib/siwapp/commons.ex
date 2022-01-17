@@ -214,6 +214,23 @@ defmodule Siwapp.Commons do
   end
 
   @doc """
+  Returns a Keyword List, with the list of taxes, being the key
+  a String with the name of the tax and the value its id, appropiate
+  for multiselect inputs.
+
+  ## Examples
+
+      iex> list_taxes_for_multiselect()
+      ["VAT": 1, "RETENTION": 2]
+
+  """
+  @spec list_taxes_for_multiselect :: [String.t()]
+  def list_taxes_for_multiselect do
+    Repo.all(Tax)
+    |> Enum.map(&{&1.name, &1.id})
+  end
+
+  @doc """
   Gets a single tax.
 
   Raises `Ecto.NoResultsError` if the Tax does not exist.

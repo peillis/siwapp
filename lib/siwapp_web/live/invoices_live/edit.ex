@@ -18,7 +18,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
-    new_invoice = %Invoice{items: [%Item{}]}
+    new_invoice = %Invoice{items: [%Item{taxes: []}]}
 
     socket
     |> assign(:action, :new)
@@ -75,7 +75,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     changeset =
       socket.assigns.changeset
-      |> Map.put(:changes, %{items: items})
+      |> Ecto.Changeset.put_change(:items, items)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -90,5 +90,15 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Map.put(:changes, %{items: items})
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  defp get_existing_taxes(changeset, fi) do
+    item =
+      changeset
+      |> Ecto.Changeset.get_field(:items)
+      |> Enum.at(fi.index)
+
+    item.taxes
+    |> Enum.map(&{&1.name, &1.id})
   end
 end
