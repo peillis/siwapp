@@ -110,6 +110,7 @@ defmodule Siwapp.Invoices do
     |> assign_number()
   end
 
+  @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
     case Ecto.Changeset.get_change(changeset, :series_id) do
       nil ->
@@ -125,6 +126,7 @@ defmodule Siwapp.Invoices do
     end
   end
 
+  @spec which_number(pos_integer()) :: integer
   defp which_number(series_id) do
     case list_by(:series_id, series_id) do
       [] -> Commons.get_series(series_id).first_number
