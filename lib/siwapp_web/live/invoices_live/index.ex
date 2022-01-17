@@ -20,7 +20,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
     } = socket.assigns
 
     next_page = page + 1
-    IO.inspect(next_page)
 
     {
       :noreply,
