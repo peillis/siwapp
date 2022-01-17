@@ -1,7 +1,7 @@
 <h1><%= @page_title %></h1>
 
 <.form let={f} for={@changeset} phx-submit="save" phx-change="validate">
-
+<%= #require IEx; IEx.pry %>
   <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer" f={f}/>
   <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
   <br>
