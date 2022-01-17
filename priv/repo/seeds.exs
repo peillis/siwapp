@@ -15,7 +15,8 @@ alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings, Templat
 
 today = Date.utc_today()
 
-{:ok, file} = File.read("/home/pablo/Escritorio/elixir/siwapp/priv/repo/fixtures/print_default.html.heex")
+{:ok, file} =
+  File.read("#{__DIR__}/../../lib/siwapp_web/templates/iframe/print_default.html.heex")
 
 customers = [
   %{name: "Pablo"},
@@ -50,7 +51,8 @@ invoices = [
     number: 1,
     issue_date: Date.add(today, -2),
     series_id: 1,
-    customer_id: 1
+    customer_id: 1,
+    currency: "$"
   },
   %{
     name: "Second_Invoice",
@@ -59,7 +61,8 @@ invoices = [
     issue_date: today,
     due_date: Date.add(today, 30),
     series_id: 1,
-    customer_id: 2
+    customer_id: 2,
+    currency: "$"
   },
   %{
     name: "Third_Invoice",
@@ -69,7 +72,8 @@ invoices = [
     issue_date: today,
     due_date: Date.add(today, 30),
     series_id: 1,
-    customer_id: 1
+    customer_id: 1,
+    currency: "$"
   }
 ]
 
@@ -110,6 +114,13 @@ templates = [
   }
 ]
 
+items = [
+  %{
+    quantity: 1,
+    description: "first description"
+  }
+]
+
 Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
@@ -117,3 +128,4 @@ Enum.each(invoices, &Invoices.create(&1))
 Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
 Enum.each(settings, &Settings.create(&1))
 Enum.each(templates, &Templates.create(&1))
+Enum.each(items, &Invoices.create_item(Invoices.get!(1), &1))

@@ -21,6 +21,12 @@ td.table-span:not([align]){
   text-align: center;
 }
 
+.iframe.template{
+  width: 770px;
+  height: 1090px;
+  border: 2px solid #ced4da;  
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile{
     display: flex;
