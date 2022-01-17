@@ -12,6 +12,18 @@ defmodule Siwapp.Invoices.Query do
       preload: [customer: c]
   end
 
+  def paginate(query, page, per_page) do
+    offset_by = per_page * page
+
+    query
+    |> limit(^per_page)
+    |> offset(^offset_by)
+  end
+
+  def scroll_list_query(page, per_page \\ 20) do
+    from(c in Invoice) |> paginate(page, per_page)
+  end
+
   def by(field, value) do
     where(Invoice, ^[{field, value}])
   end

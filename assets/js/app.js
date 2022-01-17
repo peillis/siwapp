@@ -25,9 +25,34 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import scrollAt from './live_view_scroll/scroll';
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let Hooks = {}
+
+Hooks.InfiniteScroll = {
+  page() { return this.el.dataset.page },
+  mounted(){
+    this.pending = this.page()
+    let deadtime = 100;
+    let lastCall = 0;
+    window.addEventListener("scroll", e => {
+      const now = (new Date).getTime();
+      if(this.pending == this.page() && scrollAt()> 90){
+          if (now - lastCall > deadtime) {
+            lastCall = now;
+            this.pending = this.page() + 1
+            this.pushEvent("load-more", {})
+        } else
+        lastCall = now;
+      }
+    })
+  },
+  reconnected(){ this.pending = this.page() },
+  updated(){ this.pending = this.page() }
+}
+
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
