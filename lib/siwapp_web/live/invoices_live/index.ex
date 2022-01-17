@@ -8,8 +8,27 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:invoices, Invoices.list())
+     |> assign(:page, 0)
+     |> assign(:invoices, Invoices.scroll_listing(0))
      |> assign(:checked, MapSet.new())}
+  end
+
+  def handle_event("load-more", _, socket) do
+    %{
+      page: page,
+      invoices: invoices
+    } = socket.assigns
+
+    next_page = page + 1
+    IO.inspect(next_page)
+
+    {
+      :noreply,
+      assign(socket,
+        invoices: invoices ++ Invoices.scroll_listing(next_page),
+        page: next_page
+      )
+    }
   end
 
   def handle_event("click_checkbox", params, socket) do
