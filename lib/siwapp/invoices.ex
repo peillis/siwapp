@@ -112,6 +112,15 @@ defmodule Siwapp.Invoices do
     Invoice.changeset(invoice, attrs)
   end
 
+  def list_past_due_or_pending do
+    Repo.all(Query.list_past_due_or_pending())
+  end
+
+  def list_past_due do
+    list = list_past_due_or_pending()
+    Enum.filter(list, fn x -> status(x) == :past_due end)
+  end
+
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
   def status(invoice) do
     cond do

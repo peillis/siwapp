@@ -28,6 +28,11 @@ defmodule Siwapp.Invoices.Query do
     where(Invoice, ^[{field, value}])
   end
 
+  def list_past_due_or_pending do
+    from i in Invoice,
+      where: i.draft == false and i.paid == false and i.failed == false
+  end
+
   def with_terms(terms) do
     from(i in Invoice,
       join: it in Siwapp.Invoices.Item,

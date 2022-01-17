@@ -9,7 +9,7 @@ defmodule SiwappWeb.PageLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:invoices, Invoices.list())
+     |> assign(:invoices, Invoices.list_past_due())
      |> assign(:checked, MapSet.new())}
   end
 
