@@ -10,7 +10,6 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-
 alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings, Templates}
 
 today = Date.utc_today()
@@ -93,7 +92,6 @@ recurring_invoices = [
     customer_id: 2
   }
 ]
-
 
 settings = [
   company: "Doofinder",
