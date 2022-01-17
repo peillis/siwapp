@@ -126,7 +126,6 @@ defmodule SiwappWeb.Router do
     get "/settings", SettingsController, :edit
     post "/settings", SettingsController, :update
 
-
     get "/iframe/:id", IframeController, :iframe
   end
 
