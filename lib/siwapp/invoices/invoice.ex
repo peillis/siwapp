@@ -13,7 +13,8 @@ defmodule Siwapp.Invoices.Invoice do
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
   @type t :: %__MODULE__{
-          id: pos_integer(),
+          __meta__: Ecto.Schema.Metadata.t(),
+          id: pos_integer() | nil,
           name: binary() | nil,
           identification: binary() | nil,
           email: binary() | nil,
@@ -29,18 +30,20 @@ defmodule Siwapp.Invoices.Invoice do
           due_date: Date.t() | nil,
           failed: boolean(),
           deleted_number: pos_integer() | nil,
-          currency: binary() | nil,
+          currency: <<_::24>> | nil,
           invoicing_address: binary() | nil,
           shipping_address: binary() | nil,
           notes: binary() | nil,
           terms: binary() | nil,
           deleted_at: DateTime.t() | nil,
           meta_attributes: map() | nil,
+          customer: Ecto.Association.NotLoaded.t() | Customer.t(),
+          series: Ecto.Association.NotLoaded.t() | Series.t(),
           series_id: pos_integer() | nil,
-          customer_id: pos_integer(),
+          customer_id: pos_integer() | nil,
           recurring_invoice_id: pos_integer() | nil,
-          inserted_at: DateTime.t(),
-          updated_at: DateTime.t()
+          inserted_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil
         }
 
   @fields [
