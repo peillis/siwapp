@@ -29,6 +29,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def apply_action(socket, :edit, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), :preload)
+    IO.inspect invoice
 
     socket
     |> assign(:action, :edit)

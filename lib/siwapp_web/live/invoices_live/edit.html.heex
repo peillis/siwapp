@@ -119,7 +119,7 @@
               <th>Subtotal:</th>
               <td><%= Ecto.Changeset.get_field(@changeset, :net_amount)%></td>
             </tr>
-            <% IO.inspect @changeset %>
+            <% IO.inspect @changeset.data %>
             <%= for tax_amount <- Ecto.Changeset.get_field(@changeset, :taxes_amounts) do %>
             <tr>
               <th><%= tax_amount |> elem(0) %></th>
@@ -128,7 +128,7 @@
             <% end %>
             <tr>
               <th>TOTAL</th>
-              <td><%= @gross_amount %></td>
+              <td><%= Ecto.Changeset.get_field(@changeset, :gross_amount) %></td>
             </tr>
           </tbody>
         </table>
