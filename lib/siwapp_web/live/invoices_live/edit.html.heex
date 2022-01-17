@@ -67,7 +67,7 @@
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :quantity, class: "label" %>
           <p class="control">
-            <%= text_input fi, :quantity, phx_debounce: "blur", class: "input" %>
+            <%= text_input fi, :quantity, class: "input" %>
           </p>
           <%= error_tag fi, :quantity %>
 
@@ -75,14 +75,14 @@
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :unitary_cost, "Price", class: "label" %>
           <p class="control">
-            <%= text_input fi, :unitary_cost, phx_debounce: "blur", class: "input" %>
+            <%= text_input fi, :unitary_cost, class: "input" %>
           </p>
           <%= error_tag fi, :unitary_cost %>
         </div>
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :discount, class: "label" %>
           <p class="control">
-            <%= text_input fi, :discount, phx_debounce: "blur", class: "input" %>
+            <%= text_input fi, :discount, class: "input" %>
           </p>
           <%= error_tag fi, :discount %>
         </div>
@@ -117,19 +117,18 @@
           <tbody>
             <tr>
               <th>Subtotal:</th>
-              <td>Amount</td>
+              <td><%= Ecto.Changeset.get_field(@changeset, :net_amount)%></td>
             </tr>
+            <% IO.inspect @changeset %>
+            <%= for tax_amount <- Ecto.Changeset.get_field(@changeset, :taxes_amounts) do %>
             <tr>
-              <th>VAT</th>
-              <td>Amount</td>
+              <th><%= tax_amount |> elem(0) %></th>
+              <td><%= tax_amount |> elem(1) %></td>
             </tr>
-            <tr>
-              <th>RETENTION</th>
-              <td>Amount</td>
-            </tr>
+            <% end %>
             <tr>
               <th>TOTAL</th>
-              <td>Amount</td>
+              <td><%= @gross_amount %></td>
             </tr>
           </tbody>
         </table>
