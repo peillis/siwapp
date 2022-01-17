@@ -92,9 +92,10 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  defp getSelectedTaxes(changeset, fi) do
+  defp get_existing_taxes(changeset, fi) do
     item =
-      Ecto.Changeset.get_field(changeset, :items)
+      changeset
+      |> Ecto.Changeset.get_field(:items)
       |> Enum.at(fi.index)
 
     item.taxes
