@@ -19,13 +19,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
       invoices: invoices
     } = socket.assigns
 
-    next_page = page + 1
-
     {
       :noreply,
       assign(socket,
-        invoices: invoices ++ Invoices.scroll_listing(next_page),
-        page: next_page
+        invoices: invoices ++ Invoices.scroll_listing(page + 1),
+        page: page + 1
       )
     }
   end
