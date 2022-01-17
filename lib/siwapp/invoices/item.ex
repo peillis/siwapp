@@ -86,7 +86,7 @@ defmodule Siwapp.Invoices.Item do
   end
 
   defp find_taxes(changeset, attrs) do
-    taxes = Map.get(attrs, :taxes, [])
+    taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
     taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in taxes))
     put_assoc(changeset, :taxes, taxes_assoc)
   end
