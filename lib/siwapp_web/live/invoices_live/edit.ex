@@ -29,13 +29,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def apply_action(socket, :edit, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), :preload)
-    IO.inspect invoice
 
     socket
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice))
+    |> assign(:changeset, Invoices.change(invoice, %{items: Enum.map(invoice.items, & Map.from_struct(&1))}))
   end
 
   def handle_event("save", %{"invoice" => params, "meta" => meta}, socket) do
