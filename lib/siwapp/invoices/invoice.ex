@@ -207,7 +207,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   @spec which_number(pos_integer()) :: integer
   defp which_number(series_id) do
-    query = Query.last_number_with_series_id(series_id)
+    query = Query.last_number_with_series_id(__MODULE__, series_id)
 
     case Repo.one(query) do
       nil -> Repo.get(Series, series_id).first_number

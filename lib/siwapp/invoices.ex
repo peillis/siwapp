@@ -18,7 +18,9 @@ defmodule Siwapp.Invoices do
   end
 
   def list(:preload) do
-    Repo.all(Query.list_preload())
+    Invoice
+    |> Query.list_preload(:customer)
+    |> Repo.all()
   end
 
   def scroll_listing(page, per_page \\ 20) do
@@ -36,22 +38,22 @@ defmodule Siwapp.Invoices do
     query =
       case {key, value} do
         {:with_terms, value} ->
-          Query.with_terms(value)
+          Query.with_terms(Invoice, value)
 
         {:customer_id, value} ->
-          Query.by(:customer_id, value)
+          Query.by(Invoice, :customer_id, value)
 
         {:issue_date_gteq, value} ->
-          Query.issue_date_gteq(value)
+          Query.issue_date_gteq(Invoice, value)
 
         {:issue_date_lteq, value} ->
-          Query.issue_date_lteq(value)
+          Query.issue_date_lteq(Invoice, value)
 
         {:series_id, value} ->
-          Query.by(:series_id, value)
+          Query.by(Invoice, :series_id, value)
 
         {:with_status, value} ->
-          Query.by(:paid, value)
+          Query.by(Invoice, :paid, value)
       end
 
     Repo.all(query)
@@ -96,7 +98,10 @@ defmodule Siwapp.Invoices do
   def get!(id), do: Repo.get!(Invoice, id)
 
   def get!(id, :preload) do
-    invoice = Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
+    invoice =
+      Invoice
+      |> Repo.get!(id)
+      |> Repo.preload([:customer, {:items, :taxes}, :series])
 
     items_with_calculations =
       invoice.items
