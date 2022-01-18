@@ -107,6 +107,7 @@ defmodule Siwapp.Invoices do
 
     Map.put(invoice, :items, items_with_calculations)
   end
+
   @doc """
   Get a single invoice by the params
   """
