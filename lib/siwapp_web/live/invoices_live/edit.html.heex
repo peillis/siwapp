@@ -68,7 +68,7 @@
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :quantity, class: "label" %>
           <p class="control">
-            <%= text_input fi, :quantity, phx_debounce: "blur", class: "input" %>
+            <%= text_input fi, :quantity, class: "input" %>
           </p>
           <%= error_tag fi, :quantity %>
 
@@ -76,14 +76,14 @@
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :unitary_cost, "Price", class: "label" %>
           <p class="control">
-            <%= text_input fi, :unitary_cost, phx_debounce: "blur", class: "input" %>
+            <%= text_input fi, :unitary_cost, class: "input" %>
           </p>
           <%= error_tag fi, :unitary_cost %>
         </div>
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :discount, class: "label" %>
           <p class="control">
-            <%= text_input fi, :discount, phx_debounce: "blur", class: "input" %>
+            <%= text_input fi, :discount, class: "input" %>
           </p>
           <%= error_tag fi, :discount %>
         </div>
@@ -95,7 +95,7 @@
           <label class="label">Total</label>
           <p class="control">
             <a class="button is-static is-fullwidth">
-              Total
+              <%= item_net_amount(@changeset, fi) %>
             </a>
           </p>
         </div>
@@ -118,19 +118,17 @@
           <tbody>
             <tr>
               <th>Subtotal:</th>
-              <td>Amount</td>
+              <td><%= net_amount(@changeset) %></td>
             </tr>
+            <%= for {tax_name, tax_value} <- taxes_amounts(@changeset) do %>
             <tr>
-              <th>VAT</th>
-              <td>Amount</td>
+              <th><%= tax_name %></th>
+              <td><%= tax_value %></td>
             </tr>
-            <tr>
-              <th>RETENTION</th>
-              <td>Amount</td>
-            </tr>
+            <% end %>
             <tr>
               <th>TOTAL</th>
-              <td>Amount</td>
+              <td><%= gross_amount(@changeset) %></td>
             </tr>
           </tbody>
         </table>

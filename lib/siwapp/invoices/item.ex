@@ -85,9 +85,16 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
+  # First, we check that the taxes association doesn't exist, because if it does
+  # we cast it and that's it. If it actually doesn't, we find the taxes associated
+  # in the attributes.
   defp find_taxes(changeset, attrs) do
-    taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
-    taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in taxes))
-    put_assoc(changeset, :taxes, taxes_assoc)
+    if get_field(changeset, :taxes) != [] do
+      cast_assoc(changeset, :taxes)
+    else
+      taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
+      taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in taxes))
+      put_assoc(changeset, :taxes, taxes_assoc)
+    end
   end
 end
