@@ -30,7 +30,9 @@ defmodule Siwapp.Invoices do
   end
 
   def scroll_listing(page, per_page \\ 20) do
-    Query.scroll_list_query(page, per_page) |> Repo.all()
+    Invoice
+    |> Query.scroll_list_query(page, per_page)
+    |> Repo.all()
   end
 
   @doc """
