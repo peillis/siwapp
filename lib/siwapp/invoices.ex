@@ -100,6 +100,7 @@ defmodule Siwapp.Invoices do
   def get!(id, preload: list) do
     invoice =
       Invoice
+      |> preload(^list)
       |> Repo.get!(id)
       |> Repo.preload(list)
 
