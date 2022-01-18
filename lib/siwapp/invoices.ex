@@ -4,7 +4,6 @@ defmodule Siwapp.Invoices do
   """
   import Ecto.Query, warn: false
 
-  alias Siwapp.Commons
   alias Siwapp.Invoices.{Invoice, Item, Query}
   alias Siwapp.Repo
 
@@ -63,7 +62,7 @@ defmodule Siwapp.Invoices do
   @spec create(map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %Invoice{}
-    |> change(attrs)
+    |> Invoice.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -74,7 +73,7 @@ defmodule Siwapp.Invoices do
   @spec update(Invoice.t(), map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def update(%Invoice{} = invoice, attrs) do
     invoice
-    |> change(attrs)
+    |> Invoice.changeset(attrs)
     |> Repo.update()
   end
 
@@ -111,31 +110,6 @@ defmodule Siwapp.Invoices do
   """
   def change(%Invoice{} = invoice, attrs \\ %{}) do
     Invoice.changeset(invoice, attrs)
-    |> assign_number()
-  end
-
-  @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp assign_number(changeset) do
-    case Ecto.Changeset.get_change(changeset, :series_id) do
-      nil ->
-        changeset
-
-      series_id ->
-        if is_nil(Ecto.Changeset.get_change(changeset, :number)) do
-          proper_number = which_number(series_id)
-          Ecto.Changeset.put_change(changeset, :number, proper_number)
-        else
-          changeset
-        end
-    end
-  end
-
-  @spec which_number(pos_integer()) :: integer
-  defp which_number(series_id) do
-    case list_by(:series_id, series_id) do
-      [] -> Commons.get_series(series_id).first_number
-      list -> List.last(list).number + 1
-    end
   end
 
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
