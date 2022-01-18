@@ -23,12 +23,6 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-  def list_preload(assoc) do
-    Invoice
-    |> Query.list_preload(assoc)
-    |> Repo.all()
-  end
-
   def scroll_listing(page, per_page \\ 20) do
     Invoice
     |> Query.scroll_list_query(page, per_page)
@@ -113,7 +107,6 @@ defmodule Siwapp.Invoices do
 
     Map.put(invoice, :items, items_with_calculations)
   end
-
   @doc """
   Get a single invoice by the params
   """
