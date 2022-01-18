@@ -112,6 +112,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
     |> find_customer_or_new()
+    |> bring_customer_errors()
     |> assign_number()
     |> validate_draft_enablement()
     |> validate_required_draft()
@@ -120,12 +121,6 @@ defmodule Siwapp.Invoices.Invoice do
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
     |> foreign_key_constraint(:recurring_invoice_id)
-    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
-    |> validate_length(:name, max: 100)
-    |> validate_length(:identification, max: 50)
-    |> validate_length(:email, max: 100)
-    |> validate_length(:contact_person, max: 100)
-    |> validate_length(:currency, max: 100)
     |> calculate()
   end
 
