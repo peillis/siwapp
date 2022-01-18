@@ -216,7 +216,7 @@
       <div class="section-sm">
         <p class="text-muted">Billed to:</p>
         <ul class="company customer">
-          <%= if @invoice.name do %>
+          <%= if @invoice.name do %>}
             <li class="company__name"><%= @invoice.name %></li>
           <% end %>
           <%= if @invoice.identification do %>
