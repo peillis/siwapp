@@ -2,14 +2,10 @@ defmodule Siwapp.Invoices.Query do
   @moduledoc """
   Invoices Querys
   """
-  alias Siwapp.Invoices.Invoice
-
   import Ecto.Query
 
-  def list_preload do
-    from i in Invoice,
-      join: c in assoc(i, :customer),
-      preload: [customer: c]
+  def list_preload(query, term) do
+    preload(query, ^term)
   end
 
   def paginate(query, page, per_page) do
@@ -24,29 +20,27 @@ defmodule Siwapp.Invoices.Query do
     from(c in Invoice) |> paginate(page, per_page)
   end
 
-  def by(field, value) do
-    where(Invoice, ^[{field, value}])
+  def by(query, field, value) do
+    query
+    |> where(^[{field, value}])
   end
 
-  def with_terms(terms) do
-    from(i in Invoice,
-      join: it in Siwapp.Invoices.Item,
-      where: ilike(it.description, ^"%#{terms}%"),
-      or_where: ilike(i.email, ^"%#{terms}%"),
-      or_where: ilike(i.name, ^"%#{terms}%"),
-      or_where: ilike(i.identification, ^"%#{terms}%")
-    )
+  def with_terms(query, terms) do
+    query
+    |> join(:inner, [i], it in Siwapp.Invoices.Item)
+    |> where([i, it], ilike(it.description, ^"%#{terms}%"))
+    |> or_where([i], ilike(i.email, ^"%#{terms}%"))
+    |> or_where([i], ilike(i.name, ^"%#{terms}%"))
+    |> or_where([i], ilike(i.identification, ^"%#{terms}%"))
   end
 
-  def issue_date_gteq(date) do
-    from(i in Invoice,
-      where: i.issue_date >= ^date
-    )
+  def issue_date_gteq(query, date) do
+    query
+    |> where([i], i.issue_date >= ^date)
   end
 
-  def issue_date_lteq(date) do
-    from(i in Invoice,
-      where: i.issue_date <= ^date
-    )
+  def issue_date_lteq(query, date) do
+    query
+    |> where([i], i.issue_date <= ^date)
   end
 end
