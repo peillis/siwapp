@@ -94,7 +94,7 @@
           <label class="label">Total</label>
           <p class="control">
             <a class="button is-static is-fullwidth">
-              Total
+              <%= item_net_amount(@changeset, fi) %>
             </a>
           </p>
         </div>
@@ -117,17 +117,17 @@
           <tbody>
             <tr>
               <th>Subtotal:</th>
-              <td><%= Ecto.Changeset.get_field(@changeset, :net_amount)%></td>
+              <td><%= net_amount(@changeset) %></td>
             </tr>
-            <%= for tax_amount <- Ecto.Changeset.get_field(@changeset, :taxes_amounts) do %>
+            <%= for {tax_name, tax_value} <- taxes_amounts(@changeset) do %>
             <tr>
-              <th><%= tax_amount |> elem(0) %></th>
-              <td><%= tax_amount |> elem(1) %></td>
+              <th><%= tax_name %></th>
+              <td><%= tax_value %></td>
             </tr>
             <% end %>
             <tr>
               <th>TOTAL</th>
-              <td><%= Ecto.Changeset.get_field(@changeset, :gross_amount) %></td>
+              <td><%= gross_amount(@changeset) %></td>
             </tr>
           </tbody>
         </table>
