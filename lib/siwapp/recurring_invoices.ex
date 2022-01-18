@@ -57,4 +57,20 @@ defmodule Siwapp.RecurringInvoices do
   def change(%RecurringInvoice{} = recurring_invoice, attrs \\ %{}) do
     RecurringInvoice.changeset(recurring_invoice, attrs)
   end
+
+  @spec invoices_to_generate(pos_integer()) :: pos_integer()
+  def invoices_to_generate(id) do
+    rec_inv = get!(id)
+    number_using_date = number_of_inv(rec_inv.starting_date, rec_inv.period, rec_inv.period_type, rec_inv.finishing_date)
+    number_using_max = number_of_inv(rec_inv.starting_date, rec_inv.period, rec_inv.period_type, rec_inv.max_ocurrences)
+  end
+
+  @spec number_of_inv(Date.t(), integer, binary, Date.t | pos_integer()) :: non_neg_integer()
+  defp number_of_inv(starting_date, period, period_type, %Date{} = finishing_date) do
+    1
+  end
+  defp number_of_inv(starting_date, period, period_type, max_ocurrences) when is_integer(max_ocurrences) do
+    0
+  end
+    
 end
