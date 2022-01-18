@@ -13,10 +13,10 @@ defmodule SiwappWeb.InvoicesLive.InvoicesList do
 
   def mount(_params, _session, %{id: "home"} = socket) do
     {:ok,
-    socket
-    |> assign(:page, 0)
-    |> assign(:invoices, Invoices.list_past_due(0))
-    |> assign(:checked, MapSet.new())}
+     socket
+     |> assign(:page, 0)
+     |> assign(:invoices, Invoices.list_past_due(0))
+     |> assign(:checked, MapSet.new())}
   end
 
   def handle_event("load-more", _, %{id: "invoices"} = socket) do
