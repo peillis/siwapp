@@ -1,9 +1,15 @@
 defmodule SiwappWeb.InvoicesLive.Index do
-  @moduledoc """
-  This module manages the invoices LiveView events
-  """
+  @moduledoc false
   use SiwappWeb, :live_view
   alias Siwapp.Invoices
+
+  def mount(_params, _session, %{id: "home"} = socket) do
+    {:ok,
+     socket
+     |> assign(:page, 0)
+     |> assign(:invoices, Invoices.list_past_due(0))
+     |> assign(:checked, MapSet.new())}
+  end
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -11,6 +17,21 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:page, 0)
      |> assign(:invoices, Invoices.scroll_listing(0))
      |> assign(:checked, MapSet.new())}
+  end
+
+  def handle_event("load-more", _, %{id: "home"} = socket) do
+    %{
+      page: page,
+      invoices: invoices
+    } = socket.assigns
+
+    {
+      :noreply,
+      assign(socket,
+        invoices: invoices ++ Invoices.list_past_due(page + 1),
+        page: page + 1
+      )
+    }
   end
 
   def handle_event("load-more", _, socket) do

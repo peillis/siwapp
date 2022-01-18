@@ -22,7 +22,9 @@ defmodule Siwapp.Invoices do
   end
 
   def scroll_listing(page, per_page \\ 20) do
-    Query.scroll_list_query(page, per_page) |> Repo.all()
+    Invoice
+    |> Query.scroll_list_query(page, per_page)
+    |> Repo.all()
   end
 
   @doc """
@@ -118,6 +120,18 @@ defmodule Siwapp.Invoices do
   """
   def change(%Invoice{} = invoice, attrs \\ %{}) do
     Invoice.changeset(invoice, attrs)
+  end
+
+  def list_past_due_or_pending(page, per_page \\ 20) do
+    Invoice
+    |> Query.list_past_due_or_pending()
+    |> Query.scroll_list_query(page, per_page)
+    |> Repo.all()
+  end
+
+  def list_past_due(page, per_page \\ 20) do
+    list_past_due_or_pending(page, per_page)
+    |> Enum.filter(fn x -> status(x) == :past_due end)
   end
 
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
