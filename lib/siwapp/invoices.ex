@@ -23,12 +23,6 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-  def list_preload(assoc) do
-    Invoice
-    |> Query.list_preload(assoc)
-    |> Repo.all()
-  end
-
   def scroll_listing(page, per_page \\ 20) do
     Invoice
     |> Query.scroll_list_query(page, per_page)
@@ -105,12 +99,6 @@ defmodule Siwapp.Invoices do
 
   def get!(id, :preload) do
     Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
-  end
-
-  def get2!(id, :preload) do
-    Invoice
-    |> preload([:customer, {:items, :taxes}, :series])
-    |> Repo.get!(id)
   end
 
   @doc """
