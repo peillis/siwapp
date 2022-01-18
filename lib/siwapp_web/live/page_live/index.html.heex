@@ -2,4 +2,4 @@
 
 <h1>Past due invoices</h1>
 
-<.live_component module={SiwappWeb.InvoicesLive.TableComponent} id="table" invoices={@invoices} checked={@checked}/>
+<%= live_component SiwappWeb.InvoicesLive.TableComponent, invoices: @invoices, checked: @checked %>
