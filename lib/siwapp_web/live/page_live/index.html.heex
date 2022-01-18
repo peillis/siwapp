@@ -2,4 +2,4 @@
 
 <h1>Past due invoices</h1>
 
-<%= live_component SiwappWeb.InvoicesLive.TableComponent, invoices: @invoices, checked: @checked %>
+<%= live_render(@socket, SiwappWeb.InvoicesLive.InvoicesList, id: "home") %>

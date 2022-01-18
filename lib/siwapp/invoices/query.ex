@@ -20,17 +20,24 @@ defmodule Siwapp.Invoices.Query do
     |> offset(^offset_by)
   end
 
-  def scroll_list_query(page, per_page \\ 20) do
-    from(c in Invoice) |> paginate(page, per_page)
+  # def scroll_list_query(page, per_page \\ 20) do
+  #   from(c in Invoice) |> paginate(page, per_page)
+  # end
+
+  def scroll_list_query(query, page, per_page \\ 20) do
+    query
+    |> paginate(page, per_page)
   end
 
   def by(field, value) do
     where(Invoice, ^[{field, value}])
   end
 
-  def list_past_due_or_pending do
-    from i in Invoice,
-      where: i.draft == false and i.paid == false and i.failed == false
+  def list_past_due_or_pending(query) do
+    query
+    |> where(draft: false)
+    |> where(paid: false)
+    |> where(failed: false)
   end
 
   def with_terms(terms) do

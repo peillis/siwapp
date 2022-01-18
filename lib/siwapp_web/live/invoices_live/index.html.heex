@@ -1,18 +1,1 @@
-<nav class={"navbar is-fixed-bottom
-             #{if Enum.empty?(@checked), do: "is-invisible"}"}
-            role="navigation" aria-label="main navigation">
-  <div class="navbar-menu">
-    <div class="navbar-end">
-      <div class="navbar-item buttons">
-        <button class="button is-danger">Delete</button>
-        <button class="button is-info">Send Email</button>
-        <button class="button is-info">Set Paid</button>
-        <button class="button is-info">Download PDF</button>
-        <button class="button is-info">Duplicate</button>
-      </div>
-    </div>
-  </div>
-</nav>
-
-<%= live_component SiwappWeb.InvoicesLive.TableComponent, invoices: @invoices, checked: @checked %>
-
+<%= live_render(@socket, SiwappWeb.InvoicesLive.InvoicesList, id: "invoices") %>
