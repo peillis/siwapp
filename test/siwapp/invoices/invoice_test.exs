@@ -22,11 +22,11 @@ defmodule Siwapp.InvoiceTest do
       assert %{issue_date: ["can't be blank"]} = errors_on(changeset)
     end
 
-    test "an invoice can be saved if it has all the required fields" do
+    test "an invoice can be saved if it has all the required fields", %{series_id: series_id} do
       changeset =
         Invoice.changeset(%Invoice{}, %{
           name: "Melissa",
-          series_id: 1,
+          series_id: series_id,
           issue_date: Date.utc_today()
         })
 

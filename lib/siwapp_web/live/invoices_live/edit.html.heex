@@ -20,6 +20,7 @@
         <p class=" control select is-fullwidth">
           <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur" %>
         </p>
+        <%= error_tag f, :series_id %>
       </div>
       <%= if @live_action == :edit do %>
         <div class="field">

@@ -9,8 +9,9 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.Item
+  alias Siwapp.Invoices.{Item, Query}
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.Repo
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -111,6 +112,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
     |> find_customer_or_new()
+    |> assign_number()
     |> validate_draft_enablement()
     |> validate_required_draft()
     |> unique_constraint([:series_id, :number])
@@ -148,11 +150,9 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
-  @doc """
-  Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
-  """
+  # Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
   @spec calculate(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  def calculate(changeset) do
+  defp calculate(changeset) do
     changeset
     |> set_net_amount()
     |> set_taxes_amounts()
@@ -187,5 +187,31 @@ defmodule Siwapp.Invoices.Invoice do
       |> Enum.sum()
 
     put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
+  end
+
+  @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp assign_number(changeset) do
+    case get_change(changeset, :series_id) do
+      nil ->
+        changeset
+
+      series_id ->
+        if is_nil(get_change(changeset, :number)) do
+          proper_number = which_number(series_id)
+          put_change(changeset, :number, proper_number)
+        else
+          changeset
+        end
+    end
+  end
+
+  @spec which_number(pos_integer()) :: integer
+  defp which_number(series_id) do
+    query = Query.last_number_with_series_id(series_id)
+
+    case Repo.one(query) do
+      nil -> Repo.get(Series, series_id).first_number
+      invoice -> invoice.number + 1
+    end
   end
 end
