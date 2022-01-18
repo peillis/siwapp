@@ -11,21 +11,21 @@ defmodule Siwapp.Invoices do
   Gets a list of invoices by updated date
   """
 
-  @spec list(none() | :preload) :: [Invoice.t()]
+  @spec list(none() | atom()) :: [Invoice.t()]
   def list do
     # query = Query.invoices()
     Repo.all(Invoice)
   end
 
-  def list(:preload) do
+  def list(assoc) do
     Invoice
-    |> Query.list_preload(:customer)
+    |> Query.list_preload(assoc)
     |> Repo.all()
   end
 
   def scroll_listing(page, per_page \\ 20) do
     Invoice
-    |> Query.scroll_list_query(page, per_page)
+    |> Query.paginate(page, per_page)
     |> Repo.all()
   end
 
@@ -94,14 +94,14 @@ defmodule Siwapp.Invoices do
   Gets an invoice by id
   """
 
-  @spec get!(pos_integer(), none() | :preload) :: Invoice.t()
+  @spec get!(pos_integer(), none() | keyword()) :: Invoice.t()
   def get!(id), do: Repo.get!(Invoice, id)
 
-  def get!(id, :preload) do
+  def get!(id, preload: list) do
     invoice =
       Invoice
       |> Repo.get!(id)
-      |> Repo.preload([:customer, {:items, :taxes}, :series])
+      |> Repo.preload(list)
 
     items_with_calculations =
       invoice.items
@@ -127,16 +127,11 @@ defmodule Siwapp.Invoices do
     Invoice.changeset(invoice, attrs)
   end
 
-  def list_past_due_or_pending(page, per_page \\ 20) do
-    Invoice
-    |> Query.list_past_due_or_pending()
-    |> Query.scroll_list_query(page, per_page)
-    |> Repo.all()
-  end
-
   def list_past_due(page, per_page \\ 20) do
-    list_past_due_or_pending(page, per_page)
-    |> Enum.filter(fn x -> status(x) == :past_due end)
+    Invoice
+    |> Query.list_past_due()
+    |> Query.paginate(page, per_page)
+    |> Repo.all()
   end
 
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
