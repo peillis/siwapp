@@ -34,7 +34,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice, %{items: Enum.map(invoice.items, & Map.from_struct(&1))}))
+    |> assign(:changeset, Invoices.change(invoice))
   end
 
   def handle_event("save", %{"invoice" => params, "meta" => meta}, socket) do

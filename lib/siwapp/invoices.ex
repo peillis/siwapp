@@ -93,9 +93,16 @@ defmodule Siwapp.Invoices do
   @spec get!(pos_integer(), none() | :preload) :: Invoice.t()
   def get!(id), do: Repo.get!(Invoice, id)
 
-  def get!(id, :preload),
-    do: Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
+  def get!(id, :preload) do
+    invoice = Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
 
+    items_with_calculations =
+      invoice.items
+      |> Enum.map(&change_item/1)
+      |> Enum.map(&Ecto.Changeset.apply_changes/1)
+
+    Map.put(invoice, :items, items_with_calculations)
+  end
   @doc """
   Get a single invoice by the params
   """
