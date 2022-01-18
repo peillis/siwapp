@@ -27,7 +27,6 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-
   @doc """
   Gets a list on the invoices that match with the params
   """
