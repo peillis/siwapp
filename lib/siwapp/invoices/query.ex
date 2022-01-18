@@ -52,11 +52,11 @@ defmodule Siwapp.Invoices.Query do
     |> where([i], i.issue_date <= ^date)
   end
 
-  @spec last_number_with_series_id(pos_integer()) :: Ecto.Query.t()
-  def last_number_with_series_id(series_id) do
-    Invoice
+  @spec last_number_with_series_id(any, pos_integer()) :: Ecto.Query.t()
+  def last_number_with_series_id(query, series_id) do
+    query
     |> where(series_id: ^series_id)
-    |> Ecto.Query.order_by(desc: :number)
-    |> Ecto.Query.limit(1)
+    |> order_by(desc: :number)
+    |> limit(1)
   end
 end

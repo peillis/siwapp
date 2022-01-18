@@ -98,7 +98,10 @@ defmodule Siwapp.Invoices do
   def get!(id), do: Repo.get!(Invoice, id)
 
   def get!(id, :preload) do
-    invoice = Repo.get!(Invoice, id) |> Repo.preload([:customer, {:items, :taxes}, :series])
+    invoice =
+      Invoice
+      |> Repo.get!(id)
+      |> Repo.preload([:customer, {:items, :taxes}, :series])
 
     items_with_calculations =
       invoice.items
