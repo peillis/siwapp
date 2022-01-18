@@ -18,8 +18,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:noreply, assign(socket, checked: checked)}
   end
 
-  def handle_event("edit", %{"id" => id}, socket) do
-    {:noreply, push_redirect(socket, to: Routes.invoices_edit_path(socket, :edit, id))}
+  def handle_event("redirect", %{"id" => id}, socket) do
+    invoice = Invoices.get!(String.to_integer(id))
+
+    if Invoices.status(invoice) == :paid do
+      {:noreply, push_redirect(socket, to: Routes.page_path(socket, :show_invoice, id))}
+    else
+      {:noreply, push_redirect(socket, to: Routes.invoices_edit_path(socket, :edit, id))}
+    end
   end
 
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do

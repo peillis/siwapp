@@ -14,8 +14,7 @@ alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings, Templat
 
 today = Date.utc_today()
 
-{:ok, file} =
-  File.read("#{__DIR__}/../../lib/siwapp_web/templates/iframe/print_default.html.heex")
+{:ok, file} = File.read("#{__DIR__}/fixtures/print_default.html.heex")
 
 customers = [
   %{name: "Pablo"},
