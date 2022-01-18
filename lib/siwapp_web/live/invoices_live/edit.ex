@@ -114,5 +114,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   defp taxes_amounts(changeset), do: Ecto.Changeset.get_field(changeset, :taxes_amounts)
 
   defp gross_amount(changeset), do: Ecto.Changeset.get_field(changeset, :gross_amount)
-
 end
