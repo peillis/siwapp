@@ -160,8 +160,6 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   defp set_net_amount(changeset) do
-    IO.inspect changeset
-
     total_net_amount =
       get_field(changeset, :items)
       |> Enum.map(& &1.net_amount)

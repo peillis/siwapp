@@ -38,7 +38,7 @@ defmodule Siwapp.Invoices.Item do
   end
 
   def changeset(item, attrs \\ %{}) do
-    IO.inspect item
+    item
     |> cast(attrs, @fields)
     |> find_taxes(attrs)
     |> foreign_key_constraint(:invoice_id)
