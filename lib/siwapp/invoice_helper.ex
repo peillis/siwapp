@@ -27,14 +27,30 @@ defmodule Siwapp.InvoiceHelper do
   end
 
   def bring_customer_errors(changeset) do
-    customer_changes = Map.take(changeset.changes, [:name, :identification, :email, :contact_person, :invoicing_address, :shipping_address])
-    customer_data = Map.take(changeset.data, [:name, :identification, :email, :contact_person, :invoicing_address, :shipping_address])
+    customer_changes =
+      Map.take(changeset.changes, [
+        :name,
+        :identification,
+        :email,
+        :contact_person,
+        :invoicing_address,
+        :shipping_address
+      ])
+
+    customer_data =
+      Map.take(changeset.data, [
+        :name,
+        :identification,
+        :email,
+        :contact_person,
+        :invoicing_address,
+        :shipping_address
+      ])
 
     customer_changeset = Customer.changeset(struct(Customer, customer_data), customer_changes)
 
     customer_changeset.errors
     |> Enum.reduce(changeset, fn error, changeset -> add_customer_error(changeset, error) end)
-
   end
 
   defp add_customer_error(changeset, {key, {message, opts}}) do
