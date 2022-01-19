@@ -113,15 +113,6 @@ defmodule Siwapp.Invoices do
   end
 
   @doc """
-  Get a single invoice by the params
-  """
-
-  @spec get_by!(atom(), any()) :: Invoice.t()
-  def get_by!(key, value) do
-    Repo.get_by!(Invoice, %{key => value})
-  end
-
-  @doc """
   Returns an `%Ecto.Changeset{}` for tracking invoice changes.
   """
   def change(%Invoice{} = invoice, attrs \\ %{}) do
