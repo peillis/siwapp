@@ -9,7 +9,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{Item, InvoiceQuery}
+  alias Siwapp.Invoices.{InvoiceQuery, Item}
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
 
