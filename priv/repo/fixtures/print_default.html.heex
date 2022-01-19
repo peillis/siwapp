@@ -216,24 +216,24 @@
       <div class="section-sm">
         <p class="text-muted">Billed to:</p>
         <ul class="company customer">
-          <%= if @invoice.name do %>}
-            <li class="company__name"><%= @invoice.name %></li>
+          <%= if name do %>
+            <li class="company__name"><%= name %></li>
           <% end %>
-          <%= if @invoice.identification do %>
-            <li class="company__id"><%= @invoice.identification %></li>
+          <%= if identification do %>
+            <li class="company__id"><%= identification %></li>
           <% end %>
-          <%= if @invoice.invoicing_address || @invoice.contact_person do %>
+          <%= if invoicing_address || contact_person do %>
             <li class="company__address">
-              <%= if @invoice.contact_person do %>
-                <%= @invoice.contact_person %><br>
+              <%= if contact_person do %>
+                <%= contact_person %><br>
               <% end %>
-              <%= if @invoice.invoicing_address do %>
-                <%= @invoice.invoicing_address %>
+              <%= if invoicing_address do %>
+                <%= invoicing_address %>
               <% end %>
             </li>
           <% end %>
-          <%= if @invoice.email do %>
-            <li><%= @invoice.email %></li>
+          <%= if email do %>
+            <li><%= email %></li>
           <% end %>
         </ul>
       </div>
@@ -242,15 +242,15 @@
           <tbody>
             <tr>
               <th>Invoice Number:</th>
-              <td class="total"><%= @invoice.name %></td>
+              <td class="total"><%= series.code <> "-" <> Integer.to_string(number) %></td>
             </tr>
             <tr>
               <th>Billed:</th>
-              <td class="total"><%= @invoice.issue_date %></td>
+              <td class="total"><%= issue_date %></td>
             </tr>
             <tr>
               <th>Due on:</th>
-              <td class="total"><%= @invoice.due_date %></td>
+              <td class="total"><%= due_date %></td>
             </tr>
           </tbody>
         </table>
@@ -258,12 +258,12 @@
     </div>
 
     <div class="row">
-      <div class={"status #{Invoices.status(@invoice)}"}>
-        <%= Invoices.status(@invoice) %>
+      <div class="status <%= status %>">
+        <%= status %>
       </div>
       <div class="amount">
-        <%= @invoice.gross_amount %>
-        <span class="amount__currency"><%= @invoice.currency %></span>
+        <%= gross_amount %>
+        <span class="amount__currency"><%= currency %></span>
       </div>
     </div>
 
@@ -271,7 +271,7 @@
       <thead>
         <tr>
           <th>Description</th>
-          <%= if have_items_discount?(@invoice.items) do %>
+          <%= if have_discount? do %>
             <th>Price</th>
             <th>Discount</th>
           <% end %>
@@ -279,21 +279,14 @@
         </tr>
       </thead>
       <tbody>
-        <%= for item <- @invoice.items do %>
+        <%= for item <- items do %>
           <tr>
             <td> <%= item.description %> </td>
-            <%= if have_items_discount?([item]) do %>
-              <td>
-                <%= @invoice.currency %>
-                <%= item.unitary_cost %>
-              </td>
-              <td>
-                <%= @invoice.currency %>
-                <%= item.discount %>
-              </td>
+            <%= if item.discount != 0 do %>
+              <td> <%= item.unitary_cost %> </td>
+              <td> <%= item.discount %> </td>
             <% end %>
             <td class="total">
-              <%= @invoice.currency %>
               <%= item.net_amount %>
             </td>
           </tr>
@@ -303,11 +296,11 @@
 
     <div class="row">
       <div class="section">
-        <%= if @invoice.terms do %>
+        <%= if terms do %>
           <div class="notes">
             <p class="notes__title">Terms &amp; Conditions</p>
             <div class="notes__content">
-              <%= @invoice.terms %>
+              <%= terms %>
             </div>
           </div>
         <% end %>
@@ -318,15 +311,13 @@
             <tr>
               <th>Subtotal</th>
               <td class="total">
-                <%= @invoice.currency %>
-                <%= @invoice.net_amount %>
+                <%= net_amount %>
               </td>
             </tr>
             <%# <%= for tax <- @invoice.taxes do  %>
               <tr>
                 <th> tax </th>
                 <td class="total">
-                  <%= @invoice.currency %>
                   tax.value
                 </td>
               </tr>
@@ -334,8 +325,7 @@
             <tr class="grand-total">
               <th>Total</th>
               <td class="total">
-                <%= @invoice.currency %>
-                <%= @invoice.gross_amount %>
+                <%= gross_amount %>
               </td>
             </tr>
           </tbody>
