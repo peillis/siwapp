@@ -119,7 +119,6 @@ defmodule SiwappWeb.Router do
     live "/templates/:id/edit", TemplatesLive.Edit, :edit
 
     live "/recurring_invoices", RecurringInvoicesLive.Index, :index
-
     live "/recurring_invoices/new", RecurringInvoicesLive.Edit, :new
     live "/recurring_invoices/:id/edit", RecurringInvoicesLive.Edit, :edit
 
