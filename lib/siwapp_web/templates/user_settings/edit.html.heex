@@ -13,13 +13,17 @@
 
   <div class="field">
     <%= label f, :email, class: "label" %>
-    <%= email_input f, :email, required: true, class: "input" %>
+    <p class="control">
+      <%= email_input f, :email, required: true, class: "input" %>
+    </p>
     <%= error_tag f, :email %>
   </div>
 
   <div class="field">
     <%= label f, :current_password, for: "current_password_for_email", class: "label" %>
-    <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email", class: "input" %>
+    <p class="control">
+      <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email", class: "input" %>
+    </p>
     <%= error_tag f, :current_password %>
   </div>
 
@@ -41,19 +45,25 @@
 
   <div class="field">
     <%= label f, :password, "New password", class: "label" %>
-    <%= password_input f, :password, required: true, class: "input" %>
+    <p class="control">
+      <%= password_input f, :password, required: true, class: "input" %>
+    </p>
     <%= error_tag f, :password %>
   </div>
 
   <div class="field">
     <%= label f, :password_confirmation, "Confirm new password", class: "label" %>
-    <%= password_input f, :password_confirmation, required: true, class: "input" %>
+    <p class="control">
+      <%= password_input f, :password_confirmation, required: true, class: "input" %>
+    </p>
     <%= error_tag f, :password_confirmation %>
   </div>
 
   <div class="field">
     <%= label f, :current_password, for: "current_password_for_password", class: "label" %>
-    <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password", class: "input" %>
+    <p class="control">
+      <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password", class: "input" %>
+    </p>
     <%= error_tag f, :current_password %>
   </div>
 
