@@ -43,14 +43,19 @@ recurring_invoices = [
 invoices = [
   %{
     name: "First_Invoice",
-    gross_amount: 100,
+    terms: "A term",
+    contact_person: "Gabriel",
+    email: "info@doofinder.com",
+    identification: "B000A2",
+    invoicing_address: "Walabee 42, Sidney",
     paid: true,
     sent_by_email: true,
     number: 1,
     issue_date: Date.add(today, -2),
+    due_date: Date.add(today, 30),
     series_id: 1,
     customer_id: 1,
-    currency: "$"
+    currency: "USD"
   },
   %{
     name: "Second_Invoice",
@@ -60,7 +65,7 @@ invoices = [
     due_date: Date.add(today, 30),
     series_id: 1,
     customer_id: 2,
-    currency: "$"
+    currency: "USD"
   },
   %{
     name: "Third_Invoice",
@@ -71,7 +76,7 @@ invoices = [
     due_date: Date.add(today, 30),
     series_id: 1,
     customer_id: 1,
-    currency: "$"
+    currency: "USD"
   }
 ]
 
@@ -114,7 +119,8 @@ templates = [
 items = [
   %{
     quantity: 1,
-    description: "first description"
+    description: "first description",
+    unitary_cost: 42_000
   }
 ]
 
