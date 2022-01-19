@@ -16,28 +16,34 @@ defmodule Siwapp.InvoiceHelper do
       case Customers.get(identification, name) do
         nil ->
           customer = Customer.changeset(%Customer{}, changeset.changes)
-
           changeset
           |> put_assoc(:customer, customer)
-          |> bring_customer_errors()
+          |> traverse_customer_errors()
 
         customer ->
           put_change(changeset, :customer_id, customer.id)
       end
     else
-      changeset
+      customer_changeset = Customer.changeset(%Customer{}, changeset.changes)
+      changeset = bring_customer_errors(customer_changeset.errors, changeset)
+
+      IO.inspect changeset
     end
   end
 
-  defp bring_customer_errors(changeset) do
+  defp traverse_customer_errors(changeset) do
     traverse_errors(changeset, & &1)
-    |> Map.get(:customer)
-    |> Enum.reduce(changeset, fn error, changeset -> add_customer_error(changeset, error) end)
-
-    changeset
+    |> Map.get(:customer, [])
+    |> Enum.map(fn {key, [value]} -> {key, value} end)
+    |> bring_customer_errors(changeset)
   end
 
-  defp add_customer_error(changeset, {key, [{message, opts}]}) do
+  defp bring_customer_errors(errors, changeset) do
+    errors
+    |> Enum.reduce(changeset, fn error, changeset -> add_customer_error(changeset, error) end)
+  end
+
+  defp add_customer_error(changeset, {key, {message, opts}}) do
     add_error(changeset, key, message, opts)
   end
 end

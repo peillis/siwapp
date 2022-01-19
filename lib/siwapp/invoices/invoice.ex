@@ -108,7 +108,7 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   def changeset(invoice, attrs \\ %{}) do
-    invoice
+    IO.inspect invoice
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
     |> find_customer_or_new()
