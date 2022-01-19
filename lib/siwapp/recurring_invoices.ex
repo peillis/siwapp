@@ -3,6 +3,7 @@ defmodule Siwapp.RecurringInvoices do
   Recurring Invoices context.
   """
   import Ecto.Query, warn: false
+  import DateTime
 
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
@@ -54,16 +55,22 @@ defmodule Siwapp.RecurringInvoices do
   @spec invoices_to_generate(pos_integer()) :: pos_integer()
   def invoices_to_generate(id) do
     rec_inv = get!(id)
-    number_using_date = number_of_inv(rec_inv.starting_date, rec_inv.period, rec_inv.period_type, rec_inv.finishing_date)
+    today =  to_date(utc_now)
+    max_date = Date.add(starting_date, )
+    if Date.compare(finishing_date, Date.add())
+    number_using_date = number_of_inv_using_date(today, rec_inv.period, rec_inv.period_type, rec_inv.finishing_date)
     number_using_max = number_of_inv(rec_inv.starting_date, rec_inv.period, rec_inv.period_type, rec_inv.max_ocurrences)
   end
 
-  @spec number_of_inv(Date.t(), integer, binary, Date.t | pos_integer()) :: non_neg_integer()
-  defp number_of_inv(starting_date, period, period_type, %Date{} = finishing_date) do
-    1
+  #Right now returns the number of invoices to generate counting today but not the finishing_date
+  defp number_of_inv(today, period, "Daily", %Date{} = max_date) do
+    Stream.iterate(today, &( Date.add( &1, period) ))
+    |> Enum.take_while( &Date.compare(&1, finishing_date) != :eq)
+    |> length()
   end
-  defp number_of_inv(starting_date, period, period_type, max_ocurrences) when is_integer(max_ocurrences) do
-    0
+
+  defp number_of_inv(today, period, "Monthly", %Date{} = max_date) do
+    Stream.iterate(today, &( Date.add(&1, days_to_sum(&1, period)) ))
   end
-    
+
 end
