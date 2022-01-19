@@ -107,6 +107,7 @@ defmodule SiwappWeb.Router do
 
     live "/invoices/new", InvoicesLive.Edit, :new
     live "/invoices/:id/edit", InvoicesLive.Edit, :edit
+    get "/invoices/:id/show", PageController, :show_invoice
     live "/invoices", InvoicesLive.Index, :index
 
     live "/customers/new", CustomerLive.Edit, :new
@@ -123,6 +124,8 @@ defmodule SiwappWeb.Router do
 
     get "/settings", SettingsController, :edit
     post "/settings", SettingsController, :update
+
+    get "/iframe/:id", IframeController, :iframe
   end
 
   scope "/", SiwappWeb do

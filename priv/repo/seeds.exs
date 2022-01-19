@@ -10,9 +10,11 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings}
+alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings, Templates}
 
 today = Date.utc_today()
+
+{:ok, file} = File.read("#{__DIR__}/fixtures/print_default.html.heex")
 
 customers = [
   %{name: "Pablo"},
@@ -41,13 +43,19 @@ recurring_invoices = [
 invoices = [
   %{
     name: "First_Invoice",
-    gross_amount: 100,
+    terms: "A term",
+    contact_person: "Gabriel",
+    email: "info@doofinder.com",
+    identification: "B000A2",
+    invoicing_address: "Walabee 42, Sidney",
     paid: true,
     sent_by_email: true,
     number: 1,
     issue_date: Date.add(today, -2),
+    due_date: Date.add(today, 30),
     series_id: 1,
-    customer_id: 1
+    customer_id: 1,
+    currency: "USD"
   },
   %{
     name: "Second_Invoice",
@@ -56,7 +64,8 @@ invoices = [
     issue_date: today,
     due_date: Date.add(today, 30),
     series_id: 1,
-    customer_id: 2
+    customer_id: 2,
+    currency: "USD"
   },
   %{
     name: "Third_Invoice",
@@ -66,7 +75,8 @@ invoices = [
     issue_date: today,
     due_date: Date.add(today, 30),
     series_id: 1,
-    customer_id: 1
+    customer_id: 1,
+    currency: "USD"
   }
 ]
 
@@ -99,9 +109,26 @@ settings = [
   legal_terms: "Clauses of our contract"
 ]
 
+templates = [
+  %{
+    name: "Print Default",
+    template: file
+  }
+]
+
+items = [
+  %{
+    quantity: 1,
+    description: "first description",
+    unitary_cost: 42_000
+  }
+]
+
 Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
 Enum.each(invoices, &Invoices.create(&1))
 Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
 Enum.each(settings, &Settings.create(&1))
+Enum.each(templates, &Templates.create(&1))
+Enum.each(items, &Invoices.create_item(Invoices.get!(1), &1))
