@@ -2,6 +2,7 @@
 
 <.form let={f} for={@changeset} phx-submit="save" phx-change="validate">
 <%= #require IEx; IEx.pry %>
+  <%= checkbox f, :active%> This customer is active
   <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer" f={f}/>
   <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
   <br>
