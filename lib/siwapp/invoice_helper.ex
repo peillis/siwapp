@@ -28,7 +28,11 @@ defmodule Siwapp.InvoiceHelper do
       end
     else
       customer_changeset = get_customer_changeset(changeset)
-      errors = Enum.map(customer_changeset.errors, fn {key, {message, opts}} -> {key, [{message, opts}]} end)
+
+      errors =
+        Enum.map(customer_changeset.errors, fn {key, {message, opts}} ->
+          {key, [{message, opts}]}
+        end)
 
       bring_customer_errors(errors, changeset)
     end
@@ -45,12 +49,15 @@ defmodule Siwapp.InvoiceHelper do
         :shipping_address
       ])
 
-      Customer.changeset(struct(Customer, customer_data), changeset.changes)
+    Customer.changeset(struct(Customer, customer_data), changeset.changes)
   end
 
   defp bring_customer_errors(errors, changeset) do
-    Enum.reduce(errors, changeset, fn error, new_changeset -> add_customer_error(new_changeset, error) end)
+    Enum.reduce(errors, changeset, fn error, new_changeset ->
+      add_customer_error(new_changeset, error)
+    end)
   end
 
-  defp add_customer_error(changeset, {key, [{message, opts}]}), do: add_error(changeset, key, message, opts)
+  defp add_customer_error(changeset, {key, [{message, opts}]}),
+    do: add_error(changeset, key, message, opts)
 end
