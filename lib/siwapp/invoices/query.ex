@@ -25,6 +25,9 @@ defmodule Siwapp.Invoices.Query do
     date_today = Date.utc_today()
 
     query
+    |> where(draft: false)
+    |> where(paid: false)
+    |> where(failed: false)
     |> where([i], not is_nil(i.due_date))
     |> where([i], i.due_date < ^date_today)
   end
