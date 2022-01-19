@@ -112,12 +112,16 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     recurring_invoice
     |> cast(attrs, @fields)
     |> find_customer_or_new()
-    |> bring_customer_errors()
     |> validate_required([:starting_date, :period, :period_type])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
     |> validate_inclusion(:period_type, ["Daily", "Monthly", "Yearly"])
     |> validate_number(:period, greater_than_or_equal_to: 0)
+    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> validate_length(:name, max: 100)
+    |> validate_length(:identification, max: 50)
+    |> validate_length(:email, max: 100)
+    |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 3)
   end
 end
