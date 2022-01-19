@@ -19,8 +19,24 @@ defmodule Siwapp.Invoices.Item do
           deleted_at: DateTime.t() | nil,
           invoice_id: pos_integer() | nil
         }
+  @derive {Jason.Encoder,
+           only: [
+             :quantity,
+             :discount,
+             :description,
+             :unitary_cost,
+             :deleted_at,
+             :invoice_id
+           ]}
 
-  @fields [:quantity, :discount, :description, :unitary_cost, :deleted_at, :invoice_id]
+  @fields [
+    :quantity,
+    :discount,
+    :description,
+    :unitary_cost,
+    :deleted_at,
+    :invoice_id
+  ]
 
   schema "items" do
     field :quantity, :integer, default: 1

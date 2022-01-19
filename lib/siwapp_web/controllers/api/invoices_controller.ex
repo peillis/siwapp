@@ -8,7 +8,7 @@ defmodule SiwappWeb.Api.InvoicesController do
   alias SiwappWeb.Api.InvoicesView
 
   def index(conn, _params) do
-    invoices = Invoices.list(:preload)
+    invoices = Invoices.list(:items)
     json = Serializer.serialize(InvoicesView, invoices, conn)
     render(conn, list: json)
   end
@@ -24,7 +24,7 @@ defmodule SiwappWeb.Api.InvoicesController do
   end
 
   def show(conn, %{"id" => id}) do
-    invoice = Invoices.get!(id, :preload)
+    invoice = Invoices.get!(id, preload: [:customer, {:items, :taxes}, :series])
     json = Serializer.serialize(InvoicesView, invoice, conn)
     render(conn, show: json)
   end
@@ -34,7 +34,7 @@ defmodule SiwappWeb.Api.InvoicesController do
 
     case Invoices.create(params) do
       {:ok, invoice} ->
-        invoice = Invoices.get!(invoice.id, :preload)
+        invoice = Invoices.get!(invoice.id, preload: [:customer, {:items, :taxes}, :series])
         json = Serializer.serialize(InvoicesView, invoice, conn)
         render(conn, create: json)
 

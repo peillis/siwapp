@@ -6,7 +6,6 @@ defmodule SiwappWeb.Api.InvoicesView do
       :contact_person,
       :currency,
       :customer_id,
-      :customer,
       :deleted_at,
       :deleted_number,
       :draft,
@@ -29,7 +28,6 @@ defmodule SiwappWeb.Api.InvoicesView do
       :paid_amount,
       :recurring_invoices,
       :sent_by_email,
-      :series,
       :series_id,
       :shipping_address,
       :terms,
@@ -39,7 +37,8 @@ defmodule SiwappWeb.Api.InvoicesView do
   def relationships do
     [
       customer: {SiwappWeb.Api.CustomersView, :include},
-      series: {SiwappWeb.Api.SeriesView, :include}
+      series: {SiwappWeb.Api.SeriesView, :include},
+      items: {SiwappWeb.Api.SeriesView, :include}
     ]
   end
 

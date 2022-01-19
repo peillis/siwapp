@@ -16,21 +16,17 @@ defmodule Siwapp.Invoices.Query do
     |> offset(^offset_by)
   end
 
-  def scroll_list_query(query, page, per_page \\ 20) do
-    query
-    |> paginate(page, per_page)
-  end
-
   def by(query, field, value) do
     query
     |> where(^[{field, value}])
   end
 
-  def list_past_due_or_pending(query) do
+  def list_past_due(query) do
+    date_today = Date.utc_today()
+
     query
-    |> where(draft: false)
-    |> where(paid: false)
-    |> where(failed: false)
+    |> where([i], not is_nil(i.due_date))
+    |> where([i], i.due_date < ^date_today)
   end
 
   def with_terms(query, terms) do
