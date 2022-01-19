@@ -100,7 +100,6 @@ defmodule Siwapp.Invoices do
   def get!(id, preload: list) do
     invoice =
       Invoice
-      |> preload(^list)
       |> Repo.get!(id)
       |> Repo.preload(list)
 
@@ -110,6 +109,15 @@ defmodule Siwapp.Invoices do
       |> Enum.map(&Ecto.Changeset.apply_changes/1)
 
     Map.put(invoice, :items, items_with_calculations)
+  end
+
+  @doc """
+  Get a single invoice by the params
+  """
+
+  @spec get_by!(atom(), any()) :: Invoice.t()
+  def get_by!(key, value) do
+    Repo.get_by!(Invoice, %{key => value})
   end
 
   @doc """
