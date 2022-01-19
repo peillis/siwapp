@@ -28,7 +28,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           enabled: boolean,
           max_ocurrences: nil | pos_integer(),
           min_ocurrences: nil | pos_integer(),
-          period: nil | integer,
+          period: nil | pos_integer,
           period_type: nil | binary,
           starting_date: nil | Date.t(),
           finishing_date: nil | Date.t(),
