@@ -4,7 +4,8 @@ defmodule Siwapp.Invoices do
   """
   import Ecto.Query, warn: false
 
-  alias Siwapp.Invoices.{Invoice, Item, Query}
+  alias Siwapp.Invoices.{Invoice, InvoiceQuery, Item}
+  alias Siwapp.Query
   alias Siwapp.Repo
 
   @doc """
@@ -38,16 +39,16 @@ defmodule Siwapp.Invoices do
     query =
       case {key, value} do
         {:with_terms, value} ->
-          Query.with_terms(Invoice, value)
+          InvoiceQuery.with_terms(Invoice, value)
 
         {:customer_id, value} ->
           Query.by(Invoice, :customer_id, value)
 
         {:issue_date_gteq, value} ->
-          Query.issue_date_gteq(Invoice, value)
+          InvoiceQuery.issue_date_gteq(Invoice, value)
 
         {:issue_date_lteq, value} ->
-          Query.issue_date_lteq(Invoice, value)
+          InvoiceQuery.issue_date_lteq(Invoice, value)
 
         {:series_id, value} ->
           Query.by(Invoice, :series_id, value)
@@ -129,7 +130,7 @@ defmodule Siwapp.Invoices do
 
   def list_past_due(page, per_page \\ 20) do
     Invoice
-    |> Query.list_past_due()
+    |> InvoiceQuery.list_past_due()
     |> Query.paginate(page, per_page)
     |> Repo.all()
   end

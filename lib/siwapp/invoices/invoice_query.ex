@@ -1,25 +1,8 @@
-defmodule Siwapp.Invoices.Query do
+defmodule Siwapp.Invoices.InvoiceQuery do
   @moduledoc """
   Invoices Querys
   """
   import Ecto.Query
-
-  def list_preload(query, term) do
-    preload(query, ^term)
-  end
-
-  def paginate(query, page, per_page) do
-    offset_by = per_page * page
-
-    query
-    |> limit(^per_page)
-    |> offset(^offset_by)
-  end
-
-  def by(query, field, value) do
-    query
-    |> where(^[{field, value}])
-  end
 
   def list_past_due(query) do
     date_today = Date.utc_today()

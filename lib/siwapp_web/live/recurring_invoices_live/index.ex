@@ -8,8 +8,24 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:recurring_invoices, RecurringInvoices.list())
+     |> assign(:page, 0)
+     |> assign(:recurring_invoices, RecurringInvoices.scroll_listing(0))
      |> assign(:checked, MapSet.new())}
+  end
+
+  def handle_event("load-more", _, socket) do
+    %{
+      page: page,
+      recurring_invoices: recurring_invoices
+    } = socket.assigns
+
+    {
+      :noreply,
+      assign(socket,
+        recurring_invoices: recurring_invoices ++ RecurringInvoices.scroll_listing(page + 1),
+        page: page + 1
+      )
+    }
   end
 
   def handle_event("click_checkbox", params, socket) do

@@ -3,12 +3,19 @@ defmodule Siwapp.Customers do
   The Customers context.
   """
   alias Siwapp.Customers.Customer
+  alias Siwapp.Query
   alias Siwapp.Repo
 
   @doc """
   Lists customers in database
   """
   def list, do: Repo.all(Customer)
+
+  def scroll_listing(page, per_page \\ 20) do
+    Customer
+    |> Query.paginate(page, per_page)
+    |> Repo.all()
+  end
 
   @doc """
   Create a new customer
