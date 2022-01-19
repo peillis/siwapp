@@ -7,7 +7,7 @@ defmodule SiwappWeb.IframeController do
   plug :put_layout, false
 
   def iframe(conn, %{"id" => id}) do
-    invoice = Invoices.get!(String.to_integer(id), :preload)
+    invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
     template = Templates.get(:print_default).template
 
     invoice_eval_data =
