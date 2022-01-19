@@ -9,7 +9,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{Item, Query}
+  alias Siwapp.Invoices.{Item, InvoiceQuery}
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
 
@@ -207,7 +207,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   @spec which_number(pos_integer()) :: integer
   defp which_number(series_id) do
-    query = Query.last_number_with_series_id(__MODULE__, series_id)
+    query = InvoiceQuery.last_number_with_series_id(__MODULE__, series_id)
 
     case Repo.one(query) do
       nil -> Repo.get(Series, series_id).first_number

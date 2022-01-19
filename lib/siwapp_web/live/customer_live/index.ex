@@ -9,7 +9,26 @@ defmodule SiwappWeb.CustomerLive.Index do
   """
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, customers: Customers.list(), page_title: "Customers")}
+    {:ok,
+     socket
+     |> assign(:page, 0)
+     |> assign(customers: Customers.scroll_listing(0))
+     |> assign(page_title: "Customers")}
+  end
+
+  def handle_event("load-more", _, socket) do
+    %{
+      page: page,
+      customers: customers
+    } = socket.assigns
+
+    {
+      :noreply,
+      assign(socket,
+        customers: customers ++ Customers.scroll_listing(page + 1),
+        page: page + 1
+      )
+    }
   end
 
   def handle_event("edit", %{"id" => id}, socket) do

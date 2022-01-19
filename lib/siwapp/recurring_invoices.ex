@@ -4,6 +4,7 @@ defmodule Siwapp.RecurringInvoices do
   """
   import Ecto.Query, warn: false
 
+  alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
 
@@ -11,6 +12,12 @@ defmodule Siwapp.RecurringInvoices do
   def list do
     # query = Query.invoices()
     Repo.all(RecurringInvoice)
+  end
+
+  def scroll_listing(page, per_page \\ 20) do
+    RecurringInvoice
+    |> Query.paginate(page, per_page)
+    |> Repo.all()
   end
 
   @spec get!(pos_integer()) :: RecurringInvoice.t()
