@@ -9,10 +9,16 @@ defmodule Siwapp.InvoiceHelper do
   alias Siwapp.Customers.Customer
 
   def maybe_find_customer_or_new(changeset) do
-    if is_nil(get_field(changeset, :customer_id)) or changes_in_name_or_identification?(changeset) do
+    if is_nil(get_field(changeset, :customer_id)) do
       find_customer_or_new(changeset)
     else
-      changeset
+      if changes_in_name_or_identification?(changeset) do
+        changeset
+        |> put_change(:customer_id, nil)
+        |> find_customer_or_new()
+      else
+        changeset
+      end
     end
   end
 
