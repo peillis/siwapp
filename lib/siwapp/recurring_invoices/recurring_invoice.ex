@@ -99,7 +99,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :terms, :string
     field :meta_attributes, :map, default: %{}
     field :items, {:array, :map}, default: [%{}]
-    belongs_to :customer, Customer
+    belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :series, Series
     has_many :invoices, Invoice, on_replace: :delete
 
@@ -111,7 +111,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   def changeset(recurring_invoice, attrs) do
     recurring_invoice
     |> cast(attrs, @fields)
-    |> find_customer_or_new()
+    |> maybe_find_customer_or_new()
     |> validate_required([:starting_date, :period, :period_type])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)

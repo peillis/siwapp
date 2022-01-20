@@ -100,7 +100,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :deleted_at, :utc_datetime
     field :meta_attributes, :map, default: %{}
     belongs_to :series, Series
-    belongs_to :customer, Customer
+    belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :recurring_invoice, RecurringInvoice
     has_many :items, Item, on_replace: :delete
 
@@ -108,25 +108,25 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   def changeset(invoice, attrs \\ %{}) do
-      invoice
-      |> cast(attrs, @fields)
-      |> cast_assoc(:items)
-      |> find_customer_or_new()
-      |> assign_number()
-      |> validate_draft_enablement()
-      |> validate_required_draft()
-      |> unique_constraint([:series_id, :number])
-      |> unique_constraint([:series_id, :deleted_number])
-      |> foreign_key_constraint(:series_id)
-      |> foreign_key_constraint(:customer_id)
-      |> foreign_key_constraint(:recurring_invoice_id)
-      |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
-      |> validate_length(:name, max: 100)
-      |> validate_length(:identification, max: 50)
-      |> validate_length(:email, max: 100)
-      |> validate_length(:contact_person, max: 100)
-      |> validate_length(:currency, max: 100)
-      |> calculate()
+    invoice
+    |> cast(attrs, @fields)
+    |> cast_assoc(:items)
+    |> maybe_find_customer_or_new()
+    |> assign_number()
+    |> validate_draft_enablement()
+    |> validate_required_draft()
+    |> unique_constraint([:series_id, :number])
+    |> unique_constraint([:series_id, :deleted_number])
+    |> foreign_key_constraint(:series_id)
+    |> foreign_key_constraint(:customer_id)
+    |> foreign_key_constraint(:recurring_invoice_id)
+    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> validate_length(:name, max: 100)
+    |> validate_length(:identification, max: 50)
+    |> validate_length(:email, max: 100)
+    |> validate_length(:contact_person, max: 100)
+    |> validate_length(:currency, max: 100)
+    |> calculate()
   end
 
   # you can't convert an existing invoice to draft
