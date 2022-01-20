@@ -100,7 +100,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :deleted_at, :utc_datetime
     field :meta_attributes, :map, default: %{}
     belongs_to :series, Series
-    belongs_to :customer, Customer
+    belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :recurring_invoice, RecurringInvoice
     has_many :items, Item, on_replace: :delete
 
@@ -111,7 +111,7 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
-    |> find_customer_or_new()
+    |> maybe_find_customer_or_new()
     |> assign_number()
     |> validate_draft_enablement()
     |> validate_required_draft()
