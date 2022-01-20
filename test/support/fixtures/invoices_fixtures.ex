@@ -36,4 +36,21 @@ defmodule Siwapp.InvoicesFixtures do
 
     Repo.preload(invoice, [:customer, {:items, :taxes}, :series])
   end
+
+  def new_series do
+    {:ok, series} = Commons.create_series(%{name: "B-Series", code: "B-"})
+    series
+  end
+
+  def populate_series(series, attrs \\ %{}) do
+    attrs = Map.merge(valid_invoice_attributes(%{series_id: series.id}), attrs)
+    {:ok, invoice} = Invoices.create(attrs)
+    invoice
+  end
+
+  def already_populated_series do
+    series = new_series()
+    populate_series(series)
+    series
+  end
 end
