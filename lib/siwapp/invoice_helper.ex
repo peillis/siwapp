@@ -8,52 +8,41 @@ defmodule Siwapp.InvoiceHelper do
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
 
-  def find_customer_or_new(changeset) do
-    if is_nil(get_field(changeset, :customer_id)) do
-      identification = get_field(changeset, :identification)
-      name = get_field(changeset, :name)
-
-      case Customers.get(identification, name) do
-        nil ->
-          customer_changeset = Customer.changeset(%Customer{}, changeset.changes)
-          changeset = put_assoc(changeset, :customer, customer_changeset)
-
-          changeset
-          |> traverse_errors(& &1)
-          |> Map.get(:customer, [])
-          |> bring_customer_errors(changeset)
-
-        customer ->
-          put_change(changeset, :customer_id, customer.id)
-      end
+  def maybe_find_customer_or_new(changeset) do
+    if is_nil(get_field(changeset, :customer_id)) or changes_in_name_or_identification?(changeset) do
+      find_customer_or_new(changeset)
     else
-      customer_changeset = get_customer_changeset(changeset)
-
-      errors =
-        Enum.map(customer_changeset.errors, fn {key, {message, opts}} ->
-          {key, [{message, opts}]}
-        end)
-
-      bring_customer_errors(errors, changeset)
+      changeset
     end
   end
 
-  defp get_customer_changeset(changeset) do
-    customer_data =
-      Map.take(changeset.data, [
-        :name,
-        :identification,
-        :email,
-        :contact_person,
-        :invoicing_address,
-        :shipping_address
-      ])
+  defp find_customer_or_new(changeset) do
+    identification = get_field(changeset, :identification)
+    name = get_field(changeset, :name)
 
-    Customer.changeset(struct(Customer, customer_data), changeset.changes)
+    case Customers.get(identification, name) do
+      nil ->
+        customer_changeset = Customer.changeset(%Customer{}, changeset.changes)
+        changeset = put_assoc(changeset, :customer, customer_changeset)
+
+        changeset
+        |> traverse_errors(& &1)
+        |> bring_customer_errors(changeset)
+
+      customer ->
+        put_change(changeset, :customer_id, customer.id)
+    end
+  end
+
+  defp changes_in_name_or_identification?(changeset) do
+    Map.has_key?(changeset.changes, :name) or
+      Map.has_key?(changeset.changes, :identification)
   end
 
   defp bring_customer_errors(errors, changeset) do
-    Enum.reduce(errors, changeset, fn error, new_changeset ->
+    errors
+    |> Map.get(:customer, [])
+    |> Enum.reduce(changeset, fn error, new_changeset ->
       add_customer_error(new_changeset, error)
     end)
   end
