@@ -59,48 +59,57 @@ defmodule Siwapp.RecurringInvoices do
     RecurringInvoice.changeset(recurring_invoice, attrs)
   end
 
-  @spec invoices_to_generate(pos_integer()) :: pos_integer()
-  def invoices_to_generate(id) do
+  @doc """
+  Given an id associated to one recurring_invoice, returns the amount of invoices that 
+  should have been generated from starting_date until today, both included
+  """
+  @spec theoretical_number_of_inv_generated(pos_integer()) :: pos_integer()
+  def theoretical_number_of_inv_generated(id) do
     rec_inv = get!(id)
     today = to_date(utc_now())
 
     max_date =
-      cond do
-        is_nil(rec_inv.max_ocurrences) && is_nil(rec_inv.finishing_date) ->
-          [today, today]
-
-        is_nil(rec_inv.max_ocurrences) ->
-          [Date.add(rec_inv.finishing_date, 1), rec_inv.finishing_date]
-
-        true ->
-          date_max_ocurrences =
-            date_from_max_ocurrences(
-              rec_inv.starting_date,
-              rec_inv.period,
-              rec_inv.period_type,
-              rec_inv.max_ocurrences
-            )
-
-          finishing_date =
-            if is_nil(rec_inv.finishing_date),
-              do: Date.add(date_max_ocurrences, 1),
-              else: rec_inv.finishing_date
-
-          [date_max_ocurrences, finishing_date]
-      end
+      [today]
+      |> Enum.concat([rec_inv.finishing_date])
+      |> Enum.concat([date_max_ocurrences(rec_inv)])
+      |> Enum.reject(&is_nil(&1))
       |> Enum.sort(Date)
       |> List.first()
 
-    number_of_inv(today, rec_inv.period, rec_inv.period_type, max_date)
+    theoretical_number_of_inv_generated(
+      rec_inv.starting_date,
+      rec_inv.period,
+      rec_inv.period_type,
+      max_date
+    )
   end
 
-  # Right now returns the number of invoices to generate counting today but and the finishing_date
-  @spec number_of_inv(Date.t(), pos_integer(), binary, Date.t()) :: pos_integer()
-  defp number_of_inv(%Date{} = today, period, period_type, %Date{} = max_date) do
-    Stream.iterate(today, &Date.add(&1, days_to_sum_for_next(&1, period, period_type)))
+  # Returns the number of invoices that should have been generated from starting_date until max_date both included
+  @spec theoretical_number_of_inv_generated(Date.t(), pos_integer(), binary, Date.t()) ::
+          pos_integer()
+  defp theoretical_number_of_inv_generated(
+         %Date{} = starting_date,
+         period,
+         period_type,
+         %Date{} = max_date
+       ) do
+    Stream.iterate(starting_date, &next_date(&1, period, period_type))
     |> Enum.take_while(&(Date.compare(&1, max_date) != :gt))
     |> length()
   end
+
+  # Invoking date_from_max_ocurrences if max_ocurrences field isn't nil
+  @spec date_max_ocurrences(RecurringInvoice.t()) :: nil | Date.t()
+  defp date_max_ocurrences(rec_inv) when is_nil(rec_inv.max_ocurrences), do: nil
+
+  defp date_max_ocurrences(rec_inv),
+    do:
+      date_from_max_ocurrences(
+        rec_inv.starting_date,
+        rec_inv.period,
+        rec_inv.period_type,
+        rec_inv.max_ocurrences
+      )
 
   # Returns the theoretical date of max_ocurrences ending counting that first invoice is on starting_date
   @spec date_from_max_ocurrences(Date.t(), pos_integer(), binary, pos_integer()) :: Date.t()
@@ -108,10 +117,15 @@ defmodule Siwapp.RecurringInvoices do
     do: starting_date
 
   defp date_from_max_ocurrences(%Date{} = starting_date, period, period_type, max_ocurrences) do
-    next_date = Date.add(starting_date, days_to_sum_for_next(starting_date, 1, period_type))
+    next_date = next_date(starting_date, 1, period_type)
     date_from_max_ocurrences(next_date, period, period_type, max_ocurrences - 1)
   end
 
+  # Returns the next date that invoices should be generated
+  defp next_date(%Date{} = date, period, period_type),
+    do: Date.add(date, days_to_sum_for_next(date, period, period_type))
+
+  # Returns the days that should be added to get to the following invoices generating date
   @spec days_to_sum_for_next(Date.t(), pos_integer(), binary) :: pos_integer
   defp days_to_sum_for_next(_date, 0, _period_type), do: 0
   defp days_to_sum_for_next(_date, period, "Daily"), do: period
