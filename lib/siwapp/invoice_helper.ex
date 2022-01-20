@@ -29,11 +29,10 @@ defmodule Siwapp.InvoiceHelper do
     case Customers.get(identification, name) do
       nil ->
         customer_changeset = Customer.changeset(%Customer{}, changeset.changes)
-        changeset = put_assoc(changeset, :customer, customer_changeset)
 
         changeset
-        |> traverse_errors(& &1)
-        |> bring_customer_errors(changeset)
+        |> put_assoc(:customer, customer_changeset)
+        |> bring_customer_errors()
 
       customer ->
         put_change(changeset, :customer_id, customer.id)
@@ -45,14 +44,15 @@ defmodule Siwapp.InvoiceHelper do
       Map.has_key?(changeset.changes, :identification)
   end
 
-  defp bring_customer_errors(errors, changeset) do
-    errors
+  defp bring_customer_errors(changeset) do
+    changeset
+    |> traverse_errors(& &1)
     |> Map.get(:customer, [])
     |> Enum.reduce(changeset, fn error, new_changeset ->
-      add_customer_error(new_changeset, error)
+      add_error(new_changeset, error)
     end)
   end
 
-  defp add_customer_error(changeset, {key, [{message, opts}]}),
+  defp add_error(changeset, {key, [{message, opts}]}),
     do: add_error(changeset, key, message, opts)
 end
