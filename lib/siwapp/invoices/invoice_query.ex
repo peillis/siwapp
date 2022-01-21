@@ -34,11 +34,19 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> where([i], i.issue_date <= ^date)
   end
 
-  @spec last_number_with_series_id(any, pos_integer()) :: Ecto.Query.t()
+  @spec last_number_with_series_id(Ecto.Queryable.t(), pos_integer()) :: Ecto.Query.t()
   def last_number_with_series_id(query, series_id) do
     query
     |> where(series_id: ^series_id)
     |> order_by(desc: :number)
     |> limit(1)
+  end
+
+  @spec number_of_invoices_associated_to_recurring_id(Ecto.Queryable.t(), pos_integer()) ::
+          Ecto.Query.t()
+  def number_of_invoices_associated_to_recurring_id(query, recurring_invoice_id) do
+    query
+    |> where(recurring_invoice_id: ^recurring_invoice_id)
+    |> select([q], count(q.id))
   end
 end
