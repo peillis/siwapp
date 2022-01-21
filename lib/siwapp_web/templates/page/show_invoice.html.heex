@@ -2,7 +2,7 @@
   <div class="navbar-end navbar-items buttons">
     <%= link "Back", to: Routes.invoices_index_path(@conn, :index), class: "button is-dark" %>
     <button class="button is-info">Send Email</button>
-    <button class="button is-info">Download PDF</button>
+    <%= link "Download PDF", to: Routes.page_path(@conn, :download, @invoice.id), class: "button is-info" %>
     <%= link "Edit", to: Routes.invoices_edit_path(@conn, :edit, @invoice.id), class: "button is-info" %>
   </div>
 </nav>

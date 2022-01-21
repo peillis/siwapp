@@ -15,7 +15,8 @@ defmodule Siwapp.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Siwapp.PubSub},
       # Start the Endpoint (http/https)
-      SiwappWeb.Endpoint
+      SiwappWeb.Endpoint,
+      ChromicPDF
       # Start a worker by calling: Siwapp.Worker.start_link(arg)
       # {Siwapp.Worker, arg}
     ]
