@@ -135,53 +135,68 @@ defmodule Siwapp.InvoiceTest do
     end
   end
 
-  describe "Number assignment when number isn't changed" do
-    test "If there aren't associated series there's no number" do
+  describe "If number is introduced manually, it's respected" do
+    test "Updating invoice to new series, with no associated invoices, assigning number manually" do
+      series = series_fixture()
+      invoice = invoice_fixture(%{series_id: series.id})
+      new_series = series_fixture(5)
+
+      {:ok, invoice} =
+        Invoices.update(invoice, %{
+          series_id: new_series.id,
+          number: 20
+        })
+
+      assert invoice.number == 20
+    end
+
+    test "Updating invoice to series, with associated invoices, assigning number manually" do
+      series = series_fixture()
+      invoice1 = invoice_fixture(%{series_id: series.id})
+      new_series = series_fixture(5)
+      _invoice2 = invoice_fixture(%{series_id: new_series.id})
+
+      {:ok, invoice1} = Invoices.update(invoice1, %{series_id: new_series.id, number: 10})
+
+      assert invoice1.number == 10
+    end
+  end
+
+  describe "Automathical number assignment when no number is provided" do
+    test "If there aren't associated series yet there's no number" do
       changeset = Invoice.changeset(%Invoice{})
       assert is_nil(Map.get(changeset.changes, :number))
     end
 
     test "Creation of first invoice for a given series. Number is series' first number" do
-      series = new_series()
-      invoice = populate_series(series)
-      assert invoice.number == series.first_number
+      series = series_fixture(1)
+      invoice = invoice_fixture(%{series_id: series.id})
+      assert invoice.number == 1
     end
 
-    test "Creation of invoice in already populated series. Number is next of greatest invoice's number in series" do
-      series = already_populated_series()
-      invoice1 = populate_series(series, %{number: series.first_number + 1})
-      invoice2 = populate_series(series)
-      assert invoice2.number == invoice1.number + 1
+    test "Creation of invoice in series that has already associated invoices. Number is next of greatest invoice's number in series" do
+      series = series_fixture(2)
+      _invoice1 = invoice_fixture(%{series_id: series.id, number: 5})
+      _invoice2 = invoice_fixture(%{series_id: series.id, number: 1})
+      invoice3 = invoice_fixture(%{series_id: series.id})
+      assert invoice3.number == 6
     end
 
-    test "Updating invoice to new series, number assignment behaves like creation of invoice in series" do
-      invoice1 = invoice_fixture()
-      series = new_series()
-      {:ok, invoice1} = Invoices.update(invoice1, %{series_id: series.id})
-      invoice2 = invoice_fixture()
-      {:ok, invoice2} = Invoices.update(invoice2, %{series_id: series.id})
-      assert invoice1.number == series.first_number
-      assert invoice2.number == invoice1.number + 1
+    test "Updating invoice changing series. Number assignment to first invoice associated to that series behaves like creation" do
+      series = series_fixture()
+      invoice1 = invoice_fixture(%{series: series.id, number: 7})
+      new_series = series_fixture(3)
+      {:ok, invoice1} = Invoices.update(invoice1, %{series_id: new_series.id})
+      assert invoice1.number == 3
     end
-  end
 
-  describe "Number assignment does nothing when number is changed" do
-    test "If there are changes to number, they are respected", %{series: series1} do
-      series2 = new_series()
-
-      {:ok, invoice1} =
-        Invoices.update(invoice_fixture(), %{
-          series_id: series2.id,
-          number: series1.first_number + 10
-        })
-
-      invoice2 = invoice_fixture()
-
-      {:ok, invoice2} =
-        Invoices.update(invoice2, %{series_id: series2.id, number: invoice1.number + 10})
-
-      assert invoice1.number == series1.first_number + 10
-      assert invoice2.number == invoice1.number + 10
+    test "Updating invoice changing series. Number is next of greatest invoice's number in series" do
+      series = series_fixture()
+      invoice1 = invoice_fixture(%{series_id: series.id})
+      new_series = series_fixture(4)
+      _invoice2 = invoice_fixture(%{series_id: new_series.id, number: 20})
+      {:ok, invoice1} = Invoices.update(invoice1, %{series_id: new_series.id})
+      assert invoice1.number == 21
     end
   end
 end
