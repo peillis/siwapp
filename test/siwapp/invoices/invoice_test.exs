@@ -11,7 +11,7 @@ defmodule Siwapp.InvoiceTest do
     {:ok, series} = Commons.create_series(%{name: "A-Series", code: "A-"})
     {:ok, tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
     {:ok, tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
-    %{series_id: series.id, series: series, taxes: [tax1, tax2]}
+    %{series_id: series.id, taxes: [tax1, tax2]}
   end
 
   describe "saving restrictions, and draft exception: " do
@@ -136,7 +136,7 @@ defmodule Siwapp.InvoiceTest do
   end
 
   describe "If number is introduced manually, it's respected" do
-    test "Updating invoice to new series, with no associated invoices, assigning number manually" do
+    test "Updating invoice to new series assigning number manually preserves that number" do
       series = series_fixture()
       invoice = invoice_fixture(%{series_id: series.id})
       new_series = series_fixture(5)
@@ -148,17 +148,6 @@ defmodule Siwapp.InvoiceTest do
         })
 
       assert invoice.number == 20
-    end
-
-    test "Updating invoice to series, with associated invoices, assigning number manually" do
-      series = series_fixture()
-      invoice1 = invoice_fixture(%{series_id: series.id})
-      new_series = series_fixture(5)
-      _invoice2 = invoice_fixture(%{series_id: new_series.id})
-
-      {:ok, invoice1} = Invoices.update(invoice1, %{series_id: new_series.id, number: 10})
-
-      assert invoice1.number == 10
     end
   end
 
