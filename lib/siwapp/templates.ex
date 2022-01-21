@@ -7,6 +7,7 @@ defmodule Siwapp.Templates do
   alias Siwapp.Repo
 
   alias Siwapp.Templates.Template
+  alias Siwapp.Invoices
 
   @doc """
   Returns the list of templates.
@@ -184,6 +185,21 @@ defmodule Siwapp.Templates do
     Template.changeset(template, attrs)
   end
 
+  def string_template(invoice) do
+    template = get(:print_default).template
+
+    invoice_eval_data =
+      invoice
+      |> Map.from_struct()
+      |> Enum.map(fn {key, value} -> {key, value} end)
+
+    all_eval_data =
+      invoice_eval_data ++
+        [have_discount?: have_items_discount?(invoice.items), status: Invoices.status(invoice)]
+
+    EEx.eval_string(template, all_eval_data)
+  end
+
   @spec insert_new(map()) :: {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
   defp insert_new(attrs) do
     %Template{}
@@ -212,5 +228,19 @@ defmodule Siwapp.Templates do
     end
 
     update_by(default_template, key, true)
+  end
+
+  defp have_items_discount?([]) do
+    false
+  end
+
+  defp have_items_discount?(items) do
+    [h | t] = items
+
+    if h.discount != 0 do
+      true
+    else
+      have_items_discount?(t)
+    end
   end
 end
