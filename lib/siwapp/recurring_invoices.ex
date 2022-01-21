@@ -5,6 +5,7 @@ defmodule Siwapp.RecurringInvoices do
   import Ecto.Query, warn: false
   import DateTime
 
+  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
@@ -60,34 +61,50 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   @doc """
-  Given an id associated to one recurring_invoice, returns the amount of invoices that 
-  should have been generated from starting_date until today, both included
+  Given an id associated to one recurring_invoice, returns the amount of invoices that should
+  be generated
   """
-  @spec theoretical_number_of_inv_generated(pos_integer()) :: pos_integer()
-  def theoretical_number_of_inv_generated(id) do
+  @spec invoices_to_generate(pos_integer()) :: integer
+  def invoices_to_generate(id) do
+    theoretical_number_of_inv_generated(id) - generated_invoices(id)
+  end
+
+  @spec generated_invoices(pos_integer()) :: integer
+  defp generated_invoices(id) do
+    Invoice
+    |> InvoiceQuery.number_of_invoices_associated_to_recurring_id(id)
+    |> Repo.one()
+  end
+
+  # Given an id associated to one recurring_invoice, returns the amount of invoices that
+  # should have been generated from starting_date until today, both included
+  @spec theoretical_number_of_inv_generated(pos_integer()) :: non_neg_integer()
+  defp theoretical_number_of_inv_generated(id) do
     rec_inv = get!(id)
     today = to_date(utc_now())
 
     max_date =
-      [today]
-      |> Enum.concat([rec_inv.finishing_date])
-      |> Enum.concat([date_max_ocurrences(rec_inv)])
+      [today, rec_inv.finishing_date]
       |> Enum.reject(&is_nil(&1))
       |> Enum.sort(Date)
       |> List.first()
 
-    theoretical_number_of_inv_generated(
-      rec_inv.starting_date,
-      rec_inv.period,
-      rec_inv.period_type,
-      max_date
-    )
+    number_using_dates =
+      number_of_invoices_in_between_dates(
+        rec_inv.starting_date,
+        rec_inv.period,
+        rec_inv.period_type,
+        max_date
+      )
+
+    max_ocurrences = rec_inv.max_ocurrences || number_using_dates
+    min(number_using_dates, max_ocurrences)
   end
 
   # Returns the number of invoices that should have been generated from starting_date until max_date both included
-  @spec theoretical_number_of_inv_generated(Date.t(), pos_integer(), binary, Date.t()) ::
+  @spec number_of_invoices_in_between_dates(Date.t(), pos_integer(), binary, Date.t()) ::
           pos_integer()
-  defp theoretical_number_of_inv_generated(
+  defp number_of_invoices_in_between_dates(
          %Date{} = starting_date,
          period,
          period_type,
@@ -98,30 +115,8 @@ defmodule Siwapp.RecurringInvoices do
     |> length()
   end
 
-  # Invoking date_from_max_ocurrences if max_ocurrences field isn't nil
-  @spec date_max_ocurrences(RecurringInvoice.t()) :: nil | Date.t()
-  defp date_max_ocurrences(rec_inv) when is_nil(rec_inv.max_ocurrences), do: nil
-
-  defp date_max_ocurrences(rec_inv),
-    do:
-      date_from_max_ocurrences(
-        rec_inv.starting_date,
-        rec_inv.period,
-        rec_inv.period_type,
-        rec_inv.max_ocurrences
-      )
-
-  # Returns the theoretical date of max_ocurrences ending counting that first invoice is on starting_date
-  @spec date_from_max_ocurrences(Date.t(), pos_integer(), binary, pos_integer()) :: Date.t()
-  defp date_from_max_ocurrences(%Date{} = starting_date, _period, _period_type, 1),
-    do: starting_date
-
-  defp date_from_max_ocurrences(%Date{} = starting_date, period, period_type, max_ocurrences) do
-    next_date = next_date(starting_date, 1, period_type)
-    date_from_max_ocurrences(next_date, period, period_type, max_ocurrences - 1)
-  end
-
   # Returns the next date that invoices should be generated
+  @spec next_date(Date.t(), pos_integer(), binary) :: Date.t()
   defp next_date(%Date{} = date, period, period_type),
     do: Date.add(date, days_to_sum_for_next(date, period, period_type))
 
@@ -132,11 +127,13 @@ defmodule Siwapp.RecurringInvoices do
 
   defp days_to_sum_for_next(date, period, "Monthly") do
     days_this_month = :calendar.last_day_of_the_month(date.year, date.month)
-    days_this_month + days_to_sum_for_next(Date.add(date, days_this_month), period - 1, "Monthly")
+    next_date = Date.add(date, days_this_month)
+    days_this_month + days_to_sum_for_next(next_date, period - 1, "Monthly")
   end
 
   defp days_to_sum_for_next(date, period, "Yearly") do
     days_this_year = if Date.leap_year?(date), do: 366, else: 365
-    days_this_year + days_to_sum_for_next(Date.add(date, days_this_year), period - 1, "Yearly")
+    next_date = Date.add(date, days_this_year)
+    days_this_year + days_to_sum_for_next(next_date, period - 1, "Yearly")
   end
 end
