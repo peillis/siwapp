@@ -4,10 +4,9 @@ defmodule Siwapp.Templates do
   """
 
   import Ecto.Query, warn: false
-  alias Siwapp.Repo
-
-  alias Siwapp.Templates.Template
   alias Siwapp.Invoices
+  alias Siwapp.Repo
+  alias Siwapp.Templates.Template
 
   @doc """
   Returns the list of templates.
