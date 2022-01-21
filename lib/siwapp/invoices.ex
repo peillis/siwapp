@@ -31,33 +31,16 @@ defmodule Siwapp.Invoices do
   end
 
   @doc """
-  Gets a list on the invoices that match with the params
+  Gets a list of the invoices by giving a list of tuples with {key, value}
+  where the key is an atom
   """
 
-  @spec list_by(atom(), any()) :: [Invoice.t()]
-  def list_by(key, value) do
-    query =
-      case {key, value} do
-        {:with_terms, value} ->
-          InvoiceQuery.with_terms(Invoice, value)
-
-        {:customer_id, value} ->
-          Query.by(Invoice, :customer_id, value)
-
-        {:issue_date_gteq, value} ->
-          InvoiceQuery.issue_date_gteq(Invoice, value)
-
-        {:issue_date_lteq, value} ->
-          InvoiceQuery.issue_date_lteq(Invoice, value)
-
-        {:series_id, value} ->
-          Query.by(Invoice, :series_id, value)
-
-        {:with_status, value} ->
-          Query.by(Invoice, :paid, value)
-      end
-
-    Repo.all(query)
+  @spec list_by([{atom(), any()}]) :: list()
+  def list_by(query_list) do
+    Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
+      InvoiceQuery.list_by_query(acc_query, field, value)
+    end)
+    |> Repo.all()
   end
 
   @doc """
@@ -89,6 +72,14 @@ defmodule Siwapp.Invoices do
   @spec delete(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def delete(%Invoice{} = invoice) do
     Repo.delete(invoice)
+  end
+
+  def get(id), do: Repo.get(Invoice, id)
+
+  def get(id, preload: list) do
+    Invoice
+    |> Repo.get(id)
+    |> Repo.preload(list)
   end
 
   @doc """

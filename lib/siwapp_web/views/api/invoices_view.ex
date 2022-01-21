@@ -36,21 +36,19 @@ defmodule SiwappWeb.Api.InvoicesView do
 
   def relationships do
     [
-      customer: {SiwappWeb.Api.CustomersView, :include},
-      series: {SiwappWeb.Api.SeriesView, :include},
-      items: {SiwappWeb.Api.SeriesView, :include}
+      items: {SiwappWeb.Api.ItemsView, :include}
     ]
   end
 
-  def render("index.json", %{list: json}) do
-    json
-  end
+  def render("index.json", %{list: json}), do: json
 
-  def render("show.json", %{show: json}) do
-    json
-  end
+  def render("create.json", %{create: json}), do: json
 
-  def render("create.json", %{create: json}) do
-    json
-  end
+  def render("show.json", %{show: json}), do: json
+
+  def render("update.json", %{update: json}), do: json
+
+  def render("delete.json", %{delete: id}), do: %{"accepted" => "Invoice #{id} has been deleted"}
+
+  def render("delete.json", %{error: :not_found}), do: %{"errors" => "Invoice not found"}
 end
