@@ -41,4 +41,35 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> order_by(desc: :number)
     |> limit(1)
   end
+
+  @doc """
+  Gets a query on the invoices that match with the params
+  """
+  def list_by_query(query, key, value) do
+    case {key, value} do
+      {:with_terms, value} ->
+        with_terms(query, value)
+
+      {:customer_id, value} ->
+        where(query, customer_id: ^value)
+
+      {:issue_date_gteq, value} ->
+        issue_date_gteq(query, value)
+
+      {:issue_date_lteq, value} ->
+        issue_date_lteq(query, value)
+
+      {:series_id, value} ->
+        where(query, series_id: ^value)
+
+      {:with_status, :past_due} ->
+        date_today = Date.utc_today()
+
+        where(query, [i], not is_nil(i.due_date))
+        |> where([i], i.due_date < ^date_today)
+
+      {:with_status, value} ->
+        where(query, ^[{value, true}])
+    end
+  end
 end

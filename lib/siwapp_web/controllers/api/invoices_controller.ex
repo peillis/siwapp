@@ -13,16 +13,6 @@ defmodule SiwappWeb.Api.InvoicesController do
     render(conn, list: json)
   end
 
-  def searching(conn, %{"map" => map}) do
-    {key, value} =
-      map
-      |> String.split()
-      |> List.to_tuple()
-
-    search = Invoices.list_by(key, value)
-    json(conn, search)
-  end
-
   def show(conn, %{"id" => id}) do
     invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
     json = Serializer.serialize(InvoicesView, invoice, conn)
@@ -36,18 +26,41 @@ defmodule SiwappWeb.Api.InvoicesController do
       {:ok, invoice} ->
         invoice = Invoices.get!(invoice.id, preload: [{:items, :taxes}, :series])
         json = Serializer.serialize(InvoicesView, invoice, conn)
-        render(conn, create: json)
+
+        conn
+        |> Plug.Conn.put_status(201)
+        |> render(create: json)
 
       {:error, changeset} ->
-        changeset = traverse_errors(changeset, fn {msg, _opt} -> msg end)
-        render(conn, create: %{"errors" => changeset})
+        errors = traverse_errors(changeset, fn {msg, _opt} -> msg end)
+
+        conn
+        |> Plug.Conn.put_status(409)
+        |> render(create: %{"errors" => errors})
     end
   end
 
-  def update(conn, %{"id" => invoice_params}) do
-    case Invoices.update(conn.assigns.invoice, invoice_params) do
-      {:ok, _} -> json(conn, "The invoice was successfully updated")
-      {:error, changeset} -> json(conn, changeset)
+  def update(conn, %{"id" => id} = invoice_params) do
+    invoice = Invoices.get(id, preload: [{:items, :taxes}, :series])
+
+    if invoice == nil do
+      conn
+      |> Plug.Conn.put_status(404)
+      |> render(update: %{"errors" => "Invoice not found"})
+    else
+      case Invoices.update(invoice, invoice_params) do
+        {:ok, invoice} ->
+          invoice = Invoices.get(invoice.id, preload: [{:items, :taxes}, :series])
+          json = Serializer.serialize(InvoicesView, invoice, conn)
+          render(conn, update: json)
+
+        {:error, changeset} ->
+          errors = traverse_errors(changeset, fn {msg, _opt} -> msg end)
+
+          conn
+          |> Plug.Conn.put_status(409)
+          |> render(update: %{"errors" => errors})
+      end
     end
   end
 
@@ -56,8 +69,15 @@ defmodule SiwappWeb.Api.InvoicesController do
   end
 
   def delete(conn, %{"id" => id}) do
-    invoice = Invoices.get!(id)
-    {:ok, response} = Invoices.delete(invoice)
-    json(conn, response)
+    invoice = Invoices.get(id)
+
+    if invoice == nil do
+      conn
+      |> Plug.Conn.put_status(404)
+      |> render(error: :not_found)
+    else
+      {:ok, _response} = Invoices.delete(invoice)
+      render(conn, delete: id)
+    end
   end
 end

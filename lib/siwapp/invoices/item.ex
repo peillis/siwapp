@@ -103,14 +103,33 @@ defmodule Siwapp.Invoices.Item do
 
   # First, we check that the taxes association doesn't exist, because if it does
   # we cast it and that's it. If it actually doesn't, we find the taxes associated
-  # in the attributes.
+  # in the attributes. If the attributes have a tax that it doesn't exist we add
+  # an error in the changeset.
+
   defp find_taxes(changeset, attrs) do
-    if get_field(changeset, :taxes) != [] do
-      cast_assoc(changeset, :taxes)
+    if get_field(changeset, :taxes) == [] do
+      taxes =
+        (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
+        |> Enum.map(&String.downcase/1)
+
+      list_taxes = Commons.list_taxes()
+      taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
+      database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
+
+      Enum.reduce(taxes, changeset, fn tax, acc_changeset ->
+        check_wrong_taxes(tax, acc_changeset, database_taxes)
+      end)
+      |> put_assoc(:taxes, taxes_assoc)
     else
-      taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
-      taxes_assoc = Enum.filter(Commons.list_taxes(), &(&1.name in taxes))
-      put_assoc(changeset, :taxes, taxes_assoc)
+      cast_assoc(changeset, :taxes)
+    end
+  end
+
+  defp check_wrong_taxes(tax, changeset, database_taxes) do
+    if Enum.member?(database_taxes, tax) do
+      changeset
+    else
+      add_error(changeset, :taxes, "The tax #{String.upcase(tax)} is not defined")
     end
   end
 end
