@@ -15,7 +15,6 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
       add :days_to_due, :integer
       add :enabled, :boolean, default: true
       add :max_ocurrences, :integer
-      add :min_ocurrences, :integer
       add :period, :integer
       add :period_type, :string, size: 8
       add :starting_date, :date
