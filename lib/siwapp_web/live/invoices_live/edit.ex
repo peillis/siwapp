@@ -5,7 +5,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
-  alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -38,9 +37,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:changeset, Invoices.change(invoice))
   end
 
-  def handle_event("save", %{"invoice" => params, "meta" => meta}, socket) do
-    params = MetaAttributesComponent.merge(params, meta)
-
+  def handle_event("save", %{"invoice" => params}, socket) do
     result =
       case socket.assigns.live_action do
         :new -> Invoices.create(params)

@@ -7,7 +7,7 @@ defmodule SiwappWeb.MetaAttributesComponent do
 
   def update(assigns, socket) do
     attributes =
-      case Form.input_value(assigns.f, :meta_attributes) do
+      case Form.input_value(assigns.f, assigns.field) do
         "" -> %{}
         attrs -> attrs
       end
@@ -17,6 +17,8 @@ defmodule SiwappWeb.MetaAttributesComponent do
       |> assign(new_key: "")
       |> assign(new_value: "")
       |> assign(attributes: attributes)
+      |> assign(name: assigns.f.name)
+      |> assign(field: assigns.field)
 
     {:ok, socket}
   end
@@ -26,20 +28,24 @@ defmodule SiwappWeb.MetaAttributesComponent do
     <fieldset>
       <h2>Meta Attributes</h2>
       <%= for {k, v} <- @attributes do %>
-        <div class="field is-horizontal field-body">
-          <input class="input field" type="text" name="meta[values][]" value={k} />
-          <input class="input field" type="text" name={"customer[meta_attributes][#{k}]"} value={v} />
-          <a class="button is-danger field" phx-click="remove" phx-value-key={k} phx-target={@myself}>Remove</a>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label"><%= k %>:</label>
+          </div>
+          <div class="field-body">
+            <input class="input field" type="text" name={"#{@name}[#{@field}][#{k}]"} value={v} />
+            <span class="icon has-text-danger is-clickable" phx-click="remove" phx-value-key={k} phx-target={@myself}><i class="fas fa-trash"></i></span>
+          </div>
         </div>
       <% end %>
 
       <%= if @attributes == %{} do %>
-        <input type="hidden" name="customer[meta_attributes]" />
+        <input type="hidden" name={"#{@name}[#{@field}]"} />
       <% end %>
 
       <div class="field is-horizontal field-body">
-        <input class="input field" type="text" name="meta[keys][]" phx-blur="changing-key" phx-target={@myself} placeholder="Key"/>
-        <input class="input field" type="text" name="meta[values][]" phx-blur="changing-value" phx-target={@myself} placeholder="Value"/>
+        <input class="input field" type="text" phx-blur="changing-key" phx-target={@myself} placeholder="Key"/>
+        <input class="input field" type="text" phx-blur="changing-value" phx-target={@myself} placeholder="Value"/>
         <a class="button is-success field" phx-click="add" phx-target={@myself}>Add</a>
       </div>
     </fieldset>
