@@ -36,15 +36,4 @@ defmodule Siwapp.InvoicesFixtures do
 
     Repo.preload(invoice, [:customer, {:items, :taxes}, :series])
   end
-
-  def series_fixture(first_number \\ 1) do
-    {:ok, series} =
-      Commons.create_series(%{
-        name: to_string(first_number) <> "-Series",
-        code: to_string(first_number) <> "-",
-        first_number: first_number
-      })
-
-    series
-  end
 end
