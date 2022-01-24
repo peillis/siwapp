@@ -11,6 +11,8 @@ defmodule Siwapp.Customers do
   """
   def list, do: Repo.all(Customer)
 
+  def list_names, do: list() |> Enum.map(& &1.name)
+
   def scroll_listing(page, per_page \\ 20) do
     Customer
     |> Query.paginate(page, per_page)
