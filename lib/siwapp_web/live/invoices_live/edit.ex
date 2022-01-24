@@ -165,7 +165,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   defp gross_amount(changeset), do: Ecto.Changeset.get_field(changeset, :gross_amount)
 
-  defp change_atom_keys_to_string(map) do
-    for {key, val} <- map, into: %{}, do: {Atom.to_string(key), val}
-  end
 end
