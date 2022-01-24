@@ -134,8 +134,8 @@
         </table>
       </div>
     </div>
-  </fieldset>  
-  
+  </fieldset>
+
   <fieldset class="fieldset">
     <h2>Payments</h2>
 
@@ -173,8 +173,8 @@
     </label>
   </fieldset>
 
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
-  
+  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" f={f} field={:meta_attributes} />
+
   <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
     <div class="navbar-end navbar-items buttons">
       <%= if @live_action == :edit do %>

@@ -1,12 +1,11 @@
 <h1><%= @page_title %></h1>
 
 <.form let={f} for={@changeset} phx-submit="save" phx-change="validate">
-  <%= checkbox f, :active%> This customer is active
+  <%= checkbox f, :active %> This customer is active
   <%= render(SiwappWeb.PageView, "customer_form.html", f: f) %>
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
+  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" f={f} field={:meta_attributes} />
   <br>
   <%= submit "Save", class: "button is-success" %>
-  <!-- TODO: in future we will redirect to customer listing -->
   <%= live_patch "Back", to: Routes.customer_index_path(@socket, :index), class: "button is-dark" %>
   <%= if @live_action == :edit do %>
     <button class="button is-danger" phx-click="delete">Delete</button>

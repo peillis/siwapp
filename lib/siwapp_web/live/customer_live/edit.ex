@@ -4,7 +4,6 @@ defmodule SiwappWeb.CustomerLive.Edit do
 
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
-  alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -33,13 +32,12 @@ defmodule SiwappWeb.CustomerLive.Edit do
     changeset =
       socket.assigns.changeset.data
       |> Customers.change(params)
+      |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("save", %{"customer" => params, "meta" => meta}, socket) do
-    params = MetaAttributesComponent.merge(params, meta)
-
+  def handle_event("save", %{"customer" => params}, socket) do
     result =
       case socket.assigns.live_action do
         :new -> Customers.create(params)

@@ -5,7 +5,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   alias Siwapp.Commons
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
-  alias SiwappWeb.MetaAttributesComponent
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -37,9 +36,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
   end
 
-  def handle_event("save", %{"recurring_invoice" => params, "meta" => meta}, socket) do
-    params = MetaAttributesComponent.merge(params, meta)
-
+  def handle_event("save", %{"recurring_invoice" => params}, socket) do
     result =
       case socket.assigns.live_action do
         :new -> RecurringInvoices.create(params)
