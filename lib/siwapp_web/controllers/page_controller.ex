@@ -1,7 +1,6 @@
 defmodule SiwappWeb.PageController do
   use SiwappWeb, :controller
   alias Siwapp.Invoices
-  alias Siwapp.Templates
 
   def show_invoice(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id))
@@ -11,18 +10,24 @@ defmodule SiwappWeb.PageController do
 
   def download(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
-    str_template = Templates.string_template(invoice)
     name = invoice.series.code <> "-" <> Integer.to_string(invoice.number)
-    html_file = name <> ".html"
     pdf_file = name <> ".pdf"
-    File.write!(html_file, str_template)
+    cookie_value = conn.req_cookies["_siwapp_key"]
 
-    {:ok, _} =
-      ChromicPDF.print_to_pdf({:url, html_file},
+    cookie = %{
+      name: "_siwapp_key",
+      value: cookie_value,
+      domain: "localhost"
+    }
+
+    {:ok, send_conn} =
+      ChromicPDF.print_to_pdf({:url, Routes.iframe_url(conn, :iframe, id)},
+        set_cookie: cookie,
         output: fn path ->
           send_download(conn, {:file, path}, filename: pdf_file)
-          File.rm!(html_file)
         end
       )
+
+    send_conn
   end
 end
