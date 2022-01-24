@@ -4,8 +4,8 @@ defmodule Siwapp.Templates do
   """
 
   import Ecto.Query, warn: false
-
   alias Siwapp.Repo
+
   alias Siwapp.Templates.Template
 
   @doc """
