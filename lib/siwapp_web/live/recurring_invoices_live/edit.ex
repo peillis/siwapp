@@ -61,7 +61,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", %{"_target" => ["recurring_invoice", "name"], "recurring_invoice" => params}, socket) do
+  def handle_event(
+        "validate",
+        %{"_target" => ["recurring_invoice", "name"], "recurring_invoice" => params},
+        socket
+      ) do
     customer_input = Map.get(params, "name")
 
     {:noreply,
