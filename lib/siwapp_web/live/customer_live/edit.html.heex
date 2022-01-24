@@ -3,8 +3,8 @@
 <.form let={f} for={@changeset} phx-submit="save" phx-change="validate">
 <%= #require IEx; IEx.pry %>
   <%= checkbox f, :active%> This customer is active
-  <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer" f={f}/>
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes} />
+  <.live_component module={SiwappWeb.CustomerLive.FormComponent} id="customer" f={f} customer_input={nil} customer_suggestions={[]}/>
+  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" meta_attributes={f.data.meta_attributes}/>
   <br>
   <%= submit "Save", class: "button is-success" %>
   <!-- in future we will redirect to customer listing -->

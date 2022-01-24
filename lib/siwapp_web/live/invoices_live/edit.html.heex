@@ -9,7 +9,7 @@
     </div>
   <% end %>
 
-  <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
+  <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} customer_input={@customer_input} customer_suggestions={@customer_suggestions}/>
 
   <fieldset class="fieldset">
     <h2>Invoice Details</h2>

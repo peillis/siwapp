@@ -3,8 +3,21 @@
     <div class="field">
       <%= label @f, :name, class: "label" %>
       <p class="control">
-        <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
+        <%= if @customer_input do %>
+          <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_input %>
+        <% else %>
+          <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
+        <% end %>
       </p>
+      <%= if @customer_suggestions != [] do %>
+        <div>
+          <%= for customer_suggestion <- @customer_suggestions do %>
+            <div phx-click="pick_customer" phx-value-name={customer_suggestion}>
+              <%= customer_suggestion %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
       <%= error_tag @f, :name %>
     </div>
 

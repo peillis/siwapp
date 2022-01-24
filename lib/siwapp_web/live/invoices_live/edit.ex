@@ -3,6 +3,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias Siwapp.Commons
+  alias Siwapp.Customers
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
   alias SiwappWeb.MetaAttributesComponent
@@ -10,7 +11,9 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:series, Commons.list_series())}
+     |> assign(:series, Commons.list_series())
+     |> assign(:customer_suggestions, [])
+     |> assign(:customer_input, "")}
   end
 
   def handle_params(params, _url, socket) do
@@ -61,6 +64,26 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     end
   end
 
+  def handle_event("validate", %{"_target" => ["invoice", "name"], "invoice" => params}, socket) do
+    customer_input = Map.get(params, "name")
+
+    assigns = [
+      customer_suggestions: suggest_customers(customer_input),
+      customer_input: customer_input
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("pick_customer", %{"name" => customer_input}, socket) do
+    assigns = [
+      customer_suggestions: [],
+      customer_input: customer_input
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
   def handle_event("validate", %{"invoice" => params}, socket) do
     changeset =
       socket.assigns.invoice
@@ -91,6 +114,16 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Map.put(:changes, %{items: items})
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  defp suggest_customers(""), do: []
+  defp suggest_customers(customer_input) do
+    Customers.list_names()
+    |> Enum.filter(& matches?(&1, customer_input))
+  end
+
+  defp matches?(original, typed) do
+    String.contains?(String.downcase(original), String.downcase(typed))
   end
 
   defp get_existing_taxes(changeset, fi) do
