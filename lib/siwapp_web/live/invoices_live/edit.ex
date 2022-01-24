@@ -12,8 +12,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:ok,
      socket
      |> assign(:series, Commons.list_series())
-     |> assign(:customer_suggestions, [])
-     |> assign(:customer_input, "")}
+     |> assign(:customer_suggestions, [])}
   end
 
   def handle_params(params, _url, socket) do
@@ -28,6 +27,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
     |> assign(:changeset, Invoices.change(new_invoice))
+    |> assign(:customer_input, "")
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -39,6 +39,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
     |> assign(:changeset, Invoices.change(invoice))
+    |> assign(:customer_input, invoice.name)
   end
 
   def handle_event("save", %{"invoice" => params, "meta" => meta}, socket) do
@@ -67,21 +68,10 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   def handle_event("validate", %{"_target" => ["invoice", "name"], "invoice" => params}, socket) do
     customer_input = Map.get(params, "name")
 
-    assigns = [
-      customer_suggestions: suggest_customers(customer_input),
-      customer_input: customer_input
-    ]
-
-    {:noreply, assign(socket, assigns)}
-  end
-
-  def handle_event("pick_customer", %{"name" => customer_input}, socket) do
-    assigns = [
-      customer_suggestions: [],
-      customer_input: customer_input
-    ]
-
-    {:noreply, assign(socket, assigns)}
+    {:noreply,
+     socket
+     |> assign(:customer_suggestions, suggest_customers(customer_input))
+     |> assign(:customer_input, customer_input)}
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do
@@ -90,6 +80,24 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Invoices.change(params)
 
     {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  def handle_event("pick_customer", %{"name" => customer_input, "id" => customer_id}, socket) do
+    IO.inspect Customers.get(customer_id)
+
+    customer_params =
+      Customers.get(customer_id)
+      |> Map.take([:name, :identification, :contact_person, :email, :invoicing_address, :shipping_address])
+
+    changeset =
+      socket.assigns.invoice
+      |> Invoices.change(customer_params)
+
+    {:noreply,
+     socket
+     |> assign(:customer_suggestions, [])
+     |> assign(:customer_input, customer_input)
+     |> assign(:changeset, changeset)}
   end
 
   def handle_event("add_item", _, socket) do
@@ -117,9 +125,10 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   defp suggest_customers(""), do: []
+
   defp suggest_customers(customer_input) do
-    Customers.list_names()
-    |> Enum.filter(& matches?(&1, customer_input))
+    Customers.list()
+    |> Enum.filter(&matches?(&1.name, customer_input))
   end
 
   defp matches?(original, typed) do
@@ -148,4 +157,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   defp taxes_amounts(changeset), do: Ecto.Changeset.get_field(changeset, :taxes_amounts)
 
   defp gross_amount(changeset), do: Ecto.Changeset.get_field(changeset, :gross_amount)
+
+  defp change_atom_keys_to_string(map) do
+    for {key, val} <- map, into: %{}, do: {Atom.to_string(key), val}
+  end
 end
