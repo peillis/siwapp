@@ -80,11 +80,18 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("pick_customer", %{"name" => customer_input, "id" => customer_id}, socket) do
-    IO.inspect Customers.get(customer_id)
+    Customers.get(customer_id)
 
     customer_params =
       Customers.get(customer_id)
-      |> Map.take([:name, :identification, :contact_person, :email, :invoicing_address, :shipping_address])
+      |> Map.take([
+        :name,
+        :identification,
+        :contact_person,
+        :email,
+        :invoicing_address,
+        :shipping_address
+      ])
 
     changeset =
       socket.assigns.invoice
