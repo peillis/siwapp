@@ -152,7 +152,7 @@ defmodule Siwapp.InvoiceTest do
     end
   end
 
-  describe "Automathical number assignment when no number is provided" do
+  describe "Automatical number assignment when no number is provided" do
     test "If there aren't associated series yet there's no number" do
       changeset = Invoice.changeset(%Invoice{})
       assert is_nil(Map.get(changeset.changes, :number))
