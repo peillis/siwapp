@@ -4,7 +4,7 @@
       <%= label @f, :name, class: "label" %>
       <p class="control">
         <%= if @customer_input do %>
-          <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_input %>
+          <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_input, autocomplete: "off" %>
         <% else %>
           <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
         <% end %>
@@ -12,8 +12,8 @@
       <%= if @customer_suggestions != [] do %>
         <div>
           <%= for customer_suggestion <- @customer_suggestions do %>
-            <div phx-click="pick_customer" phx-value-name={customer_suggestion}>
-              <%= customer_suggestion %>
+            <div phx-click="pick_customer" phx-value-name={customer_suggestion.name} phx-value-id={customer_suggestion.id}>
+              <%= customer_suggestion.name %>
             </div>
           <% end %>
         </div>
