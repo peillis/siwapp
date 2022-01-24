@@ -10,8 +10,7 @@ defmodule SiwappWeb.PageController do
 
   def download(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
-    name = invoice.series.code <> "-" <> Integer.to_string(invoice.number)
-    pdf_file = name <> ".pdf"
+    pdf_file = invoice.series.code <> "-" <> Integer.to_string(invoice.number) <> ".pdf"
     cookie_value = conn.req_cookies["_siwapp_key"]
 
     cookie = %{
