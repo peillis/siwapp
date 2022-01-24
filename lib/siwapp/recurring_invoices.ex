@@ -69,7 +69,7 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   # Given a recurring_invoice id, returns the amount of invoices already generated related to that recurring_invoice
-  @spec generated_invoices(pos_integer()) :: integer
+  @spec generated_invoices(pos_integer()) :: non_neg_integer()
   defp generated_invoices(id) do
     Invoice
     |> InvoiceQuery.number_of_invoices_associated_to_recurring_id(id)
@@ -97,8 +97,9 @@ defmodule Siwapp.RecurringInvoices do
         max_date
       )
 
-    max_ocurrences = rec_inv.max_ocurrences || number_using_dates
-    min(number_using_dates, max_ocurrences)
+    if rec_inv.max_ocurrences,
+      do: min(number_using_dates, rec_inv.max_ocurrences),
+      else: number_using_dates
   end
 
   # Returns the number of invoices that should have been generated from starting_date until max_date both included
