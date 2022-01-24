@@ -3,7 +3,6 @@ defmodule Siwapp.RecurringInvoices do
   Recurring Invoices context.
   """
   import Ecto.Query, warn: false
-  import DateTime
 
   alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Query
@@ -61,7 +60,7 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   @doc """
-  Given an id associated to one recurring_invoice, returns the amount of invoices that should
+  Given a recurring_invoice id, returns the amount of invoices that should
   be generated
   """
   @spec invoices_to_generate(pos_integer()) :: integer
@@ -69,6 +68,7 @@ defmodule Siwapp.RecurringInvoices do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
   end
 
+  # Given a recurring_invoice id, returns the amount of invoices already generated related to that recurring_invoice
   @spec generated_invoices(pos_integer()) :: integer
   defp generated_invoices(id) do
     Invoice
@@ -76,12 +76,12 @@ defmodule Siwapp.RecurringInvoices do
     |> Repo.one()
   end
 
-  # Given an id associated to one recurring_invoice, returns the amount of invoices that
+  # Given a recurring_invoice id, returns the amount of invoices that
   # should have been generated from starting_date until today, both included
   @spec theoretical_number_of_inv_generated(pos_integer()) :: non_neg_integer()
   defp theoretical_number_of_inv_generated(id) do
     rec_inv = get!(id)
-    today = to_date(utc_now())
+    today = Date.utc_today()
 
     max_date =
       [today, rec_inv.finishing_date]
