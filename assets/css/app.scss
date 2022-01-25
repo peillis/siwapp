@@ -27,6 +27,21 @@ td.table-span:not([align]){
   border: 2px solid #ced4da;  
 }
 
+.search-menu{
+  position: absolute;
+  top: 2.9rem;  
+  background-color: #f8f9fa;  
+}
+
+.search-menu-content{
+  border: 1px solid #ced4da;
+  padding: 1rem;  
+}
+
+.row{
+  display: flex;
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile{
     display: flex;
