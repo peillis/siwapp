@@ -9,21 +9,23 @@ defmodule SiwappWeb.PageController do
   end
 
   def download(conn, %{"id" => id}) do
+    IO.inspect(conn)
     invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
-    pdf_file = invoice.series.code <> "-" <> Integer.to_string(invoice.number) <> ".pdf"
+    pdf_name = invoice.series.code <> "-" <> Integer.to_string(invoice.number) <> ".pdf"
     cookie_value = conn.req_cookies["_siwapp_key"]
+    cookie_domain = conn.host
 
     cookie = %{
       name: "_siwapp_key",
       value: cookie_value,
-      domain: "localhost"
+      domain: cookie_domain
     }
 
     {:ok, send_conn} =
       ChromicPDF.print_to_pdf({:url, Routes.iframe_url(conn, :iframe, id)},
         set_cookie: cookie,
         output: fn path ->
-          send_download(conn, {:file, path}, filename: pdf_file)
+          send_download(conn, {:file, path}, filename: pdf_name)
         end
       )
 
