@@ -73,8 +73,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     changeset = socket.assigns.changeset
     invoice = socket.assigns.invoice
 
-    items =
-      Ecto.Changeset.get_field(changeset, :items) ++ [Invoices.change_item(%Item{})]
+    items = Ecto.Changeset.get_field(changeset, :items) ++ [Invoices.change_item(%Item{})]
 
     {:noreply, assign(socket, changeset: update_changeset_with_items(changeset, invoice, items))}
   end
@@ -100,10 +99,15 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Enum.at(item_index)
       |> Map.put(:taxes, selected_taxes)
 
-    items = Enum.with_index(items, fn item, index -> if index == item_index, do: updated_item, else: item end)
+    items =
+      Enum.with_index(items, fn item, index ->
+        if index == item_index, do: updated_item, else: item
+      end)
 
-    {:noreply, assign(socket, changeset: update_changeset_with_items(changeset, socket.assigns.invoice, items))}
-
+    {:noreply,
+     assign(socket,
+       changeset: update_changeset_with_items(changeset, socket.assigns.invoice, items)
+     )}
   end
 
   defp update_changeset_with_items(changeset, invoice, items) do

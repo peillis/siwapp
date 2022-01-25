@@ -110,7 +110,7 @@ defmodule Siwapp.Invoices.Item do
 
     taxes_from_attrs =
       (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
-      |> Enum.map(& if is_map(&1), do: &1.name, else: &1)
+      |> Enum.map(&if is_map(&1), do: &1.name, else: &1)
       |> Enum.map(&String.downcase/1)
 
     if taxes_from_data == [] or taxes_from_attrs != [] do
@@ -121,14 +121,14 @@ defmodule Siwapp.Invoices.Item do
   end
 
   defp add_tax_assoc(changeset, taxes) do
-      list_taxes = Commons.list_taxes()
-      taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
-      database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
+    list_taxes = Commons.list_taxes()
+    taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
+    database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
 
-      Enum.reduce(taxes, changeset, fn tax, acc_changeset ->
-        check_wrong_taxes(tax, acc_changeset, database_taxes)
-      end)
-      |> put_assoc(:taxes, taxes_assoc)
+    Enum.reduce(taxes, changeset, fn tax, acc_changeset ->
+      check_wrong_taxes(tax, acc_changeset, database_taxes)
+    end)
+    |> put_assoc(:taxes, taxes_assoc)
   end
 
   defp check_wrong_taxes(tax, changeset, database_taxes) do

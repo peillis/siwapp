@@ -44,7 +44,12 @@ defmodule SiwappWeb.MultiselectComponent do
 
   def handle_event("remove", %{"index" => index, "key" => key, "val" => value}, socket) do
     selected = MapSet.delete(socket.assigns.selected, {key, value})
-    send self(), {:taxes_updated, %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+
+    send(
+      self(),
+      {:taxes_updated,
+       %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+    )
 
     {:noreply, assign(socket, :selected, selected)}
   end
@@ -52,7 +57,11 @@ defmodule SiwappWeb.MultiselectComponent do
   def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
     selected = MapSet.put(socket.assigns.selected, {key, value})
 
-    send self(), {:taxes_updated, %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+    send(
+      self(),
+      {:taxes_updated,
+       %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+    )
 
     {:noreply, assign(socket, :selected, selected)}
   end
