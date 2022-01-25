@@ -83,17 +83,14 @@ p.control.has-dropdown {
 
 .search-menu{
   position: absolute;
-  top: 2.9rem;  
-  background-color: #f8f9fa;  
+  top: 2.9rem;
+  background-color: #f8f9fa;
+  width: 210%;
 }
 
 .search-menu-content{
   border: 1px solid #ced4da;
-  padding: 1rem;  
-}
-
-.row{
-  display: flex;
+  padding: 1rem;
 }
 
 @media screen and (max-width: 600px) {
