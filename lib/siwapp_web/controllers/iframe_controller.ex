@@ -17,7 +17,12 @@ defmodule SiwappWeb.IframeController do
 
     all_eval_data =
       invoice_eval_data ++
-        [have_discount?: have_items_discount?(invoice.items), status: Invoices.status(invoice)]
+        [
+          have_discount?: have_items_discount?(invoice.items),
+          status: Invoices.status(invoice),
+          gross_amount_curr: Invoices.set_currency(invoice.gross_amount, invoice.currency),
+          net_amount_curr: Invoices.set_currency(invoice.net_amount, invoice.currency)
+        ]
 
     str_template = EEx.eval_string(template, all_eval_data)
     html(conn, str_template)

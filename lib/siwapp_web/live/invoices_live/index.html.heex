@@ -57,14 +57,14 @@
 
           <% :pending -> %>
             <td class="table-span"><span class="tag is-warning">Pending</span></td>
-            <td>$ <%= invoice.gross_amount %></td>
+            <td><%= Invoices.set_currency(invoice.gross_amount, invoice.currency) %></td>
 
           <% :past_due -> %>
             <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
-            <td>$ <%= invoice.gross_amount %></td>
+            <td><%= Invoices.set_currency(invoice.gross_amount, invoice.currency) %></td>
         <% end %>
 
-        <td>$ <%= invoice.gross_amount %></td>
+        <td><%= Invoices.set_currency(invoice.gross_amount, invoice.currency) %></td>
       </tr>
     <% end %>
   </tbody>

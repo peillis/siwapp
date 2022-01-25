@@ -46,6 +46,7 @@ defmodule Siwapp.Invoices.Item do
     field :deleted_at, :utc_datetime
     field :net_amount, :float, virtual: true, default: 0.0
     field :taxes_amount, :map, virtual: true, default: %{}
+    field :virtual_unitary_cost, :float, virtual: true, default: 0.0
     belongs_to :invoice, Invoice
 
     many_to_many :taxes, Tax,
@@ -56,12 +57,14 @@ defmodule Siwapp.Invoices.Item do
   def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, @fields)
+    |> set_unitary_cost(attrs)
     |> find_taxes(attrs)
     |> foreign_key_constraint(:invoice_id)
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
     |> calculate()
+    |> set_virtual_unitary_cost()
   end
 
   @doc """
@@ -130,6 +133,46 @@ defmodule Siwapp.Invoices.Item do
       changeset
     else
       add_error(changeset, :taxes, "The tax #{String.upcase(tax)} is not defined")
+    end
+  end
+
+  def set_unitary_cost(changeset, attrs) do
+    unitary_cost = Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
+
+    cond do
+      unitary_cost == "" ->
+        put_change(changeset, :unitary_cost, 0)
+
+      is_binary(unitary_cost) && String.ends_with?(unitary_cost, ".") ->
+        unitary_cost =
+          unitary_cost
+          |> String.trim(".")
+          |> String.to_integer()
+
+        put_change(changeset, :unitary_cost, unitary_cost * 100)
+
+      is_binary(unitary_cost) && String.contains?(unitary_cost, ".") ->
+        put_change(changeset, :unitary_cost, String.to_float(unitary_cost) * 100)
+
+      is_binary(unitary_cost) && !String.contains?(unitary_cost, ",") ->
+        put_change(changeset, :unitary_cost, String.to_integer(unitary_cost) * 100)
+
+      is_float(unitary_cost) || is_integer(unitary_cost) ->
+        put_change(changeset, :unitary_cost, unitary_cost * 100)
+
+      true ->
+        add_error(changeset, :virtual_unitary_cost, "Invalid format")
+    end
+  end
+
+  def set_virtual_unitary_cost(changeset) do
+    if is_nil(get_field(changeset, :unitary_cost)) do
+      changeset
+    else
+      virtual_unitary_cost =
+        :erlang.float_to_binary(get_field(changeset, :unitary_cost) / 100, decimals: 2)
+
+      put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
     end
   end
 end
