@@ -101,17 +101,26 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  # First, we check that the taxes association doesn't exist, because if it does
-  # we cast it and that's it. If it actually doesn't, we find the taxes associated
-  # in the attributes. If the attributes have a tax that it doesn't exist we add
-  # an error in the changeset.
+  # First, we check if there is no taxes in data or there it is but we have
+  # new taxes from attributes to add. If there is taxes association, we simply
+  # cast it.
 
   defp find_taxes(changeset, attrs) do
-    if get_field(changeset, :taxes) == [] do
-      taxes =
-        (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
-        |> Enum.map(&String.downcase/1)
+    taxes_from_data = get_field(changeset, :taxes)
 
+    taxes_from_attrs =
+      (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
+      |> Enum.map(& if is_map(&1), do: &1.name, else: &1)
+      |> Enum.map(&String.downcase/1)
+
+    if taxes_from_data == [] or taxes_from_attrs != [] do
+      add_tax_assoc(changeset, taxes_from_attrs)
+    else
+      cast_assoc(changeset, :taxes)
+    end
+  end
+
+  defp add_tax_assoc(changeset, taxes) do
       list_taxes = Commons.list_taxes()
       taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
       database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
@@ -120,9 +129,6 @@ defmodule Siwapp.Invoices.Item do
         check_wrong_taxes(tax, acc_changeset, database_taxes)
       end)
       |> put_assoc(:taxes, taxes_assoc)
-    else
-      cast_assoc(changeset, :taxes)
-    end
   end
 
   defp check_wrong_taxes(tax, changeset, database_taxes) do

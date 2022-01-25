@@ -70,27 +70,53 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("add_item", _, socket) do
+    changeset = socket.assigns.changeset
+    invoice = socket.assigns.invoice
+
     items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items) ++
-        [Invoices.change_item(%Item{})]
+      Ecto.Changeset.get_field(changeset, :items) ++ [Invoices.change_item(%Item{})]
 
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items, items)
-
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply, assign(socket, changeset: update_changeset_with_items(changeset, invoice, items))}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
+    changeset = socket.assigns.changeset
+    invoice = socket.assigns.invoice
+
     items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items)
+      changeset
+      |> Ecto.Changeset.get_field(:items)
       |> List.delete_at(String.to_integer(item_id))
 
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items, items)
+    {:noreply, assign(socket, changeset: update_changeset_with_items(changeset, invoice, items))}
+  end
 
-    {:noreply, assign(socket, changeset: changeset)}
+  def handle_info({:taxes_updated, %{index: item_index, selected: selected_taxes}}, socket) do
+    changeset = socket.assigns.changeset
+    items = Ecto.Changeset.get_field(changeset, :items)
+
+    updated_item =
+      items
+      |> Enum.at(item_index)
+      |> Map.put(:taxes, selected_taxes)
+
+    items = Enum.with_index(items, fn item, index -> if index == item_index, do: updated_item, else: item end)
+
+    {:noreply, assign(socket, changeset: update_changeset_with_items(changeset, socket.assigns.invoice, items))}
+
+  end
+
+  defp update_changeset_with_items(changeset, invoice, items) do
+    items_params =
+      items
+      |> Enum.map(&Map.from_struct/1)
+
+    params =
+      Ecto.Changeset.apply_changes(changeset)
+      |> Map.from_struct()
+      |> Map.put(:items, items_params)
+
+    Invoices.change(invoice, params)
   end
 
   defp get_selected_taxes(changeset, fi) do
