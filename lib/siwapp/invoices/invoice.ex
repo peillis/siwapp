@@ -169,7 +169,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
-  #Draft can't have number
+  # Draft can't have number
   @spec validate_draft_has_not_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_draft_has_not_number(changeset) do
     if get_field(changeset, :draft) and get_field(changeset, :number) do
@@ -218,7 +218,7 @@ defmodule Siwapp.Invoices.Invoice do
     put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
   end
 
-  #It's illegal to assign a number to a draft
+  # It's illegal to assign a number to a draft
   @spec number_assignment_when_legal(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp number_assignment_when_legal(changeset) do
     cond do

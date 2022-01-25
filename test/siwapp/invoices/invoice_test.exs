@@ -43,9 +43,9 @@ defmodule Siwapp.InvoiceTest do
     end
 
     test "a draft can't have number" do
-      changeset = Invoice.changeset(%Invoice{}, %{ name: "Nuria", draft: true, number: 3 })
+      changeset = Invoice.changeset(%Invoice{}, %{name: "Nuria", draft: true, number: 3})
 
-      assert %{ number: ["can't assign number to draft"] } = errors_on(changeset)
+      assert %{number: ["can't assign number to draft"]} = errors_on(changeset)
     end
   end
 
@@ -190,11 +190,10 @@ defmodule Siwapp.InvoiceTest do
     test "If number's already assigned, changeset isn't valid" do
       series = series_fixture()
       _invoice = invoice_fixture(%{series_id: series.id, number: 3})
-      changeset = Invoice.changeset(%Invoice{}, %{ series_id: series.id, number: 3 })
+      changeset = Invoice.changeset(%Invoice{}, %{series_id: series.id, number: 3})
 
       assert changeset.valid? == false
     end
-
   end
 
   describe "Automatical number assignment when no number is provided" do
