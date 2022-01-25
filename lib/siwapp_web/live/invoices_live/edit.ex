@@ -88,12 +88,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     changeset =
       socket.assigns.changeset
-      |> Map.put(:changes, %{items: items})
+      |> Ecto.Changeset.put_change(:items, items)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  defp get_existing_taxes(changeset, fi) do
+  defp get_selected_taxes(changeset, fi) do
     item =
       changeset
       |> Ecto.Changeset.get_field(:items)
