@@ -27,8 +27,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           days_to_due: nil | integer,
           enabled: boolean,
           max_ocurrences: nil | pos_integer(),
-          min_ocurrences: nil | pos_integer(),
-          period: nil | integer,
+          period: nil | pos_integer,
           period_type: nil | binary,
           starting_date: nil | Date.t(),
           finishing_date: nil | Date.t(),
@@ -60,7 +59,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     :days_to_due,
     :enabled,
     :max_ocurrences,
-    :min_ocurrences,
     :period,
     :period_type,
     :starting_date,
@@ -88,7 +86,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :days_to_due, :integer
     field :enabled, :boolean, default: true
     field :max_ocurrences, :integer
-    field :min_ocurrences, :integer
     field :period, :integer
     field :period_type, :string
     field :starting_date, :date
