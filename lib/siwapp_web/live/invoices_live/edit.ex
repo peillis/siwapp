@@ -26,7 +26,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
     |> assign(:changeset, Invoices.change(new_invoice))
-    |> assign(:customer_input, "")
+    |> assign(:customer_name, "")
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -38,7 +38,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
     |> assign(:changeset, Invoices.change(invoice))
-    |> assign(:customer_input, invoice.name)
+    |> assign(:customer_name, invoice.name)
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
@@ -63,12 +63,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("validate", %{"_target" => ["invoice", "name"], "invoice" => params}, socket) do
-    customer_input = Map.get(params, "name")
+    customer_name_input = Map.get(params, "name")
 
     {:noreply,
      socket
-     |> assign(:customer_suggestions, suggest_customers(customer_input))
-     |> assign(:customer_input, customer_input)}
+     |> assign(:customer_suggestions, suggest_customers(customer_name_input))
+     |> assign(:customer_name, customer_name_input)}
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do
@@ -79,7 +79,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("pick_customer", %{"name" => customer_input, "id" => customer_id}, socket) do
+  def handle_event("pick_customer", %{"name" => customer_name, "id" => customer_id}, socket) do
     Customers.get(customer_id)
 
     customer_params =
@@ -100,7 +100,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply,
      socket
      |> assign(:customer_suggestions, [])
-     |> assign(:customer_input, customer_input)
+     |> assign(:customer_name, customer_name)
      |> assign(:changeset, changeset)}
   end
 
@@ -130,9 +130,9 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   defp suggest_customers(""), do: []
 
-  defp suggest_customers(customer_input) do
+  defp suggest_customers(customer_name_input) do
     Customers.list()
-    |> Enum.filter(&matches?(&1.name, customer_input))
+    |> Enum.filter(&matches?(&1.name, customer_name_input))
   end
 
   defp matches?(original, typed) do
