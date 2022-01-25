@@ -34,10 +34,16 @@ defmodule Siwapp.InvoiceTest do
       assert changeset.valid?
     end
 
-    test "a draft is valid always" do
+    test "a draft doesn't need series_id nor issue_date" do
       changeset = Invoice.changeset(%Invoice{}, %{name: "Melissa", draft: true})
 
       assert changeset.valid?
+    end
+
+    test "a draft can't have number" do
+      changeset = Invoice.changeset(%Invoice{}, %{ name: "Nuria", draft: true, number: 3 })
+
+      assert %{ number: ["can't assign number to draft"] } = errors_on(changeset)
     end
   end
 
@@ -150,12 +156,27 @@ defmodule Siwapp.InvoiceTest do
 
       assert invoice.number == 20
     end
+
+    test "If number's already assigned, changeset isn't valid" do
+      series = series_fixture()
+      _invoice = invoice_fixture(%{series_id: series.id, number: 3})
+      changeset = Invoice.changeset(%Invoice{}, %{ series_id: series.id, number: 3 })
+
+      assert changeset.valid? == false
+    end
+
   end
 
   describe "Automatical number assignment when no number is provided" do
     test "If there aren't associated series yet there's no number" do
       changeset = Invoice.changeset(%Invoice{})
-      assert is_nil(Map.get(changeset.changes, :number))
+      assert is_nil(Ecto.Changeset.get_field(changeset, :number))
+    end
+
+    test "If draft, no number is assigned" do
+      changeset = Invoice.changeset(%Invoice{}, %{draft: true})
+
+      assert is_nil(Ecto.Changeset.get_field(changeset, :number))
     end
 
     test "Creation of first invoice for a given series. Number is series' first number" do
