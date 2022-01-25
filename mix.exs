@@ -45,6 +45,7 @@ defmodule Siwapp.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:jsonapi, "~> 1.3"},
+      {:money, "~> 1.4"},
       {:phoenix, "~> 1.6.2"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},

@@ -74,11 +74,11 @@
 
         </div>
         <div class="column is-1-desktop is-half-mobile">
-          <%= label fi, :unitary_cost, "Price", class: "label" %>
+          <%= label fi, :virtual_unitary_cost, "Price", class: "label" %>
           <p class="control">
-            <%= text_input fi, :unitary_cost, class: "input" %>
+            <%= text_input fi, :virtual_unitary_cost, class: "input", phx_debounce: "500" %>
           </p>
-          <%= error_tag fi, :unitary_cost %>
+          <%= error_tag fi, :virtual_unitary_cost %>
         </div>
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :discount, class: "label" %>
