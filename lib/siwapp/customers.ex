@@ -11,6 +11,12 @@ defmodule Siwapp.Customers do
   """
   def list, do: Repo.all(Customer)
 
+  def list_by_name_input(name_input) do
+    Customer
+    |> Query.search_in_string(:name, "%#{name_input}%")
+    |> Repo.all()
+  end
+
   def scroll_listing(page, per_page \\ 20) do
     Customer
     |> Query.paginate(page, per_page)

@@ -131,12 +131,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   defp suggest_customers(""), do: []
 
   defp suggest_customers(customer_name_input) do
-    Customers.list()
-    |> Enum.filter(&matches?(&1.name, customer_name_input))
-  end
-
-  defp matches?(original, typed) do
-    String.contains?(String.downcase(original), String.downcase(typed))
+    Customers.list_by_name_input(customer_name_input)
   end
 
   defp get_existing_taxes(changeset, fi) do
