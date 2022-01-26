@@ -113,6 +113,8 @@ defmodule Siwapp.Invoices.Invoice do
     |> cast_assoc(:items)
     |> maybe_find_customer_or_new()
     |> assign_number()
+    |> assign_issue_date()
+    |> assign_due_date()
     |> validate_draft_enablement()
     |> validate_required_draft()
     |> unique_constraint([:series_id, :number])
@@ -127,6 +129,22 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 100)
     |> calculate()
+  end
+
+  defp assign_issue_date(changeset) do
+    if get_field(changeset, :issue_date) do
+      changeset
+    else
+      put_change(changeset, :issue_date, Date.utc_today())
+    end
+  end
+
+  defp assign_due_date(changeset) do
+    issue_date = get_field(changeset, :issue_date)
+    settings = Siwapp.Settings.prepare_data()
+    due_date = Date.add(issue_date, String.to_integer(settings.days_to_due))
+
+    put_change(changeset, :due_date, due_date)
   end
 
   # you can't convert an existing invoice to draft
