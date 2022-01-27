@@ -3,7 +3,6 @@ defmodule SiwappWeb.Api.CustomersView do
 
   def fields,
     do: [
-      :active,
       :contact_person,
       :email,
       :id,
