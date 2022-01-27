@@ -10,7 +10,7 @@
         <% end %>
       </p>
       <%= for customer_suggestion <- @customer_suggestions do %>
-        <div phx-click="pick_customer" phx-value-name={customer_suggestion.name} phx-value-id={customer_suggestion.id}>
+        <div phx-click="pick_customer" phx-value-id={customer_suggestion.id}>
           <%= customer_suggestion.name %>
         </div>
       <% end %>

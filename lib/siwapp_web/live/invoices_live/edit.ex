@@ -67,7 +67,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     {:noreply,
      socket
-     |> assign(:customer_suggestions, suggest_customers(customer_name_input))
+     |> assign(:customer_suggestions, Customers.list_by_name_input(customer_name_input))
      |> assign(:customer_name, customer_name_input)}
   end
 
@@ -79,9 +79,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("pick_customer", %{"name" => customer_name, "id" => customer_id}, socket) do
-    Customers.get(customer_id)
-
+  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
     customer_params =
       Customers.get(customer_id)
       |> Map.take([
@@ -100,7 +98,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply,
      socket
      |> assign(:customer_suggestions, [])
-     |> assign(:customer_name, customer_name)
+     |> assign(:customer_name, customer_params.name)
      |> assign(:changeset, changeset)}
   end
 
@@ -126,12 +124,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Map.put(:changes, %{items: items})
 
     {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  defp suggest_customers(""), do: []
-
-  defp suggest_customers(customer_name_input) do
-    Customers.list_by_name_input(customer_name_input)
   end
 
   defp get_existing_taxes(changeset, fi) do

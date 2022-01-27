@@ -11,6 +11,8 @@ defmodule Siwapp.Customers do
   """
   def list, do: Repo.all(Customer)
 
+  def list_by_name_input(""), do: []
+
   def list_by_name_input(name_input) do
     Customer
     |> Query.search_in_string(:name, "%#{name_input}%")

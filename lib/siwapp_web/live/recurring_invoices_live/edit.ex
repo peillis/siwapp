@@ -26,7 +26,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, new_recurring_invoice)
     |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
-    |> assign(:customer_input, "")
+    |> assign(:customer_name, "")
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -37,7 +37,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:page_title, recurring_invoice.name)
     |> assign(:recurring_invoice, recurring_invoice)
     |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
-    |> assign(:customer_input, recurring_invoice.name)
+    |> assign(:customer_name, recurring_invoice.name)
   end
 
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
@@ -66,12 +66,12 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
         %{"_target" => ["recurring_invoice", "name"], "recurring_invoice" => params},
         socket
       ) do
-    customer_input = Map.get(params, "name")
+    customer_name_input = Map.get(params, "name")
 
     {:noreply,
      socket
-     |> assign(:customer_suggestions, suggest_customers(customer_input))
-     |> assign(:customer_input, customer_input)}
+     |> assign(:customer_suggestions, Customers.list_by_name_input(customer_name_input))
+     |> assign(:customer_name, customer_name_input)}
   end
 
   def handle_event("validate", %{"recurring_invoice" => params}, socket) do
@@ -82,9 +82,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("pick_customer", %{"name" => customer_input, "id" => customer_id}, socket) do
-    Customers.get(customer_id)
-
+  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
     customer_params =
       Customers.get(customer_id)
       |> Map.take([
@@ -103,18 +101,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:noreply,
      socket
      |> assign(:customer_suggestions, [])
-     |> assign(:customer_input, customer_input)
+     |> assign(:customer_name, customer_params.name)
      |> assign(:changeset, changeset)}
-  end
-
-  defp suggest_customers(""), do: []
-
-  defp suggest_customers(customer_input) do
-    Customers.list()
-    |> Enum.filter(&matches?(&1.name, customer_input))
-  end
-
-  defp matches?(original, typed) do
-    String.contains?(String.downcase(original), String.downcase(typed))
   end
 end
