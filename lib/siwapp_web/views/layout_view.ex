@@ -6,20 +6,20 @@ defmodule SiwappWeb.LayoutView do
   @compile {:no_warn_undefined, {Routes, :live_dashboard_path, 2}}
 
   def shared_button(conn) do
-    case conn.request_path do
-      n when n in ["/series", "/series/new"] ->
+    case conn.view do
+      n when n in [SiwappWeb.SeriesLive.Index, SiwappWeb.SeriesLive.FormComponent] ->
         new_button("New Series", Routes.series_index_path(conn, :new))
 
-      n when n in ["/customers", "/customers/:id/edit", "/customers/new"] ->
+      n when n in [SiwappWeb.CustomerLive.Index, SiwappWeb.CustomerLive.Edit] ->
         new_button("New Customer", Routes.customer_edit_path(conn, :new))
 
-      n when n in ["/taxes", "/taxes/new"] ->
+      n when n in [SiwappWeb.TaxesLive.Index, SiwappWeb.TaxesLive.FormComponent] ->
         new_button("New Tax", Routes.taxes_index_path(conn, :new))
 
-      n when n in ["/templates", "/templates/new"] ->
+      n when n in [SiwappWeb.TemplatesLive.Index, SiwappWeb.TemplatesLive.Edit] ->
         new_button("New Template", Routes.templates_edit_path(conn, :new))
 
-      n when n in ["/recurring_invoices", "/recurring_invoices/new"] ->
+      n when n in [SiwappWeb.RecurringInvoicesLive.Index, SiwappWeb.RecurringInvoicesLive.Edit] ->
         new_button("New Recurring Invoice", Routes.recurring_invoices_edit_path(conn, :new))
 
       _ ->
