@@ -1,10 +1,10 @@
 /* This file is for your main application CSS */
-
 @import "./phoenix.scss";
 @import "./graphic.css";
 @import "./multiselect.scss";
 @import "bulma";
-main.container {
+
+main.container{
   margin: 1em auto;
 }
 
@@ -14,31 +14,31 @@ main.container {
   z-index: 100;
 }
 
-fieldset.fieldset {
+fieldset.fieldset{
   margin-bottom: 3em;
 }
 
-.icon.table-icon {
+.icon.table-icon{
   display: revert;
   text-align: center;
 }
 
-td.table-span:not([align]) {
+td.table-span:not([align]){
   text-align: center;
 }
 
-.iframe.template {
+.iframe.template{
   width: 770px;
   height: 1090px;
   border: 2px solid #ced4da;
 }
 
 @media screen and (max-width: 1024px) {
-  .columns.is-multiline-mobile {
+  .columns.is-multiline-mobile{
     display: flex;
     flex-wrap: wrap;
   }
-  .navbar-mobile {
+  .navbar-mobile{
     position: fixed;
     z-index: 30;
     bottom: 0;
