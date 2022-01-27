@@ -138,35 +138,41 @@ defmodule Siwapp.Invoices.Item do
 
   def set_unitary_cost(changeset, attrs) do
     unitary_cost = Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
-    put_change_unitary_cost(changeset, unitary_cost)
-  end
 
-  defp put_change_unitary_cost(changeset, unitary_cost) when is_binary(unitary_cost) do
     cond do
-      unitary_cost == "" ->
+      is_nil(unitary_cost) ->
         put_change(changeset, :unitary_cost, 0)
 
+      is_float(unitary_cost) || is_integer(unitary_cost) ->
+        put_change(changeset, :unitary_cost, round(unitary_cost * 100))
+
+      is_binary(unitary_cost) ->
+        case string_to_float(unitary_cost) do
+          {:ok, value} -> put_change(changeset, :unitary_cost, round(value * 100))
+          {:error, msg} -> add_error(changeset, :virtual_unitary_cost, msg)
+        end
+    end
+  end
+
+  defp string_to_float(unitary_cost) do
+    cond do
+      unitary_cost == "" ->
+        {:ok, 0}
+
       String.ends_with?(unitary_cost, ".") ->
-        unitary_cost =
+        value =
           unitary_cost
           |> String.trim(".")
           |> String.to_integer()
 
-        put_change(changeset, :unitary_cost, unitary_cost * 100)
+        {:ok, value}
 
       String.match?(unitary_cost, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
         {value, _} = Float.parse(unitary_cost)
-        put_change(changeset, :unitary_cost, round(value * 100))
+        {:ok, value}
 
       true ->
-        add_error(changeset, :virtual_unitary_cost, "Invalid format")
-    end
-  end
-  defp put_change_unitary_cost(changeset, unitary_cost) do
-    if is_float(unitary_cost) || is_integer(unitary_cost) do
-      put_change(changeset, :unitary_cost, round(unitary_cost * 100))
-    else
-      add_error(changeset, :virtual_unitary_cost, "Invalid format")
+        {:error, "Invalid format"}
     end
   end
 
