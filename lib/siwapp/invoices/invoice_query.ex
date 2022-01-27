@@ -17,11 +17,12 @@ defmodule Siwapp.Invoices.InvoiceQuery do
 
   def with_terms(query, terms) do
     query
-    |> join(:inner, [i], it in Siwapp.Invoices.Item)
-    |> where([i, it], ilike(it.description, ^"%#{terms}%"))
+    |> join(:left, [i], it in Siwapp.Invoices.Item, on: it.invoice_id == i.id)
+    |> or_where([i, it], ilike(it.description, ^"%#{terms}%"))
     |> or_where([i], ilike(i.email, ^"%#{terms}%"))
     |> or_where([i], ilike(i.name, ^"%#{terms}%"))
     |> or_where([i], ilike(i.identification, ^"%#{terms}%"))
+    |> distinct([i], i.id)
   end
 
   def issue_date_gteq(query, date) do
