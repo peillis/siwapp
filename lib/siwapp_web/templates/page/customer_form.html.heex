@@ -2,18 +2,20 @@
   <div class="field is-horizontal field-body">
     <div class="field">
       <%= label @f, :name, class: "label" %>
-      <p class="control">
-        <%= if @customer_name do %>
-          <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_name, autocomplete: "off" %>
+        <%= if Map.has_key?(assigns, :customer_name) do %>
+          <p class="control">
+            <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_name, autocomplete: "off" %>
+            <%= for customer_suggestion <- @customer_suggestions do %>
+              <div phx-click="pick_customer" phx-value-id={customer_suggestion.id}>
+                <%= customer_suggestion.name %>
+              </div>
+            <% end %>
+          </p>
         <% else %>
-          <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
+          <p class="control">
+            <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
+          </p>
         <% end %>
-      </p>
-      <%= for customer_suggestion <- @customer_suggestions do %>
-        <div phx-click="pick_customer" phx-value-id={customer_suggestion.id}>
-          <%= customer_suggestion.name %>
-        </div>
-      <% end %>
       <%= error_tag @f, :name %>
     </div>
 
