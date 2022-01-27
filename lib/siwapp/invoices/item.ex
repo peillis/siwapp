@@ -137,38 +137,49 @@ defmodule Siwapp.Invoices.Item do
   end
 
   def set_unitary_cost(changeset, attrs) do
-    unitary_cost = Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
+    virtual_unitary_cost =
+      Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
 
-    cond do
-      is_nil(unitary_cost) ->
-        put_change(changeset, :unitary_cost, 0)
+    unitary_cost = get_field(changeset, :unitary_cost)
+    put_change_unutary_cost(changeset, virtual_unitary_cost, unitary_cost)
+  end
 
-      is_float(unitary_cost) || is_integer(unitary_cost) ->
-        put_change(changeset, :unitary_cost, round(unitary_cost * 100))
+  defp put_change_unutary_cost(changeset, nil, nil) do
+    put_change(changeset, :unitary_cost, 0)
+  end
 
-      is_binary(unitary_cost) ->
-        case string_to_float(unitary_cost) do
-          {:ok, value} -> put_change(changeset, :unitary_cost, round(value * 100))
-          {:error, msg} -> add_error(changeset, :virtual_unitary_cost, msg)
-        end
+  defp put_change_unutary_cost(changeset, virtual_unitary_cost, _unitary_cost)
+       when is_float(virtual_unitary_cost) or is_integer(virtual_unitary_cost) do
+    put_change(changeset, :unitary_cost, round(virtual_unitary_cost * 100))
+  end
+
+  defp put_change_unutary_cost(changeset, virtual_unitary_cost, _unitary_cost)
+       when is_binary(virtual_unitary_cost) do
+    case string_to_float(virtual_unitary_cost) do
+      {:ok, value} -> put_change(changeset, :unitary_cost, round(value * 100))
+      {:error, msg} -> add_error(changeset, :virtual_unitary_cost, msg)
     end
   end
 
-  defp string_to_float(unitary_cost) do
+  defp put_change_unutary_cost(changeset, _virtual_unitary_cost, _unitary_cost) do
+    changeset
+  end
+
+  defp string_to_float(virtual_unitary_cost) do
     cond do
-      unitary_cost == "" ->
+      virtual_unitary_cost == "" ->
         {:ok, 0}
 
-      String.ends_with?(unitary_cost, ".") ->
+      String.ends_with?(virtual_unitary_cost, ".") ->
         value =
-          unitary_cost
+          virtual_unitary_cost
           |> String.trim(".")
           |> String.to_integer()
 
         {:ok, value}
 
-      String.match?(unitary_cost, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
-        {value, _} = Float.parse(unitary_cost)
+      String.match?(virtual_unitary_cost, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
+        {value, _} = Float.parse(virtual_unitary_cost)
         {:ok, value}
 
       true ->
