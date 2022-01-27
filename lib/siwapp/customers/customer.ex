@@ -17,7 +17,6 @@ defmodule Siwapp.Customers.Customer do
           hash_id: binary | nil,
           email: binary | nil,
           contact_person: binary | nil,
-          active: boolean(),
           deleted_at: DateTime.t() | nil,
           invoicing_address: binary | nil,
           shipping_address: binary | nil,
@@ -32,7 +31,6 @@ defmodule Siwapp.Customers.Customer do
              :identification,
              :email,
              :contact_person,
-             :active,
              :invoicing_address,
              :shipping_address
            ]}
@@ -43,7 +41,6 @@ defmodule Siwapp.Customers.Customer do
     :hash_id,
     :email,
     :contact_person,
-    :active,
     :deleted_at,
     :invoicing_address,
     :shipping_address,
@@ -56,7 +53,6 @@ defmodule Siwapp.Customers.Customer do
     field :hash_id, :string
     field :email, :string
     field :contact_person, :string
-    field :active, :boolean, default: true
     field :deleted_at, :utc_datetime
     field :invoicing_address, :string
     field :shipping_address, :string

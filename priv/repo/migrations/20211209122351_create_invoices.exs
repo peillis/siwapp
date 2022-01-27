@@ -18,7 +18,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :email, :string, size: 100
       add :contact_person, :string, size: 100
       add :deleted_at, :utc_datetime
-      add :active, :boolean, default: true
       add :invoicing_address, :text
       add :shipping_address, :text
       add :meta_attributes, :jsonb
