@@ -141,19 +141,19 @@ defmodule Siwapp.Invoices.Item do
       Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
 
     unitary_cost = get_field(changeset, :unitary_cost)
-    put_change_unutary_cost(changeset, virtual_unitary_cost, unitary_cost)
+    put_change_unitary_cost(changeset, virtual_unitary_cost, unitary_cost)
   end
 
-  defp put_change_unutary_cost(changeset, nil, nil) do
+  defp put_change_unitary_cost(changeset, nil, nil) do
     put_change(changeset, :unitary_cost, 0)
   end
 
-  defp put_change_unutary_cost(changeset, virtual_unitary_cost, _unitary_cost)
+  defp put_change_unitary_cost(changeset, virtual_unitary_cost, _unitary_cost)
        when is_float(virtual_unitary_cost) or is_integer(virtual_unitary_cost) do
     put_change(changeset, :unitary_cost, round(virtual_unitary_cost * 100))
   end
 
-  defp put_change_unutary_cost(changeset, virtual_unitary_cost, _unitary_cost)
+  defp put_change_unitary_cost(changeset, virtual_unitary_cost, _unitary_cost)
        when is_binary(virtual_unitary_cost) do
     case string_to_float(virtual_unitary_cost) do
       {:ok, value} -> put_change(changeset, :unitary_cost, round(value * 100))
@@ -161,7 +161,7 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  defp put_change_unutary_cost(changeset, _virtual_unitary_cost, _unitary_cost) do
+  defp put_change_unitary_cost(changeset, _virtual_unitary_cost, _unitary_cost) do
     changeset
   end
 
