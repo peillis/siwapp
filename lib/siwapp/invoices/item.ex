@@ -165,21 +165,21 @@ defmodule Siwapp.Invoices.Item do
     changeset
   end
 
-  defp string_to_float(string) do
+  defp string_to_float(number) do
     cond do
-      string == "" ->
+      number == "" ->
         {:ok, 0}
 
-      String.ends_with?(string, ".") && String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
+      String.ends_with?(number, ".") && String.match?(number, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
         value =
-          string
+          number
           |> String.trim(".")
           |> String.to_integer()
 
         {:ok, value}
 
-      String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
-        {value, _} = Float.parse(string)
+      String.match?(number, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
+        {value, _} = Float.parse(number)
         {:ok, value}
 
       true ->
