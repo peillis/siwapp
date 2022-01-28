@@ -132,25 +132,43 @@ today = Date.utc_today()
 
 recurring_invoices = [
   %{
-    period: 1,
-    period_type: "Monthly",
+    period: 3,
+    period_type: "Daily",
     starting_date: Date.add(today, -60),
     series_id: 1,
-    customer_id: 1
+    customer_id: 1,
   },
   %{
     period: 2,
-    period_type: "Yearly",
-    starting_date: Date.add(today, -400),
-    series_id: 1,
-    customer_id: 2
+    period_type: "Monthly",
+    starting_date: Date.add(today, -60),
+    series_id: 2,
+    customer_id: 2,
+    items: [
+      %{
+        "description" => "description",
+        "quantity" => 1,
+        "unitary_cost" => 0,
+        "discount" => 0
+        "taxes" => "RETENTION"
+      }
+    ]
   },
   %{
-    period: 3,
-    period_type: "Monthly",
-    starting_date: Date.add(today, -20),
-    series_id: 1,
-    customer_id: 4
+    period: 1,
+    period_type: "Yearly",
+    starting_date: Date.add(today, -400),
+    series_id: 3,
+    customer_id: 3,
+    items: [
+      %{
+        "description" => "description",
+        "quantity" => 1,
+        "unitary_cost" => 0,
+        "discount" => 0
+        "taxes" => "VAT"
+      }
+    ]
   }
 ]
 
