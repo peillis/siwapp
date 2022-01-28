@@ -30,16 +30,6 @@ taxes = [
   %{name: "RETENTION", value: -15}
 ]
 
-recurring_invoices = [
-  %{
-    period: 3,
-    period_type: "Monthly",
-    starting_date: ~D[2021-10-08],
-    customer_id: 1,
-    series_id: 1
-  }
-]
-
 invoices = [
   %{
     name: "First_Invoice",
@@ -86,14 +76,24 @@ recurring_invoices = [
     period_type: "Monthly",
     starting_date: ~D[2022-01-07],
     series_id: 1,
-    customer_id: 1
+    customer_id: 1,
+    items: [
+      %{
+        "description" => "description",
+        "quantity" => 1,
+        "unitary_cost" => 0,
+        "discount" => 0
+        "taxes" => "RETENTION"
+      }
+    ]
   },
   %{
     period: 2,
     period_type: "Yearly",
     starting_date: ~D[2022-01-10],
     series_id: 1,
-    customer_id: 2
+    customer_id: 2,
+    items: []
   }
 ]
 
@@ -127,8 +127,8 @@ items = [
 Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
+Enum.each(settings, &Settings.create(&1))
 Enum.each(invoices, &Invoices.create(&1))
 Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
-Enum.each(settings, &Settings.create(&1))
 Enum.each(templates, &Templates.create(&1))
 Enum.each(items, &Invoices.create_item(Invoices.get!(1), &1))
