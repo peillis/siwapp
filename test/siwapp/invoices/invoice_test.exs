@@ -7,25 +7,13 @@ defmodule Siwapp.InvoiceTest do
   alias Siwapp.Settings
 
   import Siwapp.InvoicesFixtures
+  import Siwapp.SettingsFixtures
 
   setup do
     {:ok, series} = Commons.create_series(%{name: "A-Series", code: "A-"})
     {:ok, tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
     {:ok, tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
-
-    settings = [
-      company: "Doofinder",
-      company_vat_id: "1fg5t7",
-      company_phone: "632778941",
-      company_email: "demo@example.com",
-      company_website: "www.mywebsite.com",
-      currency: "USD",
-      days_to_due: "0",
-      company_address: "Newton Avenue, 32. NY",
-      legal_terms: "Clauses of our contract"
-    ]
-
-    Enum.each(settings, &Settings.create/1)
+    settings_fixture()
 
     %{series_id: series.id, taxes: [tax1, tax2]}
   end
