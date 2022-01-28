@@ -12,7 +12,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
      socket
      |> assign(:series, Commons.list_series())
      |> assign(:customer_suggestions, [])}
-    }
   end
 
   def handle_params(params, _url, socket) do
@@ -90,6 +89,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
+
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
     items = List.delete_at(socket.assigns.items, String.to_integer(item_id))
     {:noreply, assign(socket, items: items)}
