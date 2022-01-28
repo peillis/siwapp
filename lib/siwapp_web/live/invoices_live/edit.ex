@@ -7,6 +7,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
+  alias SiwappWeb.PageView
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -123,18 +124,18 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   defp net_amount(changeset) do
     Ecto.Changeset.get_field(changeset, :net_amount)
-    |> Invoices.set_currency(Ecto.Changeset.get_field(changeset, :currency))
+    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
   end
 
   defp taxes_amounts(changeset) do
     Ecto.Changeset.get_field(changeset, :taxes_amounts)
     |> Enum.map(fn {k, v} ->
-      {k, Invoices.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
+      {k, PageView.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
     end)
   end
 
   defp gross_amount(changeset) do
     Ecto.Changeset.get_field(changeset, :gross_amount)
-    |> Invoices.set_currency(Ecto.Changeset.get_field(changeset, :currency))
+    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
   end
 end

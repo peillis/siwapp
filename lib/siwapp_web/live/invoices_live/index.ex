@@ -2,6 +2,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   @moduledoc false
   use SiwappWeb, :live_view
   alias Siwapp.Invoices
+  alias SiwappWeb.PageView
 
   def mount(_params, _session, %{id: "home"} = socket) do
     {:ok,

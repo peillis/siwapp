@@ -262,7 +262,7 @@
         <%= status %>
       </div>
       <div class="amount">
-        <%= gross_amount_curr %>
+        <%= SiwappWeb.IframeView.set_currency(gross_amount, currency) %>
         <span class="amount__currency"><%= currency %></span>
       </div>
     </div>
@@ -283,11 +283,11 @@
           <tr>
             <td> <%= item.description %> </td>
             <%= if item.discount != 0 do %>
-              <td> <%= Money.to_string(Money.new(round(item.unitary_cost),currency) ) %> </td>
+              <td> <%= SiwappWeb.IframeView.set_currency(item.unitary_cost, currency) %> </td>
               <td> <%= item.discount %> </td>
             <% end %>
             <td class="total">
-              <%= Money.to_string(Money.new(round(item.net_amount),currency) )%>
+              <%= SiwappWeb.IframeView.set_currency(item.net_amount, currency) %>
             </td>
           </tr>
         <% end %>
@@ -311,7 +311,7 @@
             <tr>
               <th>Subtotal</th>
               <td class="total">
-                <%= net_amount_curr %>
+                <%= SiwappWeb.IframeView.set_currency(net_amount, currency) %>
               </td>
             </tr>
             <%# <%= for tax <- @invoice.taxes do  %>
@@ -325,7 +325,7 @@
             <tr class="grand-total">
               <th>Total</th>
               <td class="total">
-                <%= gross_amount_curr %>
+                <%= SiwappWeb.IframeView.set_currency(gross_amount, currency) %>
               </td>
             </tr>
           </tbody>
