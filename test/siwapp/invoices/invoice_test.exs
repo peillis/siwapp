@@ -4,13 +4,17 @@ defmodule Siwapp.InvoiceTest do
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
+  alias Siwapp.Settings
 
   import Siwapp.InvoicesFixtures
+  import Siwapp.SettingsFixtures
 
   setup do
     {:ok, series} = Commons.create_series(%{name: "A-Series", code: "A-"})
     {:ok, tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
     {:ok, tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
+    settings_fixture()
+
     %{series_id: series.id, taxes: [tax1, tax2]}
   end
 
@@ -19,15 +23,13 @@ defmodule Siwapp.InvoiceTest do
       changeset = Invoice.changeset(%Invoice{}, %{name: "Melissa"})
 
       assert %{series_id: ["can't be blank"]} = errors_on(changeset)
-      assert %{issue_date: ["can't be blank"]} = errors_on(changeset)
     end
 
     test "an invoice can be saved if it has all the required fields", %{series_id: series_id} do
       changeset =
         Invoice.changeset(%Invoice{}, %{
           name: "Melissa",
-          series_id: series_id,
-          issue_date: Date.utc_today()
+          series_id: series_id
         })
 
       assert changeset.valid?
@@ -132,6 +134,36 @@ defmodule Siwapp.InvoiceTest do
       # %{"RETENTION" => -17.955, "VAT" => 50.274} (total taxes amounts)
       # 239 + 50.274 - 17.955 = 271.319 (total gross_amount)
       assert invoice.gross_amount == 271
+    end
+  end
+
+  describe "default dates for an invoice: " do
+    setup do
+      %{today: Date.utc_today()}
+    end
+
+    test "Issue date always has a value when created" do
+      assert invoice_fixture().issue_date != nil
+    end
+
+    test "Due date always has a value when created" do
+      assert invoice_fixture().due_date != nil
+    end
+
+    test "Issue date is today if none is provided", %{today: today} do
+      assert invoice_fixture().issue_date == today
+    end
+
+    test "If you provide an issue date, that one is set" do
+      invoice = invoice_fixture(%{issue_date: ~D[2022-12-12]})
+
+      assert invoice.issue_date == ~D[2022-12-12]
+    end
+
+    test "Due date is today + 'Days to due' value set in Settings", %{today: today} do
+      Settings.apply_user_settings(%{"days_to_due" => "5"})
+
+      assert invoice_fixture().due_date == Date.add(today, 5)
     end
   end
 end
