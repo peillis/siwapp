@@ -6,7 +6,7 @@ defmodule SiwappWeb.ItemView do
   alias Siwapp.Invoices.Item
 
   def get_existing_taxes(changeset, fi) do
-    if fi.id =~  "recurring_invoice"do
+    if fi.id =~ "recurring_invoice" do
       taxes = fi.params["taxes"]
       if taxes, do: taxes_with_id(taxes), else: []
     else
@@ -31,7 +31,14 @@ defmodule SiwappWeb.ItemView do
   def alt_inputs_for(item, index) do
     item_changeset = Invoices.change_item(%Item{}, item)
     fi = FormData.to_form(item_changeset, [])
-    %{ fi | id: "recurring_invoice_items_"<> Integer.to_string(index), name: "items[#{index}]", index: index, options: []}
+
+    %{
+      fi
+      | id: "recurring_invoice_items_" <> Integer.to_string(index),
+        name: "items[#{index}]",
+        index: index,
+        options: []
+    }
   end
 
   def item_net_amount(changeset, fi) do
@@ -45,7 +52,8 @@ defmodule SiwappWeb.ItemView do
     end
   end
 
-  defp taxes_with_id(taxes), do: Enum.map(taxes, fn tax -> {tax, Siwapp.Commons.get_tax_id(tax)} end)
+  defp taxes_with_id(taxes),
+    do: Enum.map(taxes, fn tax -> {tax, Siwapp.Commons.get_tax_id(tax)} end)
 
   defp net_amount(changeset), do: Ecto.Changeset.get_field(changeset, :net_amount)
   defp taxes_amounts(changeset), do: Ecto.Changeset.get_field(changeset, :taxes_amounts) || []

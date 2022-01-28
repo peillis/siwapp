@@ -248,6 +248,7 @@ defmodule Siwapp.Commons do
   def get_tax!(id), do: Repo.get!(Tax, id)
 
   def get_tax_id(name), do: Repo.get_by(Tax, name: name).id
+
   @doc """
   Creates a tax.
 
