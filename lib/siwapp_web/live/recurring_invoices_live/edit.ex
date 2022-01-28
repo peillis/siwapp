@@ -3,7 +3,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias Siwapp.Commons
-  alias Siwapp.Customers
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
 

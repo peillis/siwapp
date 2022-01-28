@@ -6,7 +6,11 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
 
   def update(assigns, socket) do
     changeset = assigns.f.source
-    customer_name = %{data: Ecto.Changeset.get_field(changeset, :name), change: Ecto.Changeset.get_change(changeset, :name)}
+
+    customer_name = %{
+      data: Ecto.Changeset.get_field(changeset, :name),
+      change: Ecto.Changeset.get_change(changeset, :name)
+    }
 
     customer_suggestions =
       if Customers.exists_with_name?(customer_name.change),

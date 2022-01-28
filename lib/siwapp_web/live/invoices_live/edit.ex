@@ -5,7 +5,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias SiwappWeb.InvoicesLive.CustomerComponent
 
   alias Siwapp.Commons
-  alias Siwapp.Customers
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
 
