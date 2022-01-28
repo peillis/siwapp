@@ -171,8 +171,10 @@ defmodule Siwapp.InvoiceTest do
       Settings.apply_user_settings(%{"days_to_due" => "5"})
 
       assert invoice_fixture().due_date == Date.add(today, 5)
+    end
+  end
 
-      describe "If number is introduced manually, it's respected" do
+  describe "If number is introduced manually, it's respected" do
     test "Updating invoice to new series assigning number manually preserves that number" do
       series = series_fixture()
       invoice = invoice_fixture(%{series_id: series.id})
