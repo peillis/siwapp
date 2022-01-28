@@ -30,25 +30,25 @@
           <div class="navbar-start">
             <%= live_redirect "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
             <%= live_redirect "Recurring Invoices", to: Routes.recurring_invoices_index_path(@conn, :index), class: "navbar-item" %>
-            <%= link "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
+            <%= live_redirect "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">
                 Account
               </a>
               <div class="navbar-dropdown">
-                <%= link "Profile", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
+                <%= live_redirect "Profile", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
                 <hr class="navbar-divider">
-                <%= link "Settings", to: Routes.settings_path(@conn, :edit), class: "navbar-item" %>
+                <%= live_redirect "Settings", to: Routes.settings_path(@conn, :edit), class: "navbar-item" %>
                 <hr class="navbar-divider">
-                <%= link "Series", to: Routes.series_index_path(@conn, :index), class: "navbar-item" %>
-                <%= link "Taxes", to: Routes.taxes_index_path(@conn, :index), class: "navbar-item" %>
-                <%= link "Templates", to: Routes.templates_index_path(@conn, :index), class: "navbar-item" %>
+                <%= live_redirect "Series", to: Routes.series_index_path(@conn, :index), class: "navbar-item" %>
+                <%= live_redirect "Taxes", to: Routes.taxes_index_path(@conn, :index), class: "navbar-item" %>
+                <%= live_redirect "Templates", to: Routes.templates_index_path(@conn, :index), class: "navbar-item" %>
                 <hr class="navbar-divider">
                 <a class="navbar-item">
                   Hooks
                 </a>
                 <hr class="navbar-divider">
-                <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item" %>
+                <%= live_redirect "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item" %>
               </div>
             </div>
           </div>
