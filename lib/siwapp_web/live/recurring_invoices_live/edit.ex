@@ -61,19 +61,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     end
   end
 
-  def handle_event(
-        "validate",
-        %{"_target" => ["recurring_invoice", "name"], "recurring_invoice" => params},
-        socket
-      ) do
-    customer_name_input = Map.get(params, "name")
-
-    {:noreply,
-     socket
-     |> assign(:customer_suggestions, Customers.list_by_name_input(customer_name_input))
-     |> assign(:customer_name, customer_name_input)}
-  end
-
   def handle_event("validate", %{"recurring_invoice" => params}, socket) do
     changeset =
       socket.assigns.recurring_invoice
@@ -82,26 +69,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
-    customer_params =
-      Customers.get(customer_id)
-      |> Map.take([
-        :name,
-        :identification,
-        :contact_person,
-        :email,
-        :invoicing_address,
-        :shipping_address
-      ])
-
+  def handle_info({:update_changeset, params}, socket) do
     changeset =
       socket.assigns.recurring_invoice
-      |> RecurringInvoices.change(customer_params)
+      |> RecurringInvoices.change(params)
 
-    {:noreply,
-     socket
-     |> assign(:customer_suggestions, [])
-     |> assign(:customer_name, customer_params.name)
-     |> assign(:changeset, changeset)}
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 end

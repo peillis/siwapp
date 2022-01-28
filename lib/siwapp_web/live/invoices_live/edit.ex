@@ -2,6 +2,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   @moduledoc false
   use SiwappWeb, :live_view
 
+  alias SiwappWeb.InvoicesLive.CustomerComponent
+
   alias Siwapp.Commons
   alias Siwapp.Customers
   alias Siwapp.Invoices
@@ -26,7 +28,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
     |> assign(:changeset, Invoices.change(new_invoice))
-    |> assign(:customer_name, "")
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -38,7 +39,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
     |> assign(:changeset, Invoices.change(invoice))
-    |> assign(:customer_name, invoice.name)
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
@@ -62,44 +62,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", %{"_target" => ["invoice", "name"], "invoice" => params}, socket) do
-    customer_name_input = Map.get(params, "name")
-
-    {:noreply,
-     socket
-     |> assign(:customer_suggestions, Customers.list_by_name_input(customer_name_input))
-     |> assign(:customer_name, customer_name_input)}
-  end
-
   def handle_event("validate", %{"invoice" => params}, socket) do
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
 
     {:noreply, assign(socket, :changeset, changeset)}
-  end
-
-  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
-    customer_params =
-      Customers.get(customer_id)
-      |> Map.take([
-        :name,
-        :identification,
-        :contact_person,
-        :email,
-        :invoicing_address,
-        :shipping_address
-      ])
-
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(customer_params)
-
-    {:noreply,
-     socket
-     |> assign(:customer_suggestions, [])
-     |> assign(:customer_name, customer_params.name)
-     |> assign(:changeset, changeset)}
   end
 
   def handle_event("add_item", _, socket) do
@@ -124,6 +92,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Map.put(:changes, %{items: items})
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_info({:update_changeset, params}, socket) do
+    changeset =
+      socket.assigns.invoice
+      |> Invoices.change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   defp get_existing_taxes(changeset, fi) do

@@ -2,11 +2,11 @@
   <div class="field is-horizontal field-body">
     <div class="field">
       <%= label @f, :name, class: "label" %>
-        <%= if Map.has_key?(assigns, :customer_name) do %>
+        <%= if Map.has_key?(assigns, :customer_suggestions) do %>
           <p class="control">
             <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_name, autocomplete: "off" %>
             <%= for customer_suggestion <- @customer_suggestions do %>
-              <div phx-click="pick_customer" phx-value-id={customer_suggestion.id}>
+              <div phx-click="pick_customer" phx-value-id={customer_suggestion.id} phx-target={@myself}>
                 <%= customer_suggestion.name %>
               </div>
             <% end %>
