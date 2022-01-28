@@ -20,4 +20,9 @@ defmodule Siwapp.Query do
   def list_preload(query, term) do
     preload(query, ^term)
   end
+
+  def search_in_string(query, string_field, search) do
+    query
+    |> where([q], ilike(field(q, ^string_field), ^search))
+  end
 end

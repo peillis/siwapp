@@ -9,7 +9,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:series, Commons.list_series())}
+     |> assign(:series, Commons.list_series())
+     |> assign(:customer_suggestions, [])}
   end
 
   def handle_params(params, _url, socket) do
@@ -24,6 +25,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, new_recurring_invoice)
     |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
+    |> assign(:customer_name, "")
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -34,6 +36,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:page_title, recurring_invoice.name)
     |> assign(:recurring_invoice, recurring_invoice)
     |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
+    |> assign(:customer_name, recurring_invoice.name)
   end
 
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
@@ -58,6 +61,14 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("validate", %{"recurring_invoice" => params}, socket) do
+    changeset =
+      socket.assigns.recurring_invoice
+      |> RecurringInvoices.change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  def handle_info({:update_changeset, params}, socket) do
     changeset =
       socket.assigns.recurring_invoice
       |> RecurringInvoices.change(params)

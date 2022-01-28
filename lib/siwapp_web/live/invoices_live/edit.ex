@@ -2,6 +2,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   @moduledoc false
   use SiwappWeb, :live_view
 
+  alias SiwappWeb.InvoicesLive.CustomerComponent
+
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
@@ -9,7 +11,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:series, Commons.list_series())}
+     |> assign(:series, Commons.list_series())
+     |> assign(:customer_suggestions, [])}
   end
 
   def handle_params(params, _url, socket) do
@@ -88,6 +91,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Map.put(:changes, %{items: items})
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_info({:update_changeset, params}, socket) do
+    changeset =
+      socket.assigns.invoice
+      |> Invoices.change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   defp get_existing_taxes(changeset, fi) do

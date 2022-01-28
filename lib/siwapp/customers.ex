@@ -11,6 +11,15 @@ defmodule Siwapp.Customers do
   """
   def list, do: Repo.all(Customer)
 
+  def suggest_by_name_input(""), do: []
+  def suggest_by_name_input(nil), do: []
+
+  def suggest_by_name_input(name_input) do
+    Customer
+    |> Query.search_in_string(:name, "%#{name_input}%")
+    |> Repo.all()
+  end
+
   def scroll_listing(page, per_page \\ 20) do
     Customer
     |> Query.paginate(page, per_page)
@@ -65,6 +74,14 @@ defmodule Siwapp.Customers do
       nil -> get_by_hash_id(identification, name)
       customer -> customer
     end
+  end
+
+  def exists_with_name?(nil), do: nil
+
+  def exists_with_name?(name) do
+    Customer
+    |> Query.by(:name, name)
+    |> Repo.exists?()
   end
 
   def change(%Customer{} = customer, attrs \\ %{}) do
