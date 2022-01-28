@@ -149,7 +149,7 @@ recurring_invoices = [
         "description" => "description",
         "quantity" => 1,
         "unitary_cost" => 0,
-        "discount" => 0
+        "discount" => 0,
         "taxes" => "RETENTION"
       }
     ]
