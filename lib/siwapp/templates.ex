@@ -187,6 +187,7 @@ defmodule Siwapp.Templates do
 
   def string_template(invoice) do
     template = get(:print_default).template
+
     invoice_eval_data =
       invoice
       |> Map.from_struct()
