@@ -79,7 +79,9 @@ defmodule Siwapp.Customers do
   def exists_with_name?(nil), do: nil
 
   def exists_with_name?(name) do
-    Repo.exists?(Query.by(Siwapp.Customers.Customer, :name, name))
+    Customer
+    |> Query.by(:name, name)
+    |> Repo.exists?()
   end
 
   def change(%Customer{} = customer, attrs \\ %{}) do
