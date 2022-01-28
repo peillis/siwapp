@@ -3,7 +3,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias Siwapp.Commons
-  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
@@ -25,7 +24,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, new_recurring_invoice)
-    |> assign(:items, [new_item()])
+    |> assign(:items, [RecurringInvoices.new_item()])
     |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
     |> assign(:customer_name, "")
   end
@@ -43,7 +42,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("save", %{"recurring_invoice" => rec_params} = params, socket) do
-    {items, params} = build_params(params, rec_params)
+    {_items, params} = build_params(params, rec_params)
 
     result =
       case socket.assigns.live_action do
@@ -78,8 +77,13 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("add_item", _, socket) do
-    items = socket.assigns.items ++ [new_item()]
+    items = socket.assigns.items ++ [RecurringInvoices.new_item()]
     {:noreply, assign(socket, :items, items)}
+  end
+
+  def handle_event("remove_item", %{"item-id" => item_id}, socket) do
+    items = List.delete_at(socket.assigns.items, String.to_integer(item_id))
+    {:noreply, assign(socket, items: items)}
   end
 
   def handle_info({:update_changeset, params}, socket) do
@@ -90,11 +94,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    items = List.delete_at(socket.assigns.items, String.to_integer(item_id))
-    {:noreply, assign(socket, items: items)}
-  end
-
   defp build_params(params, rec_params) do
     taxes_params = get_taxes_params(params)
 
@@ -102,20 +101,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
       params
       |> get_items_params()
       |> merge_taxes_with_item(taxes_params)
-      |> Enum.map(fn {index, item} -> item end)
+      |> Enum.map(fn {_index, item} -> item end)
 
     params = Map.put(rec_params, "items", items)
     {items, params}
   end
-
-  defp new_item,
-    do: %{
-      "description" => "",
-      "unitary_cost" => 0,
-      "quantity" => 1,
-      "discount" => 0,
-      "taxes" => []
-    }
 
   defp get_items_params(params), do: params["items"] || %{}
   defp get_taxes_params(params), do: params["invoice"]["items"] || %{}
