@@ -43,3 +43,21 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+    let button = document.getElementById("search-button")
+    let menu = document.getElementById("search-menu")
+
+    button.addEventListener(
+      'click',
+      () => {if (menu.style.display == "block"){
+          menu.style.display = "none"
+        } else {
+          menu.style.display = "block"
+        }
+      }
+    )
+  }
+)
