@@ -173,9 +173,9 @@ defmodule Siwapp.Invoices.Invoice do
   @spec validate_draft_has_not_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_draft_has_not_number(changeset) do
     if get_field(changeset, :draft) and get_field(changeset, :number) do
-        add_error(changeset, :number, "can't assign number to draft")
-      else
-        changeset
+      add_error(changeset, :number, "can't assign number to draft")
+    else
+      changeset
     end
   end
 
