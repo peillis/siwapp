@@ -83,7 +83,7 @@ recurring_invoices = [
         "quantity" => 1,
         "unitary_cost" => 0,
         "discount" => 0,
-        "taxes" => "RETENTION"
+        "taxes" => ["RETENTION"]
       }
     ]
   },
