@@ -12,6 +12,4 @@ defmodule SiwappWeb.IframeController do
 
     html(conn, str_template)
   end
-
-
 end
