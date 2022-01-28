@@ -165,21 +165,21 @@ defmodule Siwapp.Invoices.Item do
     changeset
   end
 
-  defp string_to_float(virtual_unitary_cost) do
+  defp string_to_float(string) do
     cond do
-      virtual_unitary_cost == "" ->
+      string == "" ->
         {:ok, 0}
 
-      String.ends_with?(virtual_unitary_cost, ".") ->
+      String.ends_with?(string, ".") && String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
         value =
-          virtual_unitary_cost
+          string
           |> String.trim(".")
           |> String.to_integer()
 
         {:ok, value}
 
-      String.match?(virtual_unitary_cost, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
-        {value, _} = Float.parse(virtual_unitary_cost)
+      String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
+        {value, _} = Float.parse(string)
         {:ok, value}
 
       true ->
