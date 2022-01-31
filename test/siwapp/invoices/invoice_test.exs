@@ -160,10 +160,17 @@ defmodule Siwapp.InvoiceTest do
       assert invoice.issue_date == ~D[2022-12-12]
     end
 
-    test "Due date is today + 'Days to due' value set in Settings", %{today: today} do
+    test "Due date is today + 'Days to due' value set in Settings if none ins provided", %{today: today} do
       Settings.apply_user_settings(%{"days_to_due" => "5"})
 
       assert invoice_fixture().due_date == Date.add(today, 5)
+    end
+
+    test "If you provide a due date, that one is set" do
+      invoice = invoice_fixture(%{due_date: ~D[2023-12-12]})
+
+      assert invoice.due_date == ~D[2023-12-12]
+
     end
   end
 end
