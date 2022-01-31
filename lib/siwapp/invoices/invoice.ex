@@ -45,7 +45,7 @@ defmodule Siwapp.Invoices.Invoice do
           series: Ecto.Association.NotLoaded.t() | Series.t(),
           updated_at: DateTime.t() | nil,
           inserted_at: DateTime.t() | nil,
-          deleted_at: DateTime.t() | nil,
+          deleted_at: DateTime.t() | nil
         }
 
   @fields [

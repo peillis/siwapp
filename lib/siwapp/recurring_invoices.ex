@@ -60,7 +60,7 @@ defmodule Siwapp.RecurringInvoices do
   def generate_invoices(id) do
     rec_inv = Repo.get!(RecurringInvoice, id)
     invoices_to_do = invoices_to_generate(id)
-    for _i <- 1..invoices_to_do, do: if rec_inv.enabled, do: Repo.insert(build_invoice(rec_inv))
+    for _i <- 1..invoices_to_do, do: if(rec_inv.enabled, do: Repo.insert(build_invoice(rec_inv)))
   end
 
   # Builds Invoice struct from recurring_invoice
@@ -71,11 +71,13 @@ defmodule Siwapp.RecurringInvoices do
       |> Map.from_struct()
       |> Map.to_list()
       |> Keyword.filter(fn {key, _value} -> Enum.member?(identical_fields(), key) end)
+
     keywords_invoice =
       common_parameters
       |> Keyword.put_new(:recurring_invoice_id, rec_inv.id)
       |> maybe_add_due_date(rec_inv.days_to_due)
       |> insert_items(rec_inv.items)
+
     struct(Invoice, keywords_invoice)
   end
 
@@ -89,27 +91,57 @@ defmodule Siwapp.RecurringInvoices do
     end
   end
 
-  @spec insert_items(Keyword.t()) :: Keyword.t()
+  @spec insert_items(Keyword.t(), list) :: Keyword.t()
   defp insert_items(keywords, []), do: keywords
   defp insert_items(keywords, list), do: keywords ++ [{:items, build_items(list)}]
 
   @spec build_items(list) :: [] | [Item.t()]
   defp build_items([]), do: []
-  defp build_items([ h | t]) do
+
+  defp build_items([h | t]) do
     item_parameters = translate_item_fields(h)
     [struct(Item, item_parameters)] ++ build_items(t)
   end
 
   @spec translate_item_fields(map) :: Keyword.t()
-  defp translate_item_fields(%{"description" => d, "discount" => di, "quantity" => q, "taxes" => t, "unitary_cost" => u}) do
-    taxes = Enum.map(t, &(Siwapp.Commons.get_tax_by_name(&1)))
-  [{:description, d}, {:unitary_cost, String.to_integer(u)}, {:quantity, String.to_integer(q)}, {:discount, String.to_integer(di)}, {:taxes, taxes}]
+  defp translate_item_fields(%{
+         "description" => d,
+         "discount" => di,
+         "quantity" => q,
+         "taxes" => t,
+         "unitary_cost" => u
+       }) do
+    taxes = Enum.map(t, &Siwapp.Commons.get_tax_by_name(&1))
+
+    [
+      {:description, d},
+      {:unitary_cost, String.to_integer(u)},
+      {:quantity, String.to_integer(q)},
+      {:discount, String.to_integer(di)},
+      {:taxes, taxes}
+    ]
   end
 
-  @spec identical_fields :: Keyword.t()
-  defp identical_fields, do: [:name, :identification, :email, :contact_person, :invoicing_address, :shipping_address, :net_amount, :gross_amount, :notes, :terms, :meta_attributes, :customer_id, :series_id, :currency]
+  @spec identical_fields :: [atom]
+  defp identical_fields,
+    do: [
+      :name,
+      :identification,
+      :email,
+      :contact_person,
+      :invoicing_address,
+      :shipping_address,
+      :net_amount,
+      :gross_amount,
+      :notes,
+      :terms,
+      :meta_attributes,
+      :customer_id,
+      :series_id,
+      :currency
+    ]
 
-  #Given a recurring_invoice id, returns the amount of invoices that should  be generated
+  # Given a recurring_invoice id, returns the amount of invoices that should  be generated
   @spec invoices_to_generate(pos_integer()) :: integer
   defp invoices_to_generate(id) do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
