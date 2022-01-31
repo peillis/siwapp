@@ -124,11 +124,11 @@ items = [
   }
 ]
 
+Enum.each(settings, &Settings.create(&1))
 Enum.each(customers, &Customers.create(&1))
 Enum.each(series, &Commons.create_series(&1))
 Enum.each(taxes, &Commons.create_tax(&1))
 Enum.each(invoices, &Invoices.create(&1))
 Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
-Enum.each(settings, &Settings.create(&1))
 Enum.each(templates, &Templates.create(&1))
 Enum.each(items, &Invoices.create_item(Invoices.get!(1), &1))
