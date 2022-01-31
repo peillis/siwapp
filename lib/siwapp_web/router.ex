@@ -38,7 +38,7 @@ defmodule SiwappWeb.Router do
     resources "/invoices", Api.InvoicesController, except: [:new, :edit]
     get "/invoices/searching/:map", Api.InvoicesController, :searching
     get "/invoices/send_email/:id", Api.InvoicesController, :send_email
-    get "/invoices/download/:id", PageController, :download
+    get "/invoices/download/:id", Api.InvoicesController, :download
 
     resources "/recurring_invoices", Api.RecurringInvoicesController, except: [:new, :edit]
 
