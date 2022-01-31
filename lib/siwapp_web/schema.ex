@@ -1,4 +1,6 @@
 defmodule SiwappWeb.Schema do
+  @moduledoc false
+
   use Absinthe.Schema
   import_types(SiwappWeb.Schema.ContentTypes)
 
