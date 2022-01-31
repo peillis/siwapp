@@ -9,5 +9,4 @@ defmodule SiwappWeb.SearchLive.Index do
   def toogle() do
     JS.toggle(to: "#search-menu")
   end
-
 end
