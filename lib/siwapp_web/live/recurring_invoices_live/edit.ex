@@ -36,18 +36,18 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, recurring_invoice.name)
     |> assign(:recurring_invoice, recurring_invoice)
-    |> assign(:items, recurring_invoice.items || [])
+    |> assign(:items, recurring_invoice.items)
     |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
     |> assign(:customer_name, recurring_invoice.name)
   end
 
   def handle_event("save", %{"recurring_invoice" => rec_params} = params, socket) do
-    {_items, params} = build_params(params, rec_params)
+    {_items, rec_params} = build_params(params, rec_params)
 
     result =
       case socket.assigns.live_action do
-        :new -> RecurringInvoices.create(params)
-        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, params)
+        :new -> RecurringInvoices.create(rec_params)
+        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, rec_params)
       end
 
     case result do
@@ -65,8 +65,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("validate", %{"recurring_invoice" => rec_params} = params, socket) do
-    {items, params} = build_params(params, rec_params)
-    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
+    {items, rec_params} = build_params(params, rec_params)
+    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, rec_params)
 
     socket =
       socket
@@ -101,10 +101,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
       params
       |> get_items_params()
       |> merge_taxes_with_item(taxes_params)
-      |> Enum.map(fn {_index, item} -> item end)
 
-    params = Map.put(rec_params, "items", items)
-    {items, params}
+    {items, Map.put(rec_params, "items", items)}
   end
 
   defp get_items_params(params), do: params["items"] || %{}
@@ -112,7 +110,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
 
   defp merge_taxes_with_item(items_params, taxes_params),
     do:
-      Map.new(items_params, fn {index, item} ->
-        {index, Map.merge(item, taxes_params[index] || %{})}
+      Enum.map(items_params, fn {index, item} ->
+        Map.merge(item, taxes_params[index] || %{})
       end)
 end
