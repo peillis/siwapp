@@ -2,14 +2,28 @@ defmodule SiwappWeb.Schema do
   @moduledoc false
 
   use Absinthe.Schema
-  import_types(SiwappWeb.Schema.ContentTypes)
+  import_types(SiwappWeb.Schema.Types)
 
   alias SiwappWeb.Resolvers
 
   query do
     @desc "Get all customers"
     field :customers, list_of(:customer) do
-      resolve(&Resolvers.Content.list_customers/3)
+      resolve &Resolvers.Customer.list/3
+    end
+  end
+
+  mutation do
+    @desc "Create a customer"
+    field :create_customer, type: :customer do
+      arg :name, non_null(:string)
+      arg :identification, :string
+      arg :email, :string
+      arg :contact_person, :string
+      arg :invoicing_address, :string
+      arg :shipping_address, :string
+
+      resolve &Resolvers.Customer.create/3
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule SiwappWeb.Schema.ContentTypes do
+defmodule SiwappWeb.Schema.Types do
   @moduledoc false
 
   use Absinthe.Schema.Notation
