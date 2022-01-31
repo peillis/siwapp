@@ -49,10 +49,21 @@ defmodule Siwapp.RecurringInvoices do
     Repo.delete(recurring_invoice)
   end
 
-  # Expect will be added when function is finished
   def generate_invoices(id) do
-    Repo.get!(RecurringInvoice, id)
+    rec_inv = Repo.get!(RecurringInvoice, id)
+    invoices_to_do = invoices_to_generate(id)
+    Enum.each(1..invoices_to_do, &build_invoice(rec_inv))
   end
+
+  defp build_invoice(recurring_invoice) do
+    common_values =
+      recurring_invoice
+      |> Map.from_struct()
+      |> Map.to_list()
+      |> Keyword.filter(fn {key, _value} -> Enum.member?(identical_fields(), key) end)
+  end
+
+  defp identical_fields(), do: [:name, :identification, :email, :contact_person, :invoicing_address, :shipping_address, :net_amount, :gross_amount, :notes, :terms, :meta_attributes, :customer_id, :series_id, :currency]
 
   @spec change(RecurringInvoice.t(), map) :: Ecto.Changeset.t()
   def change(%RecurringInvoice{} = recurring_invoice, attrs \\ %{}) do
