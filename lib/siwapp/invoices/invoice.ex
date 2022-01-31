@@ -16,6 +16,7 @@ defmodule Siwapp.Invoices.Invoice do
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           id: pos_integer() | nil,
+          recurring_invoice_id: pos_integer() | nil,
           name: binary() | nil,
           identification: binary() | nil,
           email: binary() | nil,
@@ -30,23 +31,21 @@ defmodule Siwapp.Invoices.Invoice do
           customer_id: pos_integer() | nil,
           series_id: pos_integer() | nil,
           currency: <<_::24>> | nil,
-
-          sent_by_email: boolean(),
           due_date: Date.t() | nil,
-          deleted_at: DateTime.t() | nil,
-          items: Ecto.Association.NotLoaded.t() | [Item.t()]
-          customer: Ecto.Association.NotLoaded.t() | Customer.t(),
-          series: Ecto.Association.NotLoaded.t() | Series.t(),
-          updated_at: DateTime.t() | nil
-          inserted_at: DateTime.t() | nil,
+          items: Ecto.Association.NotLoaded.t() | [Item.t()],
+          sent_by_email: boolean(),
           paid_amount: non_neg_integer(),
           draft: boolean(),
           paid: boolean(),
-          number: pos_integer() | nil,
-          issue_date: Date.t() | nil,
           failed: boolean(),
           deleted_number: pos_integer() | nil,
-          recurring_invoice_id: pos_integer() | nil,
+          number: pos_integer() | nil,
+          issue_date: Date.t() | nil,
+          customer: Ecto.Association.NotLoaded.t() | Customer.t(),
+          series: Ecto.Association.NotLoaded.t() | Series.t(),
+          updated_at: DateTime.t() | nil,
+          inserted_at: DateTime.t() | nil,
+          deleted_at: DateTime.t() | nil,
         }
 
   @fields [
