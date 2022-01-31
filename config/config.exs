@@ -65,3 +65,7 @@ config :jsonapi,
   remove_links: false,
   json_library: Jason,
   paginator: nil
+
+config :money,
+  default_currency: :USD,
+  symbol_space: true
