@@ -52,6 +52,7 @@ defmodule SiwappWeb.ItemView do
         |> Enum.at(fi.index)
         |> Map.get(:net_amount)
       end
+
     :erlang.float_to_binary(net_amount / 100, decimals: 2)
   end
 
@@ -61,10 +62,11 @@ defmodule SiwappWeb.ItemView do
   end
 
   defp taxes_amounts(changeset) do
-    Ecto.Changeset.get_field(changeset, :taxes_amounts) || []
-    |> Enum.map(fn {k, v} ->
-      {k, PageView.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
-    end)
+    Ecto.Changeset.get_field(changeset, :taxes_amounts) ||
+      []
+      |> Enum.map(fn {k, v} ->
+        {k, PageView.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
+      end)
   end
 
   defp gross_amount(changeset) do
