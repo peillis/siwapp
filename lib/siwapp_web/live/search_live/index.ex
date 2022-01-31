@@ -1,4 +1,5 @@
 defmodule SiwappWeb.SearchLive.Index do
+  @moduledoc false
   use Phoenix.LiveView, layout: {SiwappWeb.LayoutView, "search_live.html"}
   alias Phoenix.LiveView.JS
 
@@ -6,7 +7,7 @@ defmodule SiwappWeb.SearchLive.Index do
     {:ok, socket}
   end
 
-  def toogle() do
+  def toogle do
     JS.toggle(to: "#search-menu")
   end
 end
