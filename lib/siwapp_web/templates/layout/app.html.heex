@@ -1,3 +1,8 @@
+<div class="navbar-end">
+  <div class="navbar-item navbar-new-button">
+    <%= new_button("New Invoice", Routes.invoices_edit_path(@conn, :new)) %>
+  </div>
+</div>
 <main class="container section has-navbar-fixed-bottom">
   <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
   <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
