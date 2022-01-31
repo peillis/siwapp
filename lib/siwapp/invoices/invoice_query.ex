@@ -81,12 +81,4 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> where(recurring_invoice_id: ^recurring_invoice_id)
     |> select([q], count(q.id))
   end
-
-  @spec number_of_invoices_associated_to_recurring_id(Ecto.Queryable.t(), pos_integer()) ::
-          Ecto.Query.t()
-  def number_of_invoices_associated_to_recurring_id(query, recurring_invoice_id) do
-    query
-    |> where(recurring_invoice_id: ^recurring_invoice_id)
-    |> select([q], count(q.id))
-  end
 end
