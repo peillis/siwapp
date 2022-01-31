@@ -38,6 +38,7 @@ defmodule SiwappWeb.Router do
     resources "/invoices", Api.InvoicesController, except: [:new, :edit]
     get "/invoices/searching/:map", Api.InvoicesController, :searching
     get "/invoices/send_email/:id", Api.InvoicesController, :send_email
+    get "/invoices/download/:id", Api.InvoicesController, :download
 
     resources "/recurring_invoices", Api.RecurringInvoicesController, except: [:new, :edit]
 
@@ -109,6 +110,7 @@ defmodule SiwappWeb.Router do
     live "/invoices/:id/edit", InvoicesLive.Edit, :edit
     get "/invoices/:id/show", PageController, :show_invoice
     live "/invoices", InvoicesLive.Index, :index
+    get "/invoices/:id/download", PageController, :download
 
     live "/customers/new", CustomerLive.Edit, :new
     live "/customers/:id/edit", CustomerLive.Edit, :edit
