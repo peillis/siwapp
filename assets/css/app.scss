@@ -14,6 +14,14 @@ main.container{
   z-index: 100;
 }
 
+.navbar-item.has-dropdown div {
+  visibility: hidden;
+}
+
+.navbar-item.has-dropdown:hover div {
+  visibility: visible;
+}
+
 fieldset.fieldset{
   margin-bottom: 3em;
 }
