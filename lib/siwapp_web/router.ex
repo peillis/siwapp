@@ -29,6 +29,16 @@ defmodule SiwappWeb.Router do
     post "/sign_in", Api.TokenController, :create
   end
 
+  scope "/apigql" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: SiwappWeb.Schema
+
+    forward "/", Absinthe.Plug,
+      schema: SiwappWeb.Schema
+  end
+
   # Other scopes may use custom stacks.
   scope "/api/v1", SiwappWeb do
     pipe_through [:api, :token_authenticated]
