@@ -101,41 +101,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
-
-  defp get_existing_taxes(changeset, fi) do
-    item =
-      changeset
-      |> Ecto.Changeset.get_field(:items)
-      |> Enum.at(fi.index)
-
-    item.taxes
-    |> Enum.map(&{&1.name, &1.id})
-  end
-
-  defp item_net_amount(changeset, fi) do
-    net_amount =
-      changeset
-      |> Ecto.Changeset.get_field(:items)
-      |> Enum.at(fi.index)
-      |> Map.get(:net_amount)
-
-    :erlang.float_to_binary(net_amount / 100, decimals: 2)
-  end
-
-  defp net_amount(changeset) do
-    Ecto.Changeset.get_field(changeset, :net_amount)
-    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
-  end
-
-  defp taxes_amounts(changeset) do
-    Ecto.Changeset.get_field(changeset, :taxes_amounts)
-    |> Enum.map(fn {k, v} ->
-      {k, PageView.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
-    end)
-  end
-
-  defp gross_amount(changeset) do
-    Ecto.Changeset.get_field(changeset, :gross_amount)
-    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
-  end
 end
