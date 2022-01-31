@@ -32,11 +32,9 @@ defmodule SiwappWeb.Router do
   scope "/apigql" do
     pipe_through :api
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
-      schema: SiwappWeb.Schema
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: SiwappWeb.Schema
 
-    forward "/", Absinthe.Plug,
-      schema: SiwappWeb.Schema
+    forward "/", Absinthe.Plug, schema: SiwappWeb.Schema
   end
 
   # Other scopes may use custom stacks.
