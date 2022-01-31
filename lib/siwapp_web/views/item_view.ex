@@ -4,21 +4,7 @@ defmodule SiwappWeb.ItemView do
   alias Phoenix.HTML.FormData
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Item
-
-  def get_existing_taxes(changeset, fi) do
-    if fi.id =~ "recurring_invoice" do
-      taxes = fi.params["taxes"]
-      if taxes, do: taxes_with_id(taxes), else: []
-    else
-      item =
-        changeset
-        |> Ecto.Changeset.get_field(:items)
-        |> Enum.at(fi.index)
-
-      item.taxes
-      |> Enum.map(&{&1.name, &1.id})
-    end
-  end
+  alias SiwappWeb.PageView
 
   def pseudo_inputs_for(f, items) do
     if f.id == "invoice" do
@@ -41,21 +27,51 @@ defmodule SiwappWeb.ItemView do
     }
   end
 
-  def item_net_amount(changeset, fi) do
+  def get_existing_taxes(changeset, fi) do
     if fi.id =~ "recurring_invoice" do
-      Ecto.Changeset.get_field(fi.source, :net_amount)
+      taxes = fi.params["taxes"]
+      if taxes, do: taxes_with_id(taxes), else: []
     else
-      changeset
-      |> Ecto.Changeset.get_field(:items)
-      |> Enum.at(fi.index)
-      |> Map.get(:net_amount)
+      item =
+        changeset
+        |> Ecto.Changeset.get_field(:items)
+        |> Enum.at(fi.index)
+
+      item.taxes
+      |> Enum.map(&{&1.name, &1.id})
     end
   end
 
-  defp taxes_with_id(taxes),
-    do: Enum.map(taxes, fn tax -> {tax, Siwapp.Commons.get_tax_id(tax)} end)
+  def item_net_amount(changeset, fi) do
+    net_amount =
+      if fi.id =~ "recurring_invoice" do
+        Ecto.Changeset.get_field(fi.source, :net_amount)
+      else
+        changeset
+        |> Ecto.Changeset.get_field(:items)
+        |> Enum.at(fi.index)
+        |> Map.get(:net_amount)
+      end
+    :erlang.float_to_binary(net_amount / 100, decimals: 2)
+  end
 
-  defp net_amount(changeset), do: Ecto.Changeset.get_field(changeset, :net_amount)
-  defp taxes_amounts(changeset), do: Ecto.Changeset.get_field(changeset, :taxes_amounts) || []
-  defp gross_amount(changeset), do: Ecto.Changeset.get_field(changeset, :gross_amount)
+  defp net_amount(changeset) do
+    Ecto.Changeset.get_field(changeset, :net_amount)
+    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
+  end
+
+  defp taxes_amounts(changeset) do
+    Ecto.Changeset.get_field(changeset, :taxes_amounts) || []
+    |> Enum.map(fn {k, v} ->
+      {k, PageView.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
+    end)
+  end
+
+  defp gross_amount(changeset) do
+    Ecto.Changeset.get_field(changeset, :gross_amount)
+    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
+  end
+
+  defp taxes_with_id(taxes),
+    do: Enum.map(taxes, fn tax -> {tax, Siwapp.Commons.get_tax_by_name(tax).id} end)
 end
