@@ -140,11 +140,15 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   defp assign_due_date(changeset) do
-    issue_date = get_field(changeset, :issue_date)
-    settings = Siwapp.Settings.prepare_data()
-    due_date = Date.add(issue_date, String.to_integer(settings.days_to_due))
+    if get_field(changeset, :due_date) do
+      changeset
+    else
+      issue_date = get_field(changeset, :issue_date)
+      settings = Siwapp.Settings.prepare_data()
+      due_date = Date.add(issue_date, String.to_integer(settings.days_to_due))
 
-    put_change(changeset, :due_date, due_date)
+      put_change(changeset, :due_date, due_date)
+    end
   end
 
   # you can't convert an existing invoice to draft
