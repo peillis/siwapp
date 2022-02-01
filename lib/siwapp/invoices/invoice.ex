@@ -112,11 +112,12 @@ defmodule Siwapp.Invoices.Invoice do
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
     |> maybe_find_customer_or_new()
-    |> assign_number()
     |> assign_issue_date()
     |> assign_due_date()
+    |> number_assignment_when_legal()
     |> validate_draft_enablement()
     |> validate_required_draft()
+    |> validate_draft_has_not_number()
     |> unique_constraint([:series_id, :number])
     |> unique_constraint([:series_id, :deleted_number])
     |> foreign_key_constraint(:series_id)
@@ -168,6 +169,16 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  # Draft can't have number
+  @spec validate_draft_has_not_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp validate_draft_has_not_number(changeset) do
+    if get_field(changeset, :draft) and get_field(changeset, :number) do
+      add_error(changeset, :number, "can't assign number to draft")
+    else
+      changeset
+    end
+  end
+
   # Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
   @spec calculate(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp calculate(changeset) do
@@ -207,20 +218,22 @@ defmodule Siwapp.Invoices.Invoice do
     put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
   end
 
+  # It's illegal to assign a number to a draft
+  @spec number_assignment_when_legal(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp number_assignment_when_legal(changeset) do
+    cond do
+      get_field(changeset, :draft) -> changeset
+      is_nil(get_change(changeset, :series_id)) -> changeset
+      is_nil(get_change(changeset, :number)) -> assign_number(changeset)
+      true -> changeset
+    end
+  end
+
   @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
-    case get_change(changeset, :series_id) do
-      nil ->
-        changeset
-
-      series_id ->
-        if is_nil(get_change(changeset, :number)) do
-          proper_number = which_number(series_id)
-          put_change(changeset, :number, proper_number)
-        else
-          changeset
-        end
-    end
+    series_id = get_change(changeset, :series_id)
+    proper_number = which_number(series_id)
+    put_change(changeset, :number, proper_number)
   end
 
   @spec which_number(pos_integer()) :: integer
