@@ -6,8 +6,4 @@ defmodule SiwappWeb.SearchLive.Index do
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
-
-  def toogle do
-    JS.toggle(to: "#search-menu")
-  end
 end
