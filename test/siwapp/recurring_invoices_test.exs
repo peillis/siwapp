@@ -2,12 +2,78 @@ defmodule Siwapp.RecurringInvoicesTest do
   use Siwapp.DataCase
 
   import Siwapp.RecurringInvoicesFixtures
+  import Siwapp.InvoicesFixtures
+  import Siwapp.SettingsFixtures
+
+
+  alias Siwapp.Commons
   alias Siwapp.RecurringInvoices
 
   setup do
-    {:ok, series} = Commons.create_series(%{name: "A-Series", code: "A-"})
+    {:ok, _series} = Commons.create_series(%{name: "A-Series", code: "A-"})
+    {:ok, _tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
+    {:ok, _tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
+    today = Date.utc_today()
+    settings_fixture()
+
+    %{today: today}
   end
 
-  describe "invoices_to_generate/1" do
-    test ""
+  describe "invoices_to_generate/1 " do
+    test "the limit for generating invoices is the strictest boundary. Max ocurrences is the strictest.",
+         %{today: today} do
+
+      rec_invoice =
+        recurring_invoice_fixture(%{
+          max_ocurrences: 5,
+          starting_date: Date.add(today, -9),
+          finishing_date: today,
+          period: 1,
+          period_type: "Daily"
+        })
+
+      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5
+    end
+
+    test "the limit for generating invoices is the strictest boundary. Finishing date is the strictest.",
+    %{today: today} do
+
+      rec_invoice =
+        recurring_invoice_fixture(%{
+          max_ocurrences: 10,
+          starting_date: Date.add(today, -4),
+          finishing_date: today,
+          period: 1,
+          period_type: "Daily"
+        })
+
+      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5
+    end
+
+    test "the number of invoices to generate is calculated until the day of today", %{today: today} do
+
+      rec_invoice =
+        recurring_invoice_fixture(%{
+          starting_date: Date.add(today, -4),
+          finishing_date: Date.add(today, 5),
+          period: 1,
+          period_type: "Daily"
+        })
+
+      # If the day of today weren't in the middle, the result would be 10
+      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5
+
+    end
+
+    test "if there are already generated invoices, they are substracted from the number of invoices to generate" do
+      rec_invoice = recurring_invoice_fixture(%{max_ocurrences: 5, period: 1, period_type: "Daily"})
+
+      invoice_fixture(recurring_invoice_id: rec_invoice.id)
+      invoice_fixture(recurring_invoice_id: rec_invoice.id)
+      invoice_fixture(recurring_invoice_id: rec_invoice.id)
+
+      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5-3
+
+    end
   end
+end

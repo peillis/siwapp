@@ -14,8 +14,8 @@ defmodule Siwapp.RecurringInvoicesFixtures do
       name: CustomersFixtures.unique_customer_name(),
       identification: CustomersFixtures.unique_customer_identification(),
       series_id: hd(Commons.list_series()).id,
-      starting_date: Date.utc_today(),
-      finishing_date: Date.add(Date.utc_today(), 100),
+      starting_date: Date.add(Date.utc_today(), -100),
+      finishing_date: Date.utc_today(),
       period: 1,
       period_type: "Monthly",
       max_ocurrences: 5
