@@ -4,7 +4,8 @@ defmodule Siwapp.RecurringInvoices do
   """
   import Ecto.Query, warn: false
 
-  alias Siwapp.Invoices.{Invoice, InvoiceQuery, Item}
+  alias Siwapp.Invoices
+  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
@@ -57,69 +58,34 @@ defmodule Siwapp.RecurringInvoices do
   @doc """
   Generates invoices associated to recurring_invoice if this is enabled
   """
+  @spec generate_invoices(pos_integer()) :: [{:ok, Invoice.t()}] | nil
   def generate_invoices(id) do
     rec_inv = Repo.get!(RecurringInvoice, id)
-    invoices_to_do = invoices_to_generate(id)
-    for _i <- 1..invoices_to_do, do: if(rec_inv.enabled, do: Repo.insert(build_invoice(rec_inv)))
-  end
 
-  # Builds Invoice struct from recurring_invoice
-  @spec build_invoice(RecurringInvoice.t()) :: Invoice.t()
-  defp build_invoice(rec_inv) do
-    common_parameters =
-      rec_inv
-      |> Map.from_struct()
-      |> Map.to_list()
-      |> Keyword.filter(fn {key, _value} -> Enum.member?(identical_fields(), key) end)
-
-    keywords_invoice =
-      common_parameters
-      |> Keyword.put_new(:recurring_invoice_id, rec_inv.id)
-      |> maybe_add_due_date(rec_inv.days_to_due)
-      |> insert_items(rec_inv.items)
-
-    struct(Invoice, keywords_invoice)
-  end
-
-  @spec maybe_add_due_date(Keyword.t(), integer) :: Keyword.t()
-  defp maybe_add_due_date(keywords, days_to_due) do
-    if days_to_due do
-      due_date = Date.add(Date.utc_today(), days_to_due)
-      Keyword.put_new(keywords, :due_date, due_date)
-    else
-      keywords
+    if invoices_to_generate(id) > 0 do
+      for _i <- 1..invoices_to_generate(id),
+          do: if(rec_inv.enabled, do: Invoices.create(build_invoice_attrs(rec_inv)))
     end
   end
 
-  @spec insert_items(Keyword.t(), list) :: Keyword.t()
-  defp insert_items(keywords, []), do: keywords
-  defp insert_items(keywords, list), do: keywords ++ [{:items, build_items(list)}]
-
-  @spec build_items(list) :: [] | [Item.t()]
-  defp build_items([]), do: []
-
-  defp build_items([h | t]) do
-    item_parameters = translate_item_fields(h)
-    [struct(Item, item_parameters)] ++ build_items(t)
+  @spec build_invoice_attrs(RecurringInvoice.t()) :: map
+  defp build_invoice_attrs(rec_inv) do
+    rec_inv
+    |> Map.from_struct()
+    |> Map.filter(fn {key, _value} -> key in identical_fields() end)
+    |> Map.put(:recurring_invoice_id, rec_inv.id)
+    |> maybe_add_due_date(rec_inv.days_to_due)
+    |> Map.put(:items, rec_inv.items)
   end
 
-  @spec translate_item_fields(map) :: Keyword.t()
-  defp translate_item_fields(%{
-         "description" => d,
-         "discount" => di,
-         "quantity" => q,
-         "taxes" => t,
-         "unitary_cost" => u
-       }) do
-    taxes = Enum.map(t, &Siwapp.Commons.get_tax_by_name(&1))
-
-    [
-      {:description, d},
-      {:unitary_cost, String.to_integer(u)},
-      {:quantity, String.to_integer(q)},
-      {:discount, String.to_integer(di)},
-      {:taxes, taxes}
-    ]
+  @spec maybe_add_due_date(map, integer) :: map
+  defp maybe_add_due_date(attrs, days_to_due) do
+    if days_to_due do
+      due_date = Date.add(Date.utc_today(), days_to_due)
+      Map.put(attrs, :due_date, due_date)
+    else
+      attrs
+    end
   end
 
   @spec identical_fields :: [atom]
@@ -143,7 +109,7 @@ defmodule Siwapp.RecurringInvoices do
 
   # Given a recurring_invoice id, returns the amount of invoices that should  be generated
   @spec invoices_to_generate(pos_integer()) :: integer
-  defp invoices_to_generate(id) do
+  def invoices_to_generate(id) do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
   end
 
