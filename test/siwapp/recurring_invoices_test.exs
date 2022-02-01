@@ -5,7 +5,6 @@ defmodule Siwapp.RecurringInvoicesTest do
   import Siwapp.InvoicesFixtures
   import Siwapp.SettingsFixtures
 
-
   alias Siwapp.Commons
   alias Siwapp.RecurringInvoices
 
@@ -22,7 +21,6 @@ defmodule Siwapp.RecurringInvoicesTest do
   describe "invoices_to_generate/1 " do
     test "the limit for generating invoices is the strictest boundary. Max ocurrences is the strictest.",
          %{today: today} do
-
       rec_invoice =
         recurring_invoice_fixture(%{
           max_ocurrences: 5,
@@ -36,8 +34,7 @@ defmodule Siwapp.RecurringInvoicesTest do
     end
 
     test "the limit for generating invoices is the strictest boundary. Finishing date is the strictest.",
-    %{today: today} do
-
+         %{today: today} do
       rec_invoice =
         recurring_invoice_fixture(%{
           max_ocurrences: 10,
@@ -50,8 +47,9 @@ defmodule Siwapp.RecurringInvoicesTest do
       assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5
     end
 
-    test "the number of invoices to generate is calculated until the day of today", %{today: today} do
-
+    test "the number of invoices to generate is calculated until the day of today", %{
+      today: today
+    } do
       rec_invoice =
         recurring_invoice_fixture(%{
           starting_date: Date.add(today, -4),
@@ -62,18 +60,17 @@ defmodule Siwapp.RecurringInvoicesTest do
 
       # If the day of today weren't in the middle, the result would be 10
       assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5
-
     end
 
     test "if there are already generated invoices, they are substracted from the number of invoices to generate" do
-      rec_invoice = recurring_invoice_fixture(%{max_ocurrences: 5, period: 1, period_type: "Daily"})
+      rec_invoice =
+        recurring_invoice_fixture(%{max_ocurrences: 5, period: 1, period_type: "Daily"})
 
       invoice_fixture(recurring_invoice_id: rec_invoice.id)
       invoice_fixture(recurring_invoice_id: rec_invoice.id)
       invoice_fixture(recurring_invoice_id: rec_invoice.id)
 
-      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5-3
-
+      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 5 - 3
     end
   end
 end
