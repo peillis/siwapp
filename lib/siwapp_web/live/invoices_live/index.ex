@@ -88,6 +88,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(0)
   end
 
+
   defp summary_chart(invoices_data_for_a_month) do
     invoices_data_for_a_month
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
