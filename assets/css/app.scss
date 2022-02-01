@@ -24,7 +24,24 @@ td.table-span:not([align]){
 .iframe.template{
   width: 770px;
   height: 1090px;
-  border: 2px solid #ced4da;  
+  border: 2px solid #ced4da;
+}
+
+.search-input{
+  display: flex;
+}
+
+.search-menu{
+  position: absolute;
+  top: 2.9rem;
+  background-color: #f8f9fa;
+  width: 210%;
+}
+
+.search-menu-content{
+  border: 1px solid #ced4da;
+  padding: 1rem;
+  display: none;
 }
 
 @media screen and (max-width: 600px) {

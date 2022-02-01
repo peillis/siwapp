@@ -28,6 +28,7 @@
 
         <div class="navbar-menu">
           <div class="navbar-start">
+            <%= live_render @conn, SiwappWeb.SearchLive.Index %>
             <%= link "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
             <%= link "Recurring Invoices", to: Routes.recurring_invoices_index_path(@conn, :index), class: "navbar-item" %>
             <%= link "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
