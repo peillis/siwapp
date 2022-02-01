@@ -228,6 +228,7 @@ defmodule Siwapp.Invoices do
     Item.changeset(item, attrs, currency)
   end
 
+<<<<<<< HEAD
   @doc """
   Gets a payment by id
   """
