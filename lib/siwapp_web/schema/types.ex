@@ -2,6 +2,7 @@ defmodule SiwappWeb.Schema.Types do
   @moduledoc false
 
   use Absinthe.Schema.Notation
+  use Absinthe.Relay.Schema.Notation, :modern
 
   object :customer do
     field :id, :id

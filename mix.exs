@@ -33,8 +33,9 @@ defmodule Siwapp.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:absinthe, "~> 1.7"},
+      {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"},
+      {:absinthe_relay, "~> 1.5"},
       {:bcrypt_elixir, "~> 2.0"},
       {:bulma, "0.9.3"},
       {:chromic_pdf, "~> 1.1"},
