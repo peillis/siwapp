@@ -1,0 +1,75 @@
+<form class="navbar-item is-active">
+  <div class="search-input">
+    <button id="search-button" class="button" type="button" phx-click={JS.toggle(to: "#search-menu")}>
+      <span class="icon is-small">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </button>
+    <input class="input" type="search" placeholder="Search..."/>
+    <button class="button is-info" type="submit">
+      <span class="icon is-small is-right"><i class="fas fa-search"></i></span>
+    </button>
+  </div>
+
+  <div class="search-menu">
+    <div class="search-menu-content" id="search-menu">
+      <div class="columns">
+        <div class="column is-6">
+          <label class="label">CUSTOMER:</label>
+          <div class="select is-fullwidth">
+            <select>
+              <option>Choose...</option>
+              <option>With options</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-3">
+          <label class="label">ISSUE DATE FROM:</label>
+          <input class="input" type="date">
+        </div>
+        <div class="column is-3">
+          <label class="label">TO:</label>
+          <input class="input" type="date">
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-3">
+          <label class="label">SERIES:</label>
+          <div class="select is-fullwidth">
+            <select>
+              <option>Choose...</option>
+              <option>With options</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-3">
+          <label class="label">NUMBER:</label>
+          <input class="input" type="text">
+        </div>
+        <div class="column is-6">
+          <label class="label">STATUS:</label>
+          <div class="select is-fullwidth">
+            <select>
+              <option>Choose...</option>
+              <option>With options</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <label class="label">KEY</label>
+          <input class="input" type="text">
+        </div>
+        <div class="column">
+          <label class="label">VALUE</label>
+          <input class="input" type="text">
+        </div>
+      </div>
+      <div class="buttons is-right">
+        <button class="button is-info">Export to csv</button>
+        <button class="button is-info">Search</button>
+      </div>
+    </div>
+  </div>
+</form>
