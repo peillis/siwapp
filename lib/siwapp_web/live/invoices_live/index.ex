@@ -13,11 +13,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:checked, MapSet.new())}
   end
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Invoices.scroll_listing(0))
+     |> assign(:invoices, invoices_filter(params))
      |> assign(:checked, MapSet.new())}
   end
 
@@ -91,5 +91,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  defp invoices_filter(params) do
+    if params == %{} do
+      Invoices.list_invoices_filtered("")
+    else
+      [value] = Map.values(params)
+      Invoices.list_invoices_filtered(value)
+    end
   end
 end
