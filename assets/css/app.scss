@@ -1,58 +1,74 @@
-/* This file is for your main application CSS */
-@import "./phoenix.scss";
-@import "./graphic.css";
-@import "./multiselect.scss";
-@import "bulma";
-
-main.container{
-  margin: 1em auto;
-}
-
-fieldset.fieldset{
-  margin-bottom: 3em;
-}
-
-.icon.table-icon{
-  display: revert;
-  text-align: center;
-}
-
-td.table-span:not([align]){
-  text-align: center;
-}
-
-.iframe.template{
-  width: 770px;
-  height: 1090px;
-  border: 2px solid #ced4da;
-}
-
-.search-input{
-  display: flex;
-}
-
-.search-menu{
-  position: absolute;
-  top: 2.9rem;
-  background-color: #f8f9fa;
-  width: 210%;
-}
-
-.search-menu-content{
-  border: 1px solid #ced4da;
-  padding: 1rem;
-  display: none;
-}
-
-@media screen and (max-width: 600px) {
-  .columns.is-multiline-mobile{
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .navbar-mobile{
-    position: fixed;
-    z-index: 30;
-    bottom: 0;
-  }
-}
+        /* This file is for your main application CSS */
+      
+      @import "./phoenix.scss";
+      @import "./graphic.css";
+      @import "./multiselect.scss";
+      @import "bulma";
+      main.container {
+        margin: 1em auto;
+      }
+      
+      fieldset.fieldset {
+        margin-bottom: 3em;
+      }
+      
+      .icon.table-icon {
+        display: revert;
+        text-align: center;
+      }
+      
+      td.table-span:not([align]) {
+        text-align: center;
+      }
+      
+      .iframe.template {
+        width: 770px;
+        height: 1090px;
+        border: 2px solid #ced4da;
+      }
+      
+      .search-input {
+        display: flex;
+      }
+      
+      .search-menu {
+        position: absolute;
+        top: 2.9rem;
+        background-color: #f8f9fa;
+        width: 210%;
+      }
+      
+      .search-menu-content {
+        border: 1px solid #ced4da;
+        padding: 1rem;
+        display: none;
+      }
+      
+      p.control.has-dropdown {
+        margin-bottom: 0px;
+      }
+      
+      .dropdown.below-input {
+        position: absolute;
+      }
+      
+      .below-input .dropdown-content {
+        max-height: 200px;
+        overflow: hidden;
+        overflow-y: scroll;
+      }
+      
+      .below-input .dropdown-menu {
+        padding-top: 0px;
+      }
+      
+      @media screen and (max-width: 600px) {
+        .columns.is-multiline-mobile {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        .navbar-mobile {
+          position: fixed;
+          z-index: 30;
+          bottom: 0;
+        }

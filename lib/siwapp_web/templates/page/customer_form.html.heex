@@ -3,14 +3,22 @@
     <div class="field">
       <%= label @f, :name, class: "label" %>
         <%= if Map.has_key?(assigns, :customer_suggestions) do %>
-          <p class="control">
+          <p class="control has-dropdown">
             <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_name, autocomplete: "off" %>
-            <%= for customer_suggestion <- @customer_suggestions do %>
-              <div phx-click="pick_customer" phx-value-id={customer_suggestion.id} phx-target={@myself}>
-                <%= customer_suggestion.name %>
+          </p>
+            <%= if @customer_suggestions != [] do %>
+              <div class="dropdown below-input is-active">
+                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <%= for customer_suggestion <- @customer_suggestions do %>
+                      <a href="#" phx-click="pick_customer" phx-value-id={customer_suggestion.id} phx-target={@myself} class="dropdown-item">
+                        <%= customer_suggestion.name %>
+                      </a>
+                    <% end %>
+                  </div>
+                </div>
               </div>
             <% end %>
-          </p>
         <% else %>
           <p class="control">
             <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
