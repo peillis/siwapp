@@ -30,7 +30,7 @@ defmodule SiwappWeb.Router do
   end
 
   scope "/api/graphql" do
-    if Mix.env == :dev do
+    if Mix.env() == :dev do
       pipe_through :api
       forward "/graphiql", Absinthe.Plug.GraphiQL, schema: SiwappWeb.Schema
     else
