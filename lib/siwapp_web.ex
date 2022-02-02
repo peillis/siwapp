@@ -39,6 +39,10 @@ defmodule SiwappWeb do
 
       # Include shared imports and aliases for views
       unquote(view_helpers())
+
+      def template_not_found(template, _assigns) do
+        Phoenix.Controller.status_message_from_template(template)
+      end
     end
   end
 
