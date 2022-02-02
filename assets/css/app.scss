@@ -44,6 +44,10 @@ td.table-span:not([align]){
   display: none;
 }
 
+.search-menu-content label{
+  font-size: 14px;
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile{
     display: flex;

@@ -3,7 +3,7 @@ defmodule SiwappWeb.SearchLive.Index do
   use Phoenix.LiveView, layout: {SiwappWeb.LayoutView, "search_live.html"}
   alias Phoenix.LiveView.JS
 
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(_params, session, socket) do
+    {:ok, assign(socket, :path, session["path"])}
   end
 end
