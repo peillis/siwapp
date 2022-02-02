@@ -15,8 +15,10 @@ defmodule SiwappWeb.ItemView do
     if f.id == "invoice" do
       inputs_for(f, :items)
     else
-      inputs_for = Enum.map(Enum.with_index(items), fn {item, i} -> indexed_item_form(item, i) end)
-      can_save? = Enum.all?(inputs_for, &(&1.source.valid?))
+      inputs_for =
+        Enum.map(Enum.with_index(items), fn {item, i} -> indexed_item_form(item, i) end)
+
+      can_save? = Enum.all?(inputs_for, & &1.source.valid?)
       send(self(), {:can_save?, can_save?})
       inputs_for
     end
