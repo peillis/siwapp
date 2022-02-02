@@ -24,7 +24,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, new_recurring_invoice)
-    |> assign(:items, [RecurringInvoices.new_item()])
+    |> assign(:items, [%{}])
     |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
     |> assign(:customer_name, "")
   end
@@ -41,8 +41,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:customer_name, recurring_invoice.name)
   end
 
-  def handle_event("save", %{"recurring_invoice" => rec_params} = params, socket) do
-    {_items, rec_params} = build_params(params, rec_params)
+  def handle_event("save", params, socket) do
+    rec_params = build_rec_params(params, :save)
 
     result =
       case socket.assigns.live_action do
@@ -64,26 +64,25 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", %{"recurring_invoice" => rec_params} = params, socket) do
-    {items, rec_params} = build_params(params, rec_params)
+  def handle_event("validate", params, socket) do
+    rec_params = build_rec_params(params, :validate)
     changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, rec_params)
 
     socket =
       socket
       |> assign(:changeset, changeset)
-      |> assign(:items, items)
+      |> assign(:items, rec_params["items"])
 
     {:noreply, socket}
   end
 
   def handle_event("add_item", _, socket) do
-    items = socket.assigns.items ++ [RecurringInvoices.new_item()]
-    {:noreply, assign(socket, :items, items)}
+    {:noreply, assign(socket, :items, socket.assigns.items ++ [%{}])}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    items = List.delete_at(socket.assigns.items, String.to_integer(item_id))
-    {:noreply, assign(socket, items: items)}
+    index = String.to_integer(item_id)
+    {:noreply, assign(socket, items: List.delete_at(socket.assigns.items, index))}
   end
 
   def handle_info({:update_changeset, params}, socket) do
@@ -94,20 +93,32 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  defp build_params(params, rec_params) do
+  @spec build_rec_params(map, :save | :validate) :: map
+  defp build_rec_params(params, msg) do
     taxes_params = get_taxes_params(params)
 
     items =
       params
       |> get_items_params()
       |> merge_taxes_with_item(taxes_params)
+      |> maybe_remove_virtual_unitary_cost(msg)
 
-    {items, Map.put(rec_params, "items", items)}
+    Map.put(params["recurring_invoice"], "items", items)
   end
 
+  @spec maybe_remove_virtual_unitary_cost(list, :save | :validate) :: [] | [map]
+  defp maybe_remove_virtual_unitary_cost(items, :save) do
+    Enum.map(items, &Map.delete(&1, "virtual_unitary_cost"))
+  end
+
+  defp maybe_remove_virtual_unitary_cost(items, _), do: items
+
+  @spec get_items_params(map) :: map
   defp get_items_params(params), do: params["items"] || %{}
+  @spec get_taxes_params(map) :: map
   defp get_taxes_params(params), do: params["invoice"]["items"] || %{}
 
+  @spec merge_taxes_with_item(map, map) :: [] | [map]
   defp merge_taxes_with_item(items_params, taxes_params),
     do:
       Enum.map(items_params, fn {index, item} ->
