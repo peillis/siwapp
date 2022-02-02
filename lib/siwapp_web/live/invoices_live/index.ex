@@ -89,10 +89,9 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   defp invoices_filter(params) do
     if params == %{} do
-      Invoices.list_invoices_filtered("")
+      Invoices.scroll_listing(0)
     else
-      [value] = Map.values(params)
-      Invoices.list_invoices_filtered(value)
+      Invoices.invoices_filtered(params["value"])
     end
   end
 end

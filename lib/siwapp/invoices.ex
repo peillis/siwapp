@@ -188,10 +188,9 @@ defmodule Siwapp.Invoices do
     Item.changeset(item, attrs)
   end
 
-  def list_invoices_filtered(value) do
+  def invoices_filtered(value) do
     Invoice
-    |> InvoiceQuery.list_by_query(:with_terms, value)
-    |> Query.list_preload(:customer)
+    |> Query.terms(value)
     |> Query.paginate(0, 20)
     |> Repo.all()
   end
