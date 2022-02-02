@@ -10,7 +10,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:ok,
      socket
      |> assign(:series, Commons.list_series())
-     |> assign(:customer_suggestions, [])}
+     |> assign(:customer_suggestions, [])
+     |> assign(:can_save?, true)}
   end
 
   def handle_params(params, _url, socket) do
@@ -41,7 +42,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:customer_name, recurring_invoice.name)
   end
 
-  def handle_event("save", params, socket) do
+  def handle_event("save", params, %{assigns: %{can_save?: true}} = socket) do
     rec_params = build_rec_params(params, :save)
 
     result =
@@ -62,6 +63,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  def handle_event("save", _params, %{assigns: %{can_save?: false}} = socket) do
+    {:noreply, socket}
   end
 
   def handle_event("validate", params, socket) do
@@ -91,6 +96,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
       |> RecurringInvoices.change(params)
 
     {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  def handle_info({:can_save?, value}, socket) do
+    {:noreply, assign(socket, :can_save?, value)}
   end
 
   @spec build_rec_params(map, :save | :validate) :: map
