@@ -2,6 +2,8 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
+  import Ecto.Query
+
   alias Siwapp.Customers.Customer
   alias Siwapp.Query
   alias Siwapp.Repo
@@ -9,7 +11,13 @@ defmodule Siwapp.Customers do
   @doc """
   Lists customers in database
   """
-  def list, do: Repo.all(Customer)
+  def list(limit \\ 100, offset \\ 0) do
+    Customer
+    |> order_by(desc: :id)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Repo.all()
+  end
 
   def suggest_by_name_input(""), do: []
   def suggest_by_name_input(nil), do: []

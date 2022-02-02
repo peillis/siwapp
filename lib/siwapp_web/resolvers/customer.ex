@@ -4,8 +4,8 @@ defmodule SiwappWeb.Resolvers.Customer do
   alias Siwapp.Customers
   alias SiwappWeb.Resolvers.Errors
 
-  def list(_args, _resolution) do
-    {:ok, Customers.list()}
+  def list(%{limit: limit, offset: offset}, _resolution) do
+    {:ok, Customers.list(limit, offset)}
   end
 
   def create(args, _resolution) do

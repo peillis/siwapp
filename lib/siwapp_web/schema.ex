@@ -9,6 +9,9 @@ defmodule SiwappWeb.Schema do
   query do
     @desc "Get all customers"
     field :customers, list_of(:customer) do
+      arg(:limit, :integer, default_value: 10)
+      arg(:offset, :integer, default_value: 0)
+
       resolve(&Resolvers.Customer.list/2)
     end
   end
