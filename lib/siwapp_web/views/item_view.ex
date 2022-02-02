@@ -8,13 +8,17 @@ defmodule SiwappWeb.ItemView do
 
   @doc """
   Replicates inputs_for behavior for recurring_invoice's items even when there's no association
+  Warns LiveView parent when there are items errors so recurring_invoice can't be saved
   """
   @spec pseudo_inputs_for(FormData.t(), list) :: [FormData.t()]
   def pseudo_inputs_for(f, items) do
     if f.id == "invoice" do
       inputs_for(f, :items)
     else
-      Enum.map(Enum.with_index(items), fn {item, i} -> indexed_item_form(item, i) end)
+      inputs_for = Enum.map(Enum.with_index(items), fn {item, i} -> indexed_item_form(item, i) end)
+      can_save? = Enum.all?(inputs_for, &(&1.source.valid?))
+      send(self(), {:can_save?, can_save?})
+      inputs_for
     end
   end
 
@@ -36,7 +40,8 @@ defmodule SiwappWeb.ItemView do
       | id: "recurring_invoice_items_" <> Integer.to_string(index),
         name: "items[#{index}]",
         index: index,
-        options: []
+        options: [],
+        errors: fi.source.errors
     }
   end
 
