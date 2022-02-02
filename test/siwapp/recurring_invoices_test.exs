@@ -19,6 +19,16 @@ defmodule Siwapp.RecurringInvoicesTest do
   end
 
   describe "invoices_to_generate/1 " do
+    test "when period is daily, it generates one invoice per day", %{today: today} do
+      recurring_invoice_fixture(%{starting_date: Date.add(today, -30), finishing_date: today, period: 1, period_type: "Daily"})
+
+      assert RecurringInvoices.invoices_to_generate()
+    end
+
+    test "when period is monthly, it generates one invoice per day"
+
+    test "when period is yearly, it generates one invoice per day"
+
     test "the limit for generating invoices is the strictest boundary. Max ocurrences is the strictest.",
          %{today: today} do
       rec_invoice =
