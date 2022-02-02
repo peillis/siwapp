@@ -7,7 +7,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
-  alias SiwappWeb.PageView
 
   def mount(_params, _session, socket) do
     {:ok,
