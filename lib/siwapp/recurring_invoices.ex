@@ -49,16 +49,6 @@ defmodule Siwapp.RecurringInvoices do
     Repo.delete(recurring_invoice)
   end
 
-  @spec new_item :: map
-  def new_item,
-    do: %{
-      "description" => "",
-      "unitary_cost" => 0,
-      "quantity" => 1,
-      "discount" => 0,
-      "taxes" => []
-    }
-
   # Expect will be added when function is finished
   def generate_invoices(id) do
     Repo.get!(RecurringInvoice, id)
