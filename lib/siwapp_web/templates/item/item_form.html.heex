@@ -10,22 +10,23 @@
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :quantity, class: "label" %>
           <p class="control">
-            <%= number_input fi, :quantity, class: "input" %>
+            <%= text_input fi, :quantity, class: "input" %>
           </p>
           <%= error_tag fi, :quantity %>
 
         </div>
         <div class="column is-1-desktop is-half-mobile">
-          <%= label fi, :unitary_cost, "Price", class: "label" %>
+          <%= label fi, :virtual_unitary_cost, "Price", class: "label" %>
           <p class="control">
             <%= text_input fi, :virtual_unitary_cost, class: "input" %>
+            <%= hidden_input fi, :unitary_cost, value: set_unitary_cost(fi.source.changes)%>
           </p>
-          <%= error_tag fi, :unitary_cost %>
+          <%= error_tag fi, :virtual_unitary_cost%>
         </div>
         <div class="column is-1-desktop is-half-mobile">
           <%= label fi, :discount, class: "label" %>
           <p class="control">
-            <%= number_input fi, :discount, class: "input" %>
+            <%= text_input fi, :discount, class: "input" %>
           </p>
           <%= error_tag fi, :discount %>
         </div>
