@@ -15,7 +15,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
      |> assign(
        :recurring_invoices,
        RecurringInvoices.list(limit: 20, offset: 0, preload: [:series])
-     )     |> assign(:checked, MapSet.new())}
+     )
+     |> assign(:checked, MapSet.new())}
   end
 
   @impl Phoenix.LiveView
