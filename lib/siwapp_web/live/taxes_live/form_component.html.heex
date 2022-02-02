@@ -37,7 +37,7 @@
           <% end %>
         </p>
         <p class="control">
-          <%= link "Back", to: Routes.taxes_index_path(@socket, :index), class: "button is-dark" %>
+          <%= live_redirect "Back", to: Routes.taxes_index_path(@socket, :index), class: "button is-dark" %>
         </p>
         <p class="control">
           <%= submit "Save", class: "button is-success" %>

@@ -92,42 +92,45 @@ defmodule SiwappWeb.Router do
 
   scope "/", SiwappWeb do
     pipe_through [:browser, :require_authenticated_user]
-    live "/", PageLive.Index, :index
 
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    live_session :user do
+      live "/", PageLive.Index, :index
 
-    live "/series", SeriesLive.Index, :index
-    live "/series/new", SeriesLive.Index, :new
-    live "/series/:id/edit", SeriesLive.Index, :edit
+      get "/users/settings", UserSettingsController, :edit
+      put "/users/settings", UserSettingsController, :update
+      get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
-    live "/taxes", TaxesLive.Index, :index
-    live "/taxes/new", TaxesLive.Index, :new
-    live "/taxes/:id/edit", TaxesLive.Index, :edit
+      live "/series", SeriesLive.Index, :index
+      live "/series/new", SeriesLive.Index, :new
+      live "/series/:id/edit", SeriesLive.Index, :edit
 
-    live "/invoices/new", InvoicesLive.Edit, :new
-    live "/invoices/:id/edit", InvoicesLive.Edit, :edit
-    get "/invoices/:id/show", PageController, :show_invoice
-    live "/invoices", InvoicesLive.Index, :index
-    get "/invoices/:id/download", PageController, :download
+      live "/taxes", TaxesLive.Index, :index
+      live "/taxes/new", TaxesLive.Index, :new
+      live "/taxes/:id/edit", TaxesLive.Index, :edit
 
-    live "/customers/new", CustomerLive.Edit, :new
-    live "/customers/:id/edit", CustomerLive.Edit, :edit
-    live "/customers/", CustomerLive.Index, :index
+      live "/invoices/new", InvoicesLive.Edit, :new
+      live "/invoices/:id/edit", InvoicesLive.Edit, :edit
+      get "/invoices/:id/show", PageController, :show_invoice
+      live "/invoices", InvoicesLive.Index, :index
+      get "/invoices/:id/download", PageController, :download
 
-    live "/templates", TemplatesLive.Index, :index
-    live "/templates/new", TemplatesLive.Edit, :new
-    live "/templates/:id/edit", TemplatesLive.Edit, :edit
+      live "/customers/new", CustomerLive.Edit, :new
+      live "/customers/:id/edit", CustomerLive.Edit, :edit
+      live "/customers/", CustomerLive.Index, :index
 
-    live "/recurring_invoices", RecurringInvoicesLive.Index, :index
-    live "/recurring_invoices/new", RecurringInvoicesLive.Edit, :new
-    live "/recurring_invoices/:id/edit", RecurringInvoicesLive.Edit, :edit
+      live "/templates", TemplatesLive.Index, :index
+      live "/templates/new", TemplatesLive.Edit, :new
+      live "/templates/:id/edit", TemplatesLive.Edit, :edit
 
-    get "/settings", SettingsController, :edit
-    post "/settings", SettingsController, :update
+      live "/recurring_invoices", RecurringInvoicesLive.Index, :index
+      live "/recurring_invoices/new", RecurringInvoicesLive.Edit, :new
+      live "/recurring_invoices/:id/edit", RecurringInvoicesLive.Edit, :edit
 
-    get "/iframe/:id", IframeController, :iframe
+      get "/settings", SettingsController, :edit
+      post "/settings", SettingsController, :update
+
+      get "/iframe/:id", IframeController, :iframe
+    end
   end
 
   scope "/", SiwappWeb do
