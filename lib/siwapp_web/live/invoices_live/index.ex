@@ -89,7 +89,5 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   @spec reference(pos_integer(), integer) :: binary
-  defp reference(series_id, number) do
-    Commons.get_series(series_id).code <> "-" <> Integer.to_string(number)
-  end
+  defp reference(series_id, number), do: Commons.get_series(series_id).code <> "-#{number}"
 end
