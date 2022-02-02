@@ -13,6 +13,19 @@ defmodule SiwappWeb.SearchLive.Index do
   end
 
   def handle_event("search", _params, socket) do
-    {:noreply, push_redirect(socket, to: Routes.invoices_index_path(socket, :index, value: socket.assigns[:value]))}
+    {:noreply, push_redirect(socket, to: redirect_path(socket))}
+  end
+
+  defp redirect_path(socket) do
+    case socket.assigns.path do
+      "/invoices" ->
+        Routes.invoices_index_path(socket, :index, value: socket.assigns[:value])
+
+      "/customers" ->
+        Routes.customer_index_path(socket, :index, value: socket.assigns[:value])
+
+      "/recurring_invoices" ->
+        Routes.recurring_invoices_index_path(socket, :index, value: socket.assigns[:value])
+    end
   end
 end
