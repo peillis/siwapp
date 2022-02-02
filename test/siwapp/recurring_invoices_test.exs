@@ -19,22 +19,24 @@ defmodule Siwapp.RecurringInvoicesTest do
   end
 
   describe "invoices_to_generate/1 " do
-    test "when period type is daily, it generates invoices every number of days the period indicates", %{today: today} do
+    test "when period type is daily, it generates invoices every number of days the period indicates",
+         %{today: today} do
       rec_invoice =
         recurring_invoice_fixture(%{
-          starting_date: Date.add(today, -(30*12)*2),
+          starting_date: Date.add(today, -(30 * 12) * 2),
           finishing_date: today,
           period: 2,
           period_type: "Daily"
         })
 
-      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == (30*12) + 1
+      assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 30 * 12 + 1
     end
 
-    test "when period type is monthly, it generates invoices every number of months the period indicates", %{today: today} do
+    test "when period type is monthly, it generates invoices every number of months the period indicates",
+         %{today: today} do
       rec_invoice =
         recurring_invoice_fixture(%{
-          starting_date: Date.add(today, -(30*12)*2),
+          starting_date: Date.add(today, -(30 * 12) * 2),
           finishing_date: today,
           period: 2,
           period_type: "Monthly"
@@ -43,10 +45,11 @@ defmodule Siwapp.RecurringInvoicesTest do
       assert RecurringInvoices.invoices_to_generate(rec_invoice.id) == 12
     end
 
-    test "when period type is yearly, it generates invoices every number of years the period indicates", %{today: today} do
+    test "when period type is yearly, it generates invoices every number of years the period indicates",
+         %{today: today} do
       rec_invoice =
         recurring_invoice_fixture(%{
-          starting_date: Date.add(today, -(30*12)*2),
+          starting_date: Date.add(today, -(30 * 12) * 2),
           finishing_date: today,
           period: 2,
           period_type: "Yearly"

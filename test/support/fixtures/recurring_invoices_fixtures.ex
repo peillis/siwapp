@@ -18,7 +18,7 @@ defmodule Siwapp.RecurringInvoicesFixtures do
       finishing_date: Date.utc_today(),
       period: 1,
       period_type: "Monthly",
-      max_ocurrences: 10000
+      max_ocurrences: 10_000
     })
   end
 
