@@ -3,6 +3,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   This module manages the recurring_invoices LiveView events
   """
   use SiwappWeb, :live_view
+  alias Siwapp.Commons
   alias Siwapp.RecurringInvoices
 
   def mount(_params, _session, socket) do
@@ -56,5 +57,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  @spec series_code(pos_integer()) :: binary
+  defp series_code(series_id) do
+    Commons.get_series(series_id).code
   end
 end
