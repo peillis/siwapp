@@ -1,6 +1,8 @@
 defmodule SiwappWeb.InvoicesLive.Index do
   @moduledoc false
   use SiwappWeb, :live_view
+
+  alias Siwapp.Commons
   alias Siwapp.Invoices
   alias SiwappWeb.PageView
 
@@ -84,5 +86,10 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  @spec reference(pos_integer(), integer) :: binary
+  defp reference(series_id, number) do
+    Commons.get_series(series_id).code <> "-" <> Integer.to_string(number)
   end
 end
