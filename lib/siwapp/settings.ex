@@ -45,6 +45,18 @@ defmodule Siwapp.Settings do
   """
   def current_bundle, do: struct(SettingBundle, list_pairs())
 
+  def prepare_data_cache do
+    case Cachex.get(:my_cache, :settings_data) do
+      {:ok, nil} ->
+        settings_data = prepare_data()
+        Cachex.put(:my_cache, :settings_data, settings_data)
+        settings_data
+
+      {:ok, settings_data} ->
+        settings_data
+    end
+  end
+
   @doc """
   Takes a map of SettingBundle's parameters and saves each associated Setting if possible.
   Informs of the possibility to save those settings and returns the setting_bundle changeset

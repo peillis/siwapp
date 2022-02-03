@@ -15,6 +15,9 @@ defmodule Siwapp.InvoiceTest do
     {:ok, tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
     {:ok, tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
     settings_fixture()
+
+    Cachex.clear(:my_cache)
+
     %{series_id: series.id, taxes: [tax1, tax2]}
   end
 
@@ -87,6 +90,8 @@ defmodule Siwapp.InvoiceTest do
             }
           ]
         )
+
+      Cachex.clear(:my_cache)
 
       %{invoice: invoice}
     end

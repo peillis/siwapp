@@ -16,9 +16,10 @@ defmodule Siwapp.Application do
       {Phoenix.PubSub, name: Siwapp.PubSub},
       # Start the Endpoint (http/https)
       SiwappWeb.Endpoint,
-      ChromicPDF
+      ChromicPDF,
       # Start a worker by calling: Siwapp.Worker.start_link(arg)
       # {Siwapp.Worker, arg}
+      {Cachex, name: :my_cache}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
