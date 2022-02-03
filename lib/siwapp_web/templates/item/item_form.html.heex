@@ -1,4 +1,4 @@
-    <%= for fi <- pseudo_inputs_for(@f, @items) do %>
+    <%= for fi <- @inputs_for do %>
       <div class="columns is-multiline-mobile is-1 is-variable">
         <div class="column is-4-desktop is-full-mobile">
           <%= label fi, :description, class: "label" %>
@@ -32,13 +32,13 @@
         </div>
         <div class="column is-3-desktop is-half-mobile">
           <label class="label">Taxes</label>
-            <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.index}"} name={"invoice[items][#{fi.index}][taxes]"} selected={get_existing_taxes(@changeset, fi)} options={Siwapp.Commons.list_taxes_for_multiselect()} />
+            <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.index}"} name={"invoice[items][#{fi.index}][taxes]"} selected={get_existing_taxes(fi)} options={Siwapp.Commons.list_taxes_for_multiselect()} />
         </div>
         <div class="column is-1-desktop is-full-mobile">
           <label class="label">Total</label>
           <p class="control">
             <a class="button is-static is-fullwidth">
-              <%= item_net_amount(@changeset, fi) %>
+              <%= item_net_amount(fi) %>
             </a>
           </p>
         </div>
