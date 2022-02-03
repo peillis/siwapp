@@ -3,6 +3,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   use SiwappWeb, :live_view
   alias Siwapp.Invoices.Invoice
   alias Siwapp.{Invoices, Search}
+  alias Phoenix.LiveView.JS
 
   def mount(_params, _session, socket) do
     {:ok,
