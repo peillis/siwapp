@@ -21,6 +21,9 @@
 
       <% "/recurring_invoices" -> %>
         <.live_component module={SiwappWeb.SearchLive.RecurringInvoiceComponent} id="recurring_invoice"/>
+
+      <% _ -> %>
+        <.live_component module={SiwappWeb.SearchLive.InvoiceComponent} id="invoice"/>
     <% end %>
   </div>
 </form>
