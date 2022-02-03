@@ -2,4 +2,4 @@
 
 <h1>Past due invoices</h1>
 
-<%= live_render(@socket, SiwappWeb.InvoicesLive.Index, id: "home") %>
+<%= render(SiwappWeb.PageView, "invoices_table.html", invoices: Invoices.list_past_due(0), checked: []) %>

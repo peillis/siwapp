@@ -3,16 +3,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
   use SiwappWeb, :live_view
   alias Siwapp.Invoices.Invoice
   alias Siwapp.{Invoices, Search}
-  alias SiwappWeb.PageView
-
-  def mount(_params, _session, %{id: "home"} = socket) do
-    {:ok,
-     socket
-     |> assign(:page, 0)
-     |> assign(:invoices, Invoices.list_past_due(0))
-     |> assign(:checked, MapSet.new())
-     |> assign(:page_title, "Invoices")}
-  end
 
   def mount(_params, _session, socket) do
     {:ok,
