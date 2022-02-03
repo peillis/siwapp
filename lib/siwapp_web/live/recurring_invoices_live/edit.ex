@@ -2,7 +2,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   @moduledoc false
   use SiwappWeb, :live_view
 
+  alias Phoenix.HTML.FormData
   alias Siwapp.Commons
+  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
@@ -25,7 +27,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, new_recurring_invoice)
-    |> assign(:items, [%{}])
+    |> assign(:inputs_for, pseudo_inputs_for([%{}]))
     |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
     |> assign(:customer_name, "")
   end
@@ -37,7 +39,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, recurring_invoice.name)
     |> assign(:recurring_invoice, recurring_invoice)
-    |> assign(:items, recurring_invoice.items)
+    |> assign(:inputs_for, pseudo_inputs_for(recurring_invoice.items))
     |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
     |> assign(:customer_name, recurring_invoice.name)
   end
@@ -76,18 +78,21 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     socket =
       socket
       |> assign(:changeset, changeset)
-      |> assign(:items, rec_params["items"])
+      |> assign(:inputs_for, pseudo_inputs_for(rec_params["items"]))
 
     {:noreply, socket}
   end
 
   def handle_event("add_item", _, socket) do
-    {:noreply, assign(socket, :items, socket.assigns.items ++ [%{}])}
+    index = length(socket.assigns.inputs_for) + 1
+
+    {:noreply,
+     assign(socket, :inputs_for, socket.assigns.inputs_for ++ [indexed_item_form(%{}, index)])}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
     index = String.to_integer(item_id)
-    {:noreply, assign(socket, items: List.delete_at(socket.assigns.items, index))}
+    {:noreply, assign(socket, :inputs_for, List.delete_at(socket.assigns.inputs_for, index))}
   end
 
   def handle_info({:update_changeset, params}, socket) do
@@ -100,6 +105,31 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
 
   def handle_info({:can_save?, value}, socket) do
     {:noreply, assign(socket, :can_save?, value)}
+  end
+
+  # Replicates inputs_for behavior for recurring_invoice's items even when there's no association
+  # Warns LiveView parent when there are items errors so recurring_invoice can't be saved
+  @spec pseudo_inputs_for(list) :: [FormData.t()]
+  defp pseudo_inputs_for(items) do
+    inputs_for = Enum.map(Enum.with_index(items), fn {item, i} -> indexed_item_form(item, i) end)
+    can_save? = Enum.all?(inputs_for, & &1.source.valid?)
+    send(self(), {:can_save?, can_save?})
+    inputs_for
+  end
+
+  @spec indexed_item_form(map, non_neg_integer()) :: FormData.t()
+  defp indexed_item_form(item, index) do
+    item_changeset = Item.changeset(%Item{}, item)
+    fi = FormData.to_form(item_changeset, [])
+
+    %{
+      fi
+      | id: "recurring_invoice_items_" <> Integer.to_string(index),
+        name: "items[#{index}]",
+        index: index,
+        options: [],
+        errors: fi.source.errors
+    }
   end
 
   @spec build_rec_params(map, :save | :validate) :: map
