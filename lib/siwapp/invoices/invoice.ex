@@ -7,11 +7,11 @@ defmodule Siwapp.Invoices.Invoice do
   import Ecto.Changeset
   import Siwapp.InvoiceHelper
 
+  alias Siwapp.Commons
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{InvoiceQuery, Item}
+  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
-  alias Siwapp.Repo
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -236,17 +236,7 @@ defmodule Siwapp.Invoices.Invoice do
   @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
     series_id = get_change(changeset, :series_id)
-    proper_number = which_number(series_id)
+    proper_number = Commons.which_number_cache(series_id)
     put_change(changeset, :number, proper_number)
-  end
-
-  @spec which_number(pos_integer()) :: integer
-  defp which_number(series_id) do
-    query = InvoiceQuery.last_number_with_series_id(__MODULE__, series_id)
-
-    case Repo.one(query) do
-      nil -> Repo.get(Series, series_id).first_number
-      invoice -> invoice.number + 1
-    end
   end
 end
