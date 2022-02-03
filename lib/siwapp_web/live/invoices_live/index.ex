@@ -10,7 +10,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
      socket
      |> assign(:page, 0)
      |> assign(:invoices, Invoices.list_past_due(0))
-     |> assign(:checked, MapSet.new())}
+     |> assign(:checked, MapSet.new())
+     |> assign(:page_title, "Invoices")}
   end
 
   def mount(_params, _session, socket) do
@@ -18,7 +19,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
      socket
      |> assign(:page, 0)
      |> assign(:invoices, Invoices.scroll_listing(0))
-     |> assign(:checked, MapSet.new())}
+     |> assign(:checked, MapSet.new())
+     |> assign(:page_title, "Invoices")}
   end
 
   def handle_event("load-more", _, %{id: "home"} = socket) do
