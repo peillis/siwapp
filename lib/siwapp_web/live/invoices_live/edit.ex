@@ -10,8 +10,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias SiwappWeb.PageView
 
   def mount(_params, _session, socket) do
+    Cachex.clear(:my_cache)
+
     {:ok,
      socket
+     |> assign(:multiselect_options, Commons.list_taxes_for_multiselect())
      |> assign(:series, Commons.list_series())
      |> assign(:customer_suggestions, [])}
   end
@@ -50,6 +53,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     case result do
       {:ok, _invoice} ->
+        Cachex.clear(:my_cache)
+
         socket =
           socket
           |> put_flash(:info, "Invoice successfully saved")

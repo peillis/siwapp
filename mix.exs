@@ -38,6 +38,7 @@ defmodule Siwapp.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:bulma, "0.9.3"},
       {:chromic_pdf, "~> 1.1"},
+      {:cachex, "~> 3.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},

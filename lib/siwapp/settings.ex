@@ -23,6 +23,18 @@ defmodule Siwapp.Settings do
   """
   def prepare_data, do: struct(SettingBundle, Enum.zip(SettingBundle.labels(), values()))
 
+  def prepare_data_cache do
+    case Cachex.get(:my_cache, :settings_data) do
+      {:ok, nil} ->
+        settings_data = prepare_data()
+        Cachex.put(:my_cache, :settings_data, settings_data)
+        settings_data
+
+      {:ok, settings_data} ->
+        settings_data
+    end
+  end
+
   @doc """
   Function which takes the filled form and applies proper actions
   """
