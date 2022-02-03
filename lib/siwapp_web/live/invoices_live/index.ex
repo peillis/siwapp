@@ -14,21 +14,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:page_title, "Invoices")}
   end
 
-  def handle_event("load-more", _, %{id: "home"} = socket) do
-    %{
-      page: page,
-      invoices: invoices
-    } = socket.assigns
-
-    {
-      :noreply,
-      assign(socket,
-        invoices: invoices ++ Invoices.list_past_due(page + 1),
-        page: page + 1
-      )
-    }
-  end
-
   def handle_event("load-more", _, socket) do
     %{
       page: page,
