@@ -12,56 +12,6 @@
   </head>
 
   <body class="has-navbar-fixed-top content" >
-    <%= if @current_user do %>
-      <nav class="navbar is-fixed-top"  role="navigation" aria-label="main navigation">
-        <div class="navbar-brand ">
-          <%=
-            img_tag(Routes.static_path(@conn, "/images/logo.svg"))
-            |> link(to: Routes.page_index_path(@conn, :index), class: "navbar-item")
-          %>
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-
-        <div class="navbar-menu">
-          <div class="navbar-start">
-            <%= live_render @conn, SiwappWeb.SearchLive.Index %>
-            <%= link "Invoices", to: Routes.invoices_index_path(@conn, :index), class: "navbar-item" %>
-            <%= link "Recurring Invoices", to: Routes.recurring_invoices_index_path(@conn, :index), class: "navbar-item" %>
-            <%= link "Customers", to: Routes.customer_index_path(@conn, :index), class: "navbar-item" %>
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">
-                Account
-              </a>
-              <div class="navbar-dropdown">
-                <%= link "Profile", to: Routes.user_settings_path(@conn, :edit), class: "navbar-item" %>
-                <hr class="navbar-divider">
-                <%= link "Settings", to: Routes.settings_path(@conn, :edit), class: "navbar-item" %>
-                <hr class="navbar-divider">
-                <%= link "Series", to: Routes.series_index_path(@conn, :index), class: "navbar-item" %>
-                <%= link "Taxes", to: Routes.taxes_index_path(@conn, :index), class: "navbar-item" %>
-                <%= link "Templates", to: Routes.templates_index_path(@conn, :index), class: "navbar-item" %>
-                <hr class="navbar-divider">
-                <a class="navbar-item">
-                  Hooks
-                </a>
-                <hr class="navbar-divider">
-                <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "navbar-item" %>
-              </div>
-            </div>
-          </div>
-
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <%= shared_button(@conn) %>
-            </div>
-          </div>
-        </div>
-      </nav>
-    <% end %>
     <%= @inner_content %>
   </body>
 </html>
