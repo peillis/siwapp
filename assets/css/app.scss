@@ -1,56 +1,84 @@
 /* This file is for your main application CSS */
+
 @import "./phoenix.scss";
 @import "./graphic.css";
 @import "./multiselect.scss";
 @import "bulma";
-
-main.container{
+main.container {
   margin: 1em auto;
 }
 
-fieldset.fieldset{
+fieldset.fieldset {
   margin-bottom: 3em;
 }
 
-.icon.table-icon{
+.icon.table-icon {
   display: revert;
   text-align: center;
 }
 
-td.table-span:not([align]){
+td.table-span:not([align]) {
   text-align: center;
 }
 
-.iframe.template{
+.iframe.template {
   width: 770px;
   height: 1090px;
   border: 2px solid #ced4da;
 }
 
-.search-input{
+.search-input {
   display: flex;
 }
 
-.search-menu{
+.search-menu {
   position: absolute;
   top: 2.9rem;
   background-color: #f8f9fa;
   width: 210%;
 }
 
-.search-menu-content{
+.search-menu-content {
   border: 1px solid #ced4da;
   padding: 1rem;
   display: none;
 }
 
+p.control.has-dropdown {
+  margin-bottom: 0px;
+}
+
+.input-with-dropdown {
+  display: grid;
+}
+
+.input:focus-within+.dropdown.below-input,
+.dropdown.below-input:hover {
+  display: block;
+  position: static;
+  max-width: 100%;
+  width: 100%;
+}
+
+.dropdown.below-input {
+  display: none;
+}
+
+.below-input .dropdown-content {
+  max-height: 200px;
+  overflow: hidden;
+  overflow-y: scroll;
+  padding-top: 0px;
+  max-width: 100%;
+  width: 100%;
+}
+
 @media screen and (max-width: 600px) {
-  .columns.is-multiline-mobile{
+  .columns.is-multiline-mobile {
     display: flex;
     flex-wrap: wrap;
   }
-
-  .navbar-mobile{
+  .navbar-mobile {
     position: fixed;
     z-index: 30;
     bottom: 0;
