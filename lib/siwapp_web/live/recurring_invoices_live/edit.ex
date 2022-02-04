@@ -42,7 +42,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("save", params, socket) do
-    rec_params = Map.merge(build_rec_params(params), %{"save?" => true})
+    rec_params = build_rec_params(params)
 
     result =
       case socket.assigns.live_action do
@@ -72,25 +72,24 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("add_item", _, socket) do
-    items_transformed =
-      Ecto.Changeset.get_field(socket.assigns.changeset, :items_transformed) ++
-        [Item.changeset(%Item{}, %{})]
+    items = Ecto.Changeset.get_field(socket.assigns.changeset, :items)
+    [Item.changeset(%Item{}, %{})]
 
     changeset =
       socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items_transformed, items_transformed)
+      |> Ecto.Changeset.put_change(:items, items)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
     items =
-      Ecto.Changeset.get_field(socket.assigns.changeset, :items_transformed)
+      Ecto.Changeset.get_field(socket.assigns.changeset, :items)
       |> List.delete_at(String.to_integer(item_id))
 
     changeset =
       socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items_transformed, items)
+      |> Map.put(:changes, %{items: items})
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -107,9 +106,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   # using items_transformed, which are the changed items
   @spec pseudo_inputs_for(Ecto.Changeset.t()) :: [FormData.t()]
   defp pseudo_inputs_for(changeset) do
-    items_transformed = Ecto.Changeset.get_field(changeset, :items_transformed)
+    items_changesets = Ecto.Changeset.get_field(changeset, :items)
 
-    Enum.map(Enum.with_index(items_transformed), fn {item_changeset, i} ->
+    Enum.map(Enum.with_index(items_changesets), fn {item_changeset, i} ->
       indexed_item_form(item_changeset, i)
     end)
   end
