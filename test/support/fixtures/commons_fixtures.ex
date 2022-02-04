@@ -36,6 +36,7 @@ defmodule Siwapp.CommonsFixtures do
       attrs
       |> valid_taxes_attributes()
       |> Commons.create_tax()
+
     tax
   end
 

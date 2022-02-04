@@ -125,7 +125,6 @@ defmodule Siwapp.Invoices do
     invoice
     |> Invoice.changeset(attrs)
     |> Invoice.final_changeset()
-
   end
 
   def list_past_due(page, per_page \\ 20) do

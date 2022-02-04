@@ -151,7 +151,6 @@ defmodule Siwapp.Commons do
     end
   end
 
-
   @doc """
   Deletes a series.
 
