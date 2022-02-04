@@ -19,7 +19,6 @@
           <%= label fi, :virtual_unitary_cost, "Price", class: "label" %>
           <p class="control">
             <%= text_input fi, :virtual_unitary_cost, class: "input" %>
-            <%= hidden_input fi, :unitary_cost, value: set_unitary_cost(fi.source.changes)%>
           </p>
           <%= error_tag fi, :virtual_unitary_cost%>
         </div>
