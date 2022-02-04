@@ -4,14 +4,14 @@ defmodule Siwapp.RecurringInvoicesTest do
   import Siwapp.RecurringInvoicesFixtures
   import Siwapp.InvoicesFixtures
   import Siwapp.SettingsFixtures
+  import Siwapp.CommonsFixtures
 
-  alias Siwapp.Commons
   alias Siwapp.RecurringInvoices
 
   setup do
-    {:ok, _series} = Commons.create_series(%{name: "A-Series", code: "A-"})
-    {:ok, _tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
-    {:ok, _tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
+    series_fixture(%{name: "A-Series", code: "A-"})
+    taxes_fixture(%{name: "VAT", value: 21, default: true})
+    taxes_fixture(%{name: "RETENTION", value: -15})
     today = Date.utc_today()
     settings_fixture()
 
