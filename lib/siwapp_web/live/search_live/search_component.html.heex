@@ -12,18 +12,24 @@
   </div>
 
   <div class="search-menu">
-    <%= case @view do %>
-      <% SiwappWeb.InvoicesLive.Index -> %>
-        <.live_component module={SiwappWeb.SearchLive.InvoiceComponent} id="invoice"/>
+    <div class="search-menu-content" id="search-menu">
+      <%= case @view do %>
+        <% SiwappWeb.InvoicesLive.Index -> %>
+          <.live_component module={SiwappWeb.SearchLive.InvoiceComponent} id="invoice"/>
 
-      <% SiwappWeb.CustomerLive.Index -> %>
-        <.live_component module={SiwappWeb.SearchLive.CustomerComponent} id="customer"/>
+        <% SiwappWeb.CustomerLive.Index -> %>
+          <.live_component module={SiwappWeb.SearchLive.CustomerComponent} id="customer"/>
 
-      <% SiwappWeb.RecurringInvoicesLive.Index -> %>
-        <.live_component module={SiwappWeb.SearchLive.RecurringInvoiceComponent} id="recurring_invoice"/>
+        <% SiwappWeb.RecurringInvoicesLive.Index -> %>
+          <.live_component module={SiwappWeb.SearchLive.RecurringInvoiceComponent} id="recurring_invoice"/>
 
-      <% _ -> %>
-        <.live_component module={SiwappWeb.SearchLive.InvoiceComponent} id="invoice"/>
-    <% end %>
+        <% _ -> %>
+          <.live_component module={SiwappWeb.SearchLive.InvoiceComponent} id="invoice"/>
+      <% end %>
+      <div class="buttons is-right">
+        <button class="button is-info">Export to csv</button>
+        <button class="button is-info">Search</button>
+      </div>
+    </div>
   </div>
 </form>

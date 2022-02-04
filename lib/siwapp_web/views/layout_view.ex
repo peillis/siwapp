@@ -39,7 +39,7 @@ defmodule SiwappWeb.LayoutView do
     ]
 
     if socket.view in view do
-      live_component SiwappWeb.SearchLive.SearchComponent, id: "search", view: socket.view
+      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", view: socket.view)
     end
   end
 
