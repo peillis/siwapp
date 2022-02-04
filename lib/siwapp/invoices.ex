@@ -190,7 +190,7 @@ defmodule Siwapp.Invoices do
 
   def invoices_filtered(value) do
     Invoice
-    |> Query.terms(value)
+    |> Query.name_email_or_id(value)
     |> Query.paginate(0, 20)
     |> Repo.all()
   end
