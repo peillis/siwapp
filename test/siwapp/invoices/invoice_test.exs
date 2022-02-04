@@ -201,6 +201,7 @@ defmodule Siwapp.InvoiceTest do
     test "If number's already assigned, changeset isn't valid" do
       series = series_fixture()
       _invoice = invoice_fixture(%{series_id: series.id, number: 3})
+
       changeset =
         %Invoice{}
         |> Invoice.changeset(%{series_id: series.id, number: 3})

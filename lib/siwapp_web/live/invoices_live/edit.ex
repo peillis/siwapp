@@ -10,7 +10,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Invoices.{Invoice, Item}
 
   def mount(_params, _session, socket) do
-
     {:ok,
      socket
      |> assign(:multiselect_options, Commons.list_taxes_for_multiselect())
@@ -52,7 +51,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     case result do
       {:ok, _invoice} ->
-
         socket =
           socket
           |> put_flash(:info, "Invoice successfully saved")
@@ -65,7 +63,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", %{"invoice" => params, "_target" => ["invoice", "series_id"]}, socket) do
+  def handle_event(
+        "validate",
+        %{"invoice" => params, "_target" => ["invoice", "series_id"]},
+        socket
+      ) do
     changeset =
       socket.assigns.invoice
       |> Invoices.total_change(params)
