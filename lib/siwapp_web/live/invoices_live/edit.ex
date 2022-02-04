@@ -10,7 +10,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias SiwappWeb.PageView
 
   def mount(_params, _session, socket) do
-    Cachex.clear(:my_cache)
 
     {:ok,
      socket
@@ -53,7 +52,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     case result do
       {:ok, _invoice} ->
-        Cachex.clear(:my_cache)
 
         socket =
           socket
@@ -65,6 +63,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  def handle_event("validate", %{"invoice" => params, "_target" => ["invoice", "series_id"]}, socket) do
+    changeset =
+      socket.assigns.invoice
+      |> Invoices.total_change(params)
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do

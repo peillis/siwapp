@@ -51,6 +51,7 @@ defmodule Siwapp.Invoices do
   def create(attrs \\ %{}) do
     %Invoice{}
     |> Invoice.changeset(attrs)
+    |> Invoice.final_changeset()
     |> Repo.insert()
   end
 
@@ -62,6 +63,7 @@ defmodule Siwapp.Invoices do
   def update(%Invoice{} = invoice, attrs) do
     invoice
     |> Invoice.changeset(attrs)
+    |> Invoice.final_changeset()
     |> Repo.update()
   end
 
@@ -117,6 +119,13 @@ defmodule Siwapp.Invoices do
   """
   def change(%Invoice{} = invoice, attrs \\ %{}) do
     Invoice.changeset(invoice, attrs)
+  end
+
+  def total_change(%Invoice{} = invoice, attrs \\ %{}) do
+    invoice
+    |> Invoice.changeset(attrs)
+    |> Invoice.final_changeset()
+
   end
 
   def list_past_due(page, per_page \\ 20) do
