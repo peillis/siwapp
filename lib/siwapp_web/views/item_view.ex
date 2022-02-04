@@ -4,14 +4,6 @@ defmodule SiwappWeb.ItemView do
   alias Phoenix.HTML.FormData
   alias SiwappWeb.PageView
 
-  @doc """
-  Gets unitary_cost from item changeset to set it as hidden input so it gets to items' params (managed by LiveView)
-  """
-  @spec set_unitary_cost(map) :: binary
-  def set_unitary_cost(changes) do
-    Integer.to_string(Map.get(changes, :unitary_cost, 0))
-  end
-
   @spec get_existing_taxes(FormData.t()) :: [] | [tuple]
   def get_existing_taxes(fi) do
     Ecto.Changeset.get_field(fi.source, :taxes)
