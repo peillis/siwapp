@@ -64,7 +64,7 @@ defmodule Siwapp.RecurringInvoices do
 
     if invoices_to_generate(id) > 0 do
       for _i <- 1..invoices_to_generate(id),
-          do: if(rec_inv.enabled, do: Invoices.create(build_invoice_attrs(rec_inv)))
+          do: Invoices.create(build_invoice_attrs(rec_inv))
     end
   end
 
@@ -72,7 +72,6 @@ defmodule Siwapp.RecurringInvoices do
   defp build_invoice_attrs(rec_inv) do
     rec_inv
     |> Map.from_struct()
-    |> Map.filter(fn {key, _value} -> key in identical_fields() end)
     |> Map.put(:recurring_invoice_id, rec_inv.id)
     |> maybe_add_due_date(rec_inv.days_to_due)
     |> Map.put(:items, rec_inv.items)
@@ -87,25 +86,6 @@ defmodule Siwapp.RecurringInvoices do
       attrs
     end
   end
-
-  @spec identical_fields :: [atom]
-  defp identical_fields,
-    do: [
-      :name,
-      :identification,
-      :email,
-      :contact_person,
-      :invoicing_address,
-      :shipping_address,
-      :net_amount,
-      :gross_amount,
-      :notes,
-      :terms,
-      :meta_attributes,
-      :customer_id,
-      :series_id,
-      :currency
-    ]
 
   # Given a recurring_invoice id, returns the amount of invoices that should  be generated
   @spec invoices_to_generate(pos_integer()) :: integer
@@ -123,28 +103,34 @@ defmodule Siwapp.RecurringInvoices do
 
   # Given a recurring_invoice id, returns the amount of invoices that
   # should have been generated from starting_date until today, both included
+  # if recurring_invoice is enabled. Otherwise returns 0
   @spec theoretical_number_of_inv_generated(pos_integer()) :: non_neg_integer()
   defp theoretical_number_of_inv_generated(id) do
     rec_inv = get!(id)
-    today = Date.utc_today()
 
-    max_date =
-      [today, rec_inv.finishing_date]
-      |> Enum.reject(&is_nil(&1))
-      |> Enum.sort(Date)
-      |> List.first()
+    if rec_inv.enabled do
+      today = Date.utc_today()
 
-    number_using_dates =
-      number_of_invoices_in_between_dates(
-        rec_inv.starting_date,
-        rec_inv.period,
-        rec_inv.period_type,
-        max_date
-      )
+      max_date =
+        [today, rec_inv.finishing_date]
+        |> Enum.reject(&is_nil(&1))
+        |> Enum.sort(Date)
+        |> List.first()
 
-    if rec_inv.max_ocurrences,
-      do: min(number_using_dates, rec_inv.max_ocurrences),
-      else: number_using_dates
+      number_using_dates =
+        number_of_invoices_in_between_dates(
+          rec_inv.starting_date,
+          rec_inv.period,
+          rec_inv.period_type,
+          max_date
+        )
+
+      if rec_inv.max_ocurrences,
+        do: min(number_using_dates, rec_inv.max_ocurrences),
+        else: number_using_dates
+    else
+      0
+    end
   end
 
   # Returns the number of invoices that should have been generated from starting_date until max_date both included
