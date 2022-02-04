@@ -12,14 +12,14 @@
   </div>
 
   <div class="search-menu">
-    <%= case @path do %>
-      <% "/invoices"-> %>
+    <%= case @view do %>
+      <% SiwappWeb.InvoicesLive.Index -> %>
         <.live_component module={SiwappWeb.SearchLive.InvoiceComponent} id="invoice"/>
 
-      <% "/customers" -> %>
+      <% SiwappWeb.CustomerLive.Index -> %>
         <.live_component module={SiwappWeb.SearchLive.CustomerComponent} id="customer"/>
 
-      <% "/recurring_invoices" -> %>
+      <% SiwappWeb.RecurringInvoicesLive.Index -> %>
         <.live_component module={SiwappWeb.SearchLive.RecurringInvoiceComponent} id="recurring_invoice"/>
 
       <% _ -> %>
