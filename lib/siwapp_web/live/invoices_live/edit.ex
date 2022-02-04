@@ -71,8 +71,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def handle_event("add_item", _, socket) do
     items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items) ++
-        [Invoices.change_item(%Item{})]
+      Ecto.Changeset.get_field(socket.assigns.changeset, :items) ++
+        [Item.changeset(%Item{}, %{})]
 
     changeset =
       socket.assigns.changeset
@@ -83,7 +83,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
     items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items)
+      Ecto.Changeset.get_field(socket.assigns.changeset, :items)
       |> List.delete_at(String.to_integer(item_id))
 
     changeset =
