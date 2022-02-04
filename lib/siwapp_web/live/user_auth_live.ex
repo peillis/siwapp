@@ -1,4 +1,5 @@
 defmodule SiwappWeb.UserAuthLive do
+  @moduledoc false
   import Phoenix.LiveView
   alias Siwapp.Accounts
 
