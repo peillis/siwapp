@@ -9,7 +9,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   This module manages the customer index view
   """
 
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     {:ok,
      socket
      |> assign(:page, 0)
@@ -37,8 +37,13 @@ defmodule SiwappWeb.CustomerLive.Index do
   end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   def handle_event("search", params, socket) do
     customers = Search.filters(Customer, params["search_input"])
+=======
+  def handle_event("search", params, socket) do
+    customers = Customers.customers_filtered(params["search_input"])
+>>>>>>> 2203cba (Search by email, name or identification)
     {:noreply, assign(socket, :customers, customers)}
   end
 end

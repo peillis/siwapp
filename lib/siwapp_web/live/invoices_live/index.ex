@@ -13,11 +13,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:checked, MapSet.new())}
   end
 
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, invoices_filter(params))
+     |> assign(:invoices, Invoices.scroll_listing(0))
      |> assign(:checked, MapSet.new())}
   end
 
@@ -68,7 +68,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
+<<<<<<< HEAD
     invoices = Search.filters(Invoice, params["search_input"])
+=======
+    invoices = Invoices.invoices_filtered(params["search_input"])
+>>>>>>> 2203cba (Search by email, name or identification)
     {:noreply, assign(socket, :invoices, invoices)}
   end
 
@@ -90,13 +94,5 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
-  end
-
-  defp invoices_filter(params) do
-    if params == %{} do
-      Invoices.scroll_listing(0)
-    else
-      Invoices.invoices_filtered(params["value"])
-    end
   end
 end
