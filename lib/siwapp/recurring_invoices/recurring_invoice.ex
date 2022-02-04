@@ -26,6 +26,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           send_by_email: boolean,
           days_to_due: nil | integer,
           enabled: boolean,
+          save?: boolean,
           max_ocurrences: nil | pos_integer(),
           period: nil | pos_integer,
           period_type: nil | binary,
@@ -37,6 +38,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           terms: nil | binary,
           meta_attributes: nil | map,
           items: nil | [map],
+          items_transformed: nil | [Ecto.Changeset.t()],
           customer: Ecto.Association.NotLoaded.t() | Customer.t(),
           series: Ecto.Association.NotLoaded.t() | [Series.t()],
           invoices: Ecto.Association.NotLoaded.t() | [Invoice.t()],
@@ -70,7 +72,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     :meta_attributes,
     :items,
     :customer_id,
-    :series_id
+    :series_id,
+    :save?
   ]
 
   schema "recurring_invoices" do
@@ -97,6 +100,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :terms, :string
     field :meta_attributes, :map, default: %{}
     field :items, {:array, :map}, default: [%{}]
+    field :items_transformed, {:array, :map}, virtual: true
+    field :save?, :boolean, virtual: true, default: false
     belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :series, Series
     has_many :invoices, Invoice, on_replace: :delete
@@ -110,6 +115,10 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     recurring_invoice
     |> cast(attrs, @fields)
     |> maybe_find_customer_or_new()
+    |> transform_items()
+    |> validate_items()
+    |> calculate()
+    |> adequate_items()
     |> validate_required([:starting_date, :period, :period_type])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
@@ -121,11 +130,9 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 3)
-    |> calculate()
   end
 
   # Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
-  @spec calculate(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp calculate(changeset) do
     changeset
     |> set_net_amount()
@@ -135,8 +142,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   defp set_net_amount(changeset) do
     total_net_amount =
-      get_field(changeset, :items)
-      |> Enum.map(&Item.changeset(%Item{}, &1))
+      get_field(changeset, :items_transformed)
       |> Enum.map(&get_field(&1, :net_amount))
       |> Enum.sum()
       |> round()
@@ -146,8 +152,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   defp set_taxes_amounts(changeset) do
     total_taxes_amounts =
-      get_field(changeset, :items)
-      |> Enum.map(&Item.changeset(%Item{}, &1))
+      get_field(changeset, :items_transformed)
       |> Enum.map(&get_field(&1, :taxes_amount))
       |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
 
@@ -164,4 +169,44 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
     put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
   end
+
+  defp transform_items(changeset) do
+    items_transformed =
+      get_field(changeset, :items)
+      |> Enum.map(&Item.changeset(%Item{}, &1))
+
+    put_change(changeset, :items_transformed, items_transformed)
+  end
+
+  defp validate_items(changeset) do
+    items_valid? =
+      get_field(changeset, :items_transformed)
+      |> Enum.all?(& &1.valid?)
+
+    if items_valid? do
+      changeset
+    else
+      add_error(changeset, :items, "Items are invalid")
+    end
+  end
+
+  defp adequate_items(%{changes: %{save?: true}} = changeset) do
+    items_zip = Enum.zip(get_field(changeset, :items), get_field(changeset, :items_transformed))
+
+    items =
+      Enum.map(items_zip, fn {item, item_changeset} ->
+        item_virtual_to_unitary(item, item_changeset)
+      end)
+
+    put_change(changeset, :items, items)
+  end
+
+  defp adequate_items(changeset), do: changeset
+
+  @spec item_virtual_to_unitary(map, Ecto.Changeset.t()) :: map
+  defp item_virtual_to_unitary(item, item_changeset),
+    do:
+      item
+      |> Map.delete("virtual_unitary_cost")
+      |> Map.put("unitary_cost", "#{get_field(item_changeset, :unitary_cost)}")
 end
