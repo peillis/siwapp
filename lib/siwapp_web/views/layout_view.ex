@@ -55,13 +55,14 @@ defmodule SiwappWeb.LayoutView do
   defp which_component(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->
-        :invoice
+
+        SiwappWeb.SearchLive.InvoiceComponent
 
       SiwappWeb.CustomerLive.Index ->
-        :customer
+        SiwappWeb.SearchLive.CustomerComponent
 
       SiwappWeb.RecurringInvoicesLive.Index ->
-        :recurring_invoice
+        SiwappWeb.SearchLive.RecurringInvoiceComponent
     end
   end
 end
