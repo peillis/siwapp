@@ -1,12 +1,12 @@
-<form class="navbar-item is-active">
+<form class="navbar-item is-active" phx-submit="search">
   <div class="search-input">
     <button id="search-button" class="button" type="button" phx-click={JS.toggle(to: "#search-menu")}>
       <span class="icon is-small">
         <i class="fas fa-angle-down" aria-hidden="true"></i>
       </span>
     </button>
-    <input class="input" type="search" placeholder="Search..."/>
-    <button class="button is-info" type="submit">
+    <input name="search_input" class="input" type="search" placeholder="Search..."/>
+    <button class="button is-info">
       <span class="icon is-small is-right"><i class="fas fa-search"></i></span>
     </button>
   </div>
