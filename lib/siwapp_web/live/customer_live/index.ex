@@ -38,6 +38,7 @@ defmodule SiwappWeb.CustomerLive.Index do
 
   def handle_event("search", params, socket) do
     customers = Search.filters(Customer, params["search_input"])
+
     {:noreply, assign(socket, :customers, customers)}
   end
 end
