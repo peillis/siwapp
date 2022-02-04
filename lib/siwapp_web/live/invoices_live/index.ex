@@ -87,7 +87,4 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
-
-  @spec reference(pos_integer(), integer) :: binary
-  defp reference(series_id, number), do: "#{Commons.get_series(series_id).code}-#{number}"
 end

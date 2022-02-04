@@ -59,6 +59,4 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     |> MapSet.delete(0)
   end
 
-  @spec series_code(pos_integer()) :: binary
-  defp series_code(series_id), do: Commons.get_series(series_id).code
 end
