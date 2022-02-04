@@ -112,10 +112,8 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
-    |> maybe_find_customer_or_new()
     |> assign_issue_date()
     |> assign_due_date()
-    |> number_assignment_when_legal()
     |> validate_draft_enablement()
     |> validate_required_draft()
     |> validate_draft_has_not_number()
@@ -131,6 +129,12 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 100)
     |> calculate()
+  end
+
+  def final_changeset(changeset) do
+    changeset
+    |> maybe_find_customer_or_new()
+    |> number_assignment_when_legal()
   end
 
   defp assign_issue_date(changeset) do
@@ -198,7 +202,7 @@ defmodule Siwapp.Invoices.Invoice do
   @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
     series_id = get_change(changeset, :series_id)
-    proper_number = Commons.which_number_cache(series_id)
+    proper_number = Commons.which_number(series_id)
     put_change(changeset, :number, proper_number)
   end
 end

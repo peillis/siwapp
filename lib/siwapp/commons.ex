@@ -151,17 +151,6 @@ defmodule Siwapp.Commons do
     end
   end
 
-  def which_number_cache(series_id) do
-    case Cachex.get(:my_cache, series_id) do
-      {:ok, nil} ->
-        number = which_number(series_id)
-        Cachex.put(:my_cache, series_id, number, ttl: :timer.seconds(300))
-        number
-
-      {:ok, number} ->
-        number + 1
-    end
-  end
 
   @doc """
   Deletes a series.
