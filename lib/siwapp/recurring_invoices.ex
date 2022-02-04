@@ -19,6 +19,7 @@ defmodule Siwapp.RecurringInvoices do
     RecurringInvoice
     |> Query.paginate(page, per_page)
     |> Repo.all()
+    |> Repo.preload(:series)
   end
 
   @spec get!(pos_integer()) :: RecurringInvoice.t()
