@@ -95,7 +95,7 @@ defmodule Siwapp.RecurringInvoices do
 
   def recurring_invoices_filtered(value) do
     RecurringInvoice
-    |> Query.terms(value)
+    |> Query.name_email_or_id(value)
     |> Query.paginate(0, 20)
     |> Repo.all()
   end
