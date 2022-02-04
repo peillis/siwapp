@@ -101,7 +101,7 @@ defmodule Siwapp.Customers do
 
   def customers_filtered(value) do
     Customer
-    |> Query.terms(value)
+    |> Query.name_email_or_id(value)
     |> Query.paginate(0, 20)
     |> Repo.all()
   end
