@@ -17,6 +17,8 @@ defmodule Siwapp.Invoices.Statistics do
     |> Enum.map(&{&1.issue_date, &1.gross_amount})
   end
 
+  def get_accumulated_amount(invoices \\ Invoices.list()), do: sum_amounts(invoices)
+
   # We need this function so we have data (with amount = 0) for those days we have no invoices.
   # First, we create a series of graphic points with amounts of 0 for the given 'days'. Then we join
   # them with the actual data from database.
@@ -41,7 +43,7 @@ defmodule Siwapp.Invoices.Statistics do
   end
 
   @spec sum_amounts([map()]) :: non_neg_integer()
-  defp sum_amounts(day) do
-    Enum.sum(Enum.map(day, & &1.gross_amount))
+  defp sum_amounts(invoices) do
+    Enum.sum(Enum.map(invoices, & &1.gross_amount))
   end
 end
