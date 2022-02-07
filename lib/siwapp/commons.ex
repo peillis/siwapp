@@ -223,7 +223,7 @@ defmodule Siwapp.Commons do
     Repo.all(Tax)
   end
 
-  def list_taxes_cache do
+  def list_taxes(:cache) do
     case Cachex.get(:my_cache, :database_taxes) do
       {:ok, nil} ->
         taxes = list_taxes()

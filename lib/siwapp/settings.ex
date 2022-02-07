@@ -45,11 +45,11 @@ defmodule Siwapp.Settings do
   """
   def current_bundle, do: struct(SettingBundle, list_pairs())
 
-  def prepare_data_cache do
+  def prepare_data(:cache) do
     case Cachex.get(:my_cache, :settings_data) do
       {:ok, nil} ->
         settings_data = prepare_data()
-        Cachex.put(:my_cache, :settings_data, settings_data)
+        Cachex.put(:my_cache, :settings_data, settings_data, ttl: :timer.seconds(300))
         settings_data
 
       {:ok, settings_data} ->
