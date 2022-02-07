@@ -3,7 +3,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
   use SiwappWeb, :live_view
 
   alias Siwapp.Invoices
-  alias Phoenix.LiveView.JS
   alias SiwappWeb.GraphicHelpers
 
   def mount(_params, _session, socket) do
@@ -12,6 +11,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:page, 0)
      |> assign(:invoices, Invoices.scroll_listing(0))
      |> assign(:checked, MapSet.new())
+     |> assign(:summary_section, set_summary(:closed))
      |> assign(:page_title, "Invoices")}
   end
 
@@ -46,6 +46,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     end
   end
 
+  def handle_event("change-summary-state", _params, socket) do
+    if socket.assigns.summary_section.state == "opened" do
+      {:noreply, assign(socket, :summary_section, set_summary(:closed))}
+    else
+      {:noreply, assign(socket, :summary_section, set_summary(:opened))}
+    end
+  end
+
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
     socket.assigns.invoices
     |> MapSet.new(& &1.id)
@@ -71,4 +79,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> Enum.map(&GraphicHelpers.date_to_naive_type/1)
     |> GraphicHelpers.line_plot()
   end
+
+  defp set_summary(:opened), do: %{state: "opened", visibility: "is-block", icon: "fa-angle-up"}
+  defp set_summary(:closed), do: %{state: "closed", visibility: "is-hidden", icon: "fa-angle-down"}
 end
