@@ -23,11 +23,11 @@ defmodule Siwapp.Settings do
   """
   def prepare_data, do: struct(SettingBundle, Enum.zip(SettingBundle.labels(), values()))
 
-  def prepare_data_cache do
+  def prepare_data(:cache) do
     case Cachex.get(:my_cache, :settings_data) do
       {:ok, nil} ->
         settings_data = prepare_data()
-        Cachex.put(:my_cache, :settings_data, settings_data)
+        Cachex.put(:my_cache, :settings_data, settings_data, ttl: :timer.seconds(300))
         settings_data
 
       {:ok, settings_data} ->
