@@ -131,7 +131,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> calculate()
   end
 
-  def changeset(invoice, attrs , :full_changeset) do
+  def changeset(invoice, attrs, :full_changeset) do
     invoice
     |> changeset(attrs)
     |> maybe_find_customer_or_new()
@@ -153,7 +153,6 @@ defmodule Siwapp.Invoices.Invoice do
       issue_date = get_field(changeset, :issue_date)
       days_to_due = Siwapp.Settings.value(:days_to_due)
       due_date = Date.add(issue_date, String.to_integer(days_to_due))
-
       put_change(changeset, :due_date, due_date)
     end
   end
