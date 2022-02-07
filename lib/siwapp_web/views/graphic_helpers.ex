@@ -15,9 +15,18 @@ defmodule SiwappWeb.GraphicHelpers do
       smoothed: false
     ]
 
+    margins = %{left: 35, right: 15, top: 10, bottom: 20}
+
     data
     |> Dataset.new()
-    |> Plot.new(LinePlot, 500, 200, options)
+    |> Plot.new(LinePlot, 500, 150, options)
+    |> Map.put(:margins, margins)
     |> Plot.to_svg()
+  end
+
+  # This is necessary because Contex.DateScale only accepts DateTime or NaiveDateTime types.
+  @spec date_to_naive_type({Date.t(), integer()}) :: {NaiveDateTime.t(), integer()}
+  def date_to_naive_type({date, amount}) do
+    {NaiveDateTime.new!(date, ~T[00:00:00]), amount}
   end
 end
