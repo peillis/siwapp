@@ -241,7 +241,7 @@ defmodule Siwapp.Invoices.Invoice do
   @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
     series_id = get_change(changeset, :series_id)
-    proper_number = Commons.which_number(series_id)
+    proper_number = Commons.next_number_in_series(series_id)
     put_change(changeset, :number, proper_number)
   end
 end
