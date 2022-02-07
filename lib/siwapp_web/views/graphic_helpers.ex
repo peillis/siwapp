@@ -23,5 +23,4 @@ defmodule SiwappWeb.GraphicHelpers do
     |> Map.put(:margins, margins)
     |> Plot.to_svg()
   end
-
 end
