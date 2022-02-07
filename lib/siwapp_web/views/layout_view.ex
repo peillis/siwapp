@@ -56,18 +56,10 @@ defmodule SiwappWeb.LayoutView do
   defp which_component(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->
-<<<<<<< HEAD
         SiwappWeb.SearchLive.InvoiceComponent
 
       SiwappWeb.CustomerLive.Index ->
         nil
-=======
-
-        SiwappWeb.SearchLive.InvoiceComponent
-
-      SiwappWeb.CustomerLive.Index ->
-        SiwappWeb.SearchLive.CustomerComponent
->>>>>>> d9e3f3e (Get the component from the socket)
 
       SiwappWeb.RecurringInvoicesLive.Index ->
         SiwappWeb.SearchLive.RecurringInvoiceComponent
