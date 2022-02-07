@@ -141,8 +141,8 @@ defmodule Siwapp.Commons do
     update_default_series(default_series, true)
   end
 
-  @spec which_number(pos_integer()) :: integer
-  def which_number(series_id) do
+  @spec next_number_in_series(pos_integer()) :: integer
+  def next_number_in_series(series_id) do
     query = InvoiceQuery.last_number_with_series_id(Invoice, series_id)
 
     case Repo.one(query) do
