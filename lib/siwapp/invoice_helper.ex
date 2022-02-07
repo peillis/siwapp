@@ -22,6 +22,17 @@ defmodule Siwapp.InvoiceHelper do
     end
   end
 
+  @doc """
+  Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
+  """
+  @spec calculate(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def calculate(changeset) do
+    changeset
+    |> set_net_amount()
+    |> set_taxes_amounts()
+    |> set_gross_amount()
+  end
+
   defp find_customer_or_new(changeset) do
     identification = get_field(changeset, :identification)
     name = get_field(changeset, :name)
@@ -55,4 +66,34 @@ defmodule Siwapp.InvoiceHelper do
 
   defp add_error(changeset, {key, [{message, opts}]}),
     do: add_error(changeset, key, message, opts)
+
+  defp set_net_amount(changeset) do
+    total_net_amount =
+      get_field(changeset, :items)
+      |> Enum.map(& &1.net_amount)
+      |> Enum.sum()
+      |> round()
+
+    put_change(changeset, :net_amount, total_net_amount)
+  end
+
+  defp set_taxes_amounts(changeset) do
+    total_taxes_amounts =
+      get_field(changeset, :items)
+      |> Enum.map(& &1.taxes_amount)
+      |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
+
+    put_change(changeset, :taxes_amounts, total_taxes_amounts)
+  end
+
+  defp set_gross_amount(changeset) do
+    net_amount = get_field(changeset, :net_amount)
+
+    taxes_amount =
+      get_field(changeset, :taxes_amounts)
+      |> Map.values()
+      |> Enum.sum()
+
+    put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
+  end
 end
