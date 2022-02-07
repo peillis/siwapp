@@ -24,9 +24,4 @@ defmodule SiwappWeb.GraphicHelpers do
     |> Plot.to_svg()
   end
 
-  # This is necessary because Contex.DateScale only accepts DateTime or NaiveDateTime types.
-  @spec date_to_naive_type({Date.t(), integer()}) :: {NaiveDateTime.t(), integer()}
-  def date_to_naive_type({date, amount}) do
-    {NaiveDateTime.new!(date, ~T[00:00:00]), amount}
-  end
 end
