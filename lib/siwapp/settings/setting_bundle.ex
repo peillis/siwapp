@@ -1,7 +1,11 @@
 defmodule Siwapp.Settings.SettingBundle do
   import Ecto.Changeset
 
-  @moduledoc false
+  @moduledoc """
+  SettingBundle is the data structure to manage SettingsController form operations. It's a struct, whose keys consist of
+  all current settings available to change via form or terminal, updating settings values' of those already stored in db
+  (which are initialized in the seeds)
+  """
 
   @fields_keywordlist [
     company: :string,
