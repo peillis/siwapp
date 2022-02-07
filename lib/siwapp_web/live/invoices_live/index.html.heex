@@ -17,9 +17,9 @@
 <div class="mb-5">
   <div class="is-flex is-justify-content-space-between">
     <h1><%= @page_title %><span class="subtitle is-5"> (<%= length(@invoices) %> Found)</span></h1>
-    <header class="card card-header" phx-click="change-summary-state">
+    <header class="card card-header is-clickable is-unselectable" phx-click="change-summary-state">
       <span class="card-header-title is-size-4">
-        $ 258,481.00
+        <%= SiwappWeb.PageView.set_currency(Invoices.Statistics.get_accumulated_amount(), nil) %>
       </span>
       <button class="card-header-icon" aria-label="more options">
         <span class="icon">
