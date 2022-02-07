@@ -73,6 +73,14 @@ p.control.has-dropdown {
   width: 100%;
 }
 
+.search-menu-content label{
+  font-size: 14px;
+}
+
+.search-menu-content .buttons{
+  margin-top: 0.5rem;
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile {
     display: flex;

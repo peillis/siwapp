@@ -31,7 +31,37 @@ defmodule SiwappWeb.LayoutView do
     new_button("New Invoice", Routes.invoices_edit_path(conn, :new))
   end
 
+  def render_search_live(%Phoenix.LiveView.Socket{} = socket) do
+    views_with_search = [
+      SiwappWeb.InvoicesLive.Index,
+      SiwappWeb.CustomerLive.Index,
+      SiwappWeb.RecurringInvoicesLive.Index
+    ]
+
+    if socket.view in views_with_search do
+      component = which_component(socket.view)
+      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", component: component)
+    end
+  end
+
+  def render_search_live(%Plug.Conn{}) do
+    nil
+  end
+
   defp new_button(text, to) do
     live_redirect(text, to: to, method: :get, class: "button is-primary")
+  end
+
+  defp which_component(view) do
+    case view do
+      SiwappWeb.InvoicesLive.Index ->
+        :invoice
+
+      SiwappWeb.CustomerLive.Index ->
+        :customer
+
+      SiwappWeb.RecurringInvoicesLive.Index ->
+        :recurring_invoice
+    end
   end
 end
