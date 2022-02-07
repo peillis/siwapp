@@ -124,8 +124,8 @@ defmodule Siwapp.Invoices do
     Invoice
     |> InvoiceQuery.list_past_due()
     |> Query.paginate(page, per_page)
+    |> Query.list_preload(:series)
     |> Repo.all()
-    |> Repo.preload(:series)
   end
 
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
