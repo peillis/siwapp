@@ -37,5 +37,4 @@ defmodule SiwappWeb.PageLive.Index do
       )
     }
   end
-
 end

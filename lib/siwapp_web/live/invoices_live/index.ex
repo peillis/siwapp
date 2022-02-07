@@ -86,5 +86,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   defp set_summary(:opened), do: %{state: "opened", visibility: "is-block", icon: "fa-angle-up"}
-  defp set_summary(:closed), do: %{state: "closed", visibility: "is-hidden", icon: "fa-angle-down"}
+
+  defp set_summary(:closed),
+    do: %{state: "closed", visibility: "is-hidden", icon: "fa-angle-down"}
 end
