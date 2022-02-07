@@ -74,9 +74,9 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(0)
   end
 
-  defp summary_chart() do
-    Invoices.Statistics.get_data()
-    |> Enum.map(&GraphicHelpers.date_to_naive_type/1)
+  defp summary_chart(invoices) do
+    Invoices.Statistics.get_data_for_a_month(invoices)
+    |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot()
   end
 

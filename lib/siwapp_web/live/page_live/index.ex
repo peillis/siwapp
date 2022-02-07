@@ -18,8 +18,8 @@ defmodule SiwappWeb.PageLive.Index do
   """
   @spec dashboard_chart :: {:safe, [...]}
   def dashboard_chart do
-    Invoices.Statistics.get_data()
-    |> Enum.map(&GraphicHelpers.date_to_naive_type/1)
+    Invoices.Statistics.get_data_for_a_month()
+    |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot()
   end
 

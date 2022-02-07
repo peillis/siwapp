@@ -6,15 +6,14 @@ defmodule Siwapp.Invoices.Statistics do
 
   @doc """
   Returns a list of tuples, each containing the accumulated amount of money from all the invoices
-  per day. You can pass a param 'days' with the time scale you want this data to be scaled to (31
-  by default).
+  per day, for the given selection of 'invoices'.
   """
-  @spec get_data(pos_integer()) :: [tuple()]
-  def get_data(days \\ 31) do
-    Invoices.list()
+  @spec get_data_for_a_month(pos_integer()) :: [tuple()]
+  def get_data_for_a_month(invoices \\ Invoices.list()) do
+    invoices
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
-    |> set_time_scale(days)
+    |> set_time_scale(31)
     |> Enum.map(&{&1.issue_date, &1.gross_amount})
   end
 
