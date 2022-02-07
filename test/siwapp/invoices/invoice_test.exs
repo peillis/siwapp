@@ -15,7 +15,6 @@ defmodule Siwapp.InvoiceTest do
     {:ok, tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
     {:ok, tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
     settings_fixture()
-
     %{series_id: series.id, taxes: [tax1, tax2]}
   end
 
@@ -170,7 +169,7 @@ defmodule Siwapp.InvoiceTest do
     test "Due date is today + 'Days to due' value set in Settings if none is provided", %{
       today: today
     } do
-      Settings.apply_user_settings(%{"days_to_due" => "5"})
+      Settings.update({:days_to_due, "5"})
 
       assert invoice_fixture().due_date == Date.add(today, 5)
     end
