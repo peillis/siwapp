@@ -104,7 +104,7 @@ defmodule SiwappWeb.Router do
   scope "/", SiwappWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live_session :user do
+    live_session :user, on_mount: SiwappWeb.UserAuthLive do
       live "/", PageLive.Index, :index
 
       get "/users/settings", UserSettingsController, :edit
