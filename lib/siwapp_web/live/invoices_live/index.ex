@@ -4,6 +4,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.{Invoices, Search}
   alias Phoenix.LiveView.JS
+  alias SiwappWeb.GraphicHelpers
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -68,5 +69,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  defp summary_chart() do
+    Invoices.Statistics.get_data()
+    |> Enum.map(&GraphicHelpers.date_to_naive_type/1)
+    |> GraphicHelpers.line_plot()
   end
 end
