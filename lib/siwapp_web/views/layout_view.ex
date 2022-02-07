@@ -32,13 +32,13 @@ defmodule SiwappWeb.LayoutView do
   end
 
   def render_search_live(%Phoenix.LiveView.Socket{} = socket) do
-    view = [
+    views_with_search = [
       SiwappWeb.InvoicesLive.Index,
       SiwappWeb.CustomerLive.Index,
       SiwappWeb.RecurringInvoicesLive.Index
     ]
 
-    if socket.view in view do
+    if socket.view in views_with_search do
       component = which_component(socket.view)
       live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", component: component)
     end
