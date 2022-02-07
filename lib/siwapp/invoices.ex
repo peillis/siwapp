@@ -51,8 +51,7 @@ defmodule Siwapp.Invoices do
   @spec create(map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %Invoice{}
-    |> Invoice.changeset(attrs)
-    |> Invoice.final_changeset()
+    |> Invoice.changeset(attrs, :full_changeset)
     |> Repo.insert()
   end
 
@@ -63,8 +62,7 @@ defmodule Siwapp.Invoices do
   @spec update(Invoice.t(), map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def update(%Invoice{} = invoice, attrs) do
     invoice
-    |> Invoice.changeset(attrs)
-    |> Invoice.final_changeset()
+    |> Invoice.changeset(attrs, :full_changeset)
     |> Repo.update()
   end
 
@@ -124,8 +122,7 @@ defmodule Siwapp.Invoices do
 
   def total_change(%Invoice{} = invoice, attrs \\ %{}) do
     invoice
-    |> Invoice.changeset(attrs)
-    |> Invoice.final_changeset()
+    |> Invoice.changeset(attrs, :full_changeset)
   end
 
   def list_past_due(page, per_page \\ 20) do
