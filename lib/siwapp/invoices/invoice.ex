@@ -130,8 +130,9 @@ defmodule Siwapp.Invoices.Invoice do
     |> calculate()
   end
 
-  def final_changeset(changeset) do
-    changeset
+  def changeset(invoice, attrs , :full_changeset) do
+    invoice
+    |> changeset(attrs)
     |> maybe_find_customer_or_new()
     |> number_assignment_when_legal()
   end
