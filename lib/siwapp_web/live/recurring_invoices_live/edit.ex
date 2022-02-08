@@ -3,8 +3,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias Phoenix.HTML.FormData
+  alias SiwappWeb.ItemView
+
   alias Siwapp.Commons
-  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
@@ -41,13 +42,13 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:customer_name, recurring_invoice.name)
   end
 
-  def handle_event("save", params, socket) do
-    rec_params = build_rec_params(params)
+  def handle_event("save", %{ "recurring_invoice" => params }, socket) do
+    params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
 
     result =
       case socket.assigns.live_action do
-        :new -> RecurringInvoices.create(rec_params)
-        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, rec_params)
+        :new -> RecurringInvoices.create(params)
+        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, params)
       end
 
     case result do
@@ -64,32 +65,28 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", params, socket) do
-    rec_params = build_rec_params(params)
-    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, rec_params)
+  def handle_event("validate", %{ "recurring_invoice" => params = %{ "items" => _items }}, socket) do
+    params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
+    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("add_item", _, socket) do
-    items = Ecto.Changeset.get_field(socket.assigns.changeset, :items) ++
-    [Item.changeset(%Item{}, %{})]
+  def handle_event("validate", %{ "recurring_invoice" => params}, socket) do
+    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items, items)
+    {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+
+  def handle_event("add_item", _, socket) do
+    changeset = ItemView.add_item(socket.assigns.changeset)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    items =
-      Ecto.Changeset.get_field(socket.assigns.changeset, :items)
-      |> List.delete_at(String.to_integer(item_id))
-
-    changeset =
-      socket.assigns.changeset
-      |> Map.put(:changes, %{items: items})
+    changeset = ItemView.remove_item(socket.assigns.changeset, String.to_integer(item_id))
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -120,34 +117,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     %{
       fi
       | id: "recurring_invoice_items_#{index}",
-        name: "items[#{index}]",
+        name: "recurring_invoice[items][#{index}]",
         index: index,
         options: [],
         errors: fi.source.errors
     }
   end
 
-  @spec build_rec_params(map) :: map
-  defp build_rec_params(params) do
-    taxes_params = get_taxes_params(params)
-
-    items =
-      params
-      |> get_items_params()
-      |> merge_taxes_with_item(taxes_params)
-
-    Map.put(params["recurring_invoice"], "items", items)
-  end
-
-  @spec get_items_params(map) :: map
-  defp get_items_params(params), do: params["items"] || %{}
-  @spec get_taxes_params(map) :: map
-  defp get_taxes_params(params), do: params["invoice"]["items"] || %{}
-
-  @spec merge_taxes_with_item(map, map) :: [] | [map]
-  defp merge_taxes_with_item(items_params, taxes_params),
-    do:
-      Enum.map(items_params, fn {index, item} ->
-        Map.merge(item, taxes_params[index] || %{})
-      end)
 end

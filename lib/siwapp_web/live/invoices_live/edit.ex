@@ -3,6 +3,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias SiwappWeb.InvoicesLive.CustomerComponent
+  alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
   alias Siwapp.Invoices
@@ -65,30 +66,17 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
-
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_event("add_item", _, socket) do
-    items =
-      Ecto.Changeset.get_field(socket.assigns.changeset, :items) ++
-        [Item.changeset(%Item{}, %{})]
-
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items, items)
+    changeset = ItemView.add_item(socket.assigns.changeset)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    items =
-      Ecto.Changeset.get_field(socket.assigns.changeset, :items)
-      |> List.delete_at(String.to_integer(item_id))
-
-    changeset =
-      socket.assigns.changeset
-      |> Map.put(:changes, %{items: items})
+    changeset = ItemView.remove_item(socket.assigns.changeset, String.to_integer(item_id))
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -100,4 +88,5 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
+
 end
