@@ -16,7 +16,9 @@ defmodule Siwapp.Invoices do
   @spec list(none() | atom()) :: [Invoice.t()]
   def list do
     # query = Query.invoices()
-    Repo.all(Invoice)
+    Invoice
+    |> order_by(desc: :updated_at)
+    |> Repo.all()
   end
 
   def list(assoc) do
@@ -42,6 +44,7 @@ defmodule Siwapp.Invoices do
     Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
     end)
+    |> order_by(desc: :updated_at)
     |> Repo.all()
   end
 
