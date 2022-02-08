@@ -1,76 +1,76 @@
-    <%= for fi <- @inputs_for do %>
-      <div class="columns is-multiline-mobile is-1 is-variable">
-        <div class="column is-4-desktop is-full-mobile">
-          <%= label fi, :description, class: "label" %>
-          <p class="control">
-            <%= text_input fi, :description, class: "input"%>
-          </p>
-          <%= error_tag fi, :description %>
-        </div>
-        <div class="column is-1-desktop is-half-mobile">
-          <%= label fi, :quantity, class: "label" %>
-          <p class="control">
-            <%= text_input fi, :quantity, class: "input" %>
-          </p>
-          <%= error_tag fi, :quantity %>
-
-        </div>
-        <div class="column is-1-desktop is-half-mobile">
-          <%= label fi, :virtual_unitary_cost, "Price", class: "label" %>
-          <p class="control">
-            <%= text_input fi, :virtual_unitary_cost, class: "input" %>
-          </p>
-          <%= error_tag fi, :virtual_unitary_cost%>
-        </div>
-        <div class="column is-1-desktop is-half-mobile">
-          <%= label fi, :discount, class: "label" %>
-          <p class="control">
-            <%= text_input fi, :discount, class: "input" %>
-          </p>
-          <%= error_tag fi, :discount %>
-        </div>
-        <div class="column is-3-desktop is-half-mobile">
-          <label class="label">Taxes</label>
-            <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.index}"} name={"invoice[items][#{fi.index}][taxes]"} selected={get_existing_taxes(fi)} options={Siwapp.Commons.list_taxes_for_multiselect()} />
-        </div>
-        <div class="column is-1-desktop is-full-mobile">
-          <label class="label">Total</label>
-          <p class="control">
-            <a class="button is-static is-fullwidth">
-              <%= item_net_amount(fi) %>
-            </a>
-          </p>
-        </div>
-        <div class="column is-narrow-desktop">
-          <label class="label is-invisible is-hidden-mobile">invisible</label>
-          <p class="control">
-            <%= link "Remove Line", to: "#", phx_click: "remove_item", phx_value_item_id: fi.index, class: "button is-danger is-light is-fullwidth" %>
-          </p>
-        </div>
-      </div>
-    <% end %>
-    <div class="columns is-desktop">
-      <div class="column is-2">
-        <%= link "Add Line", to: "#", phx_click: "add_item", class: "button is-dark is-fullwidth" %>
-      </div>
-      <div class="column is-3 is-offset-8">
-        <table class="table is-fullwidth">
-          <tbody>
-            <tr>
-              <th>Subtotal:</th>
-              <td><%= net_amount(@changeset) %></td>
-            </tr>
-            <%= for {tax_name, tax_value} <- taxes_amounts(@changeset) do %>
-            <tr>
-              <th><%= tax_name %></th>
-              <td><%= tax_value %></td>
-            </tr>
-            <% end %>
-            <tr>
-              <th>TOTAL</th>
-              <td><%= gross_amount(@changeset) %></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<%= for fi <- @inputs_for do %>
+  <div class="columns is-multiline-mobile is-1 is-variable">
+    <div class="column is-4-desktop is-full-mobile">
+      <%= label fi, :description, class: "label" %>
+      <p class="control">
+        <%= text_input fi, :description, class: "input"%>
+      </p>
+      <%= error_tag fi, :description %>
     </div>
+    <div class="column is-1-desktop is-half-mobile">
+      <%= label fi, :quantity, class: "label" %>
+      <p class="control">
+        <%= text_input fi, :quantity, class: "input" %>
+      </p>
+      <%= error_tag fi, :quantity %>
+
+    </div>
+    <div class="column is-1-desktop is-half-mobile">
+      <%= label fi, :virtual_unitary_cost, "Price", class: "label" %>
+      <p class="control">
+        <%= text_input fi, :virtual_unitary_cost, class: "input" %>
+      </p>
+      <%= error_tag fi, :virtual_unitary_cost%>
+    </div>
+    <div class="column is-1-desktop is-half-mobile">
+      <%= label fi, :discount, class: "label" %>
+      <p class="control">
+        <%= text_input fi, :discount, class: "input" %>
+      </p>
+      <%= error_tag fi, :discount %>
+    </div>
+    <div class="column is-3-desktop is-half-mobile">
+      <label class="label">Taxes</label>
+      <.live_component module={SiwappWeb.MultiselectComponent} id={"ms-#{fi.index}"} name={"#{@f.id}[items][#{fi.index}][taxes]"} selected={get_existing_taxes(fi)} options={Siwapp.Commons.list_taxes_for_multiselect()} />
+    </div>
+    <div class="column is-1-desktop is-full-mobile">
+      <label class="label">Total</label>
+      <p class="control">
+        <a class="button is-static is-fullwidth">
+          <%= item_net_amount(fi) %>
+        </a>
+      </p>
+    </div>
+    <div class="column is-narrow-desktop">
+      <label class="label is-invisible is-hidden-mobile">invisible</label>
+      <p class="control">
+        <%= link "Remove Line", to: "#", phx_click: "remove_item", phx_value_item_id: fi.index, class: "button is-danger is-light is-fullwidth" %>
+      </p>
+    </div>
+  </div>
+<% end %>
+<div class="columns is-desktop">
+  <div class="column is-2">
+    <%= link "Add Line", to: "#", phx_click: "add_item", class: "button is-dark is-fullwidth" %>
+  </div>
+  <div class="column is-3 is-offset-8">
+    <table class="table is-fullwidth">
+      <tbody>
+        <tr>
+          <th>Subtotal:</th>
+          <td><%= net_amount(@changeset) %></td>
+        </tr>
+        <%= for {tax_name, tax_value} <- taxes_amounts(@changeset) do %>
+          <tr>
+            <th><%= tax_name %></th>
+            <td><%= tax_value %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <th>TOTAL</th>
+          <td><%= gross_amount(@changeset) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
