@@ -68,11 +68,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
-<<<<<<< HEAD
     invoices = Search.filters(Invoice, params["search_input"])
-=======
-    invoices = Invoices.invoices_filtered(params["search_input"])
->>>>>>> 2203cba (Search by email, name or identification)
+
     {:noreply, assign(socket, :invoices, invoices)}
   end
 
