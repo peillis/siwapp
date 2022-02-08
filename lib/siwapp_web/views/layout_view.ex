@@ -57,7 +57,6 @@ defmodule SiwappWeb.LayoutView do
       SiwappWeb.InvoicesLive.Index ->
         SiwappWeb.SearchLive.InvoiceComponent
 
-
       SiwappWeb.CustomerLive.Index ->
         SiwappWeb.SearchLive.CustomerComponent
 
