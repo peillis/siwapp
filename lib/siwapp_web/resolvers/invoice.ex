@@ -2,8 +2,8 @@ defmodule SiwappWeb.Resolvers.Invoice do
   @moduledoc false
 
   alias Siwapp.Invoices
-  alias SiwappWeb.Resolvers.Errors
   alias SiwappWeb.PageView
+  alias SiwappWeb.Resolvers.Errors
 
   def list(%{customer_id: customer_id}, _resolution) do
     invoice =
