@@ -10,93 +10,29 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Siwapp.{Commons, Customers, Invoices, RecurringInvoices, Settings, Templates}
+alias Siwapp.{Repo, Accounts, Commons, Customers, Invoices, RecurringInvoices, Settings, Templates}
 
-today = Date.utc_today()
-
-{:ok, file} = File.read("#{__DIR__}/fixtures/print_default.html.heex")
-
-customers = [
-  %{name: "Pablo"},
-  %{name: "Rodri"}
+models = [
+  Commons.Series,
+  Commons.Tax,
+  Customers.Customer,
+  Invoices.Invoice,
+  Invoices.Item,
+  RecurringInvoices.RecurringInvoice,
+  Settings.Setting
 ]
 
-series = [
-  %{name: "A-series", code: "A"}
-]
+Enum.each(models, &Repo.delete_all(&1))
 
-taxes = [
-  %{name: "VAT", value: 21, default: true},
-  %{name: "RETENTION", value: -15}
-]
+# SEEDING ACCOUNTS
+Enum.each(1..3, fn _ ->
+  Accounts.register_user(%{
+    email: Faker.Internet.email(),
+    password: Faker.String.base64(12)
+  })
+end)
 
-recurring_invoices = [
-  %{
-    period: 3,
-    period_type: "Monthly",
-    starting_date: ~D[2021-10-08],
-    customer_id: 1,
-    series_id: 1
-  }
-]
-
-invoices = [
-  %{
-    name: "First_Invoice",
-    terms: "A term",
-    contact_person: "Gabriel",
-    email: "info@doofinder.com",
-    identification: "B000A2",
-    invoicing_address: "Walabee 42, Sidney",
-    paid: true,
-    sent_by_email: true,
-    number: 1,
-    issue_date: Date.add(today, -2),
-    due_date: Date.add(today, 30),
-    series_id: 1,
-    customer_id: 1,
-    currency: "USD"
-  },
-  %{
-    name: "Second_Invoice",
-    gross_amount: 400,
-    number: 2,
-    issue_date: today,
-    due_date: Date.add(today, 30),
-    series_id: 1,
-    customer_id: 2,
-    currency: "USD"
-  },
-  %{
-    name: "Third_Invoice",
-    gross_amount: 1200,
-    sent_by_email: true,
-    number: 3,
-    issue_date: today,
-    due_date: Date.add(today, 30),
-    series_id: 1,
-    customer_id: 1,
-    currency: "USD"
-  }
-]
-
-recurring_invoices = [
-  %{
-    period: 1,
-    period_type: "Monthly",
-    starting_date: ~D[2022-01-07],
-    series_id: 1,
-    customer_id: 1
-  },
-  %{
-    period: 2,
-    period_type: "Yearly",
-    starting_date: ~D[2022-01-10],
-    series_id: 1,
-    customer_id: 2
-  }
-]
-
+# SEEDING SETTINGS
 settings = [
   company: "Doofinder",
   company_vat_id: "1fg5t7",
@@ -104,31 +40,103 @@ settings = [
   company_email: "demo@example.com",
   company_website: "www.mywebsite.com",
   currency: "USD",
-  days_to_due: "0",
+  days_to_due: "#{Faker.random_between(0, 5)}",
   company_address: "Newton Avenue, 32. NY",
   legal_terms: "Clauses of our contract"
 ]
 
-templates = [
-  %{
-    name: "Print Default",
-    template: file
-  }
-]
-
-items = [
-  %{
-    quantity: 1,
-    description: "first description",
-    unitary_cost: 42_000
-  }
-]
-
 Enum.each(settings, &Settings.create(&1))
-Enum.each(customers, &Customers.create(&1))
+
+# SEEDING TEMPLATES
+{:ok, file} = File.read("#{__DIR__}/fixtures/print_default.html.heex")
+
+Templates.create(%{
+  name: "Print Default",
+  template: file
+})
+
+# SEEDING SERIES
+series = [
+  %{name: "A-series", code: "A"},
+  %{name: "B-series", code: "B"},
+  %{name: "C-series", code: "C"}
+]
+
 Enum.each(series, &Commons.create_series(&1))
+
+# SEEDING TAXES
+taxes = [
+  %{name: "VAT", value: 21, default: true},
+  %{name: "RETENTION", value: -15}
+]
+
 Enum.each(taxes, &Commons.create_tax(&1))
-Enum.each(invoices, &Invoices.create(&1))
+
+# SEEDING CUSTOMERS
+customers = Enum.map(0..15, fn _i -> %{name: Faker.Person.name(), id: Faker.Code.issn()} end)
+
+Enum.each(
+  customers,
+  &Customers.create(%{
+    name: &1.name,
+    identification: &1.id,
+    email: Faker.Internet.email(),
+    contact_person: Faker.Person.name(),
+    invoicing_address:
+      "#{Faker.Address.street_address()}\n#{Faker.Address.postcode()} #{Faker.Address.country()}"
+  })
+)
+
+# SEEDING INVOICES
+currencies = ["USD", "EUR", "GBP", nil]
+booleans = [true, false]
+invoices = Enum.map(0..30, fn _i -> %{customer: Enum.random(customers), issue_date: Faker.Date.backward(31)} end)
+
+Enum.each(
+  invoices,
+  &Invoices.create(%{
+    name: &1.customer.name,
+    identification: &1.customer.id,
+    paid: Enum.random(booleans),
+    sent_by_email: Enum.random(booleans),
+    issue_date: &1.issue_date,
+    due_date: Date.add(&1.issue_date, Faker.random_between(1, 31)),
+    series_id: Faker.random_between(1, 3),
+    currency: Enum.random(currencies),
+    items: [%{
+      quantity: Faker.random_between(1, 2),
+      description: "#{Faker.App.name()} App Development",
+      unitary_cost: Faker.random_between(10_000, 1_000_000),
+      taxes: ["VAT", "RETENTION"]
+    }]
+  })
+)
+
+# SEEDING RECURRING INVOICES
+today = Date.utc_today()
+
+recurring_invoices = [
+  %{
+    period: 1,
+    period_type: "Monthly",
+    starting_date: Date.add(today, -60),
+    series_id: 1,
+    customer_id: 1
+  },
+  %{
+    period: 2,
+    period_type: "Yearly",
+    starting_date: Date.add(today, -400),
+    series_id: 1,
+    customer_id: 2
+  },
+  %{
+    period: 3,
+    period_type: "Monthly",
+    starting_date: Date.add(today, -20),
+    series_id: 1,
+    customer_id: 4
+  }
+]
+
 Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
-Enum.each(templates, &Templates.create(&1))
-Enum.each(items, &Invoices.create_item(Invoices.get!(1), &1))
