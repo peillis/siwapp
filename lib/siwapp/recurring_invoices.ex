@@ -18,6 +18,7 @@ defmodule Siwapp.RecurringInvoices do
   def scroll_listing(page, per_page \\ 20) do
     RecurringInvoice
     |> Query.paginate(page, per_page)
+    |> Query.list_preload(:series)
     |> Repo.all()
   end
 

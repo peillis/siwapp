@@ -27,6 +27,7 @@ defmodule Siwapp.Invoices do
   def scroll_listing(page, per_page \\ 20) do
     Invoice
     |> Query.paginate(page, per_page)
+    |> Query.list_preload(:series)
     |> Repo.all()
   end
 
@@ -123,6 +124,7 @@ defmodule Siwapp.Invoices do
     Invoice
     |> InvoiceQuery.list_past_due()
     |> Query.paginate(page, per_page)
+    |> Query.list_preload(:series)
     |> Repo.all()
   end
 

@@ -32,7 +32,7 @@
     <%= for invoice <- @invoices do %>
       <tr phx-click="redirect" phx-value-id={invoice.id} class="is-clickable">
         <td><input type="checkbox" phx-click="click_checkbox" checked={Enum.member?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
-        <td><%=invoice.series_id%></td>
+        <td><%= "#{invoice.series.code}-#{invoice.number}" %></td>
         <td><%= invoice.name %></td>
         <td><%= invoice.issue_date %></td>
 
