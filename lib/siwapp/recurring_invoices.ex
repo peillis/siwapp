@@ -31,7 +31,8 @@ defmodule Siwapp.RecurringInvoices do
   @spec create(map) :: {:ok, RecurringInvoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %RecurringInvoice{}
-    |> RecurringInvoice.changeset(attrs, :save)
+    |> RecurringInvoice.changeset(attrs)
+    |> RecurringInvoice.untransform_items()
     |> Repo.insert()
   end
 
@@ -39,7 +40,8 @@ defmodule Siwapp.RecurringInvoices do
           {:ok, RecurringInvoice.t()} | {:error, Ecto.Changeset.t()}
   def update(recurring_invoice, attrs) do
     recurring_invoice
-    |> RecurringInvoice.changeset(attrs, :save)
+    |> RecurringInvoice.changeset(attrs)
+    |> RecurringInvoice.untransform_items()
     |> Repo.update()
   end
 
