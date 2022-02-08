@@ -8,6 +8,7 @@ defmodule Siwapp.Query do
     offset_by = per_page * page
 
     query
+    |> order_by(desc: :updated_at)
     |> limit(^per_page)
     |> offset(^offset_by)
   end
@@ -19,6 +20,7 @@ defmodule Siwapp.Query do
 
   def list_preload(query, term) do
     preload(query, ^term)
+    |> order_by(desc: :updated_at)
   end
 
   def search_in_string(query, string_field, search) do
