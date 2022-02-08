@@ -58,14 +58,11 @@ defmodule Siwapp.RecurringInvoices do
   @doc """
   Generates invoices associated to recurring_invoice if this is enabled
   """
-  @spec generate_invoices(pos_integer()) :: [{:ok, Invoice.t()}] | nil
+  @spec generate_invoices(pos_integer()) :: :ok
   def generate_invoices(id) do
     rec_inv = Repo.get!(RecurringInvoice, id)
-
-    if invoices_to_generate(id) > 0 do
-      for _i <- 1..invoices_to_generate(id),
-          do: Invoices.create(build_invoice_attrs(rec_inv))
-    end
+    n = invoices_to_generate(id)
+    Enum.each(1..n//1, fn _ -> Invoices.create(build_invoice_attrs(rec_inv)) end)
   end
 
   @spec build_invoice_attrs(RecurringInvoice.t()) :: map
