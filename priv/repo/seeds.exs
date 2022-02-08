@@ -10,7 +10,16 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Siwapp.{Repo, Accounts, Commons, Customers, Invoices, RecurringInvoices, Settings, Templates}
+alias Siwapp.{
+  Repo,
+  Accounts,
+  Commons,
+  Customers,
+  Invoices,
+  RecurringInvoices,
+  Settings,
+  Templates
+}
 
 models = [
   Commons.Series,
@@ -90,7 +99,11 @@ Enum.each(
 # SEEDING INVOICES
 currencies = ["USD", "EUR", "GBP", nil]
 booleans = [true, false]
-invoices = Enum.map(0..30, fn _i -> %{customer: Enum.random(customers), issue_date: Faker.Date.backward(31)} end)
+
+invoices =
+  Enum.map(0..30, fn _i ->
+    %{customer: Enum.random(customers), issue_date: Faker.Date.backward(31)}
+  end)
 
 Enum.each(
   invoices,
@@ -103,12 +116,14 @@ Enum.each(
     due_date: Date.add(&1.issue_date, Faker.random_between(1, 31)),
     series_id: Faker.random_between(1, 3),
     currency: Enum.random(currencies),
-    items: [%{
-      quantity: Faker.random_between(1, 2),
-      description: "#{Faker.App.name()} App Development",
-      unitary_cost: Faker.random_between(10_000, 1_000_000),
-      taxes: ["VAT", "RETENTION"]
-    }]
+    items: [
+      %{
+        quantity: Faker.random_between(1, 2),
+        description: "#{Faker.App.name()} App Development",
+        unitary_cost: Faker.random_between(10_000, 1_000_000),
+        taxes: ["VAT", "RETENTION"]
+      }
+    ]
   })
 )
 
