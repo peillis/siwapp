@@ -72,7 +72,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("add_item", _, socket) do
-    items = Ecto.Changeset.get_field(socket.assigns.changeset, :items)
+    items = Ecto.Changeset.get_field(socket.assigns.changeset, :items) ++
     [Item.changeset(%Item{}, %{})]
 
     changeset =
