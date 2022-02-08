@@ -159,8 +159,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   def untransform_items(changeset), do: changeset
 
- # Converts field items from list of maps to list of Item changesets.
- # This is used to handle items validation and calculations
+  # Converts field items from list of maps to list of Item changesets.
+  # This is used to handle items validation and calculations
   defp transform_items(changeset) do
     items_transformed =
       get_field(changeset, :items)
@@ -217,7 +217,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     items_transformed =
 =======
   # Converts each Item struct in a changeset (changing empty map).
-  # Used to recycle add_item, remove_item functions in views and 
+  # Used to recycle add_item, remove_item functions in views and
   # build item forms' for user to fill
   defp unapply_changes_items(changeset) do
     items =

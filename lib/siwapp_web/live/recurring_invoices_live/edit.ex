@@ -42,7 +42,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:customer_name, recurring_invoice.name)
   end
 
-  def handle_event("save", %{ "recurring_invoice" => params }, socket) do
+  def handle_event("save", %{"recurring_invoice" => params}, socket) do
     params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
 
     result =
@@ -65,19 +65,18 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", %{ "recurring_invoice" => params = %{ "items" => _items }}, socket) do
+  def handle_event("validate", %{"recurring_invoice" => params = %{"items" => _items}}, socket) do
     params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
     changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("validate", %{ "recurring_invoice" => params}, socket) do
+  def handle_event("validate", %{"recurring_invoice" => params}, socket) do
     changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
-
 
   def handle_event("add_item", _, socket) do
     changeset = ItemView.add_item(socket.assigns.changeset)
@@ -123,5 +122,4 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
         errors: fi.source.errors
     }
   end
-
 end

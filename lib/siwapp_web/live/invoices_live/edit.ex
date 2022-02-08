@@ -66,6 +66,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
+
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
@@ -88,5 +89,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
-
 end

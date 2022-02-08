@@ -2,8 +2,8 @@ defmodule SiwappWeb.ItemView do
   use SiwappWeb, :view
 
   alias Phoenix.HTML.FormData
-  alias SiwappWeb.PageView
   alias Siwapp.Invoices.Item
+  alias SiwappWeb.PageView
 
   import Ecto.Changeset
 
@@ -20,8 +20,9 @@ defmodule SiwappWeb.ItemView do
   end
 
   def add_item(changeset) do
-    items = get_field(changeset, :items) ++
-    [Item.changeset(%Item{}, %{})]
+    items =
+      get_field(changeset, :items) ++
+        [Item.changeset(%Item{}, %{})]
 
     put_change(changeset, :items, items)
   end
@@ -50,5 +51,4 @@ defmodule SiwappWeb.ItemView do
     get_field(changeset, :gross_amount)
     |> PageView.set_currency(get_field(changeset, :currency))
   end
-
 end
