@@ -96,7 +96,7 @@ defmodule Siwapp.Customers do
     Customer.changeset(customer, attrs)
   end
 
-  def customers_filtered(value) do
+  def filtered_customers(value) do
     Customer
     |> Query.name_email_or_id(value)
     |> Query.paginate(0, 20)
