@@ -3,7 +3,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   This module manages the recurring_invoices LiveView events
   """
   use SiwappWeb, :live_view
-  alias Siwapp.RecurringInvoices
+  alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.{RecurringInvoices, Search}
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -39,7 +40,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    recurring_invoices = RecurringInvoices.filtered(params["search_input"])
+    recurring_invoices = Search.filters(RecurringInvoice, params["search_input"])
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
   end
 
