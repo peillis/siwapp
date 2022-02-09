@@ -69,10 +69,9 @@ defmodule Siwapp.RecurringInvoices do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
   end
 
-  def filtered_recurring_invoices(value) do
+  def filtered(value) do
     RecurringInvoice
     |> Query.name_email_or_id(value)
-    |> Query.paginate(0, 20)
     |> Repo.all()
   end
 
