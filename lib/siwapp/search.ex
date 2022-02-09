@@ -1,5 +1,6 @@
 defmodule Siwapp.Search do
   @moduledoc """
+
   Search Context
   """
   alias Siwapp.Customers.CustomerQuery
