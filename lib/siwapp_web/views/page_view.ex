@@ -13,10 +13,10 @@ defmodule SiwappWeb.PageView do
 
   def set_currency(value, nil, symbol: false), do: set_currency(value, :USD, symbol: false)
 
-  def set_currency(value, currency, symbol: false) do
+  def set_currency(value, currency, symbol: symbol) do
     value
     |> round()
     |> Money.new(currency)
-    |> Money.to_string(symbol: false)
+    |> Money.to_string(symbol: symbol)
   end
 end
