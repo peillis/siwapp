@@ -34,7 +34,6 @@ defmodule Siwapp.Search.SearchQuery do
              "finishing_from_date",
              "finishing_to_date"
            ] ->
-
         value = Date.from_iso8601!(value)
         from_or_to(query, key, value)
 
@@ -110,7 +109,7 @@ defmodule Siwapp.Search.SearchQuery do
         |> where(draft: false)
         |> where(paid: false)
         |> where(failed: false)
-        |> where([q], is_nil(q.due_date) or (q.due_date > ^Date.utc_today()))
+        |> where([q], is_nil(q.due_date) or q.due_date > ^Date.utc_today())
 
       "Past Due" ->
         query

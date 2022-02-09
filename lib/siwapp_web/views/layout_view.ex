@@ -32,7 +32,6 @@ defmodule SiwappWeb.LayoutView do
   end
 
   def render_search_live(%Phoenix.LiveView.Socket{} = socket) do
-
     views_with_search = [
       SiwappWeb.InvoicesLive.Index,
       SiwappWeb.CustomerLive.Index,
