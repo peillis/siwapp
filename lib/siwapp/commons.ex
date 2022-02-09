@@ -5,7 +5,6 @@ defmodule Siwapp.Commons do
 
   import Ecto.Query, warn: false
   alias Siwapp.Repo
-  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Commons.{Series, Tax}
 
   ### SERIES ###
@@ -141,16 +140,6 @@ defmodule Siwapp.Commons do
     update_default_series(default_series, true)
   end
 
-  @spec next_number_in_series(pos_integer()) :: integer
-  def next_number_in_series(series_id) do
-    query = InvoiceQuery.last_number_with_series_id(Invoice, series_id)
-
-    case Repo.one(query) do
-      nil -> Repo.get(Series, series_id).first_number
-      invoice -> invoice.number + 1
-    end
-  end
-
   @doc """
   Deletes a series.
 
@@ -224,10 +213,10 @@ defmodule Siwapp.Commons do
   end
 
   def list_taxes(:cache) do
-    case Cachex.get(:my_cache, :database_taxes) do
+    case Cachex.get(:siwapp_cache, :taxes) do
       {:ok, nil} ->
         taxes = list_taxes()
-        Cachex.put(:my_cache, :database_taxes, taxes, ttl: :timer.seconds(300))
+        Cachex.put(:siwapp_cache, :taxes, taxes, ttl: :timer.minutes(5))
         taxes
 
       {:ok, taxes} ->

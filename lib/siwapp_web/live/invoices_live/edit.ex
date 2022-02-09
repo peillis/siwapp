@@ -6,6 +6,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
+  alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
 
@@ -28,7 +29,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
-    |> assign(:changeset, Invoices.change(new_invoice))
+    |> assign(
+      :changeset,
+      Invoices.change(new_invoice)
+      |> InvoiceHelper.maybe_find_customer_or_new()
+      |> Invoice.number_assignment_when_legal()
+    )
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -39,7 +45,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice))
+    |> assign(
+      :changeset,
+      Invoices.change(invoice)
+      |> InvoiceHelper.maybe_find_customer_or_new()
+      |> Invoice.number_assignment_when_legal()
+    )
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
@@ -70,7 +81,8 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       ) do
     changeset =
       socket.assigns.invoice
-      |> Invoices.total_change(params)
+      |> Invoices.change(params)
+      |> Invoice.number_assignment_when_legal()
 
     {:noreply, assign(socket, :changeset, changeset)}
   end

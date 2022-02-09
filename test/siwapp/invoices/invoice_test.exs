@@ -15,7 +15,7 @@ defmodule Siwapp.InvoiceTest do
     tax2 = taxes_fixture(%{name: "RETENTION", value: -15})
     settings_fixture()
 
-    Cachex.clear(:my_cache)
+    Cachex.clear(:siwapp_cache)
 
     %{series_id: series.id, taxes: [tax1, tax2]}
   end
@@ -204,7 +204,9 @@ defmodule Siwapp.InvoiceTest do
 
       changeset =
         %Invoice{}
-        |> Invoice.changeset(%{series_id: series.id, number: 3}, :full_changeset)
+        |> Invoice.changeset(%{series_id: series.id, number: 3}
+        |> Invoice.number_assignment_when_legal()
+        )
 
       assert changeset.valid? == false
     end

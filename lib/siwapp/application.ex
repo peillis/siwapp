@@ -19,7 +19,7 @@ defmodule Siwapp.Application do
       ChromicPDF,
       # Start a worker by calling: Siwapp.Worker.start_link(arg)
       # {Siwapp.Worker, arg}
-      {Cachex, name: :my_cache}
+      {Cachex, name: :siwapp_cache}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

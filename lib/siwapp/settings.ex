@@ -43,13 +43,24 @@ defmodule Siwapp.Settings do
   @doc """
   Returns current SettingBundle (which is also useful to be changed and fill the SettingBundle form)
   """
+<<<<<<< HEAD
   def current_bundle, do: struct(SettingBundle, list_pairs())
+=======
+  def prepare_data do
+    settings =
+      Setting
+      |> Repo.all()
+      |> Enum.reduce(%{}, fn x, acc -> Map.put(acc, String.to_atom(x.key), x.value) end)
+
+    struct(SettingBundle, settings)
+  end
+>>>>>>> 737713f (cambios)
 
   def prepare_data(:cache) do
-    case Cachex.get(:my_cache, :settings_data) do
+    case Cachex.get(:siwapp_cache, :settings_data) do
       {:ok, nil} ->
         settings_data = prepare_data()
-        Cachex.put(:my_cache, :settings_data, settings_data, ttl: :timer.seconds(300))
+        Cachex.put(:siwapp_cache, :settings_data, settings_data, ttl: :timer.minutes(5))
         settings_data
 
       {:ok, settings_data} ->

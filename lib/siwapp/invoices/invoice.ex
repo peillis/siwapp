@@ -5,11 +5,10 @@ defmodule Siwapp.Invoices.Invoice do
   use Ecto.Schema
 
   import Ecto.Changeset
-  import Siwapp.InvoiceHelper
 
-  alias Siwapp.Commons
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
+  alias Siwapp.Invoices
   alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
@@ -131,13 +130,6 @@ defmodule Siwapp.Invoices.Invoice do
     |> calculate()
   end
 
-  def changeset(invoice, attrs, :full_changeset) do
-    invoice
-    |> changeset(attrs)
-    |> maybe_find_customer_or_new()
-    |> number_assignment_when_legal()
-  end
-
   defp assign_issue_date(changeset) do
     if get_field(changeset, :issue_date) do
       changeset
@@ -190,7 +182,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   # It's illegal to assign a number to a draft
   @spec number_assignment_when_legal(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp number_assignment_when_legal(changeset) do
+  def number_assignment_when_legal(changeset) do
     cond do
       get_field(changeset, :draft) -> changeset
       is_nil(get_change(changeset, :series_id)) -> changeset
@@ -202,7 +194,7 @@ defmodule Siwapp.Invoices.Invoice do
   @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
     series_id = get_change(changeset, :series_id)
-    proper_number = Commons.next_number_in_series(series_id)
+    proper_number = Invoices.next_number_in_series(series_id)
     put_change(changeset, :number, proper_number)
   end
 end
