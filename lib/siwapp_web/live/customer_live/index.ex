@@ -1,7 +1,8 @@
 defmodule SiwappWeb.CustomerLive.Index do
   use SiwappWeb, :live_view
 
-  alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
+  alias Siwapp.{Customers, Search}
 
   @moduledoc """
 
@@ -36,7 +37,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    customers = Customers.filtered(params["search_input"])
+    customers = Search.filters(Customer, params["search_input"])
     {:noreply, assign(socket, :customers, customers)}
   end
 end
