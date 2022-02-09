@@ -1,6 +1,7 @@
 defmodule Siwapp.InvoiceTest do
   use Siwapp.DataCase
 
+  alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Settings
@@ -204,10 +205,9 @@ defmodule Siwapp.InvoiceTest do
 
       changeset =
         %Invoice{}
-        |> Invoice.changeset(
-          %{series_id: series.id, number: 3}
-          |> Invoice.number_assignment_when_legal()
-        )
+        |> Invoice.changeset(%{series_id: series.id, number: 3})
+        |> InvoiceHelper.maybe_find_customer_or_new()
+        |> Invoice.number_assignment_when_legal()
 
       assert changeset.valid? == false
     end
