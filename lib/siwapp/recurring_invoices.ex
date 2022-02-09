@@ -99,13 +99,6 @@ defmodule Siwapp.RecurringInvoices do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
   end
 
-  def recurring_invoices_filtered(value) do
-    RecurringInvoice
-    |> Query.terms(value)
-    |> Query.paginate(0, 20)
-    |> Repo.all()
-  end
-
   # Given a recurring_invoice id, returns the amount of invoices already generated related to that recurring_invoice
   @spec generated_invoices(pos_integer()) :: non_neg_integer()
   defp generated_invoices(id) do

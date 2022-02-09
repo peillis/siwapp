@@ -44,10 +44,9 @@ defmodule SiwappWeb.CustomerLive.Index do
   def handle_event("search", params, socket) do
     values =
       params
-      |> Map.delete("search_input")
-      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."]end)
+      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
 
-    customers = Search.filters(Customer, params["search_input"], :customer)
+    customers = Search.filters(Customer, values)
 
     {:noreply, assign(socket, :customers, customers)}
   end

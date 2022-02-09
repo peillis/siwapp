@@ -186,11 +186,4 @@ defmodule Siwapp.Invoices do
   def change_item(%Item{} = item, currency, attrs \\ %{}) do
     Item.changeset(item, attrs, currency)
   end
-
-  def invoices_filtered(value) do
-    Invoice
-    |> Query.terms(value)
-    |> Query.paginate(0, 20)
-    |> Repo.all()
-  end
 end
