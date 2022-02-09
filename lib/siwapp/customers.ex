@@ -92,12 +92,6 @@ defmodule Siwapp.Customers do
     Customer.changeset(customer, attrs)
   end
 
-  def filtered(value) do
-    Customer
-    |> Query.name_email_or_id(value)
-    |> Repo.all()
-  end
-
   @spec get_by_hash_id(binary, binary) :: Customer.t() | nil
   defp get_by_hash_id(identification, name) do
     hash_id = Customer.create_hash_id(identification, name)

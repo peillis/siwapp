@@ -25,11 +25,4 @@ defmodule Siwapp.Query do
   def search_in_string(query, string_field, search) do
     where(query, [q], ilike(field(q, ^string_field), ^search))
   end
-
-  def name_email_or_id(query, value) do
-    query
-    |> where([q], ilike(q.name, ^"%#{value}%"))
-    |> or_where([q], ilike(q.email, ^"%#{value}%"))
-    |> or_where([q], ilike(q.identification, ^"%#{value}%"))
-  end
 end
