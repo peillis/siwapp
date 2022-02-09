@@ -25,17 +25,16 @@ defmodule Siwapp.Settings.SettingBundle do
 
   def changeset(setting_bundle, attrs \\ %{}) do
     {setting_bundle, fields_map()}
-    |> cast(attrs, labels())
+    |> cast(attrs, @labels)
     |> validate_email()
     # Example list of currency, will be updated to whole
     |> validate_inclusion(:currency, ["USD", "EUR"])
   end
 
-  @spec labels :: [atom]
-  def labels, do: @labels
   @spec fields_map :: map
   defp fields_map, do: Map.new(@fields_keywordlist)
 
+  @spec validate_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_email(changeset) do
     changeset
     |> validate_format(:company_email, ~r/^[^\s]+@[^\s]+$/,

@@ -2,6 +2,8 @@ defmodule Siwapp.Settings do
   alias Siwapp.Repo
   alias Siwapp.Settings.{Setting, SettingBundle}
 
+  import Ecto.Query
+
   @moduledoc """
   This module manage settings. For those with predefined keys in SettingBundle,
   which are also initialized using seeds, bundle operations can be used directly
@@ -11,13 +13,24 @@ defmodule Siwapp.Settings do
   """
 
   @doc """
-  Starts a setting given a key-value tuple (used only in seeds)
+  Creates a setting given a key-value tuple (used only in seeds)
   """
   @spec create({atom | binary, binary}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def create({key, value}) do
     %Setting{}
     |> change({to_string(key), value})
     |> Repo.insert()
+  end
+
+  @doc """
+  Returns all saved settings as a keywordlist formed by the key-value tuples
+  """
+  @spec list_pairs :: [] | [{atom, binary}]
+  def list_pairs do
+    Setting
+    |> select([s], {s.key, s.value})
+    |> Repo.all()
+    |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
   end
 
   @doc """
@@ -30,18 +43,21 @@ defmodule Siwapp.Settings do
   @doc """
   Returns current SettingBundle (which is also useful to be changed and fill the SettingBundle form)
   """
-  def current_bundle, do: struct(SettingBundle, Enum.zip(SettingBundle.labels(), values()))
+  def current_bundle, do: struct(SettingBundle, list_pairs())
 
   @doc """
   Takes a map of SettingBundle's parameters and saves each associated Setting if possible.
   Informs of the possibility to save those settings and returns the setting_bundle changeset
   """
+  @spec apply_user_bundle(map) :: {:ok, Ecto.Changeset.t()} | {:error, Ecto.Changeset.t()}
   def apply_user_bundle(attrs) do
     changeset = change_bundle(current_bundle(), attrs)
 
     if changeset.valid? do
-      changes = Map.to_list(changeset.changes)
-      Enum.each(changes, fn {k, v} -> update({k, v}) end)
+      changeset.changes
+      |> Map.to_list()
+      |> Enum.each(&update/1)
+
       {:ok, changeset}
     else
       {:error, %{changeset | action: :insert}}
@@ -59,6 +75,7 @@ defmodule Siwapp.Settings do
   Returns the value of the setting associated to key (atom or string). Returns nil if
   this setting doesn't exist
   """
+  @spec value(atom | binary) :: nil | Setting.t()
   def value(key) do
     case get(key) do
       nil -> nil
@@ -79,11 +96,6 @@ defmodule Siwapp.Settings do
   @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()
   defp change(%Setting{} = setting, attrs) do
     Setting.changeset(setting, adequate_attrs(attrs))
-  end
-
-  @spec values :: [nil | binary]
-  defp values do
-    for key <- SettingBundle.labels(), do: value(key)
   end
 
   @spec adequate_attrs({binary, binary}) :: map
