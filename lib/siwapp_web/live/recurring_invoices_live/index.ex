@@ -40,7 +40,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    recurring_invoices = Search.filters(RecurringInvoice, params["search_input"])
+    recurring_invoices =
+      Search.filters(RecurringInvoice, params["search_input"], :recurring_invoice)
+
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
   end
 
