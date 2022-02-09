@@ -36,7 +36,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    customers = Customers.filtered_customers(params["search_input"])
+    customers = Customers.filtered(params["search_input"])
     {:noreply, assign(socket, :customers, customers)}
   end
 end
