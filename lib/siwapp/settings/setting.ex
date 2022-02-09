@@ -12,7 +12,10 @@ defmodule Siwapp.Settings.Setting do
           updated_at: nil | DateTime.t()
         }
 
-  @moduledoc false
+  @moduledoc """
+  A Setting's a schema used to manage settings database, which has key and value columns. Therefore,
+  no matter which key, values are always strings.
+  """
 
   schema "settings" do
     field :key, :string

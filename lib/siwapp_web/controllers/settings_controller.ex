@@ -4,7 +4,7 @@ defmodule SiwappWeb.SettingsController do
   alias Siwapp.Settings
 
   def edit(conn, _params) do
-    data = Settings.prepare_data()
+    data = Settings.current_bundle()
     changeset = Settings.change_bundle(data)
 
     conn
@@ -13,7 +13,7 @@ defmodule SiwappWeb.SettingsController do
   end
 
   def update(conn, %{"setting_bundle" => attrs}) do
-    case Settings.apply_user_settings(attrs) do
+    case Settings.apply_user_bundle(attrs) do
       {:ok, changeset} ->
         conn
         |> assign(:changeset, changeset)
@@ -21,7 +21,7 @@ defmodule SiwappWeb.SettingsController do
         |> render("edit.html")
 
       {:error, changeset} ->
-        render(conn, "edit.html", changeset: %{changeset | action: :insert})
+        render(conn, "edit.html", changeset: changeset)
     end
   end
 end

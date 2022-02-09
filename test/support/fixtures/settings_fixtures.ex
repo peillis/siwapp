@@ -25,6 +25,6 @@ defmodule Siwapp.SettingsFixtures do
     |> valid_settings_attributes()
     |> Enum.each(&Settings.create/1)
 
-    Settings.prepare_data()
+    Settings.current_bundle()
   end
 end
