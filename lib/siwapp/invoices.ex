@@ -4,6 +4,7 @@ defmodule Siwapp.Invoices do
   """
   import Ecto.Query, warn: false
 
+  alias Siwapp.Commons.Series
   alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices.{Invoice, InvoiceQuery, Item}
   alias Siwapp.Query
