@@ -21,4 +21,5 @@ defmodule Siwapp.Query do
   def not_deleted(query) do
     where(query, [q], is_nil(q.deleted_at))
   end
+
 end
