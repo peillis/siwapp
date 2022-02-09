@@ -32,8 +32,8 @@ defmodule SiwappWeb.Resolvers.Invoice do
   end
 
   defp set_correct_units(invoice) do
-    Enum.reduce([:net_amount, :gross_amount, :paid_amount], invoice, fn x, invoice ->
-      Map.update(invoice, x, 0, fn existing_value ->
+    Enum.reduce([:net_amount, :gross_amount, :paid_amount], invoice, fn key, invoice ->
+      Map.update(invoice, key, 0, fn existing_value ->
         PageView.set_currency(existing_value, invoice.currency, symbol: false)
       end)
     end)
