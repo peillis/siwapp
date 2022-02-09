@@ -12,10 +12,11 @@ defmodule SiwappWeb.GraphicHelpers do
     options = [
       data_labels: false,
       default_style: false,
+      stroke_width: 1,
       smoothed: false
     ]
 
-    margins = %{left: 35, right: 15, top: 10, bottom: 20}
+    margins = %{left: 45, right: 15, top: 10, bottom: 20}
 
     data
     |> Dataset.new()
