@@ -6,11 +6,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.{RecurringInvoices, Search}
 
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:recurring_invoices, recurring_invoices_filter(params))
+     |> assign(:recurring_invoices, RecurringInvoices.scroll_listing(0))
      |> assign(:checked, MapSet.new())}
   end
 
@@ -42,10 +42,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   def handle_event("search", params, socket) do
     values =
       params
-      |> Map.delete("search_input")
-      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."]end)
+      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
 
-    recurring_invoices = Search.filters(RecurringInvoice, params["search_input"])
+    recurring_invoices = Search.filters(RecurringInvoice, values)
 
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
   end
@@ -68,13 +67,5 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
-  end
-
-  defp recurring_invoices_filter(params) do
-    if params == %{} do
-      RecurringInvoices.scroll_listing(0)
-    else
-      RecurringInvoices.recurring_invoices_filtered(params["value"])
-    end
   end
 end
