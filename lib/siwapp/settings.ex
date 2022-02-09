@@ -43,21 +43,7 @@ defmodule Siwapp.Settings do
   @doc """
   Returns current SettingBundle (which is also useful to be changed and fill the SettingBundle form)
   """
-
   def current_bundle, do: struct(SettingBundle, list_pairs())
-
-
-  def prepare_data(:cache) do
-    case Cachex.get(:siwapp_cache, :settings_data) do
-      {:ok, nil} ->
-        settings_data = prepare_data()
-        Cachex.put(:siwapp_cache, :settings_data, settings_data, ttl: :timer.minutes(5))
-        settings_data
-
-      {:ok, settings_data} ->
-        settings_data
-    end
-  end
 
   @doc """
   Takes a map of SettingBundle's parameters and saves each associated Setting if possible.
@@ -96,6 +82,18 @@ defmodule Siwapp.Settings do
     end
   end
 
+  def value(key, :cache) do
+    case Cachex.get(:siwapp_cache, key) do
+      {:ok, nil} ->
+        value = value(key)
+        Cachex.put(:siwapp_cache, key, value, ttl: :timer.minutes(5))
+        value
+
+      {:ok, value} ->
+        value
+    end
+  end
+
   @doc """
   Takes key-value tuple and updates the value of the Setting determined by key
   """
@@ -109,11 +107,6 @@ defmodule Siwapp.Settings do
   @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()
   defp change(%Setting{} = setting, attrs) do
     Setting.changeset(setting, adequate_attrs(attrs))
-  end
-
-  @spec values :: [nil | binary]
-  defp values do
-    for key <- SettingBundle.labels(), do: get(key).value
   end
 
   @spec adequate_attrs({binary, binary}) :: map

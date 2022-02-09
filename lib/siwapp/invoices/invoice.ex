@@ -142,7 +142,7 @@ defmodule Siwapp.Invoices.Invoice do
       changeset
     else
       issue_date = get_field(changeset, :issue_date)
-      days_to_due = Siwapp.Settings.value(:days_to_due)
+      days_to_due = Siwapp.Settings.value(:days_to_due, :cache)
       due_date = Date.add(issue_date, String.to_integer(days_to_due))
       put_change(changeset, :due_date, due_date)
     end
