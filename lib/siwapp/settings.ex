@@ -75,7 +75,6 @@ defmodule Siwapp.Settings do
   Returns the value of the setting associated to key (atom or string). Returns nil if
   this setting doesn't exist
   """
-  @spec value(atom | binary) :: nil | Setting.t()
   def value(key) do
     case get(key) do
       nil -> nil
