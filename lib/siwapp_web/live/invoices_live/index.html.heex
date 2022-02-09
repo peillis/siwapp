@@ -19,7 +19,7 @@
     <h1><%= @page_title %><span class="subtitle is-5"> (<%= length(@invoices) %> Found)</span></h1>
     <header class="card card-header is-clickable is-unselectable" phx-click="change-summary-state">
       <span class="card-header-title is-size-4">
-        <%= SiwappWeb.PageView.set_currency(Invoices.Statistics.get_accumulated_amount(), nil) %>
+        <%= SiwappWeb.PageView.set_currency(Invoices.Statistics.get_accumulated_amount(@invoices), nil) %>
       </span>
       <button class="card-header-icon" aria-label="more options">
         <span class="icon">
