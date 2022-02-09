@@ -177,7 +177,7 @@ defmodule Siwapp.Search.SearchQuery do
         |> where(draft: false)
         |> where(paid: false)
         |> where(failed: false)
-        |> where([q], is_nil(q.due_date) or (q.due_date > ^Date.utc_today()))
+        |> where([q], is_nil(q.due_date) or q.due_date > ^Date.utc_today())
 
       "Past Due" ->
         query
