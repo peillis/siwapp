@@ -1,6 +1,7 @@
 <div>
   <div class="columns">
     <div class="column is-6">
+<<<<<<< HEAD
       <label class="label">
         CUSTOMER:
       </label>
@@ -8,10 +9,20 @@
         <select>
           <option>Choose...</option>
           <option>With options</option>
+=======
+      <label class="label">CUSTOMER:</label>
+      <div class="select is-fullwidth">
+        <select name="name">
+          <option>Choose...</option>
+          <%= for customer <- @customers do  %>
+            <option><%= customer.name %></option>
+          <% end %>
+>>>>>>> dc7315a (Final version)
         </select>
       </div>
     </div>
     <div class="column is-3">
+<<<<<<< HEAD
       <label class="label">
         ISSUE DATE FROM:
       </label>
@@ -22,10 +33,19 @@
         TO:
       </label>
       <input class="input" type="date">
+=======
+      <label class="label">ISSUE DATE FROM:</label>
+      <input name="issue_from_date" class="input" type="date">
+    </div>
+    <div class="column is-3">
+      <label class="label">TO:</label>
+      <input name="issue_to_date" class="input" type="date">
+>>>>>>> dc7315a (Final version)
     </div>
   </div>
   <div class="columns">
     <div class="column is-3">
+<<<<<<< HEAD
       <label class="label">
         SERIES:
       </label>
@@ -33,10 +53,20 @@
         <select>
           <option>Choose...</option>
           <option>With options</option>
+=======
+      <label class="label">SERIES:</label>
+      <div class="select is-fullwidth">
+        <select name="series">
+          <option>Choose...</option>
+          <%= for series <- @series do  %>
+            <option><%= series.name %></option>
+          <% end %>
+>>>>>>> dc7315a (Final version)
         </select>
       </div>
     </div>
     <div class="column is-3">
+<<<<<<< HEAD
       <label class="label">
         NUMBER:
       </label>
@@ -50,12 +80,28 @@
         <select>
           <option>Choose...</option>
           <option>With options</option>
+=======
+      <label class="label">NUMBER:</label>
+      <input name="number" class="input" type="text">
+    </div>
+    <div class="column is-6">
+      <label class="label">STATUS:</label>
+      <div class="select is-fullwidth">
+        <select name="status">
+          <option>Choose...</option>
+          <option>Draft</option>
+          <option>Paid</option>
+          <option>Pending</option>
+          <option>Past Due</option>
+          <option>Failed</option>
+>>>>>>> dc7315a (Final version)
         </select>
       </div>
     </div>
   </div>
   <div class="columns">
     <div class="column">
+<<<<<<< HEAD
       <label class="label">
         KEY
       </label>
@@ -70,3 +116,14 @@
   </div>
 </div>
 
+=======
+      <label class="label">KEY</label>
+      <input class="input" name="key" type="text">
+    </div>
+    <div class="column">
+      <label class="label">VALUE</label>
+      <input class="input" name="value" type="text">
+    </div>
+  </div>
+</div>
+>>>>>>> dc7315a (Final version)
