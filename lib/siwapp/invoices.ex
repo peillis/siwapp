@@ -4,6 +4,7 @@ defmodule Siwapp.Invoices do
   """
   import Ecto.Query, warn: false
 
+  alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices.{Invoice, InvoiceQuery, Item}
   alias Siwapp.Query
   alias Siwapp.Repo
@@ -51,7 +52,9 @@ defmodule Siwapp.Invoices do
   @spec create(map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %Invoice{}
-    |> Invoice.changeset(attrs, :full_changeset)
+    |> Invoice.changeset(attrs)
+    |> InvoiceHelper.maybe_find_customer_or_new()
+    |> Invoice.number_assignment_when_legal()
     |> Repo.insert()
   end
 
@@ -62,7 +65,9 @@ defmodule Siwapp.Invoices do
   @spec update(Invoice.t(), map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def update(%Invoice{} = invoice, attrs) do
     invoice
-    |> Invoice.changeset(attrs, :full_changeset)
+    |> Invoice.changeset(attrs)
+    |> InvoiceHelper.maybe_find_customer_or_new()
+    |> Invoice.number_assignment_when_legal()
     |> Repo.update()
   end
 
@@ -120,11 +125,6 @@ defmodule Siwapp.Invoices do
     Invoice.changeset(invoice, attrs)
   end
 
-  def total_change(%Invoice{} = invoice, attrs \\ %{}) do
-    invoice
-    |> Invoice.changeset(attrs, :full_changeset)
-  end
-
   def list_past_due(page, per_page \\ 20) do
     Invoice
     |> InvoiceQuery.list_past_due()
@@ -149,6 +149,16 @@ defmodule Siwapp.Invoices do
       :pending
     else
       :past_due
+    end
+  end
+
+  @spec next_number_in_series(pos_integer()) :: integer
+  def next_number_in_series(series_id) do
+    query = InvoiceQuery.last_number_with_series_id(Invoice, series_id)
+
+    case Repo.one(query) do
+      nil -> Repo.get(Series, series_id).first_number
+      invoice -> invoice.number + 1
     end
   end
 

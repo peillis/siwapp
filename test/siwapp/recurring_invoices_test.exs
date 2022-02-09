@@ -15,7 +15,7 @@ defmodule Siwapp.RecurringInvoicesTest do
     today = Date.utc_today()
     settings_fixture()
 
-    Cachex.clear(:my_cache)
+    Cachex.clear(:siwapp_cache)
 
     %{today: today}
   end
