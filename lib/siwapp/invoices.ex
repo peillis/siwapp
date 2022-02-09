@@ -189,10 +189,4 @@ defmodule Siwapp.Invoices do
   def change_item(%Item{} = item, attrs \\ %{}) do
     Item.changeset(item, attrs)
   end
-
-  def filtered(value) do
-    Invoice
-    |> Query.name_email_or_id(value)
-    |> Repo.all()
-  end
 end
