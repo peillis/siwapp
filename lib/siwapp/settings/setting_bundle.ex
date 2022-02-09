@@ -31,8 +31,6 @@ defmodule Siwapp.Settings.SettingBundle do
     |> validate_inclusion(:currency, ["USD", "EUR"])
   end
 
-  @spec labels :: [atom]
-  def labels, do: @labels
   @spec fields_map :: map
   defp fields_map, do: Map.new(@fields_keywordlist)
 
