@@ -11,17 +11,17 @@ defmodule SiwappWeb.PageView do
     |> Money.to_string()
   end
 
-  def list_currencies() do
+  def list_currencies do
     default_currency = Siwapp.Settings.value(:currency)
     Enum.uniq([default_currency] ++ primary_currencies() ++ all_currencies())
   end
 
-  defp all_currencies() do
+  defp all_currencies do
     Money.Currency.all()
     |> Map.keys()
     |> Enum.map(&Atom.to_string/1)
     |> Enum.sort()
   end
 
-  defp primary_currencies(), do: ["USD", "EUR", "GBP"]
+  defp primary_currencies, do: ["USD", "EUR", "GBP"]
 end
