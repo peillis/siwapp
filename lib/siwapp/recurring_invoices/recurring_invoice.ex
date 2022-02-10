@@ -70,8 +70,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     :meta_attributes,
     :items,
     :customer_id,
-    :series_id,
-    :save?
+    :series_id
   ]
 
   schema "recurring_invoices" do
@@ -113,8 +112,9 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     |> maybe_find_customer_or_new()
     |> transform_items()
     |> validate_items()
+    |> apply_changes_items()
     |> calculate()
-    |> adequate_items()
+    |> unapply_changes_items()
     |> validate_required([:starting_date, :period, :period_type])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
@@ -128,22 +128,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     |> validate_length(:currency, max: 3)
   end
 
-<<<<<<< HEAD
-  # Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
-  defp calculate(changeset) do
-    changeset
-    |> set_net_amount()
-    |> set_taxes_amounts()
-    |> set_gross_amount()
-  end
-
-  defp set_net_amount(changeset) do
-    total_net_amount =
-      get_field(changeset, :items_transformed)
-      |> Enum.map(&get_field(&1, :net_amount))
-      |> Enum.sum()
-      |> round()
-=======
   @doc """
   Converts field items from list of Item changesets to list of maps when
   changeset is valid to be able to save in database
@@ -165,29 +149,10 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     items_transformed =
       get_field(changeset, :items)
       |> Enum.map(&Item.changeset(%Item{}, &1))
->>>>>>> ba1245d (Fn changeset única, documentación y comentarios)
 
-    put_change(changeset, :net_amount, total_net_amount)
+    put_change(changeset, :items, items_transformed)
   end
 
-<<<<<<< HEAD
-  defp set_taxes_amounts(changeset) do
-    total_taxes_amounts =
-      get_field(changeset, :items_transformed)
-      |> Enum.map(&get_field(&1, :taxes_amount))
-      |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
-
-    put_change(changeset, :taxes_amounts, total_taxes_amounts)
-  end
-
-  defp set_gross_amount(changeset) do
-    net_amount = get_field(changeset, :net_amount)
-
-    taxes_amount =
-      get_field(changeset, :taxes_amounts)
-      |> Map.values()
-      |> Enum.sum()
-=======
   # Adds error to changeset if any item is invalid
   defp validate_items(changeset) do
     items_valid? =
@@ -207,50 +172,21 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     items =
       get_field(changeset, :items)
       |> Enum.map(&apply_changes(&1))
->>>>>>> ba1245d (Fn changeset única, documentación y comentarios)
 
-    put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
+    put_change(changeset, :items, items)
   end
 
-<<<<<<< HEAD
-  defp transform_items(changeset) do
-    items_transformed =
-=======
   # Converts each Item struct in a changeset (changing empty map).
   # Used to recycle add_item, remove_item functions in views and
   # build item forms' for user to fill
   defp unapply_changes_items(changeset) do
     items =
->>>>>>> ba1245d (Fn changeset única, documentación y comentarios)
       get_field(changeset, :items)
-      |> Enum.map(&Item.changeset(%Item{}, &1))
-
-    put_change(changeset, :items_transformed, items_transformed)
-  end
-
-<<<<<<< HEAD
-  defp validate_items(changeset) do
-    items_valid? =
-      get_field(changeset, :items_transformed)
-      |> Enum.all?(& &1.valid?)
-
-    if items_valid? do
-      changeset
-    else
-      add_error(changeset, :items, "Items are invalid")
-    end
-  end
-
-  defp adequate_items(%{changes: %{save?: true}} = changeset) do
-    items_zip = Enum.zip(get_field(changeset, :items), get_field(changeset, :items_transformed))
-
-    items =
-      Enum.map(items_zip, fn {item, item_changeset} ->
-        item_virtual_to_unitary(item, item_changeset)
-      end)
+      |> Enum.map(&Item.changeset(&1, %{}))
 
     put_change(changeset, :items, items)
-=======
+  end
+
   defp make_item(%Item{description: d, quantity: q, unitary_cost: u, discount: di, taxes: t}) do
     %{
       "description" => d,
@@ -259,15 +195,5 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
       "discount" => di,
       "taxes" => Enum.map(t, & &1.name)
     }
->>>>>>> ba1245d (Fn changeset única, documentación y comentarios)
   end
-
-  defp adequate_items(changeset), do: changeset
-
-  @spec item_virtual_to_unitary(map, Ecto.Changeset.t()) :: map
-  defp item_virtual_to_unitary(item, item_changeset),
-    do:
-      item
-      |> Map.delete("virtual_unitary_cost")
-      |> Map.put("unitary_cost", "#{get_field(item_changeset, :unitary_cost)}")
 end
