@@ -2,6 +2,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   use SiwappWeb, :live_view
 
   alias Siwapp.Customers
+  alias SiwappWeb.PageView
 
   @moduledoc """
 
@@ -33,5 +34,12 @@ defmodule SiwappWeb.CustomerLive.Index do
 
   def handle_event("edit", %{"id" => id}, socket) do
     {:noreply, push_redirect(socket, to: Routes.customer_edit_path(socket, :edit, id))}
+  end
+
+  def money(customer_id, type) do
+    case Customers.money(customer_id, type) do
+      {amount, nil} -> amount
+      {amount, currency} -> PageView.set_currency(amount, currency)
+    end
   end
 end
