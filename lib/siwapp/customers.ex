@@ -28,12 +28,6 @@ defmodule Siwapp.Customers do
     |> Repo.all()
   end
 
-  def scroll_listing(page, per_page \\ 20) do
-    Customer
-    |> Query.paginate(page, per_page)
-    |> Repo.all()
-  end
-
   @doc """
   Create a new customer
   """

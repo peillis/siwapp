@@ -12,7 +12,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(customers: Customers.scroll_listing(0))
+     |> assign(customers: Customers.list(20, 0))
      |> assign(page_title: "Customers")}
   end
 
@@ -25,7 +25,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {
       :noreply,
       assign(socket,
-        customers: customers ++ Customers.scroll_listing(page + 1),
+        customers: customers ++ Customers.list(20, (page + 1) * 20),
         page: page + 1
       )
     }
