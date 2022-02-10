@@ -13,6 +13,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:checked, MapSet.new())}
   end
 
+  def mount(_params, %{"customer_id" => customer_id}, %{id: "show_invoices"} = socket) do
+    {:ok,
+     socket
+     |> assign(:page, 0)
+     |> assign(:invoices, Invoices.list_by([{:customer_id, customer_id}], :series))
+     |> assign(:checked, MapSet.new())}
+  end
+
   def mount(_params, _session, socket) do
     {:ok,
      socket
