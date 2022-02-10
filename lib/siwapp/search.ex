@@ -12,6 +12,7 @@ defmodule Siwapp.Search do
           Siwapp.Invoices.Invoice.t()
           | Siwapp.Customers.Customer.t()
           | Siwapp.RecurringInvoices.RecurringInvoice.t()
+
   @doc """
   Filter invoices, customers or recurring_invoices by the selected parameters
   """
