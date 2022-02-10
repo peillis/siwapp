@@ -11,9 +11,7 @@ defmodule SiwappWeb.PageView do
     |> Money.to_string()
   end
 
-  def list_currencies(), do: Enum.uniq(primary_currencies() ++ all_currencies())
-
-  def list_currencies(:default_first) do
+  def list_currencies() do
     default_currency = Siwapp.Settings.value(:currency)
     Enum.uniq([default_currency] ++ primary_currencies() ++ all_currencies())
   end
