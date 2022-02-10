@@ -5,16 +5,16 @@ defmodule SiwappWeb.Resolvers.Invoice do
   alias SiwappWeb.PageView
   alias SiwappWeb.Resolvers.Errors
 
-  def list(%{customer_id: customer_id}, _resolution) do
+  def list(%{customer_id: customer_id, limit: limit, offset: offset}, _resolution) do
     invoice =
-      Invoices.list_by([{:customer_id, customer_id}])
+      Invoices.list_by([{:customer_id, customer_id}], limit, offset)
       |> list_correct_units()
 
     {:ok, invoice}
   end
 
-  def list(_, _resolution) do
-    {:ok, list_correct_units(Invoices.list())}
+  def list(%{limit: limit, offset: offset}, _resolution) do
+    {:ok, list_correct_units(Invoices.list(limit, offset))}
   end
 
   def create(args, _resolution) do
