@@ -6,7 +6,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
-  alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
 
@@ -32,7 +31,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(
       :changeset,
       Invoices.change(new_invoice)
-      |> InvoiceHelper.maybe_find_customer_or_new()
       |> Invoice.number_assignment_when_legal()
     )
   end
@@ -45,12 +43,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
-    |> assign(
-      :changeset,
-      Invoices.change(invoice)
-      |> InvoiceHelper.maybe_find_customer_or_new()
-      |> Invoice.number_assignment_when_legal()
-    )
+    |> assign(:changeset, Invoices.change(invoice))
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
