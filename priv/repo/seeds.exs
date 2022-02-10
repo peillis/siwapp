@@ -132,13 +132,15 @@ today = Date.utc_today()
 
 recurring_invoices = [
   %{
+    name: Faker.Person.name(),
     period: 3,
     period_type: "Daily",
-    starting_date: Date.add(today, -60),
+    starting_date: Date.add(today, -30),
     series_id: 1,
-    customer_id: 1,
+    customer_id: 1
   },
   %{
+    name: Faker.Person.name(),
     period: 2,
     period_type: "Monthly",
     starting_date: Date.add(today, -60),
@@ -155,6 +157,7 @@ recurring_invoices = [
     ]
   },
   %{
+    name: Faker.Person.name(),
     period: 1,
     period_type: "Yearly",
     starting_date: Date.add(today, -400),
@@ -165,8 +168,8 @@ recurring_invoices = [
         "description" => "description",
         "quantity" => 1,
         "unitary_cost" => 0,
-        "discount" => 0
-        "taxes" => "VAT"
+        "discount" => 0,
+        "taxes" => ["VAT"]
       }
     ]
   }
