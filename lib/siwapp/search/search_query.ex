@@ -7,7 +7,10 @@ defmodule Siwapp.Search.SearchQuery do
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.RecurringInvoices.RecurringInvoiceQuery
 
-  def prueba(query, key, value) do
+  @doc """
+  For each key, one different query
+  """
+  def filter_by(query, key, value) do
     case key do
       "search_input" ->
         name_email_or_id(query, value)
@@ -44,11 +47,9 @@ defmodule Siwapp.Search.SearchQuery do
         where(query, [q], not is_nil(q.meta_attributes[^value]))
 
       "value" ->
-        keys = get_all_keys(query)
+        key = get_key_associated_to_value(query, value)
 
-        Enum.reduce(keys, query, fn this_key, acc_query ->
-          or_where(acc_query, [q], q.meta_attributes[^this_key] == ^value)
-        end)
+        where(query, [q], q.meta_attributes[^key] == ^value)
     end
   end
 
@@ -64,6 +65,9 @@ defmodule Siwapp.Search.SearchQuery do
     |> or_where([q], ilike(q.identification, ^"%#{value}%"))
   end
 
+  # There are 6 types of dates; 3 "to_dates" and 3 "from_dates". In this function I split them in 2 groups, one for "from dates"
+  # and the other for "to_dates"
+
   defp from_or_to(query, key, value) do
     if String.contains?(key, "_from_") do
       type_of_from_date(query, key, value)
@@ -71,6 +75,8 @@ defmodule Siwapp.Search.SearchQuery do
       type_of_to_date(query, key, value)
     end
   end
+
+  # The next two functions take the key and see if it belongs to "issue_date", "starting_date" or "finishing_date".
 
   defp type_of_from_date(query, key, value) do
     cond do
@@ -129,12 +135,21 @@ defmodule Siwapp.Search.SearchQuery do
     |> String.to_atom()
   end
 
-  defp get_all_keys(query) do
+  defp get_key_associated_to_value(query, value) do
     query
     |> select([q], q.meta_attributes)
     |> Repo.all()
-    |> Enum.map(&Map.keys(&1))
-    |> List.flatten()
+    |> Enum.reject(&(&1 == %{}))
     |> Enum.uniq()
+    |> Enum.reduce("", fn map, acc -> compare_with_value(map, value, acc) end)
+  end
+
+  defp compare_with_value(map, value, acc) do
+    if Map.values(map) == [value] do
+      [key] = Map.keys(map)
+      key <> acc
+    else
+      acc
+    end
   end
 end
