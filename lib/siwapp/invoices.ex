@@ -12,17 +12,18 @@ defmodule Siwapp.Invoices do
   Gets a list of invoices by updated date
   """
 
-  @spec list(none() | atom()) :: [Invoice.t()]
-  def list do
-    # query = Query.invoices()
+  def list(limit \\ 100, offset \\ 0) do
     Invoice
-    |> order_by(desc: :updated_at)
+    |> limit(^limit)
+    |> offset(^offset)
     |> Repo.all()
   end
 
-  def list(assoc) do
+  def list_preload(limit \\ 100, offset \\ 0, preload: list) do
     Invoice
-    |> Query.list_preload(assoc)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Query.list_preload(list)
     |> Repo.all()
   end
 
@@ -39,11 +40,13 @@ defmodule Siwapp.Invoices do
   """
 
   @spec list_by([{atom(), any()}]) :: list()
-  def list_by(query_list) do
+  def list_by(query_list, limit \\ 100, offset \\ 0) do
     Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
     end)
-    |> order_by(desc: :updated_at)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Query.list_preload(:items)
     |> Repo.all()
   end
 
