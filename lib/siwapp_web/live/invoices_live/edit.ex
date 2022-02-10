@@ -3,11 +3,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias SiwappWeb.InvoicesLive.CustomerComponent
+  alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
-  alias SiwappWeb.PageView
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -71,25 +71,13 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("add_item", _, socket) do
-    items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items) ++
-        [Invoices.change_item(%Item{})]
-
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_change(:items, items)
+    changeset = ItemView.add_item(socket.assigns.changeset)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    items =
-      Map.get(socket.assigns.changeset.changes, :items, socket.assigns.invoice.items)
-      |> List.delete_at(String.to_integer(item_id))
-
-    changeset =
-      socket.assigns.changeset
-      |> Map.put(:changes, %{items: items})
+    changeset = ItemView.remove_item(socket.assigns.changeset, String.to_integer(item_id))
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -100,42 +88,5 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Invoices.change(params)
 
     {:noreply, assign(socket, :changeset, changeset)}
-  end
-
-  defp get_existing_taxes(changeset, fi) do
-    item =
-      changeset
-      |> Ecto.Changeset.get_field(:items)
-      |> Enum.at(fi.index)
-
-    item.taxes
-    |> Enum.map(&{&1.name, &1.id})
-  end
-
-  defp item_net_amount(changeset, fi) do
-    net_amount =
-      changeset
-      |> Ecto.Changeset.get_field(:items)
-      |> Enum.at(fi.index)
-      |> Map.get(:net_amount)
-
-    :erlang.float_to_binary(net_amount / 100, decimals: 2)
-  end
-
-  defp net_amount(changeset) do
-    Ecto.Changeset.get_field(changeset, :net_amount)
-    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
-  end
-
-  defp taxes_amounts(changeset) do
-    Ecto.Changeset.get_field(changeset, :taxes_amounts)
-    |> Enum.map(fn {k, v} ->
-      {k, PageView.set_currency(v, Ecto.Changeset.get_field(changeset, :currency))}
-    end)
-  end
-
-  defp gross_amount(changeset) do
-    Ecto.Changeset.get_field(changeset, :gross_amount)
-    |> PageView.set_currency(Ecto.Changeset.get_field(changeset, :currency))
   end
 end

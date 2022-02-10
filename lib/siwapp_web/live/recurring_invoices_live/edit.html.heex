@@ -1,7 +1,6 @@
 <h1><%= @page_title %></h1>
 
 <.form let={f} for={@changeset} phx-change="validate" phx-submit="save" >
-
   <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
 
   <fieldset class="fieldset">
@@ -65,7 +64,6 @@
 
   <fieldset class="fieldset">
     <h2>Invoice Details</h2>
-
     <div class="field is-horizontal field-body">
       <div class="field">
         <%= label f, :series_id, class: "label" %>
@@ -87,83 +85,8 @@
         </p>
       </div>
     </div>
-    <div class="columns is-multiline-mobile is-1 is-variable">
-      <div class="column is-4-desktop is-full-mobile">
-        <label class= "label" >Description</label>
-        <p class="control">
-          <input type="text" class="input" />
-        </p>
-      </div>
-      <div class="column is-1-desktop is-half-mobile">
-        <label class= "label" >Quantity</label>
-        <p class="control">
-          <input type="text" class="input"/>
-        </p>
-      </div>
-      <div class="column is-2-desktop is-half-mobile">
-        <label class= "label" >Price</label>
-        <p class="control">
-          <input type="text" class="input"/>
-        </p>
-      </div>
-      <div class="column is-1-desktop is-half-mobile">
-        <label class= "label" >Discount</label>
-        <p class="control">
-          <input type="text" class="input"/>
-        </p>
-      </div>
-      <div class="column is-2-desktop is-half-mobile">
-        <label class="label">Taxes</label>
-        <p class="control">
-          <input class="input" type="text" value="One,Two">
-        </p>
-      </div>
-      <div class="column is-1-desktop is-full-mobile">
-        <label class="label">Total</label>
-        <p class="control">
-          <a class="button is-static is-fullwidth">
-            Total
-          </a>
-        </p>
-      </div>
-      <div class="column is-narrow-desktop">
-        <label class="label is-invisible is-hidden-mobile">invisible</label>
-        <p class="control">
-          <a class="button is-danger is-ligth is-fullwidth">Remove Line</a>
-        </p>
-      </div>
-    </div>
-
-    <div class="columns is-desktop">
-      <div class="column is-2">
-        <%= link "Add Line", to: "#", phx_click: "add_item", class: "button is-dark is-fullwidth" %>
-      </div>
-
-      <div class="column is-3 is-offset-8">
-        <table class="table is-fullwidth">
-          <tbody>
-            <tr>
-              <th>Subtotal:</th>
-              <td>Amount</td>
-            </tr>
-            <tr>
-              <th>VAT</th>
-              <td>Amount</td>
-            </tr>
-            <tr>
-              <th>RETENTION</th>
-              <td>Amount</td>
-            </tr>
-            <tr>
-              <th>TOTAL</th>
-              <td>Amount</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <%= render(SiwappWeb.ItemView, "item_form.html", inputs_for: pseudo_inputs_for(@changeset), f: f, changeset: @changeset) %>
   </fieldset>
-
   <fieldset class="fieldset">
     <h2>PAYMENTS</h2>
 

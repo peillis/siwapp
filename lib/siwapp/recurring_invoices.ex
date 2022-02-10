@@ -34,6 +34,7 @@ defmodule Siwapp.RecurringInvoices do
   def create(attrs \\ %{}) do
     %RecurringInvoice{}
     |> RecurringInvoice.changeset(attrs)
+    |> RecurringInvoice.untransform_items()
     |> Repo.insert()
   end
 
@@ -47,6 +48,7 @@ defmodule Siwapp.RecurringInvoices do
   def update(recurring_invoice, attrs) do
     recurring_invoice
     |> RecurringInvoice.changeset(attrs)
+    |> RecurringInvoice.untransform_items()
     |> Repo.update()
   end
 
