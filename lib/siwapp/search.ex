@@ -3,14 +3,13 @@ defmodule Siwapp.Search do
   Search Context
   """
   alias Siwapp.{Query, Repo}
-  alias Siwapp.Customers.Customer
   alias Siwapp.Search.SearchQuery
 
   @doc """
   Filter invoices, customers or recurring_invoices by the selected parameters
   """
-  def filters(Customer, value) do
-    Customer
+  def filters(Siwapp.Customers.Customer = customer, value) do
+    customer
     |> SearchQuery.name_email_or_id(value)
     |> Repo.all()
   end
