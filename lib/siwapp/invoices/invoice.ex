@@ -127,7 +127,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
-    |> validate_length(:currency, max: 100)
+    |> validate_length(:currency, max: 3)
     |> calculate()
   end
 

@@ -108,11 +108,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  defp currency_options() do
-    options = ["EUR", "USD", "GBP"]
-    default = Siwapp.Settings.value(:currency)
-
-    [default | List.delete(options, default)]
-  end
-
 end

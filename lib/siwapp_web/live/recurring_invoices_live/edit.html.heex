@@ -81,7 +81,7 @@
       <div class="field">
         <%= label f, :currency, class: "label" %>
         <p class="control select is-fullwidth">
-          <%= select f, :currency, ["USD", "EUR", "GBP"] %>
+          <%= select f, :currency, SiwappWeb.PageView.list_currencies(:default_first) %>
         </p>
       </div>
     </div>
