@@ -33,7 +33,7 @@ defmodule Siwapp.Invoices do
 
   @doc """
   Gets a list of the invoices by giving a list of tuples with {key, value}
-  where the key is an atom
+  where the key is an atom. If second argument provided, preloads this.
   """
 
   @spec list_by([{atom(), any()}]) :: list()
@@ -41,6 +41,15 @@ defmodule Siwapp.Invoices do
     Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
     end)
+    |> Repo.all()
+  end
+
+  @spec list_by([{atom(), any()}], atom) :: list()
+  def list_by(query_list, assoc) do
+    Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
+      InvoiceQuery.list_by_query(acc_query, field, value)
+    end)
+    |> Query.list_preload(assoc)
     |> Repo.all()
   end
 
