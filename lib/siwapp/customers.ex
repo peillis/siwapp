@@ -5,6 +5,7 @@ defmodule Siwapp.Customers do
   import Ecto.Query
 
   alias Siwapp.Customers.Customer
+  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Query
   alias Siwapp.Repo
 
@@ -88,6 +89,37 @@ defmodule Siwapp.Customers do
 
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
+  end
+
+  def money(customer_id, type) do
+    currency =
+      case currencies(customer_id) do
+        [nil] -> nil
+        [currency] -> String.to_existing_atom(currency)
+        _ -> nil
+      end
+
+    {amount(customer_id, type), currency}
+  end
+
+  defp currencies(customer_id) do
+    Invoice
+    |> InvoiceQuery.currencies_for_customer(customer_id)
+    |> Repo.all()
+  end
+
+  def amount(customer_id, :due) do
+    case {amount(customer_id, :total), amount(customer_id, :paid)} do
+      {total, nil} -> total || 0
+      {nil, paid} -> -paid
+      {total, paid} -> total - paid
+    end
+  end
+
+  def amount(customer_id, type) do
+    Invoice
+    |> InvoiceQuery.amount_for_customer(customer_id, type)
+    |> Repo.one() || 0
   end
 
   @spec get_by_hash_id(binary, binary) :: Customer.t() | nil
