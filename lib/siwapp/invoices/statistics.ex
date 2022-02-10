@@ -13,7 +13,7 @@ defmodule Siwapp.Invoices.Statistics do
     invoices
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
-    |> set_time_scale(31)
+    |> set_time_scale(30)
     |> Enum.map(&{&1.issue_date, &1.gross_amount})
   end
 
