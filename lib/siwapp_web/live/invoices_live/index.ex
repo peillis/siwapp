@@ -68,7 +68,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    invoices = Search.filters(Invoice, params["search_input"], :invoice)
+    invoices = Search.filters(Invoice, params["search_input"])
     {:noreply, assign(socket, :invoices, invoices)}
   end
 

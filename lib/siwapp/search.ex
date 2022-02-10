@@ -5,15 +5,17 @@ defmodule Siwapp.Search do
   alias Siwapp.{Query, Repo}
   alias Siwapp.Search.SearchQuery
 
-  def filters(query, value, view) do
+  def filters(query, value) do
     query
     |> SearchQuery.name_email_or_id(value)
-    |> maybe_preload(view)
+    |> maybe_preload()
     |> Repo.all()
   end
 
-  def maybe_preload(query, view) do
-    if view in [:invoice, :recurring_invoice] do
+  def maybe_preload(query) do
+    {view, _} = query.from.source
+
+    if view in ["invoices", "recurring_invoices"] do
       Query.list_preload(query, :series)
     else
       query
