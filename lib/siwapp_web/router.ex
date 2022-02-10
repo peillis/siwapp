@@ -16,7 +16,6 @@ defmodule SiwappWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug Plug.Parsers, parsers: [:json], json_decoder: Jason
-    plug JSONAPI.Deserializer
   end
 
   pipeline :token_authenticated do
