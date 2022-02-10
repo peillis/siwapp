@@ -43,6 +43,34 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> limit(1)
   end
 
+  def amount_for_customer(query, customer_id, :total) do
+    query
+    |> where(customer_id: ^customer_id)
+    |> where(draft: false)
+    |> where(failed: false)
+    |> select([i], sum(i.gross_amount))
+  end
+
+  def amount_for_customer(query, customer_id, :paid) do
+    query
+    |> where(customer_id: ^customer_id)
+    |> where(draft: false)
+    |> where(failed: false)
+    |> select([i], sum(i.paid_amount))
+  end
+
+  def invoices_for_customer(query, customer_id) do
+    query
+    |> where(customer_id: ^customer_id)
+  end
+
+  def currencies_for_customer(query, customer_id) do
+    query
+    |> where(customer_id: ^customer_id)
+    |> group_by([i], i.currency)
+    |> select([i], i.currency)
+  end
+
   @doc """
   Gets a query on the invoices that match with the params
   """
