@@ -4,6 +4,7 @@ defmodule Siwapp.RecurringInvoices do
   """
   import Ecto.Query, warn: false
 
+  alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
@@ -36,6 +37,11 @@ defmodule Siwapp.RecurringInvoices do
     |> Repo.insert()
   end
 
+  @spec change(RecurringInvoice.t(), map) :: Ecto.Changeset.t()
+  def change(%RecurringInvoice{} = recurring_invoice, attrs \\ %{}) do
+    RecurringInvoice.changeset(recurring_invoice, attrs)
+  end
+
   @spec update(RecurringInvoice.t(), map) ::
           {:ok, RecurringInvoice.t()} | {:error, Ecto.Changeset.t()}
   def update(recurring_invoice, attrs) do
@@ -50,20 +56,36 @@ defmodule Siwapp.RecurringInvoices do
     Repo.delete(recurring_invoice)
   end
 
-  # Expect will be added when function is finished
-  def generate_invoices(id) do
-    Repo.get!(RecurringInvoice, id)
-  end
-
-  @spec change(RecurringInvoice.t(), map) :: Ecto.Changeset.t()
-  def change(%RecurringInvoice{} = recurring_invoice, attrs \\ %{}) do
-    RecurringInvoice.changeset(recurring_invoice, attrs)
-  end
-
   @doc """
-  Given a recurring_invoice id, returns the amount of invoices that should
-  be generated
+  Generates invoices associated to recurring_invoice if this is enabled
   """
+  @spec generate_invoices(pos_integer()) :: :ok
+  def generate_invoices(id) do
+    rec_inv = Repo.get!(RecurringInvoice, id)
+    n = invoices_to_generate(id)
+    Enum.each(1..n//1, fn _ -> Invoices.create(build_invoice_attrs(rec_inv)) end)
+  end
+
+  @spec build_invoice_attrs(RecurringInvoice.t()) :: map
+  defp build_invoice_attrs(rec_inv) do
+    rec_inv
+    |> Map.from_struct()
+    |> Map.put(:recurring_invoice_id, rec_inv.id)
+    |> maybe_add_due_date(rec_inv.days_to_due)
+    |> Map.put(:items, rec_inv.items)
+  end
+
+  @spec maybe_add_due_date(map, integer) :: map
+  defp maybe_add_due_date(attrs, days_to_due) do
+    if days_to_due do
+      due_date = Date.add(Date.utc_today(), days_to_due)
+      Map.put(attrs, :due_date, due_date)
+    else
+      attrs
+    end
+  end
+
+  # Given a recurring_invoice id, returns the amount of invoices that should  be generated
   @spec invoices_to_generate(pos_integer()) :: integer
   def invoices_to_generate(id) do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
@@ -79,28 +101,34 @@ defmodule Siwapp.RecurringInvoices do
 
   # Given a recurring_invoice id, returns the amount of invoices that
   # should have been generated from starting_date until today, both included
+  # if recurring_invoice is enabled. Otherwise returns 0
   @spec theoretical_number_of_inv_generated(pos_integer()) :: non_neg_integer()
   defp theoretical_number_of_inv_generated(id) do
     rec_inv = get!(id)
-    today = Date.utc_today()
 
-    max_date =
-      [today, rec_inv.finishing_date]
-      |> Enum.reject(&is_nil(&1))
-      |> Enum.sort(Date)
-      |> List.first()
+    if rec_inv.enabled do
+      today = Date.utc_today()
 
-    number_using_dates =
-      number_of_invoices_in_between_dates(
-        rec_inv.starting_date,
-        rec_inv.period,
-        rec_inv.period_type,
-        max_date
-      )
+      max_date =
+        [today, rec_inv.finishing_date]
+        |> Enum.reject(&is_nil(&1))
+        |> Enum.sort(Date)
+        |> List.first()
 
-    if rec_inv.max_ocurrences,
-      do: min(number_using_dates, rec_inv.max_ocurrences),
-      else: number_using_dates
+      number_using_dates =
+        number_of_invoices_in_between_dates(
+          rec_inv.starting_date,
+          rec_inv.period,
+          rec_inv.period_type,
+          max_date
+        )
+
+      if rec_inv.max_ocurrences,
+        do: min(number_using_dates, rec_inv.max_ocurrences),
+        else: number_using_dates
+    else
+      0
+    end
   end
 
   # Returns the number of invoices that should have been generated from starting_date until max_date both included

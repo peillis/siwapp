@@ -15,6 +15,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           id: nil | pos_integer(),
+          enabled: boolean,
           identification: nil | binary,
           name: nil | binary,
           email: nil | binary,
@@ -23,27 +24,26 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           shipping_address: nil | binary,
           net_amount: integer,
           gross_amount: integer,
-          send_by_email: boolean,
+          notes: nil | binary,
+          terms: nil | binary,
+          meta_attributes: nil | map,
+          customer_id: nil | pos_integer(),
+          series_id: nil | pos_integer(),
+          currency: nil | <<_::24>>,
           days_to_due: nil | integer,
-          enabled: boolean,
+          items: nil | [map],
+          send_by_email: boolean,
           max_ocurrences: nil | pos_integer(),
           period: nil | pos_integer,
           period_type: nil | binary,
           starting_date: nil | Date.t(),
           finishing_date: nil | Date.t(),
-          currency: nil | <<_::24>>,
-          deleted_at: nil | Date.t(),
-          notes: nil | binary,
-          terms: nil | binary,
-          meta_attributes: nil | map,
-          items: nil | [map],
           customer: Ecto.Association.NotLoaded.t() | Customer.t(),
           series: Ecto.Association.NotLoaded.t() | [Series.t()],
           invoices: Ecto.Association.NotLoaded.t() | [Invoice.t()],
           updated_at: nil | DateTime.t(),
           inserted_at: nil | DateTime.t(),
-          customer_id: nil | pos_integer(),
-          series_id: nil | pos_integer()
+          deleted_at: nil | Date.t()
         }
 
   @fields [
@@ -95,7 +95,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :notes, :string
     field :terms, :string
     field :meta_attributes, :map, default: %{}
-    field :items, {:array, :map}, default: [%{}]
+    field :items, {:array, :map}, default: []
     belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :series, Series
     has_many :invoices, Invoice, on_replace: :delete
