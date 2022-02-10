@@ -97,7 +97,7 @@ Enum.each(
 )
 
 # SEEDING INVOICES
-currencies = ["USD", "EUR", "GBP", nil]
+currencies = ["USD", "USD", "USD", "EUR", "GBP"]
 booleans = [true, false]
 
 invoices =
