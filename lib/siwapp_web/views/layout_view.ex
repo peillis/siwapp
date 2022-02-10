@@ -40,7 +40,6 @@ defmodule SiwappWeb.LayoutView do
 
     if socket.view in views_with_search do
       component = which_component(socket.view)
-
       live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", component: component)
     end
   end
