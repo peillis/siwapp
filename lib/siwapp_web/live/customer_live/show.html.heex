@@ -1,2 +1,0 @@
-<h1>Invoices for <%= @customer.name %></h1>
-<%= live_render(@socket, SiwappWeb.InvoicesLive.Index, id: "show_invoices", session: %{ "customer_id" => @customer.id }) %>
