@@ -13,7 +13,20 @@
 
   <div class="search-menu">
     <div class="search-menu-content" id="search-menu">
-      <.live_component module={@component} id="search-content"/>
+      <%= if @live do%>
+        <.live_component module={@component} id="search-content"/>
+      <% else %>
+        <div class="columns">
+          <div class="column is-6">
+            <label class="label">KEY:</label>
+            <input class="input" type="text">
+          </div>
+          <div class="column is-6">
+            <label class="label">VALUE:</label>
+            <input class="input" type="text">
+          </div>
+        </div>
+      <% end %>
       <div class="buttons is-right">
         <button class="button is-info">Export to csv</button>
         <button class="button is-info">Search</button>
