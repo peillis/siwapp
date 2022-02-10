@@ -16,9 +16,4 @@ defmodule SiwappWeb.Api.TokenController do
         |> render("error.json", error_message: "Invalid email or password")
     end
   end
-
-  def show(conn, _params) do
-    conn
-    |> render("valid_token.json", email: conn.assigns.current_user.email)
-  end
 end
