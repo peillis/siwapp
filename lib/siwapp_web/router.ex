@@ -16,7 +16,6 @@ defmodule SiwappWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug Plug.Parsers, parsers: [:json], json_decoder: Jason
-    plug JSONAPI.Deserializer
   end
 
   pipeline :token_authenticated do
@@ -29,7 +28,7 @@ defmodule SiwappWeb.Router do
     post "/sign_in", Api.TokenController, :create
   end
 
-  scope "/api/graphql" do
+  scope "/graphql" do
     if Mix.env() == :dev do
       pipe_through :api
       forward "/graphiql", Absinthe.Plug.GraphiQL, schema: SiwappWeb.Schema
@@ -44,20 +43,7 @@ defmodule SiwappWeb.Router do
   scope "/api", SiwappWeb do
     pipe_through [:api, :token_authenticated]
 
-    get "/", Api.TokenController, :show
-
-    resources "/invoices", Api.InvoicesController, except: [:new, :edit]
-    get "/invoices/searching/:map", Api.InvoicesController, :searching
-    get "/invoices/send_email/:id", Api.InvoicesController, :send_email
     get "/invoices/download/:id", Api.InvoicesController, :download
-
-    resources "/recurring_invoices", Api.RecurringInvoicesController, except: [:new, :edit]
-
-    get "/recurring_invoices/generate_invoices/:id",
-        Api.RecurringInvoicesController,
-        :generate_invoices
-
-    resources "/customers", Api.CustomersController, except: [:new, :edit, :index]
   end
 
   # Enables LiveDashboard only for development

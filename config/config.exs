@@ -58,14 +58,6 @@ config :dart_sass,
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
 
-config :jsonapi,
-  scheme: "https",
-  namespace: "/api",
-  field_transformation: :dasherize,
-  remove_links: false,
-  json_library: Jason,
-  paginator: nil
-
 config :money,
   default_currency: :USD,
   symbol_space: true
