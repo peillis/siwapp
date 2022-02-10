@@ -8,11 +8,18 @@ defmodule SiwappWeb.CustomerLive.Show do
     {:ok, socket}
   end
 
+  def render(assigns) do
+    ~H"""
+      <h1>Invoices for <%= @customer.name %></h1>
+      <%= live_render(@socket, SiwappWeb.InvoicesLive.Index, id: "show_invoices", session: %{ "customer_id" => @customer.id }) %>
+    """
+  end
+
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  def apply_action(socket, :show, %{ "id" => customer_id }) do
+  def apply_action(socket, :show, %{"id" => customer_id}) do
     socket
     |> assign(:customer, Customers.get(customer_id))
   end
