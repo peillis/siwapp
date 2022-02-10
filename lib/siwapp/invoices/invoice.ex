@@ -5,6 +5,7 @@ defmodule Siwapp.Invoices.Invoice do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Siwapp.InvoiceHelper
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
