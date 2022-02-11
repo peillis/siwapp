@@ -38,7 +38,6 @@ defmodule Siwapp.Invoices.Invoice do
           draft: boolean(),
           paid: boolean(),
           failed: boolean(),
-          deleted_number: pos_integer() | nil,
           number: pos_integer() | nil,
           issue_date: Date.t() | nil,
           customer: Ecto.Association.NotLoaded.t() | Customer.t(),
@@ -63,7 +62,6 @@ defmodule Siwapp.Invoices.Invoice do
     :issue_date,
     :due_date,
     :failed,
-    :deleted_number,
     :currency,
     :invoicing_address,
     :shipping_address,
@@ -92,7 +90,6 @@ defmodule Siwapp.Invoices.Invoice do
     field :issue_date, :date
     field :due_date, :date
     field :failed, :boolean, default: false
-    field :deleted_number, :integer
     field :currency, :string
     field :invoicing_address, :string
     field :shipping_address, :string
@@ -119,7 +116,6 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_required_draft()
     |> validate_draft_has_not_number()
     |> unique_constraint([:series_id, :number])
-    |> unique_constraint([:series_id, :deleted_number])
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
     |> foreign_key_constraint(:recurring_invoice_id)
