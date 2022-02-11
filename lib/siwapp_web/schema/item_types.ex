@@ -8,7 +8,7 @@ defmodule SiwappWeb.Schema.ItemTypes do
     field :quantity, :integer
     field :discount, :integer
     field :description, :string
-    field :virtual_unitary_cost, :string
+    field :unitary_cost, :string
     field :invoice, :invoice
   end
 end

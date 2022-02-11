@@ -41,7 +41,7 @@ defmodule SiwappWeb.Schema do
     field :quantity, :integer
     field :discount, :integer
     field :description, :string
-    field :virtual_unitary_cost, :string
+    field :unitary_cost, :integer
     field :taxes, list_of(:string)
   end
 
@@ -69,7 +69,6 @@ defmodule SiwappWeb.Schema do
       arg(:terms, :string)
       arg(:notes, :string)
       arg(:series_id, non_null(:id))
-      arg(:number, :string)
       arg(:currency, :string)
       arg(:issue_date, non_null(:date))
       arg(:due_date, :date)
