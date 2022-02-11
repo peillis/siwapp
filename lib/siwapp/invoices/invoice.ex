@@ -93,7 +93,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :due_date, :date
     field :failed, :boolean, default: false
     field :deleted_number, :integer
-    field :currency, :string, autogenerate: {Siwapp.Settings, :value, [:currency]}
+    field :currency, :string
     field :invoicing_address, :string
     field :shipping_address, :string
     field :notes, :string
@@ -112,6 +112,7 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
+    |> assign_currency()
     |> assign_issue_date()
     |> assign_due_date()
     |> validate_draft_enablement()

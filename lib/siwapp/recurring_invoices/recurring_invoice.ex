@@ -110,6 +110,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     recurring_invoice
     |> cast(attrs, @fields)
     |> maybe_find_customer_or_new()
+    |> assign_currency()
     |> transform_items()
     |> validate_items()
     |> apply_changes_items()
