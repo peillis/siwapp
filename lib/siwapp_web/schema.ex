@@ -75,10 +75,7 @@ defmodule SiwappWeb.Schema do
       arg(:due_date, :date)
       arg(:draft, :boolean)
       arg(:items, list_of(:items))
-      arg(:paid_amount, :string)
-      arg(:paid, :boolean)
       arg(:failed, :boolean)
-      arg(:sent_by_email, :boolean)
 
       resolve(&Resolvers.Invoice.create/2)
     end
