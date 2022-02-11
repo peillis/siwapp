@@ -91,7 +91,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :period_type, :string
     field :starting_date, :date
     field :finishing_date, :date
-    field :currency, :string, autogenerate: {Siwapp.Settings, :value, [:currency]}
+    field :currency, :string
     field :deleted_at, :utc_datetime
     field :notes, :string
     field :terms, :string
