@@ -12,6 +12,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   def mount(_params, _session, socket) do
     {:ok,
      socket
+     |> assign(:multiselect_options, Commons.list_taxes_for_multiselect())
      |> assign(:series, Commons.list_series())
      |> assign(:customer_suggestions, [])}
   end
@@ -27,7 +28,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
-    |> assign(:changeset, Invoices.change(new_invoice))
+    |> assign(
+      :changeset,
+      Invoices.change(new_invoice)
+      |> Invoices.number_assignment_when_legal()
+    )
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -60,6 +65,19 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  def handle_event(
+        "validate",
+        %{"invoice" => params, "_target" => ["invoice", "series_id"]},
+        socket
+      ) do
+    changeset =
+      socket.assigns.invoice
+      |> Invoices.change(params)
+      |> Invoices.number_assignment_when_legal()
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do

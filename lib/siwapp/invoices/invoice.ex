@@ -9,9 +9,9 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{InvoiceQuery, Item}
+  alias Siwapp.Invoices
+  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
-  alias Siwapp.Repo
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -112,10 +112,8 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
-    |> maybe_find_customer_or_new()
     |> assign_issue_date()
     |> assign_due_date()
-    |> number_assignment_when_legal()
     |> validate_draft_enablement()
     |> validate_required_draft()
     |> validate_draft_has_not_number()
@@ -146,9 +144,8 @@ defmodule Siwapp.Invoices.Invoice do
       changeset
     else
       issue_date = get_field(changeset, :issue_date)
-      days_to_due = Siwapp.Settings.value(:days_to_due)
+      days_to_due = Siwapp.Settings.value(:days_to_due, :cache)
       due_date = Date.add(issue_date, String.to_integer(days_to_due))
-
       put_change(changeset, :due_date, due_date)
     end
   end
@@ -186,7 +183,7 @@ defmodule Siwapp.Invoices.Invoice do
 
   # It's illegal to assign a number to a draft
   @spec number_assignment_when_legal(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp number_assignment_when_legal(changeset) do
+  def number_assignment_when_legal(changeset) do
     cond do
       get_field(changeset, :draft) -> changeset
       is_nil(get_change(changeset, :series_id)) -> changeset
@@ -198,17 +195,7 @@ defmodule Siwapp.Invoices.Invoice do
   @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_number(changeset) do
     series_id = get_change(changeset, :series_id)
-    proper_number = which_number(series_id)
+    proper_number = Invoices.next_number_in_series(series_id)
     put_change(changeset, :number, proper_number)
-  end
-
-  @spec which_number(pos_integer()) :: integer
-  defp which_number(series_id) do
-    query = InvoiceQuery.last_number_with_series_id(__MODULE__, series_id)
-
-    case Repo.one(query) do
-      nil -> Repo.get(Series, series_id).first_number
-      invoice -> invoice.number + 1
-    end
   end
 end

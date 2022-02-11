@@ -115,7 +115,7 @@ defmodule Siwapp.Invoices.Item do
         (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
         |> Enum.map(&String.downcase/1)
 
-      list_taxes = Commons.list_taxes()
+      list_taxes = Commons.list_taxes(:cache)
       taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
       database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
 

@@ -1,7 +1,7 @@
 defmodule Siwapp.InvoiceTest do
   use Siwapp.DataCase
 
-  alias Siwapp.Commons
+  alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Settings
@@ -11,10 +11,13 @@ defmodule Siwapp.InvoiceTest do
   import Siwapp.CommonsFixtures
 
   setup do
-    {:ok, series} = Commons.create_series(%{name: "A-Series", code: "A-"})
-    {:ok, tax1} = Commons.create_tax(%{name: "VAT", value: 21, default: true})
-    {:ok, tax2} = Commons.create_tax(%{name: "RETENTION", value: -15})
+    series = series_fixture(%{name: "A-Series", code: "A-"})
+    tax1 = taxes_fixture(%{name: "VAT", value: 21, default: true})
+    tax2 = taxes_fixture(%{name: "RETENTION", value: -15})
     settings_fixture()
+
+    Cachex.clear(:siwapp_cache)
+
     %{series_id: series.id, taxes: [tax1, tax2]}
   end
 
@@ -199,7 +202,12 @@ defmodule Siwapp.InvoiceTest do
     test "If number's already assigned, changeset isn't valid" do
       series = series_fixture()
       _invoice = invoice_fixture(%{series_id: series.id, number: 3})
-      changeset = Invoice.changeset(%Invoice{}, %{series_id: series.id, number: 3})
+
+      changeset =
+        %Invoice{}
+        |> Invoice.changeset(%{series_id: series.id, number: 3})
+        |> InvoiceHelper.maybe_find_customer_or_new()
+        |> Invoice.number_assignment_when_legal()
 
       assert changeset.valid? == false
     end

@@ -5,7 +5,6 @@ defmodule Siwapp.Commons do
 
   import Ecto.Query, warn: false
   alias Siwapp.Repo
-
   alias Siwapp.Commons.{Series, Tax}
 
   ### SERIES ###
@@ -211,6 +210,18 @@ defmodule Siwapp.Commons do
   @spec list_taxes :: [Tax.t()]
   def list_taxes do
     Repo.all(Tax)
+  end
+
+  def list_taxes(:cache) do
+    case Cachex.get(:siwapp_cache, :taxes) do
+      {:ok, nil} ->
+        taxes = list_taxes()
+        Cachex.put(:siwapp_cache, :taxes, taxes, ttl: :timer.minutes(5))
+        taxes
+
+      {:ok, taxes} ->
+        taxes
+    end
   end
 
   @doc """

@@ -4,6 +4,13 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
 
   alias Siwapp.Customers
 
+  def mount(socket) do
+    {:ok,
+     socket
+     |> assign(:customer_name, "")
+     |> assign(:customer_suggestions, [])}
+  end
+
   def update(assigns, socket) do
     changeset = assigns.f.source
 
@@ -13,8 +20,8 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     }
 
     customer_suggestions =
-      if Customers.exists_with_name?(customer_name.change),
-        do: [],
+      if socket.assigns.customer_name == customer_name.change,
+        do: socket.assigns.customer_suggestions,
         else: Customers.suggest_by_name_input(customer_name.change)
 
     socket =

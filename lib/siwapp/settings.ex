@@ -82,6 +82,18 @@ defmodule Siwapp.Settings do
     end
   end
 
+  def value(key, :cache) do
+    case Cachex.get(:siwapp_cache, key) do
+      {:ok, nil} ->
+        value = value(key)
+        Cachex.put(:siwapp_cache, key, value, ttl: :timer.minutes(5))
+        value
+
+      {:ok, value} ->
+        value
+    end
+  end
+
   @doc """
   Takes key-value tuple and updates the value of the Setting determined by key
   """

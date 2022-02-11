@@ -55,7 +55,7 @@
           <%= error_tag f, :due_date %>
       </div>
     </div>
-    <%= render(SiwappWeb.ItemView, "item_form.html", f: f, inputs_for: inputs_for(f, :items), changeset: @changeset) %>
+    <%= render(SiwappWeb.ItemView, "item_form.html", f: f, inputs_for: inputs_for(f, :items), changeset: @changeset, multiselect_options: @multiselect_options) %>
   </fieldset>
 
   <fieldset class="fieldset">
