@@ -149,12 +149,9 @@ defmodule Siwapp.Invoices do
     end
   end
 
-  defp due_date_status(due_date) do
-    if Date.diff(due_date, Date.utc_today()) > 0 do
-      :pending
-    else
-      :past_due
-    end
+  def list_currencies do
+    default_currency = Siwapp.Settings.value(:currency)
+    Enum.uniq([default_currency] ++ primary_currencies() ++ all_currencies())
   end
 
   @spec next_number_in_series(pos_integer()) :: integer
@@ -166,6 +163,23 @@ defmodule Siwapp.Invoices do
       invoice -> invoice.number + 1
     end
   end
+
+  defp due_date_status(due_date) do
+    if Date.diff(due_date, Date.utc_today()) > 0 do
+      :pending
+    else
+      :past_due
+    end
+  end
+
+  defp all_currencies do
+    Money.Currency.all()
+    |> Map.keys()
+    |> Enum.map(&Atom.to_string/1)
+    |> Enum.sort()
+  end
+
+  defp primary_currencies, do: ["USD", "EUR", "GBP"]
 
   @doc """
   Gets an item by id

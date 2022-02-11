@@ -14,7 +14,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
      socket
      |> assign(:multiselect_options, Commons.list_taxes_for_multiselect())
      |> assign(:series, Commons.list_series())
-     |> assign(:currency_options, SiwappWeb.PageView.list_currencies())
+     |> assign(:currency_options, Invoices.list_currencies())
      |> assign(:customer_suggestions, [])}
   end
 
