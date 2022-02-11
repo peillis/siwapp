@@ -8,7 +8,7 @@ defmodule Siwapp.Invoices.Statistics do
   Returns a list of tuples, each containing the accumulated amount of money from all the invoices
   per day, for the given selection of 'invoices'.
   """
-  @spec get_data_for_a_month(pos_integer()) :: [tuple()]
+  @spec get_data_for_a_month([Invoice.t()]) :: [tuple()]
   def get_data_for_a_month(invoices \\ Invoices.list()) do
     invoices
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
