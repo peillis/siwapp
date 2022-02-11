@@ -13,6 +13,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:ok,
      socket
      |> assign(:series, Commons.list_series())
+     |> assign(:currency_options, SiwappWeb.PageView.list_currencies())
      |> assign(:customer_suggestions, [])}
   end
 
