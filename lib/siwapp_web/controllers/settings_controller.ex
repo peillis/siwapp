@@ -1,6 +1,7 @@
 defmodule SiwappWeb.SettingsController do
   use SiwappWeb, :controller
 
+  alias Siwapp.Invoices
   alias Siwapp.Settings
 
   def edit(conn, _params) do
@@ -9,6 +10,7 @@ defmodule SiwappWeb.SettingsController do
 
     conn
     |> assign(:changeset, changeset)
+    |> assign(:currency_options, Invoices.list_currencies())
     |> render("edit.html")
   end
 
@@ -17,6 +19,7 @@ defmodule SiwappWeb.SettingsController do
       {:ok, changeset} ->
         conn
         |> assign(:changeset, changeset)
+        |> assign(:currency_options, Invoices.list_currencies())
         |> put_flash(:info, "Settings saved succesfully")
         |> render("edit.html")
 

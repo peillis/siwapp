@@ -81,7 +81,7 @@
       <div class="field">
         <%= label f, :currency, class: "label" %>
         <p class="control select is-fullwidth">
-          <%= select f, :currency, ["USD", "EUR", "GBP"] %>
+          <%= select f, :currency, @currency_options %>
         </p>
       </div>
     </div>

@@ -6,6 +6,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
+  alias Siwapp.Invoices
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
@@ -13,6 +14,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:ok,
      socket
      |> assign(:series, Commons.list_series())
+     |> assign(:currency_options, Invoices.list_currencies())
      |> assign(:customer_suggestions, [])}
   end
 

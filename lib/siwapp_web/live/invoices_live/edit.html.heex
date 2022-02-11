@@ -34,7 +34,7 @@
       <div class="field">
         <%= label f, :currency, class: "label" %>
         <p class="control select is-fullwidth">
-          <%= select f, :currency, ["USD", "EUR", "GBP"], phx_debounce: "blur" %>
+          <%= select f, :currency, @currency_options, phx_debounce: "blur" %>
         </p>
       </div>
     </div>

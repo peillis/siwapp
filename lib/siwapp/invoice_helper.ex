@@ -22,6 +22,14 @@ defmodule Siwapp.InvoiceHelper do
     end
   end
 
+  def assign_currency(changeset) do
+    if get_field(changeset, :currency) do
+      changeset
+    else
+      put_change(changeset, :currency, Siwapp.Settings.value(:currency))
+    end
+  end
+
   @doc """
   Performs the totals calculations for net_amount, taxes_amounts and gross_amount fields.
   """

@@ -149,12 +149,10 @@ defmodule Siwapp.Invoices do
     end
   end
 
-  defp due_date_status(due_date) do
-    if Date.diff(due_date, Date.utc_today()) > 0 do
-      :pending
-    else
-      :past_due
-    end
+  def list_currencies do
+    Money.Currency.all()
+    |> Map.keys()
+    |> Enum.sort()
   end
 
   @spec next_number_in_series(pos_integer()) :: integer
@@ -164,6 +162,14 @@ defmodule Siwapp.Invoices do
     case Repo.one(query) do
       nil -> Repo.get(Series, series_id).first_number
       invoice -> invoice.number + 1
+    end
+  end
+
+  defp due_date_status(due_date) do
+    if Date.diff(due_date, Date.utc_today()) > 0 do
+      :pending
+    else
+      :past_due
     end
   end
 

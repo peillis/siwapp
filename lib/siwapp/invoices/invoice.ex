@@ -112,6 +112,7 @@ defmodule Siwapp.Invoices.Invoice do
     invoice
     |> cast(attrs, @fields)
     |> cast_assoc(:items)
+    |> assign_currency()
     |> assign_issue_date()
     |> assign_due_date()
     |> validate_draft_enablement()
@@ -127,7 +128,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
     |> validate_length(:contact_person, max: 100)
-    |> validate_length(:currency, max: 100)
+    |> validate_length(:currency, max: 3)
     |> calculate()
   end
 

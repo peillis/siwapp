@@ -59,7 +59,7 @@
       <div class="field">
         <%=label f, :currency, class: "label"%>
         <p class="control select is-fullwidth is-hover">
-          <%=select(f, :currency, ["USD", "EUR"])%>
+          <%=select(f, :currency, @currency_options)%>
         </p>
         <%=error_tag f, :currency %>
       </div>

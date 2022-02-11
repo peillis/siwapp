@@ -28,7 +28,7 @@ defmodule Siwapp.Settings.SettingBundle do
     |> cast(attrs, @labels)
     |> validate_email()
     # Example list of currency, will be updated to whole
-    |> validate_inclusion(:currency, ["USD", "EUR"])
+    |> validate_length(:currency, max: 3)
   end
 
   @spec fields_map :: map
