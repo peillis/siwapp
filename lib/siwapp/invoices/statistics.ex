@@ -3,6 +3,7 @@ defmodule Siwapp.Invoices.Statistics do
   Statistics utils.
   """
   alias Siwapp.Invoices
+  alias Siwapp.Invoices.Invoice
 
   @doc """
   Returns a list of tuples, each containing the accumulated amount of money from all the invoices
