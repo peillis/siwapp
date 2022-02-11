@@ -1,8 +1,8 @@
 defmodule SiwappWeb.InvoicesLive.Index do
   @moduledoc false
   use SiwappWeb, :live_view
-
-  alias Siwapp.Invoices
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.{Invoices, Search}
   alias SiwappWeb.PageView
 
   def mount(_params, _session, %{id: "home"} = socket) do
@@ -65,6 +65,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
     else
       {:noreply, push_redirect(socket, to: Routes.invoices_edit_path(socket, :edit, id))}
     end
+  end
+
+  def handle_event("search", params, socket) do
+    invoices = Search.filters(Invoice, params["search_input"])
+    {:noreply, assign(socket, :invoices, invoices)}
   end
 
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
