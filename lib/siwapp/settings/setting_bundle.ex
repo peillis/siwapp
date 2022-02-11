@@ -37,7 +37,7 @@ defmodule Siwapp.Settings.SettingBundle do
   @spec validate_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_email(changeset) do
     changeset
-    |> validate_format(:company_email, ~r/^[^\s]+@[^\s]+$/,
+    |> validate_format(:company_email, Application.fetch_env!(:siwapp, :email_regex),
       message: "must have the @ sign and no spaces"
     )
     |> validate_length(:company_email, max: 160)

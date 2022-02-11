@@ -8,7 +8,8 @@
 import Config
 
 config :siwapp,
-  ecto_repos: [Siwapp.Repo]
+  ecto_repos: [Siwapp.Repo],
+  email_regex: ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
 
 # Configures the endpoint
 config :siwapp, SiwappWeb.Endpoint,
