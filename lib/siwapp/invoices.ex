@@ -126,6 +126,10 @@ defmodule Siwapp.Invoices do
     Invoice.changeset(invoice, attrs)
   end
 
+  def number_assignment_when_legal(changeset) do
+    Invoice.number_assignment_when_legal(changeset)
+  end
+
   def list_past_due(page, per_page \\ 20) do
     Invoice
     |> InvoiceQuery.list_past_due()

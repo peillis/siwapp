@@ -20,16 +20,9 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     }
 
     customer_suggestions =
-      cond do
-        socket.assigns.customer_name == customer_name.change ->
-          socket.assigns.customer_suggestions
-
-        Customers.exists_with_name?(customer_name.change) ->
-          []
-
-        true ->
-          Customers.suggest_by_name_input(customer_name.change)
-      end
+      if socket.assigns.customer_name == customer_name.change,
+        do: socket.assigns.customer_suggestions,
+        else: Customers.suggest_by_name_input(customer_name.change)
 
     socket =
       socket
