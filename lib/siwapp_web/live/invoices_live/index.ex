@@ -14,7 +14,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:checked, MapSet.new())
      |> assign(:summary_state, set_summary(:closed))
      |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month())
-     |> assign(:total, Invoices.Statistics.get_accumulated_amount())
+     |> assign(:totals, total_per_currencies())
      |> assign(:page_title, "Invoices")}
   end
 
@@ -57,7 +57,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:invoices, invoices)
      |> assign(:number_of_invoices, length(invoices))
      |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month(invoices))
-     |> assign(:total, Invoices.Statistics.get_accumulated_amount(invoices))}
+     |> assign(:totals, total_per_currencies(invoices))}
   end
 
   def handle_event("change-summary-state", _params, socket) do
@@ -96,4 +96,16 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   defp set_summary(:opened), do: %{visibility: "is-block", icon: "fa-angle-up"}
   defp set_summary(:closed), do: %{visibility: "is-hidden", icon: "fa-angle-down"}
+
+  defp total_per_currencies(invoices \\ Invoices.list()) do
+    totals = Invoices.Statistics.get_accumulated_amount_per_currencies(invoices)
+    default_currency = Siwapp.Settings.value(:currency)
+
+    default_total = totals[default_currency]
+    others_totals = Map.drop(totals, [default_currency])
+
+    %{default: SiwappWeb.PageView.set_currency(default_total, default_currency),
+      others: Enum.map(others_totals, fn {currency, amount} -> SiwappWeb.PageView.set_currency(amount, currency) end)}
+
+  end
 end

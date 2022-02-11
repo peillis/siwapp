@@ -16,7 +16,7 @@ defmodule SiwappWeb.GraphicHelpers do
       smoothed: false
     ]
 
-    margins = %{left: 45, right: 15, top: 10, bottom: 20}
+    margins = %{left: 35, right: 15, top: 10, bottom: 20}
 
     data
     |> Dataset.new()

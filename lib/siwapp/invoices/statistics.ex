@@ -14,10 +14,21 @@ defmodule Siwapp.Invoices.Statistics do
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
     |> set_time_scale(30)
-    |> Enum.map(&{&1.issue_date, &1.gross_amount})
+    |> Enum.map(&{&1.issue_date, &1.gross_amount/100})
   end
 
-  def get_accumulated_amount(invoices \\ Invoices.list()), do: sum_amounts(invoices)
+  @doc """
+  Returns a map in which each key is the string of a currency code and its value the accumulated amount
+  corresponding to all the 'invoices' in that currency.
+  """
+  @spec get_accumulated_amount_per_currencies([Invoice.t()]) :: %{String.t() => integer()}
+  def get_accumulated_amount_per_currencies(invoices \\ Invoices.list()) do
+    invoices
+    |> Enum.sort_by(& &1.currency)
+    |> Enum.chunk_by(& &1.currency)
+    |> Enum.map(& {hd(&1).currency, sum_amounts(&1)})
+    |> Map.new()
+  end
 
   # We need this function so we have data (with amount = 0) for those days we have no invoices.
   # First, we create a series of graphic points with amounts of 0 for the given 'days'. Then we join
