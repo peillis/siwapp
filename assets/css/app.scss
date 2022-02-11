@@ -92,6 +92,7 @@ p.control.has-dropdown {
   }
   .navbar-mobile {
     position: fixed;
+    z-index: 30;
     bottom: 0;
   }
 }

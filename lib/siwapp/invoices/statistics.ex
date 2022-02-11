@@ -14,7 +14,7 @@ defmodule Siwapp.Invoices.Statistics do
     |> Enum.map(&Map.take(&1, [:issue_date, :gross_amount]))
     |> accumulate_amounts()
     |> set_time_scale(30)
-    |> Enum.map(&{&1.issue_date, &1.gross_amount/100})
+    |> Enum.map(&{&1.issue_date, &1.gross_amount / 100})
   end
 
   @doc """
@@ -26,7 +26,7 @@ defmodule Siwapp.Invoices.Statistics do
     invoices
     |> Enum.sort_by(& &1.currency)
     |> Enum.chunk_by(& &1.currency)
-    |> Enum.map(& {hd(&1).currency, sum_amounts(&1)})
+    |> Enum.map(&{hd(&1).currency, sum_amounts(&1)})
     |> Map.new()
   end
 

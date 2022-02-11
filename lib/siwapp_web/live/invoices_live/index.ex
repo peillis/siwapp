@@ -104,8 +104,12 @@ defmodule SiwappWeb.InvoicesLive.Index do
     default_total = totals[default_currency]
     others_totals = Map.drop(totals, [default_currency])
 
-    %{default: SiwappWeb.PageView.set_currency(default_total, default_currency),
-      others: Enum.map(others_totals, fn {currency, amount} -> SiwappWeb.PageView.set_currency(amount, currency) end)}
-
+    %{
+      default: SiwappWeb.PageView.set_currency(default_total, default_currency),
+      others:
+        Enum.map(others_totals, fn {currency, amount} ->
+          SiwappWeb.PageView.set_currency(amount, currency)
+        end)
+    }
   end
 end
