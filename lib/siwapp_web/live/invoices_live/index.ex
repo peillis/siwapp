@@ -10,8 +10,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
      socket
      |> assign(:page, 0)
      |> assign(:invoices, Invoices.scroll_listing(0))
+     |> assign(:number_of_invoices, Invoices.count())
      |> assign(:checked, MapSet.new())
-     |> assign(:summary_section, set_summary(:closed))
+     |> assign(:summary_state, set_summary(:closed))
+     |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month())
+     |> assign(:total, Invoices.Statistics.get_accumulated_amount())
      |> assign(:page_title, "Invoices")}
   end
 
@@ -48,14 +51,20 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   def handle_event("search", params, socket) do
     invoices = Search.filters(Invoice, params["search_input"])
-    {:noreply, assign(socket, :invoices, invoices)}
+
+    {:noreply,
+     socket
+     |> assign(:invoices, invoices)
+     |> assign(:number_of_invoices, length(invoices))
+     |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month(invoices))
+     |> assign(:total, Invoices.Statistics.get_accumulated_amount(invoices))}
   end
 
   def handle_event("change-summary-state", _params, socket) do
-    if socket.assigns.summary_section.state == "opened" do
-      {:noreply, assign(socket, :summary_section, set_summary(:closed))}
+    if socket.assigns.summary_state.visibility == "is-hidden" do
+      {:noreply, assign(socket, :summary_state, set_summary(:opened))}
     else
-      {:noreply, assign(socket, :summary_section, set_summary(:opened))}
+      {:noreply, assign(socket, :summary_state, set_summary(:closed))}
     end
   end
 
@@ -79,14 +88,12 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(0)
   end
 
-  defp summary_chart(invoices) do
-    Invoices.Statistics.get_data_for_a_month(invoices)
+  defp summary_chart(invoices_data_for_a_month) do
+    invoices_data_for_a_month
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot()
   end
 
-  defp set_summary(:opened), do: %{state: "opened", visibility: "is-block", icon: "fa-angle-up"}
-
-  defp set_summary(:closed),
-    do: %{state: "closed", visibility: "is-hidden", icon: "fa-angle-down"}
+  defp set_summary(:opened), do: %{visibility: "is-block", icon: "fa-angle-up"}
+  defp set_summary(:closed), do: %{visibility: "is-hidden", icon: "fa-angle-down"}
 end

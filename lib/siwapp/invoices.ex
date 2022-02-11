@@ -33,6 +33,10 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
+  def count do
+    Repo.aggregate(Invoice, :count)
+  end
+
   @doc """
   Gets a list of the invoices by giving a list of tuples with {key, value}
   where the key is an atom
