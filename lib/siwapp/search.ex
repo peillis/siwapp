@@ -9,15 +9,19 @@ defmodule Siwapp.Search do
   @doc """
   Filter invoices, customers or recurring_invoices by the selected parameters
   """
-  def filters(Siwapp.Customers.Customer = customer, value) do
-    customer
-    |> SearchQuery.name_email_or_id(value)
+  def filters(Siwapp.Customers.Customer = customer, values) do
+    values
+    |> Enum.reduce(customer, fn {key, value}, acc_query ->
+      SearchQuery.filter_by(acc_query, key, value)
+    end)
     |> Repo.all()
   end
 
-  def filters(query, value) do
-    query
-    |> SearchQuery.name_email_or_id(value)
+  def filters(query, values) do
+    values
+    |> Enum.reduce(query, fn {key, value}, acc_query ->
+      SearchQuery.filter_by(acc_query, key, value)
+    end)
     |> Query.list_preload(:series)
     |> Repo.all()
   end
