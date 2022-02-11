@@ -17,7 +17,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :issue_date, :date
       add :due_date, :date
       add :failed, :boolean, default: false
-      add :deleted_number, :integer
       add :currency, :string, size: 3
       add :deleted_at, :utc_datetime
       add :invoicing_address, :text
@@ -36,7 +35,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
     create index(:invoices, [:email])
     create index(:invoices, [:name])
     create index(:invoices, [:series_id, :number], unique: true)
-    create index(:invoices, [:series_id, :deleted_number], unique: true)
     create index(:invoices, [:customer_id])
     create index(:invoices, [:series_id])
 
