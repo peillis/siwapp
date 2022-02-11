@@ -38,7 +38,7 @@ defmodule Siwapp.Search.SearchQuery do
              "finishing_to_date"
            ] ->
         value = Date.from_iso8601!(value)
-        from_or_to(query, key, value)
+        type_of_date(query, key, value)
 
       "status" ->
         type_of_status(query, value)
@@ -47,61 +47,62 @@ defmodule Siwapp.Search.SearchQuery do
         where(query, [q], not is_nil(q.meta_attributes[^value]))
 
       "value" ->
-        key = get_key_associated_to_value(query, value)
+        keys = get_keys_associated_to_value(query, value)
 
-        where(query, [q], q.meta_attributes[^key] == ^value)
+        if keys != [] do
+          [first_key | rest_of_keys] = keys
+          first_query = where(query, [q], q.meta_attributes[^first_key] == ^value)
+
+          Enum.reduce(rest_of_keys, first_query, fn key_associated, acc_query ->
+            where(query, [a], a.meta_attributes[^key_associated] == ^value)
+            |> union_all(^acc_query)
+          end)
+        else
+          where(query, [q], nil)
+        end
     end
   end
 
-  @doc """
-  Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
-  """
+  # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
   defp name_email_or_id(query, value) do
     query
-    |> where([q], ilike(q.name, ^"%#{value}%"))
-    |> or_where([q], ilike(q.email, ^"%#{value}%"))
-    |> or_where([q], ilike(q.identification, ^"%#{value}%"))
+    |> where(
+      [q],
+      ilike(q.name, ^"%#{value}%") or ilike(q.email, ^"%#{value}%") or
+        ilike(q.identification, ^"%#{value}%")
+    )
   end
 
-  # There are 6 types of dates; 3 "to_dates" and 3 "from_dates". In this function I split them in 2 groups, one for "from dates"
-  # and the other for "to_dates"
-
-  defp from_or_to(query, key, value) do
-    if String.contains?(key, "_from_") do
-      type_of_from_date(query, key, value)
-    else
-      type_of_to_date(query, key, value)
-    end
-  end
-
-  # The next two functions take the key and see if it belongs to "issue_date", "starting_date" or "finishing_date".
-
-  defp type_of_from_date(query, key, value) do
+  # There are 6 types of dates; 3 "to_dates" and 3 "from_dates". Depending on the key name,
+  # the function will make different queries
+  defp type_of_date(query, key, value) do
     cond do
-      String.starts_with?(key, "issue") ->
+      String.starts_with?(key, "issue_from") ->
         InvoiceQuery.issue_date_gteq(query, value)
 
-      String.starts_with?(key, "starting") ->
-        RecurringInvoiceQuery.starting_date_gteq(query, value)
-
-      true ->
-        RecurringInvoiceQuery.finishing_date_gteq(query, value)
-    end
-  end
-
-  defp type_of_to_date(query, key, value) do
-    cond do
-      String.starts_with?(key, "issue") ->
+      String.starts_with?(key, "issue_to") ->
         InvoiceQuery.issue_date_lteq(query, value)
 
-      String.starts_with?(key, "starting") ->
+      String.starts_with?(key, "starting_from") ->
+        RecurringInvoiceQuery.starting_date_gteq(query, value)
+
+      String.starts_with?(key, "starting_to") ->
         RecurringInvoiceQuery.starting_date_lteq(query, value)
+
+      String.starts_with?(key, "finishing_from") ->
+        RecurringInvoiceQuery.finishing_date_gteq(query, value)
 
       true ->
         RecurringInvoiceQuery.finishing_date_lteq(query, value)
     end
   end
 
+  # It implements the same algorithm of the Invoices Context Status function. If a user filters by draft, paid or failed,
+  # the query will search if the field with same name as value is true.
+  # If user filters by pending, the query will search if draft, paid and failed are false and also if due_date is nil
+  # or if due_date is greater than today
+  # Finally if user filters by past due, the query will do the same as pending, but in this case due_date must exists
+  # and has to be less than today
   defp type_of_status(query, value) do
     case value do
       v when v in ["Draft", "Paid", "Failed"] ->
@@ -133,21 +134,25 @@ defmodule Siwapp.Search.SearchQuery do
     |> String.to_atom()
   end
 
-  defp get_key_associated_to_value(query, value) do
+  # Get keys of a jsonb(meta_attributes) which are associated with the value a user inputs
+  defp get_keys_associated_to_value(query, value) do
     query
     |> select([q], q.meta_attributes)
     |> Repo.all()
     |> Enum.reject(&(&1 == %{}))
     |> Enum.uniq()
-    |> Enum.reduce("", fn map, acc -> compare_with_value(map, value, acc) end)
+    |> Enum.map(&compare_with_value(&1, value))
+    |> Enum.reject(&is_nil(&1))
   end
 
-  defp compare_with_value(map, value, acc) do
+  # It will compares if the value inside the map is the same as the value a user is filtering by.
+  # If true get the key of the map
+  defp compare_with_value(map, value) do
     if Map.values(map) == [value] do
       [key] = Map.keys(map)
-      key <> acc
+      key
     else
-      acc
+      nil
     end
   end
 end
