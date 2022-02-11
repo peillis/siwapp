@@ -39,13 +39,9 @@ defmodule SiwappWeb.LayoutView do
     ]
 
     if socket.view in views_with_search do
-      {component, live} = which_component(socket.view)
+      component = which_component(socket.view)
 
-      live_component(SiwappWeb.SearchLive.SearchComponent,
-        id: "search",
-        component: component,
-        live: live
-      )
+      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", component: component)
     end
   end
 
@@ -60,13 +56,13 @@ defmodule SiwappWeb.LayoutView do
   defp which_component(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->
-        {SiwappWeb.SearchLive.InvoiceComponent, true}
+        SiwappWeb.SearchLive.InvoiceComponent
 
       SiwappWeb.CustomerLive.Index ->
-        {nil, false}
+        nil
 
       SiwappWeb.RecurringInvoicesLive.Index ->
-        {SiwappWeb.SearchLive.RecurringInvoiceComponent, true}
+        SiwappWeb.SearchLive.RecurringInvoiceComponent
     end
   end
 end
