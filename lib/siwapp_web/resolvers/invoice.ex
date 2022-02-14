@@ -6,20 +6,24 @@ defmodule SiwappWeb.Resolvers.Invoice do
   alias SiwappWeb.Resolvers.Errors
 
   def list(%{customer_id: customer_id, limit: limit, offset: offset}, _resolution) do
-    invoice =
+    invoices =
       Invoices.list(
         limit: limit,
         offset: offset,
         preload: [:items],
         filters: [customer_id: customer_id]
       )
-      |> list_correct_units()
+      |> Enum.map(&set_correct_units/1)
 
-    {:ok, invoice}
+    {:ok, invoices}
   end
 
   def list(%{limit: limit, offset: offset}, _resolution) do
-    {:ok, list_correct_units(Invoices.list(limit: limit, offset: offset, preload: [:items]))}
+    invoices =
+      Invoices.list(limit: limit, offset: offset, preload: [:items])
+      |> Enum.map(&set_correct_units/1)
+
+    {:ok, invoices}
   end
 
   def create(args, _resolution) do
@@ -30,10 +34,6 @@ defmodule SiwappWeb.Resolvers.Invoice do
       {:error, changeset} ->
         {:error, message: "Failed!", details: Errors.extract(changeset)}
     end
-  end
-
-  defp list_correct_units(invoices) do
-    Enum.map(invoices, fn i -> set_correct_units(i) end)
   end
 
   defp set_correct_units(invoice) do
