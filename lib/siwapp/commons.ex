@@ -181,6 +181,12 @@ defmodule Siwapp.Commons do
     Series.changeset(series, attrs)
   end
 
+  def get_series_name do
+    Series
+    |> select([s], s.name)
+    |> Repo.all()
+  end
+
   @spec insert_new_series(map()) :: {:ok, Series.t()} | {:error, Ecto.Changeset.t()}
   defp insert_new_series(attrs) do
     %Series{}

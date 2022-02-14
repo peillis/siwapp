@@ -7,8 +7,8 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   def update(%{component: component}, socket) do
     socket =
       socket
-      |> assign(:customers, Customers.list())
-      |> assign(:series, Commons.list_series())
+      |> assign(:customers_name, Customers.get_customers_name())
+      |> assign(:series_name, Commons.get_series_name())
       |> assign(:component, component)
 
     {:ok, socket}
