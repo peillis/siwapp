@@ -63,9 +63,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(params)
+    changeset = Invoices.change(socket.assigns.invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
@@ -83,9 +81,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_info({:update_changeset, params}, socket) do
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(params)
+    changeset = Invoices.change(socket.assigns.invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end

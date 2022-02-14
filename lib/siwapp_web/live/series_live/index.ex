@@ -18,8 +18,8 @@ defmodule SiwappWeb.SeriesLive.Index do
 
   @impl true
   def handle_event("defaultClicked", %{"id" => id}, socket) do
-    Commons.get_series(id)
-    |> Commons.change_default_series()
+    series = Commons.get_series(id)
+    Commons.change_default_series(series)
 
     {:noreply, assign(socket, series_list: Commons.list_series())}
   end
