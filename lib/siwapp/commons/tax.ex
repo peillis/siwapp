@@ -37,16 +37,5 @@ defmodule Siwapp.Commons.Tax do
     |> unique_constraint([:name, :enabled])
     |> validate_required([:name, :value])
     |> validate_length(:name, max: 50)
-    |> normalize_name()
-  end
-
-  defp normalize_name(changeset) do
-    name = get_field(changeset, :name)
-
-    if is_nil(name) do
-      changeset
-    else
-      put_change(changeset, :name, String.upcase(name))
-    end
   end
 end
