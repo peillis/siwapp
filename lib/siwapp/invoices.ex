@@ -14,7 +14,7 @@ defmodule Siwapp.Invoices do
   """
   def list(options \\ []) do
     default = [limit: 100, offset: 0, preload: [], filters: []]
-    options = Keyword.merge(default, options, fn _k, _v1, v2 -> v2 end)
+    options = Keyword.merge(default, options)
 
     Enum.reduce(options[:filters], Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
