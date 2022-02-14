@@ -40,7 +40,7 @@ defmodule Siwapp.Search.SearchQuery do
         value = Date.from_iso8601!(value)
         type_of_date(query, key, value)
 
-      status when status in ["Draft", "Paid", "Failed"] ->
+      "status" ->
         type_of_status(query, value)
 
       "key" ->
