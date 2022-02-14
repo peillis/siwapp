@@ -138,11 +138,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    values =
+    params =
       params
       |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
 
-    invoices = Search.filters(Invoice, values)
+    invoices = Search.filters(Invoice, params)
 
     {:noreply,
      socket

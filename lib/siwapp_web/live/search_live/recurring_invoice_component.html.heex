@@ -7,7 +7,9 @@
       <div class="select is-fullwidth">
         <select>
           <option>Choose...</option>
-          <option>With options</option>
+          <%= for name <- @customers_name do  %>
+            <option><%= name %></option>
+          <% end %>
         </select>
       </div>
     </div>
@@ -18,7 +20,9 @@
       <div class="select is-fullwidth">
         <select>
           <option>Choose...</option>
-          <option>With options</option>
+          <%= for name <- @series_name do  %>
+            <option><%= name %></option>
+          <% end %>
         </select>
       </div>
     </div>

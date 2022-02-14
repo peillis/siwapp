@@ -31,7 +31,8 @@
           </div>
         </div>
       <% else %>
-        <.live_component module={@component} id="search-content" />
+        <.live_component module={@component}
+         id="search-content" customers_name={@customers_name} series_name={@series_name}/>
       <% end %>
       <div class="buttons is-right">
         <button class="button is-info">
