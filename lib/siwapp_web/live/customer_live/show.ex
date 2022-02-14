@@ -15,12 +15,7 @@ defmodule SiwappWeb.CustomerLive.Show do
     """
   end
 
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
-  end
-
-  def apply_action(socket, :show, %{"id" => customer_id}) do
-    socket
-    |> assign(:customer, Customers.get(customer_id))
+  def handle_params(%{"id" => customer_id}, _url, socket) do
+    {:noreply, assign(socket, :customer, Customers.get(customer_id))}
   end
 end
