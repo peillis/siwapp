@@ -10,21 +10,18 @@ defmodule Siwapp.Invoices do
   alias Siwapp.Repo
 
   @doc """
-  Gets a list of invoices by updated date
+  Gets a list of invoices by updated date with the parameters included in the options
   """
+  def list(options \\ []) do
+    default = [limit: 100, offset: 0, preload: [], filters: []]
+    options = Keyword.merge(default, options, fn _k, _v1, v2 -> v2 end)
 
-  def list(limit \\ 100, offset \\ 0) do
-    Invoice
-    |> limit(^limit)
-    |> offset(^offset)
-    |> Repo.all()
-  end
-
-  def list_preload(limit \\ 100, offset \\ 0, preload: list) do
-    Invoice
-    |> limit(^limit)
-    |> offset(^offset)
-    |> Query.list_preload(list)
+    Enum.reduce(options[:filters], Invoice, fn {field, value}, acc_query ->
+      InvoiceQuery.list_by_query(acc_query, field, value)
+    end)
+    |> limit(^options[:limit])
+    |> offset(^options[:offset])
+    |> Query.list_preload(options[:preload])
     |> Repo.all()
   end
 
@@ -32,22 +29,6 @@ defmodule Siwapp.Invoices do
     Invoice
     |> Query.paginate(page, per_page)
     |> Query.list_preload(:series)
-    |> Repo.all()
-  end
-
-  @doc """
-  Gets a list of the invoices by giving a list of tuples with {key, value}
-  where the key is an atom
-  """
-
-  @spec list_by([{atom(), any()}]) :: list()
-  def list_by(query_list, limit \\ 100, offset \\ 0) do
-    Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
-      InvoiceQuery.list_by_query(acc_query, field, value)
-    end)
-    |> limit(^limit)
-    |> offset(^offset)
-    |> Query.list_preload(:items)
     |> Repo.all()
   end
 

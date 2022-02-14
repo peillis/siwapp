@@ -7,14 +7,19 @@ defmodule SiwappWeb.Resolvers.Invoice do
 
   def list(%{customer_id: customer_id, limit: limit, offset: offset}, _resolution) do
     invoice =
-      Invoices.list_by([{:customer_id, customer_id}], limit, offset)
+      Invoices.list(
+        limit: limit,
+        offset: offset,
+        preload: [:items],
+        filters: [customer_id: customer_id]
+      )
       |> list_correct_units()
 
     {:ok, invoice}
   end
 
   def list(%{limit: limit, offset: offset}, _resolution) do
-    {:ok, list_correct_units(Invoices.list(limit, offset))}
+    {:ok, list_correct_units(Invoices.list(limit: limit, offset: offset, preload: [:items]))}
   end
 
   def create(args, _resolution) do
