@@ -5,21 +5,18 @@ defmodule Siwapp.Customers do
   import Ecto.Query
 
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
   alias Siwapp.Query
   alias Siwapp.Repo
 
-  ### PRELOADING ###
-
   @doc """
-  Lists customers in database preloading invoices
+  Lists customers in database preloading invoices whose draft and failed fields are false
   """
-  def list_preload(limit \\ 100, offset \\ 0) do
+  def list(limit \\ 100, offset \\ 0) do
     Customer
     |> order_by(desc: :id)
     |> limit(^limit)
     |> offset(^offset)
-    |> Query.list_preload(:invoices)
+    |> custom_preload()
     |> Repo.all()
   end
 
@@ -28,78 +25,13 @@ defmodule Siwapp.Customers do
   total, paid, due and currency taking advantage of having
   preloaded invoices before
   """
-  def list_index_preloading(limit, offset) do
-    list_preload(limit, offset)
+  def list_index(limit, offset) do
+    list(limit, offset)
     |> Enum.map(&%{&1 | total: total(&1.invoices)})
     |> Enum.map(&%{&1 | paid: paid(&1.invoices)})
     |> Enum.map(&%{&1 | due: &1.total - &1.paid})
     |> Enum.map(&%{&1 | currency: currency(&1.invoices)})
   end
-
-  def total(invoices), do: Enum.map(invoices, & &1.gross_amount) |> Enum.sum()
-  def paid(invoices), do: Enum.map(invoices, & &1.paid_amount) |> Enum.sum()
-
-  def currency(invoices) do
-    invoices
-    |> Enum.map(& &1.currency)
-    |> Enum.uniq()
-    |> case do
-      [currency] -> String.to_existing_atom(currency)
-      _ -> nil
-    end
-  end
-
-  #### USING QUERIES ####
-
-  @doc """
-  Lists customers in database
-  """
-  def list(limit \\ 100, offset \\ 0) do
-    Customer
-    |> order_by(desc: :id)
-    |> limit(^limit)
-    |> offset(^offset)
-    |> Repo.all()
-  end
-
-  @doc """
-  List of customers in database assigning virtual fields of
-  total, paid, due and currency, doing individual queries for
-  each customer and field (except due) because lack of preloading
-  """
-  def list_index(limit, offset) do
-    list(limit, offset)
-    |> Enum.map(&%{&1 | total: amount(&1.id, :total)})
-    |> Enum.map(&%{&1 | paid: amount(&1.id, :paid)})
-    |> Enum.map(&%{&1 | due: &1.total - &1.paid})
-    |> Enum.map(&%{&1 | currency: currency_querying(&1.id)})
-  end
-
-  # Returns the currency associated to a customer invoices' if there's
-  # only one, otherwise, returns nil (assuming currency in saved invoice
-  # is never nil)
-  @spec currency(pos_integer()) :: atom
-  defp currency_querying(customer_id) do
-    Invoice
-    |> InvoiceQuery.currencies_for_customer(customer_id)
-    |> Repo.all()
-    |> case do
-      [currency] -> String.to_existing_atom(currency)
-      _ -> nil
-    end
-  end
-
-  # Returns the sum, regarding all invoices associated to a customer, of
-  # corresponding total (original amount to pay) and paid (amount already paid).
-  # It doesn't take into account currencies.
-  @spec amount(pos_integer(), :total | :paid) :: integer
-  def amount(customer_id, type) do
-    Invoice
-    |> InvoiceQuery.amount_for_customer(customer_id, type)
-    |> Repo.one() || 0
-  end
-
-  #################
 
   def suggest_by_name_input(""), do: []
   def suggest_by_name_input(nil), do: []
@@ -170,6 +102,43 @@ defmodule Siwapp.Customers do
 
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
+  end
+
+  # Custom query to preload only invoices that aren't draft nor failed
+  defp custom_preload(query) do
+    from(c in query,
+      join: i in assoc(c, :invoices),
+      where: i.draft == false and i.failed == false,
+      preload: [invoices: i]
+    )
+  end
+
+  # Returns the sum, regarding all invoices associated to a customer, of
+  # corresponding total (original amount to pay) and paid (amount already paid).
+  # It doesn't take into account currencies.
+  defp total(invoices) do
+    invoices
+    |> Enum.map(& &1.gross_amount)
+    |> Enum.sum()
+  end
+
+  defp paid(invoices) do
+    invoices
+    |> Enum.map(& &1.paid_amount)
+    |> Enum.sum()
+  end
+
+  # Returns the currency associated to a customer invoices' if there's
+  # only one, otherwise, returns nil (assuming currency in saved invoice
+  # is never nil)
+  defp currency(invoices) do
+    invoices
+    |> Enum.map(& &1.currency)
+    |> Enum.uniq()
+    |> case do
+      [currency] -> String.to_atom(currency)
+      _ -> nil
+    end
   end
 
   @spec get_by_hash_id(binary, binary) :: Customer.t() | nil
