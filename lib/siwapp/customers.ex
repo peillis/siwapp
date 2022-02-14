@@ -9,6 +9,48 @@ defmodule Siwapp.Customers do
   alias Siwapp.Query
   alias Siwapp.Repo
 
+  ### PRELOADING ###
+
+  @doc """
+  Lists customers in database preloading invoices
+  """
+  def list_preload(limit \\ 100, offset \\ 0) do
+    Customer
+    |> order_by(desc: :id)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Query.list_preload(:invoices)
+    |> Repo.all()
+  end
+
+  @doc """
+  List of customers in database assigning virtual fields of
+  total, paid, due and currency taking advantage of having
+  preloaded invoices before
+  """
+  def list_index_preloading(limit, offset) do
+    list_preload(limit, offset)
+    |> Enum.map(&%{&1 | total: total(&1.invoices)})
+    |> Enum.map(&%{&1 | paid: paid(&1.invoices)})
+    |> Enum.map(&%{&1 | due: &1.total - &1.paid})
+    |> Enum.map(&%{&1 | currency: currency(&1.invoices)})
+  end
+
+  def total(invoices), do: Enum.map(invoices, & &1.gross_amount) |> Enum.sum()
+  def paid(invoices), do: Enum.map(invoices, & &1.paid_amount) |> Enum.sum()
+
+  def currency(invoices) do
+    invoices
+    |> Enum.map(& &1.currency)
+    |> Enum.uniq()
+    |> case do
+      [currency] -> String.to_existing_atom(currency)
+      _ -> nil
+    end
+  end
+
+  #### USING QUERIES ####
+
   @doc """
   Lists customers in database
   """
@@ -19,6 +61,45 @@ defmodule Siwapp.Customers do
     |> offset(^offset)
     |> Repo.all()
   end
+
+  @doc """
+  List of customers in database assigning virtual fields of
+  total, paid, due and currency, doing individual queries for
+  each customer and field (except due) because lack of preloading
+  """
+  def list_index(limit, offset) do
+    list(limit, offset)
+    |> Enum.map(&%{&1 | total: amount(&1.id, :total)})
+    |> Enum.map(&%{&1 | paid: amount(&1.id, :paid)})
+    |> Enum.map(&%{&1 | due: &1.total - &1.paid})
+    |> Enum.map(&%{&1 | currency: currency_querying(&1.id)})
+  end
+
+  # Returns the currency associated to a customer invoices' if there's
+  # only one, otherwise, returns nil (assuming currency in saved invoice
+  # is never nil)
+  @spec currency(pos_integer()) :: atom
+  defp currency_querying(customer_id) do
+    Invoice
+    |> InvoiceQuery.currencies_for_customer(customer_id)
+    |> Repo.all()
+    |> case do
+      [currency] -> String.to_existing_atom(currency)
+      _ -> nil
+    end
+  end
+
+  # Returns the sum, regarding all invoices associated to a customer, of
+  # corresponding total (original amount to pay) and paid (amount already paid).
+  # It doesn't take into account currencies.
+  @spec amount(pos_integer(), :total | :paid) :: integer
+  def amount(customer_id, type) do
+    Invoice
+    |> InvoiceQuery.amount_for_customer(customer_id, type)
+    |> Repo.one() || 0
+  end
+
+  #################
 
   def suggest_by_name_input(""), do: []
   def suggest_by_name_input(nil), do: []
@@ -89,37 +170,6 @@ defmodule Siwapp.Customers do
 
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
-  end
-
-  def money(customer_id, type) do
-    currency =
-      case currencies(customer_id) do
-        [nil] -> nil
-        [currency] -> String.to_existing_atom(currency)
-        _ -> nil
-      end
-
-    {amount(customer_id, type), currency}
-  end
-
-  defp currencies(customer_id) do
-    Invoice
-    |> InvoiceQuery.currencies_for_customer(customer_id)
-    |> Repo.all()
-  end
-
-  def amount(customer_id, :due) do
-    case {amount(customer_id, :total), amount(customer_id, :paid)} do
-      {total, nil} -> total || 0
-      {nil, paid} -> -paid
-      {total, paid} -> total - paid
-    end
-  end
-
-  def amount(customer_id, type) do
-    Invoice
-    |> InvoiceQuery.amount_for_customer(customer_id, type)
-    |> Repo.one() || 0
   end
 
   @spec get_by_hash_id(binary, binary) :: Customer.t() | nil
