@@ -10,25 +10,25 @@ defmodule Siwapp.Search.SearchQuery do
   @doc """
   For each key, one different query
   """
-  def filter_by(query, key, value) do
-    case key do
-      "search_input" ->
-        name_email_or_id(query, value)
+  def filter_by(query, "search_input", value) do
+    name_email_or_id(query, value)
+  end
 
-      "name" ->
-        key = convert_to_atom(key)
+  def filter_by(query, "name", value) do
+    Query.search_in_string(query, convert_to_atom("name"), value)
+  end
 
-        Query.search_in_string(query, key, value)
+  def filter_by(query, "number", value) do
+    where(query, [q], q.number == type(^value, :integer))
+  end
 
-      "number" ->
-        where(query, [q], q.number == type(^value, :integer))
+  def filter_by(query, "series", value) do
+    query
+    |> join(:inner, [q], s in Siwapp.Commons.Series, on: q.series_id == s.id)
+    |> where([q, s], ilike(s.name, ^"%#{value}%"))
+  end
 
-      "series" ->
-        query
-        |> join(:inner, [q], s in Siwapp.Commons.Series, on: q.series_id == s.id)
-        |> where([q, s], ilike(s.name, ^"%#{value}%"))
-
-      date
+  def filter_by(query, date, value)
       when date in [
              "issue_from_date",
              "issue_to_date",
@@ -36,21 +36,24 @@ defmodule Siwapp.Search.SearchQuery do
              "starting_to_date",
              "finishing_from_date",
              "finishing_to_date"
-           ] ->
-        value = Date.from_iso8601!(value)
-        type_of_date(query, key, value)
+           ] do
+    value = Date.from_iso8601!(value)
 
-      "status" ->
-        type_of_status(query, value)
+    type_of_date(query, date, value)
+  end
 
-      "key" ->
-        where(query, [q], not is_nil(q.meta_attributes[^value]))
+  def filter_by(query, "status", value) do
+    type_of_status(query, value)
+  end
 
-      "value" ->
-        keys = get_keys_associated_to_value(query, value)
+  def filter_by(query, "key", value) do
+    where(query, [q], not is_nil(q.meta_attributes[^value]))
+  end
 
-        value_for_each_key(keys, query, value)
-    end
+  def filter_by(query, "value", value) do
+    keys = get_keys_associated_to_value(query, value)
+
+    value_for_each_key(keys, query, value)
   end
 
   # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
