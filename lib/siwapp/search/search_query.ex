@@ -139,8 +139,8 @@ defmodule Siwapp.Search.SearchQuery do
 
   # If there are keys associated to the value a user inputs,
   # the function make a first query with the first key inside of "keys".
-  # Then for the rest of the keys, it makes a "where query" for each key and then
-  # it joins all the queries with an union_all
+  # Then for the rest of the keys, it makes a "where query" for each key and
+  # joins all the queries with an union_all
   defp value_for_each_key(keys, query, value) do
     if keys == [] do
       where(query, [q], nil)
@@ -155,7 +155,7 @@ defmodule Siwapp.Search.SearchQuery do
     end
   end
 
-  # It will compares if the value inside the map is the same as the value a user is filtering by.
+  # Compares if the value inside the map is the same as the value a user is filtering by.
   # If true get the key of the map
   defp compare_with_value(map, value) do
     if Map.values(map) == [value] do
