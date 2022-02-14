@@ -11,12 +11,10 @@ defmodule SiwappWeb.CustomerLive.Index do
   """
 
   def mount(_params, _session, socket) do
-    customers = Customers.list_index(20, 0)
-
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(customers: customers)
+     |> assign(customers: Customers.list_index(20, 0))
      |> assign(page_title: "Customers")}
   end
 
