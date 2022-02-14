@@ -58,6 +58,10 @@ defmodule Siwapp.Customers.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map, default: %{}
+    field :total, :integer, virtual: true
+    field :paid, :integer, virtual: true
+    field :due, :integer, virtual: true
+    field :currency, :any, virtual: true
     has_many :recurring_invoices, RecurringInvoice
     has_many :invoices, Invoice
 
