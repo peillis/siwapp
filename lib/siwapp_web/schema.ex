@@ -20,15 +20,7 @@ defmodule SiwappWeb.Schema do
 
     @desc "Get all invoices"
     field :invoices, list_of(:invoice) do
-      arg(:limit, :integer, default_value: 10)
-      arg(:offset, :integer, default_value: 0)
-
-      resolve(&Resolvers.Invoice.list/2)
-    end
-
-    @desc "Get all invoices of a customer"
-    field :invoices_of_a_customer, list_of(:invoice) do
-      arg(:customer_id, non_null(:id))
+      arg(:customer_id, :id)
       arg(:limit, :integer, default_value: 10)
       arg(:offset, :integer, default_value: 0)
 

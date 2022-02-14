@@ -6,6 +6,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
   alias SiwappWeb.Resolvers.Errors
 
   def list(%{customer_id: customer_id, limit: limit, offset: offset}, _resolution) do
+
     invoice =
       Invoices.list_by([{:customer_id, customer_id}], limit, offset)
       |> list_correct_units()
@@ -14,6 +15,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
   end
 
   def list(%{limit: limit, offset: offset}, _resolution) do
+    IO.inspect("Hola")
     {:ok, list_correct_units(Invoices.list(limit, offset))}
   end
 
