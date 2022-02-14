@@ -43,6 +43,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> limit(1)
   end
 
+  @spec amount_for_customer(Ecto.Queryable.t(), pos_integer(), atom) :: Ecto.Query.t()
   def amount_for_customer(query, customer_id, :total) do
     query
     |> where(customer_id: ^customer_id)
@@ -64,6 +65,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> where(customer_id: ^customer_id)
   end
 
+  @spec currencies_for_customer(Ecto.Queryable.t(), pos_integer()) :: Ecto.Query.t()
   def currencies_for_customer(query, customer_id) do
     query
     |> where(customer_id: ^customer_id)
