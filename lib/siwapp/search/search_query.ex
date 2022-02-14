@@ -202,6 +202,10 @@ defmodule Siwapp.Search.SearchQuery do
     |> Enum.reject(&is_nil(&1))
   end
 
+  # If there are keys associated to the value a user inputs,
+  # the function make a first query with the first key inside of "keys".
+  # Then for the rest of the keys, it makes a "where query" for each key and then
+  # it joins all the queries with an union_all
   defp value_for_each_key(keys, query, value) do
     if keys == [] do
       where(query, [q], nil)
