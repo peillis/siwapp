@@ -43,11 +43,6 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> limit(1)
   end
 
-  def invoices_for_customer(query, customer_id) do
-    query
-    |> where(customer_id: ^customer_id)
-  end
-
   @doc """
   Gets a query on the invoices that match with the params
   """
