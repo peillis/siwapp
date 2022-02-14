@@ -90,10 +90,6 @@ defmodule Siwapp.Customers.Customer do
     |> String.replace(~r/ +/, "")
   end
 
-  def query_by(field, value) do
-    where(__MODULE__, ^[{field, value}])
-  end
-
   # Validates if either a name or an identification is set
   defp validate_required_customer(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do

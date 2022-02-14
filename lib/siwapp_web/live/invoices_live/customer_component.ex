@@ -22,7 +22,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     customer_suggestions =
       if socket.assigns.customer_name == customer_name.change,
         do: socket.assigns.customer_suggestions,
-        else: Customers.suggest_by_name_input(customer_name.change)
+        else: Customers.suggest_by_name(customer_name.change)
 
     socket =
       socket
