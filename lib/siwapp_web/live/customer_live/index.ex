@@ -11,7 +11,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   """
 
   def mount(_params, _session, socket) do
-    customers = Customers.list_index_preloading(20, 0)
+    customers = Customers.list_index(20, 0)
 
     {:ok,
      socket
@@ -29,7 +29,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {
       :noreply,
       assign(socket,
-        customers: customers ++ Customers.list_index_preloading(20, (page + 1) * 20),
+        customers: customers ++ Customers.list_index(20, (page + 1) * 20),
         page: page + 1
       )
     }
