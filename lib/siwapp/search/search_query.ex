@@ -3,8 +3,8 @@ defmodule Siwapp.Search.SearchQuery do
   Search Queries
   """
   import Ecto.Query
-  alias Siwapp.{Query, Repo}
   alias Siwapp.Invoices.InvoiceQuery
+  alias Siwapp.{Query, Repo}
   alias Siwapp.RecurringInvoices.RecurringInvoiceQuery
 
   @doc """
@@ -40,7 +40,7 @@ defmodule Siwapp.Search.SearchQuery do
         value = Date.from_iso8601!(value)
         type_of_date(query, key, value)
 
-      "status" ->
+      status when status in ["Draft", "Paid", "Failed"] ->
         type_of_status(query, value)
 
       "key" ->
@@ -49,17 +49,7 @@ defmodule Siwapp.Search.SearchQuery do
       "value" ->
         keys = get_keys_associated_to_value(query, value)
 
-        if keys != [] do
-          [first_key | rest_of_keys] = keys
-          first_query = where(query, [q], q.meta_attributes[^first_key] == ^value)
-
-          Enum.reduce(rest_of_keys, first_query, fn key_associated, acc_query ->
-            where(query, [a], a.meta_attributes[^key_associated] == ^value)
-            |> union_all(^acc_query)
-          end)
-        else
-          where(query, [q], nil)
-        end
+        value_for_each_key(keys, query, value)
     end
   end
 
@@ -97,7 +87,8 @@ defmodule Siwapp.Search.SearchQuery do
     end
   end
 
-  # It implements the same algorithm of the Invoices Context Status function. If a user filters by draft, paid or failed,
+  # It implements the same algorithm of the Invoices Context Status function.
+  # If a user filters by draft, paid or failed,
   # the query will search if the field with same name as value is true.
   # If user filters by pending, the query will search if draft, paid and failed are false and also if due_date is nil
   # or if due_date is greater than today
@@ -143,6 +134,20 @@ defmodule Siwapp.Search.SearchQuery do
     |> Enum.uniq()
     |> Enum.map(&compare_with_value(&1, value))
     |> Enum.reject(&is_nil(&1))
+  end
+
+  defp value_for_each_key(keys, query, value) do
+    if keys == [] do
+      where(query, [q], nil)
+    else
+      [first_key | rest_of_keys] = keys
+      first_query = where(query, [q], q.meta_attributes[^first_key] == ^value)
+
+      Enum.reduce(rest_of_keys, first_query, fn key_associated, acc_query ->
+        where(query, [a], a.meta_attributes[^key_associated] == ^value)
+        |> union_all(^acc_query)
+      end)
+    end
   end
 
   # It will compares if the value inside the map is the same as the value a user is filtering by.
