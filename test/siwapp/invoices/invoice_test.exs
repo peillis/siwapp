@@ -205,9 +205,8 @@ defmodule Siwapp.InvoiceTest do
 
       changeset =
         %Invoice{}
-        |> Invoice.changeset(%{series_id: series.id, number: 3})
+        |> Invoices.change(%{series_id: series.id, number: 3})
         |> InvoiceHelper.maybe_find_customer_or_new()
-        |> Invoice.number_assignment_when_legal()
 
       assert changeset.valid? == false
     end

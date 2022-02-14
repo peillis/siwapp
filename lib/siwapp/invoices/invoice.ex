@@ -9,9 +9,9 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices
-  alias Siwapp.Invoices.Item
+  alias Siwapp.Invoices.{InvoiceQuery, Item}
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.Repo
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -112,7 +112,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> assign_currency()
     |> assign_issue_date()
     |> assign_due_date()
-    |> validate_draft_enablement()
+    |> only_new_invoice_can_be_draft()
     |> validate_required_draft()
     |> validate_draft_has_not_number()
     |> unique_constraint([:series_id, :number])
@@ -126,6 +126,31 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 3)
     |> calculate()
+  end
+
+  @doc """
+  Assigns the series next number to the invoice changeset.
+  """
+  def assign_number(changeset) do
+    cond do
+      # It's illegal to assign a number to a draft
+      get_field(changeset, :draft) ->
+        changeset
+
+      is_nil(get_change(changeset, :series_id)) ->
+        changeset
+
+      is_nil(get_change(changeset, :number)) ->
+        next_number =
+          changeset
+          |> get_field(:series_id)
+          |> next_number_in_series()
+
+        put_change(changeset, :number, next_number)
+
+      true ->
+        changeset
+    end
   end
 
   defp assign_issue_date(changeset) do
@@ -148,9 +173,9 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   # you can't convert an existing invoice to draft
-  defp validate_draft_enablement(changeset) do
+  defp only_new_invoice_can_be_draft(changeset) do
     if get_field(changeset, :id) != nil and
-         fetch_field(changeset, :draft) == {:changes, true} do
+         get_change(changeset, :draft) == true do
       add_error(changeset, :draft, "can't be enabled, invoice is not new")
     else
       changeset
@@ -178,21 +203,13 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
-  # It's illegal to assign a number to a draft
-  @spec number_assignment_when_legal(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  def number_assignment_when_legal(changeset) do
-    cond do
-      get_field(changeset, :draft) -> changeset
-      is_nil(get_change(changeset, :series_id)) -> changeset
-      is_nil(get_change(changeset, :number)) -> assign_number(changeset)
-      true -> changeset
-    end
-  end
+  @spec next_number_in_series(pos_integer()) :: integer
+  defp next_number_in_series(series_id) do
+    query = InvoiceQuery.last_number_with_series_id(__MODULE__, series_id)
 
-  @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp assign_number(changeset) do
-    series_id = get_change(changeset, :series_id)
-    proper_number = Invoices.next_number_in_series(series_id)
-    put_change(changeset, :number, proper_number)
+    case Repo.one(query) do
+      nil -> Repo.get(Series, series_id).first_number
+      invoice -> invoice.number + 1
+    end
   end
 end

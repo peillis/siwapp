@@ -32,7 +32,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(
       :changeset,
       Invoices.change(new_invoice)
-      |> Invoices.number_assignment_when_legal()
     )
   end
 
@@ -76,7 +75,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
-      |> Invoices.number_assignment_when_legal()
 
     {:noreply, assign(socket, :changeset, changeset)}
   end

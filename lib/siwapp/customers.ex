@@ -19,12 +19,12 @@ defmodule Siwapp.Customers do
     |> Repo.all()
   end
 
-  def suggest_by_name_input(""), do: []
-  def suggest_by_name_input(nil), do: []
+  def suggest_by_name(""), do: []
+  def suggest_by_name(nil), do: []
 
-  def suggest_by_name_input(name_input) do
+  def suggest_by_name(name) do
     Customer
-    |> Query.search_in_string(:name, "%#{name_input}%")
+    |> Query.search_in_string(:name, "%#{name}%")
     |> Repo.all()
   end
 
@@ -76,14 +76,6 @@ defmodule Siwapp.Customers do
       nil -> get_by_hash_id(identification, name)
       customer -> customer
     end
-  end
-
-  def exists_with_name?(nil), do: nil
-
-  def exists_with_name?(name) do
-    Customer
-    |> Query.by(:name, name)
-    |> Repo.exists?()
   end
 
   def change(%Customer{} = customer, attrs \\ %{}) do
