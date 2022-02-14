@@ -111,18 +111,19 @@ defmodule Siwapp.Invoices.Item do
 
   defp find_taxes(changeset, attrs) do
     if get_field(changeset, :taxes) == [] do
-      taxes =
-        (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
-        |> Enum.map(&String.downcase/1)
+      all_taxes = Commons.list_taxes()
+      all_taxes_names = Enum.map(all_taxes, & &1.name)
 
-      list_taxes = Commons.list_taxes()
-      taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
-      database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
+      attr_taxes_names =
+        Enum.map(Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []), &String.upcase/1)
 
-      Enum.reduce(taxes, changeset, fn tax, acc_changeset ->
-        check_wrong_taxes(tax, acc_changeset, database_taxes)
+      attr_taxes = Enum.filter(all_taxes, &(&1.name in attr_taxes_names))
+
+      attr_taxes_names
+      |> Enum.reduce(changeset, fn tax, acc_changeset ->
+        check_wrong_taxes(tax, acc_changeset, all_taxes_names)
       end)
-      |> put_assoc(:taxes, taxes_assoc)
+      |> put_assoc(:taxes, attr_taxes)
     else
       cast_assoc(changeset, :taxes)
     end
@@ -132,7 +133,7 @@ defmodule Siwapp.Invoices.Item do
     if Enum.member?(database_taxes, tax) do
       changeset
     else
-      add_error(changeset, :taxes, "The tax #{String.upcase(tax)} is not defined")
+      add_error(changeset, :taxes, "The tax #{tax} is not defined")
     end
   end
 
