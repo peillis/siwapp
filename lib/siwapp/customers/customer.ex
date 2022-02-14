@@ -81,7 +81,7 @@ defmodule Siwapp.Customers.Customer do
 
   @spec create_hash_id(binary, binary) :: binary
   def create_hash_id(identification, name) do
-    :crypto.hash(:md5, "#{normalize(identification)}#{normalize(name)}") |> Base.encode16()
+    Base.encode16(:crypto.hash(:md5, "#{normalize(identification)}#{normalize(name)}"))
   end
 
   @spec normalize(binary) :: binary

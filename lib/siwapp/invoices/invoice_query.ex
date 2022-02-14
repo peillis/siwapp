@@ -26,13 +26,11 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   end
 
   def issue_date_gteq(query, date) do
-    query
-    |> where([i], i.issue_date >= ^date)
+    where(query, [i], i.issue_date >= ^date)
   end
 
   def issue_date_lteq(query, date) do
-    query
-    |> where([i], i.issue_date <= ^date)
+    where(query, [i], i.issue_date <= ^date)
   end
 
   @spec last_number_with_series_id(Ecto.Queryable.t(), pos_integer()) :: Ecto.Query.t()

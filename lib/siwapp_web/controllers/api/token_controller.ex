@@ -8,12 +8,10 @@ defmodule SiwappWeb.Api.TokenController do
   def create(conn, %{"email" => email, "password" => password}) do
     with %User{} = user <- Accounts.get_user_by_email_and_password(email, password),
          token <- ApiToken.sign(%{user_id: user.id}) do
-      conn
-      |> render("token.json", token: token)
+      render(conn, "token.json", token: token)
     else
       nil ->
-        conn
-        |> render("error.json", error_message: "Invalid email or password")
+        render(conn, "error.json", error_message: "Invalid email or password")
     end
   end
 end

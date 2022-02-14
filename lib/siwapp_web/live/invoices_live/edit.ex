@@ -25,6 +25,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   def apply_action(socket, :new, _params) do
     new_invoice = %Invoice{items: [%Item{taxes: []}]}
 
+    changeset =
+      invoice
+      |> Invoices.change()
+      |> Invoices.number_assignment_when_legal()
+
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")

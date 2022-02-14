@@ -59,7 +59,7 @@ defmodule Siwapp.Customers do
   Gets a customer by id
   """
   def get!(id), do: Repo.get!(Customer, id)
-  def get!(id, :preload), do: Repo.get!(Customer, id) |> Repo.preload([:invoices])
+  def get!(id, :preload), do: Customer |> Repo.get!(id) |> Repo.preload([:invoices])
 
   @doc """
   Gets a customer by id
