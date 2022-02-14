@@ -3,7 +3,7 @@ defmodule SiwappWeb.CustomerLive.Index do
 
   alias Siwapp.Customers.Customer
   alias Siwapp.{Customers, Search}
-  alias SiwappWeb.PageView
+  import SiwappWeb.PageView
 
   @moduledoc """
 
@@ -11,10 +11,12 @@ defmodule SiwappWeb.CustomerLive.Index do
   """
 
   def mount(_params, _session, socket) do
+    customers = Customers.list_index_preloading(20, 0)
+
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(customers: Customers.list(20, 0))
+     |> assign(customers: customers)
      |> assign(page_title: "Customers")}
   end
 
@@ -27,7 +29,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {
       :noreply,
       assign(socket,
-        customers: customers ++ Customers.list(20, (page + 1) * 20),
+        customers: customers ++ Customers.list_index_preloading(20, (page + 1) * 20),
         page: page + 1
       )
     }
@@ -40,11 +42,5 @@ defmodule SiwappWeb.CustomerLive.Index do
   def handle_event("search", params, socket) do
     customers = Search.filters(Customer, params["search_input"])
     {:noreply, assign(socket, :customers, customers)}
-  end
-  def money(customer_id, type) do
-    case Customers.money(customer_id, type) do
-      {amount, nil} -> amount
-      {amount, currency} -> PageView.set_currency(amount, currency)
-    end
   end
 end
