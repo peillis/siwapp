@@ -40,11 +40,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    values =
+    params =
       params
       |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
 
-    recurring_invoices = Search.filters(RecurringInvoice, values)
+    recurring_invoices = Search.filters(RecurringInvoice, params)
 
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
   end

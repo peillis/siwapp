@@ -14,8 +14,8 @@
       <div class="select is-fullwidth">
         <select name="name">
           <option>Choose...</option>
-          <%= for customer <- @customers do  %>
-            <option><%= customer.name %></option>
+          <%= for name <- @customers_name do  %>
+            <option><%= name %></option>
           <% end %>
 >>>>>>> dc7315a (Final version)
         </select>
@@ -58,8 +58,8 @@
       <div class="select is-fullwidth">
         <select name="series">
           <option>Choose...</option>
-          <%= for series <- @series do  %>
-            <option><%= series.name %></option>
+          <%= for name <- @series_name do  %>
+            <option><%= name %></option>
           <% end %>
 >>>>>>> dc7315a (Final version)
         </select>

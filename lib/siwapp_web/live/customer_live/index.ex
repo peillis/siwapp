@@ -37,11 +37,11 @@ defmodule SiwappWeb.CustomerLive.Index do
   end
 
   def handle_event("search", params, socket) do
-    values =
+    params =
       params
       |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
 
-    customers = Search.filters(Customer, values)
+    customers = Search.filters(Customer, params)
 
     {:noreply, assign(socket, :customers, customers)}
   end
