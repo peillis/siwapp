@@ -21,6 +21,8 @@ defmodule Siwapp.Settings.SettingBundle do
 
   @labels Keyword.keys(@fields_keywordlist)
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   defstruct @labels
 
   def changeset(setting_bundle, attrs \\ %{}) do
@@ -37,9 +39,7 @@ defmodule Siwapp.Settings.SettingBundle do
   @spec validate_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_email(changeset) do
     changeset
-    |> validate_format(:company_email, Application.fetch_env!(:siwapp, :email_regex),
-      message: "must have the @ sign and no spaces"
-    )
+    |> validate_format(:company_email, @email_regex, message: "must have the @ sign and no spaces")
     |> validate_length(:company_email, max: 160)
   end
 end

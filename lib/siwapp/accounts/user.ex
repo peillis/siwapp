@@ -5,6 +5,8 @@ defmodule Siwapp.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
@@ -41,9 +43,7 @@ defmodule Siwapp.Accounts.User do
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])
-    |> validate_format(:email, Application.fetch_env!(:siwapp, :email_regex),
-      message: "must have the @ sign and no spaces"
-    )
+    |> validate_format(:email, @email_regex, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> unsafe_validate_unique(:email, Siwapp.Repo)
     |> unique_constraint(:email)

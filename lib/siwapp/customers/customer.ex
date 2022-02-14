@@ -47,6 +47,8 @@ defmodule Siwapp.Customers.Customer do
     :meta_attributes
   ]
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   schema "customers" do
     field :identification, :string
     field :name, :string
@@ -71,7 +73,7 @@ defmodule Siwapp.Customers.Customer do
     |> put_hash_id()
     |> unique_constraint(:identification)
     |> unique_constraint(:hash_id)
-    |> validate_format(:email, Application.fetch_env!(:siwapp, :email_regex))
+    |> validate_format(:email, @email_regex)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
