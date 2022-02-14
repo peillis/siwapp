@@ -2,10 +2,8 @@ defmodule Siwapp.Invoices do
   @moduledoc """
   The Invoices context.
   """
-  import Ecto.Changeset, only: [put_change: 3, get_field: 2, get_change: 2]
   import Ecto.Query, warn: false
 
-  alias Siwapp.Commons.Series
   alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices.{Invoice, InvoiceQuery, Item}
   alias Siwapp.Query
@@ -54,9 +52,8 @@ defmodule Siwapp.Invoices do
   @spec create(map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %Invoice{}
-    |> Invoice.changeset(attrs)
+    |> change(attrs)
     |> InvoiceHelper.maybe_find_customer_or_new()
-    |> assign_number()
     |> Repo.insert()
   end
 
@@ -67,9 +64,8 @@ defmodule Siwapp.Invoices do
   @spec update(Invoice.t(), map()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def update(%Invoice{} = invoice, attrs) do
     invoice
-    |> Invoice.changeset(attrs)
+    |> change(attrs)
     |> InvoiceHelper.maybe_find_customer_or_new()
-    |> assign_number()
     |> Repo.update()
   end
 
@@ -124,32 +120,9 @@ defmodule Siwapp.Invoices do
   Returns an `%Ecto.Changeset{}` for tracking invoice changes.
   """
   def change(%Invoice{} = invoice, attrs \\ %{}) do
-    Invoice.changeset(invoice, attrs)
-  end
-
-  @doc """
-  Assigns the series next number to the invoice changeset.
-  """
-  def assign_number(changeset) do
-    cond do
-      # It's illegal to assign a number to a draft
-      get_field(changeset, :draft) ->
-        changeset
-
-      is_nil(get_change(changeset, :series_id)) ->
-        changeset
-
-      is_nil(get_change(changeset, :number)) ->
-        next_number =
-          changeset
-          |> get_field(:series_id)
-          |> next_number_in_series()
-
-        put_change(changeset, :number, next_number)
-
-      true ->
-        changeset
-    end
+    invoice
+    |> Invoice.changeset(attrs)
+    |> Invoice.assign_number()
   end
 
   def list_past_due(page, per_page \\ 20) do
@@ -175,16 +148,6 @@ defmodule Siwapp.Invoices do
     Money.Currency.all()
     |> Map.keys()
     |> Enum.sort()
-  end
-
-  @spec next_number_in_series(pos_integer()) :: integer
-  defp next_number_in_series(series_id) do
-    query = InvoiceQuery.last_number_with_series_id(Invoice, series_id)
-
-    case Repo.one(query) do
-      nil -> Repo.get(Series, series_id).first_number
-      invoice -> invoice.number + 1
-    end
   end
 
   defp due_date_status(due_date) do

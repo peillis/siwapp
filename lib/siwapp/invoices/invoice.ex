@@ -9,9 +9,9 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices
-  alias Siwapp.Invoices.Item
+  alias Siwapp.Invoices.{InvoiceQuery, Item}
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.Repo
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -128,6 +128,31 @@ defmodule Siwapp.Invoices.Invoice do
     |> calculate()
   end
 
+  @doc """
+  Assigns the series next number to the invoice changeset.
+  """
+  def assign_number(changeset) do
+    cond do
+      # It's illegal to assign a number to a draft
+      get_field(changeset, :draft) ->
+        changeset
+
+      is_nil(get_change(changeset, :series_id)) ->
+        changeset
+
+      is_nil(get_change(changeset, :number)) ->
+        next_number =
+          changeset
+          |> get_field(:series_id)
+          |> next_number_in_series()
+
+        put_change(changeset, :number, next_number)
+
+      true ->
+        changeset
+    end
+  end
+
   defp assign_issue_date(changeset) do
     if get_field(changeset, :issue_date) do
       changeset
@@ -175,6 +200,16 @@ defmodule Siwapp.Invoices.Invoice do
       add_error(changeset, :number, "can't assign number to draft")
     else
       changeset
+    end
+  end
+
+  @spec next_number_in_series(pos_integer()) :: integer
+  defp next_number_in_series(series_id) do
+    query = InvoiceQuery.last_number_with_series_id(__MODULE__, series_id)
+
+    case Repo.one(query) do
+      nil -> Repo.get(Series, series_id).first_number
+      invoice -> invoice.number + 1
     end
   end
 end
