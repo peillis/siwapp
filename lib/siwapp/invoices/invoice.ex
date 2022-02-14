@@ -74,6 +74,8 @@ defmodule Siwapp.Invoices.Invoice do
     :recurring_invoice_id
   ]
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   schema "invoices" do
     field :identification, :string
     field :name, :string
@@ -119,7 +121,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> foreign_key_constraint(:series_id)
     |> foreign_key_constraint(:customer_id)
     |> foreign_key_constraint(:recurring_invoice_id)
-    |> validate_format(:email, Application.fetch_env!(:siwapp, :email_regex))
+    |> validate_format(:email, @email_regex)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
