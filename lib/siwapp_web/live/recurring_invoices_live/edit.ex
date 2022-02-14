@@ -93,9 +93,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_info({:update_changeset, params}, socket) do
-    changeset =
-      socket.assigns.recurring_invoice
-      |> RecurringInvoices.change(params)
+    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end

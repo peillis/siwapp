@@ -150,7 +150,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # This is used to handle items validation and calculations
   defp transform_items(changeset) do
     items_transformed =
-      get_field(changeset, :items)
+      changeset
+      |> get_field(:items)
       |> Enum.map(&Item.changeset(%Item{}, &1))
 
     put_change(changeset, :items, items_transformed)
@@ -159,7 +160,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Adds error to changeset if any item is invalid
   defp validate_items(changeset) do
     items_valid? =
-      get_field(changeset, :items)
+      changeset
+      |> get_field(:items)
       |> Enum.all?(& &1.valid?)
 
     if items_valid? do
@@ -173,7 +175,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Used to recycle calculate functions in invoice_helper, that use Item structs
   defp apply_changes_items(changeset) do
     items =
-      get_field(changeset, :items)
+      changeset
+      |> get_field(:items)
       |> Enum.map(&apply_changes(&1))
 
     put_change(changeset, :items, items)
@@ -184,7 +187,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # build item forms' for user to fill
   defp unapply_changes_items(changeset) do
     items =
-      get_field(changeset, :items)
+      changeset
+      |> get_field(:items)
       |> Enum.map(&Item.changeset(&1, %{}))
 
     put_change(changeset, :items, items)

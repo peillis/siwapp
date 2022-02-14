@@ -66,7 +66,8 @@ defmodule Siwapp.Invoices.InvoiceQuery do
       {:with_status, :past_due} ->
         date_today = Date.utc_today()
 
-        where(query, [i], not is_nil(i.due_date))
+        query
+        |> where([i], not is_nil(i.due_date))
         |> where([i], i.due_date < ^date_today)
 
       {:with_status, value} ->

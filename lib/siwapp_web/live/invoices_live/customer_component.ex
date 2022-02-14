@@ -70,7 +70,8 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
 
   def handle_event("pick_customer", %{"id" => customer_id}, socket) do
     customer_params =
-      Customers.get(customer_id)
+      customer_id
+      |> Customers.get()
       |> Map.take([
         :name,
         :identification,

@@ -61,9 +61,7 @@ defmodule SiwappWeb.TemplatesLive.Edit do
          |> push_redirect(to: Routes.templates_index_path(socket, :index))}
 
       {:error, _msg} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "You can't delete the default template.")}
+        {:noreply, put_flash(socket, :error, "You can't delete the default template.")}
     end
   end
 

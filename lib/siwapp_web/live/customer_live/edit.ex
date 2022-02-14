@@ -78,8 +78,7 @@ defmodule SiwappWeb.CustomerLive.Edit do
       )
 
     changeset =
-      socket.assigns.changeset
-      |> Map.put(:changes, %{shipping_address: invoicing_address})
+      Map.put(socket.assigns.changeset, :changes, %{shipping_address: invoicing_address})
 
     {:noreply, assign(socket, changeset: changeset)}
   end

@@ -12,17 +12,13 @@ defmodule Siwapp.Query do
     |> offset(^offset_by)
   end
 
-  def by(query, field, value) do
-    query
-    |> where(^[{field, value}])
-  end
+  def by(query, field, value), do: where(query, ^[{field, value}])
 
   def list_preload(query, term) do
     preload(query, ^term)
   end
 
   def search_in_string(query, string_field, search) do
-    query
-    |> where([q], ilike(field(q, ^string_field), ^search))
+    where(query, [q], ilike(field(q, ^string_field), ^search))
   end
 end

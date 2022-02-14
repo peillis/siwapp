@@ -42,9 +42,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, _msg} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "You can't delete the default series.")}
+        {:noreply, put_flash(socket, :error, "You can't delete the default series.")}
     end
   end
 
