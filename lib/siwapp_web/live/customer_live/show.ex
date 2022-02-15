@@ -10,8 +10,10 @@ defmodule SiwappWeb.CustomerLive.Show do
 
   def render(assigns) do
     ~H"""
-      <h1>Invoices for <%= @customer.name %></h1>
-      <%= live_render(@socket, SiwappWeb.InvoicesLive.Index, id: "show_invoices", session: %{ "customer_id" => @customer.id }) %>
+    <%= live_render(@socket, SiwappWeb.InvoicesLive.Index,
+      id: "show_invoices",
+      session: %{"customer_id" => @customer.id, "name" => @customer.name}
+    ) %>
     """
   end
 

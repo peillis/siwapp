@@ -23,11 +23,24 @@
   <tbody role="infinite-content">
     <%= for customer <- @customers do %>
       <tr phx-click="edit" phx-value-id={customer.id} class="is-clickable">
-        <td class="no-wrap"><%= customer.name%></td>
-        <td class="no-wrap"><%= customer.identification%></td>
-        <td class="text-right"><%= set_currency(customer.due, customer.currency)%></td>
-        <td class="text-right"><%= set_currency(customer.total, customer.currency)%></td>
-        <td class="text-center"><%= live_redirect " ", class: "icon fas fa-list", to: Routes.customer_show_path(@socket, :show, customer.id) %></td>
+        <td class="no-wrap">
+          <%= customer.name %>
+        </td>
+        <td class="no-wrap">
+          <%= customer.identification %>
+        </td>
+        <td class="text-right">
+          <%= set_currency(customer.due, customer.currency) %>
+        </td>
+        <td class="text-right">
+          <%= set_currency(customer.total, customer.currency) %>
+        </td>
+        <td class="text-center">
+          <%= live_redirect(" ",
+            class: "icon fas fa-list",
+            to: Routes.customer_show_path(@socket, :show, customer.id)
+          ) %>
+        </td>
       </tr>
     <% end %>
   </tbody>
