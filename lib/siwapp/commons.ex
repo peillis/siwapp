@@ -183,6 +183,7 @@ defmodule Siwapp.Commons do
     Series.changeset(series, attrs)
   end
 
+  @spec list_series_names :: [binary()]
   def list_series_names do
     Series
     |> select([s], s.name)

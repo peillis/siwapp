@@ -92,6 +92,7 @@ defmodule Siwapp.Customers do
     Customer.changeset(customer, attrs)
   end
 
+  @spec list_names :: [binary()]
   def list_names do
     Customer
     |> select([c], c.name)
