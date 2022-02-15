@@ -51,7 +51,7 @@ defmodule Siwapp.Search.SearchQuery do
   end
 
   def filter_by(query, "value", value) do
-    keys = get_keys_associated_to_value(query, value)
+    keys = get_all_keys(query)
 
     value_for_each_key(keys, query, value)
   end
@@ -130,14 +130,14 @@ defmodule Siwapp.Search.SearchQuery do
   end
 
   # Get keys of a jsonb(meta_attributes) which are associated with the value a user inputs
-  defp get_keys_associated_to_value(query, value) do
+  defp get_all_keys(query) do
     query
     |> select([q], q.meta_attributes)
     |> Repo.all()
     |> Enum.reject(&(&1 == %{}))
+    |> Enum.map(&Map.keys(&1))
+    |> List.flatten()
     |> Enum.uniq()
-    |> Enum.map(&compare_with_value(&1, value))
-    |> Enum.reject(&is_nil(&1))
   end
 
   # If there are keys associated to the value a user inputs,
@@ -155,17 +155,6 @@ defmodule Siwapp.Search.SearchQuery do
         where(query, [a], a.meta_attributes[^key_associated] == ^value)
         |> union_all(^acc_query)
       end)
-    end
-  end
-
-  # Compares if the value inside the map is the same as the value a user is filtering by.
-  # If true get the key of the map
-  defp compare_with_value(map, value) do
-    if Map.values(map) == [value] do
-      [key] = Map.keys(map)
-      key
-    else
-      nil
     end
   end
 end
