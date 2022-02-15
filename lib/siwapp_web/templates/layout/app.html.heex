@@ -1,16 +1,16 @@
 <%= render(SiwappWeb.LayoutView, "nav.html", socket_or_conn: @conn) %>
 <main class="container section has-navbar-fixed-bottom">
-  <%= if info = get_flash(@conn, :info) do %>
+  <%= if msg = get_flash(@conn, :info) do %>
     <p class="alert alert-info" role="alert">
-      <%= info %>
+      <%= msg %>
     </p>
   <% end %>
 
-  <%= if error = get_flash(@conn, :error) do %>
+  <%= if msg = get_flash(@conn, :error) do %>
     <p class="alert alert-danger" role="alert">
-      <%= error %>
+      <%= msg %>
     </p>
   <% end %>
-  
+
   <%= @inner_content %>
 </main>
