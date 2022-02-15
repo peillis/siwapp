@@ -126,6 +126,7 @@ defmodule Siwapp.Search.SearchQuery do
         |> where([q], q.due_date < ^Date.utc_today())
     end
   end
+
   @spec convert_to_atom(binary) :: atom
   defp convert_to_atom(value) do
     value

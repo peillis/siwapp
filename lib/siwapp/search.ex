@@ -6,7 +6,10 @@ defmodule Siwapp.Search do
   alias Siwapp.Repo
   alias Siwapp.Search.SearchQuery
 
-  @type type_of_struct :: Siwapp.Invoices.Invoice.t() | Siwapp.Customers.Customer.t() | Siwapp.RecurringInvoices.RecurringInvoice.t()
+  @type type_of_struct ::
+          Siwapp.Invoices.Invoice.t()
+          | Siwapp.Customers.Customer.t()
+          | Siwapp.RecurringInvoices.RecurringInvoice.t()
   @type key :: binary()
   @type value :: binary()
   @doc """
