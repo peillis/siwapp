@@ -10,18 +10,18 @@ defmodule Siwapp.Invoices do
   alias Siwapp.Repo
 
   @doc """
-  Gets a list of invoices by updated date
+  Gets a list of invoices by updated date with the parameters included in the options
   """
+  def list(options \\ []) do
+    default = [limit: 100, offset: 0, preload: [], filters: []]
+    options = Keyword.merge(default, options)
 
-  @spec list(none() | atom()) :: [Invoice.t()]
-  def list do
-    # query = Query.invoices()
-    Repo.all(Invoice)
-  end
-
-  def list(assoc) do
-    Invoice
-    |> Query.list_preload(assoc)
+    Enum.reduce(options[:filters], Invoice, fn {field, value}, acc_query ->
+      InvoiceQuery.list_by_query(acc_query, field, value)
+    end)
+    |> limit(^options[:limit])
+    |> offset(^options[:offset])
+    |> Query.list_preload(options[:preload])
     |> Repo.all()
   end
 
@@ -34,19 +34,6 @@ defmodule Siwapp.Invoices do
 
   def count do
     Repo.aggregate(Invoice, :count)
-  end
-
-  @doc """
-  Gets a list of the invoices by giving a list of tuples with {key, value}
-  where the key is an atom
-  """
-
-  @spec list_by([{atom(), any()}]) :: list()
-  def list_by(query_list) do
-    Enum.reduce(query_list, Invoice, fn {field, value}, acc_query ->
-      InvoiceQuery.list_by_query(acc_query, field, value)
-    end)
-    |> Repo.all()
   end
 
   @doc """

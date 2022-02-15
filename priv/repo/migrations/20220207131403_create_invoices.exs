@@ -17,7 +17,7 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :issue_date, :date
       add :due_date, :date
       add :failed, :boolean, default: false
-      add :currency, :string, size: 3
+      add :currency, :string, size: 3, null: false
       add :deleted_at, :utc_datetime
       add :invoicing_address, :text
       add :shipping_address, :text
