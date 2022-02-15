@@ -3,6 +3,8 @@ defmodule SiwappWeb.Router do
 
   import SiwappWeb.UserAuth
 
+  @env Application.compile_env!(:siwapp, :env)
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -29,7 +31,7 @@ defmodule SiwappWeb.Router do
   end
 
   scope "/graphql" do
-    if Mix.env() == :dev do
+    if @env == :dev do
       pipe_through :api
       forward "/graphiql", Absinthe.Plug.GraphiQL, schema: SiwappWeb.Schema
     else
@@ -53,7 +55,7 @@ defmodule SiwappWeb.Router do
   # If your application does not have an admins-only section yet,
   # you can use Plug.BasicAuth to set up some basic authentication
   # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
+  if @env in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
@@ -66,7 +68,7 @@ defmodule SiwappWeb.Router do
   #
   # Note that preview only shows emails that were sent by the same
   # node running the Phoenix server.
-  if Mix.env() == :dev do
+  if @env == :dev do
     scope "/dev" do
       pipe_through :browser
 
