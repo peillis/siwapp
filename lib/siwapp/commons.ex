@@ -183,7 +183,7 @@ defmodule Siwapp.Commons do
     Series.changeset(series, attrs)
   end
 
-  def get_series_name do
+  def list_series_names do
     Series
     |> select([s], s.name)
     |> Repo.all()
