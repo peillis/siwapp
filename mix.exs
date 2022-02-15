@@ -49,6 +49,7 @@ defmodule Siwapp.MixProject do
       {:faker, "~> 0.17.0", only: [:test, :dev]},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.18"},
+      {:heex_formatter, github: "feliperenan/heex_formatter"},
       {:jason, "~> 1.2"},
       {:money, "~> 1.4"},
       {:phoenix, "~> 1.6.2"},
