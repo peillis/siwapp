@@ -30,11 +30,20 @@ defmodule SiwappWeb.MetaAttributesComponent do
       <%= for {k, v} <- @attributes do %>
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label"><%= k %>:</label>
+            <label class="label">
+              <%= k %> :
+            </label>
           </div>
           <div class="field-body">
             <input class="input field" type="text" name={"#{@name}[#{@field}][#{k}]"} value={v} />
-            <span class="icon has-text-danger is-clickable" phx-click="remove" phx-value-key={k} phx-target={@myself}><i class="fas fa-trash"></i></span>
+            <span
+              class="icon has-text-danger is-clickable"
+              phx-click="remove"
+              phx-value-key={k}
+              phx-target={@myself}
+            >
+              <i class="fas fa-trash"></i>
+            </span>
           </div>
         </div>
       <% end %>
@@ -44,9 +53,23 @@ defmodule SiwappWeb.MetaAttributesComponent do
       <% end %>
 
       <div class="field is-horizontal field-body">
-        <input class="input field" type="text" phx-blur="changing-key" phx-target={@myself} placeholder="Key"/>
-        <input class="input field" type="text" phx-blur="changing-value" phx-target={@myself} placeholder="Value"/>
-        <a class="button is-success field" phx-click="add" phx-target={@myself}>Add</a>
+        <input
+          class="input field"
+          type="text"
+          phx-blur="changing-key"
+          phx-target={@myself}
+          placeholder="Key"
+        />
+        <input
+          class="input field"
+          type="text"
+          phx-blur="changing-value"
+          phx-target={@myself}
+          placeholder="Value"
+        />
+        <a class="button is-success field" phx-click="add" phx-target={@myself}>
+          Add
+        </a>
       </div>
     </fieldset>
     """

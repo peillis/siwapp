@@ -39,23 +39,28 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     <fieldset class="fieldset">
       <h2>Customer</h2>
 
-      <%= render(SiwappWeb.PageView, "customer_form.html", f: @f, myself: @myself, customer_name: @customer_name, customer_suggestions: @customer_suggestions) %>
+      <%= render(SiwappWeb.PageView, "customer_form.html",
+        f: @f,
+        myself: @myself,
+        customer_name: @customer_name,
+        customer_suggestions: @customer_suggestions
+      ) %>
 
       <div class="field is-horizontal field-body">
         <div class="field">
-          <%= label @f, :terms, "Legal terms and conditions", class: "label" %>
+          <%= label(@f, :terms, "Legal terms and conditions", class: "label") %>
           <p class="control">
-            <%= textarea @f, :terms, phx_debounce: "blur", class: "textarea" %>
+            <%= textarea(@f, :terms, phx_debounce: "blur", class: "textarea") %>
           </p>
-          <%= error_tag @f, :terms %>
+          <%= error_tag(@f, :terms) %>
         </div>
 
         <div class="field">
-          <%= label @f, :notes, class: "label" %>
+          <%= label(@f, :notes, class: "label") %>
           <p class="control">
-            <%= textarea @f, :notes, phx_debounce: "blur", class: "textarea" %>
+            <%= textarea(@f, :notes, phx_debounce: "blur", class: "textarea") %>
           </p>
-          <%= error_tag @f, :notes %>
+          <%= error_tag(@f, :notes) %>
         </div>
       </div>
 

@@ -1,76 +1,89 @@
 <fieldset class="fieldset">
   <div class="field is-horizontal field-body">
     <div class="field">
-      <%= label @f, :name, class: "label" %>
-        <%= if Map.has_key?(assigns, :customer_suggestions) do %>
-            <p class="control has-dropdown">
-              <div class="input-with-dropdown control">
-                <%= text_input @f, :name, phx_debounce: "500", class: "input", value: @customer_name, autocomplete: "off" %>
-                <%= if @customer_suggestions != [] do %>
-                  <div class="dropdown below-input is-active">
-                    <div class="dropdown-menu dropdown-content" id="dropdown-menu" role="menu">
-                        <%= for customer_suggestion <- @customer_suggestions do %>
-                          <a href="#" phx-click="pick_customer" phx-value-id={customer_suggestion.id} phx-target={@myself} class="dropdown-item">
-                            <%= customer_suggestion.name %>
-                          </a>
-                        <% end %>
-                    </div>
-                  </div>
-                <% end %>
+      <%= label(@f, :name, class: "label") %>
+      <%= if Map.has_key?(assigns, :customer_suggestions) do %>
+        <p class="control has-dropdown">
+          <div class="input-with-dropdown control">
+            <%= text_input(@f, :name,
+              phx_debounce: "500",
+              class: "input",
+              value: @customer_name,
+              autocomplete: "off"
+            ) %>
+            <%= if @customer_suggestions != [] do %>
+              <div class="dropdown below-input is-active">
+                <div class="dropdown-menu dropdown-content" id="dropdown-menu" role="menu">
+                  <%= for customer_suggestion <- @customer_suggestions do %>
+                    <a
+                      href="#"
+                      phx-click="pick_customer"
+                      phx-value-id={customer_suggestion.id}
+                      phx-target={@myself}
+                      class="dropdown-item"
+                    >
+                      <%= customer_suggestion.name %>
+                    </a>
+                  <% end %>
+                </div>
               </div>
-            </p>
-        <% else %>
-          <p class="control">
-            <%= text_input @f, :name, phx_debounce: "blur", class: "input" %>
-          </p>
-        <% end %>
-      <%= error_tag @f, :name %>
+            <% end %>
+          </div>
+        </p>
+      <% else %>
+        <p class="control">
+          <%= text_input(@f, :name, phx_debounce: "blur", class: "input") %>
+        </p>
+      <% end %>
+      <%= error_tag(@f, :name) %>
     </div>
 
     <div class="field">
-      <%= label @f, :identification, class: "label" %>
+      <%= label(@f, :identification, class: "label") %>
       <p class="control">
-        <%= text_input @f, :identification, phx_debounce: "blur", class: "input" %>
+        <%= text_input(@f, :identification, phx_debounce: "blur", class: "input") %>
       </p>
-      <%= error_tag @f, :identification %>
-    </div>
-  </div>
-
-  <div class="field is-horizontal field-body">
-    <div class="field">
-      <%= label @f, :contact_person, class: "label" %>
-      <p class="control">
-        <%= text_input @f, :contact_person, phx_debounce: "blur", class: "input" %>
-      </p>
-      <%= error_tag @f, :contact_person %>
-    </div>
-
-    <div class="field">
-      <%= label @f, :email, class: "label" %>
-      <p class="control">
-        <%= text_input @f, :email, phx_debounce: "blur", class: "input" %>
-      </p>
-      <%= error_tag @f, :email %>
+      <%= error_tag(@f, :identification) %>
     </div>
   </div>
 
   <div class="field is-horizontal field-body">
     <div class="field">
-      <%= label @f, :invoicing_address, class: "label" %>
+      <%= label(@f, :contact_person, class: "label") %>
       <p class="control">
-        <%= textarea @f, :invoicing_address, phx_debounce: "blur", class: "textarea" %>
+        <%= text_input(@f, :contact_person, phx_debounce: "blur", class: "input") %>
       </p>
-      <%= error_tag @f, :invoicing_address %>
+      <%= error_tag(@f, :contact_person) %>
     </div>
 
     <div class="field">
-      <%= label @f, :shipping_address, class: "label"  %>
+      <%= label(@f, :email, class: "label") %>
       <p class="control">
-        <%= textarea @f, :shipping_address, phx_debounce: "blur", class: "textarea" %>
+        <%= text_input(@f, :email, phx_debounce: "blur", class: "input") %>
       </p>
-      <%= error_tag @f, :shipping_address %>
+      <%= error_tag(@f, :email) %>
+    </div>
+  </div>
+
+  <div class="field is-horizontal field-body">
+    <div class="field">
+      <%= label(@f, :invoicing_address, class: "label") %>
+      <p class="control">
+        <%= textarea(@f, :invoicing_address, phx_debounce: "blur", class: "textarea") %>
+      </p>
+      <%= error_tag(@f, :invoicing_address) %>
+    </div>
+
+    <div class="field">
+      <%= label(@f, :shipping_address, class: "label") %>
+      <p class="control">
+        <%= textarea(@f, :shipping_address, phx_debounce: "blur", class: "textarea") %>
+      </p>
+      <%= error_tag(@f, :shipping_address) %>
       <p class="help">
-        <a phx-click="copy"> Copy Invoicing Address </a>
+        <a phx-click="copy">
+          Copy Invoicing Address
+        </a>
       </p>
     </div>
   </div>

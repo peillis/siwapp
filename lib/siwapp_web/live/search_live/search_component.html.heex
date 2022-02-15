@@ -5,31 +5,41 @@
         <i class="fas fa-angle-down" aria-hidden="true"></i>
       </span>
     </button>
-    <input name="search_input" class="input" type="search" placeholder="Search..."/>
+    <input name="search_input" class="input" type="search" placeholder="Search..." />
     <button class="button is-info">
-      <span class="icon is-small is-right"><i class="fas fa-search"></i></span>
+      <span class="icon is-small is-right">
+        <i class="fas fa-search"></i>
+      </span>
     </button>
   </div>
 
   <div class="search-menu">
     <div class="search-menu-content" id="search-menu">
-      <%= if is_nil(@component) do%>
-       <div class="columns">
+      <%= if is_nil(@component) do %>
+        <div class="columns">
           <div class="column is-6">
-            <label class="label">KEY:</label>
+            <label class="label">
+              KEY:
+            </label>
             <input class="input" type="text">
           </div>
           <div class="column is-6">
-            <label class="label">VALUE:</label>
+            <label class="label">
+              VALUE:
+            </label>
             <input class="input" type="text">
           </div>
         </div>
       <% else %>
-        <.live_component module={@component} id="search-content"/>
+        <.live_component module={@component} id="search-content" />
       <% end %>
       <div class="buttons is-right">
-        <button class="button is-info">Export to csv</button>
-        <button class="button is-info">Search</button>
+        <button class="button is-info">
+          Export to csv
+        </button>
+        <button class="button is-info">
+          Search
+        </button>
       </div>
     </div>
   </div>

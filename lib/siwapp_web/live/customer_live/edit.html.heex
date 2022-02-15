@@ -1,12 +1,21 @@
-<h1><%= @page_title %></h1>
+<h1>
+  <%= @page_title %>
+</h1>
 
 <.form let={f} for={@changeset} phx-submit="save" phx-change="validate">
   <%= render(SiwappWeb.PageView, "customer_form.html", f: f) %>
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" f={f} field={:meta_attributes} />
+  <.live_component
+    module={SiwappWeb.MetaAttributesComponent}
+    id="meta_attributes"
+    f={f}
+    field={:meta_attributes}
+  />
   <br>
-  <%= submit "Save", class: "button is-success" %>
-  <%= live_patch "Back", to: Routes.customer_index_path(@socket, :index), class: "button is-dark" %>
+  <%= submit("Save", class: "button is-success") %>
+  <%= live_patch("Back", to: Routes.customer_index_path(@socket, :index), class: "button is-dark") %>
   <%= if @live_action == :edit do %>
-    <button class="button is-danger" phx-click="delete">Delete</button>
+    <button class="button is-danger" phx-click="delete">
+      Delete
+    </button>
   <% end %>
 </.form>

@@ -2,15 +2,36 @@
   <thead>
     <tr>
       <%= if @checked != [] do %>
-        <th title=""><input type="checkbox" checked={Enum.member?(@checked, 0)} phx-click="click_checkbox" phx-value-id="0"></th>
+        <th title="">
+          <input
+            type="checkbox"
+            checked={Enum.member?(@checked, 0)}
+            phx-click="click_checkbox"
+            phx-value-id="0"
+          >
+        </th>
       <% end %>
-      <th title="Reference">Reference</th>
-      <th title="Customer">Customer Name</th>
-      <th title="Date">Date</th>
-      <th title="Sent">Sent</th>
-      <th title="Status">Status</th>
-      <th title="Pending">Pending</th>
-      <th title="Total">Total</th>
+      <th title="Reference">
+        Reference
+      </th>
+      <th title="Customer">
+        Customer Name
+      </th>
+      <th title="Date">
+        Date
+      </th>
+      <th title="Sent">
+        Sent
+      </th>
+      <th title="Status">
+        Status
+      </th>
+      <th title="Pending">
+        Pending
+      </th>
+      <th title="Total">
+        Total
+      </th>
     </tr>
   </thead>
 
@@ -18,41 +39,84 @@
     <%= for invoice <- @invoices do %>
       <tr phx-click="redirect" phx-value-id={invoice.id} class="is-clickable">
         <%= if @checked != [] do %>
-          <td><input type="checkbox" phx-click="click_checkbox" checked={Enum.member?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
+          <td>
+            <input
+              type="checkbox"
+              phx-click="click_checkbox"
+              checked={Enum.member?(@checked, invoice.id)}
+              phx-value-id={invoice.id}
+            >
+          </td>
         <% end %>
-        <td><%=invoice.series_id%></td>
-        <td><%= invoice.name %></td>
-        <td><%= invoice.issue_date %></td>
+        <td>
+          <%= invoice.series_id %>
+        </td>
+        <td>
+          <%= invoice.name %>
+        </td>
+        <td>
+          <%= invoice.issue_date %>
+        </td>
 
-        <%= if invoice.sent_by_email do%>
-          <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
+        <%= if invoice.sent_by_email do %>
+          <td class="icon has-text-success table-icon">
+            <i class="fas fa-check"></i>
+          </td>
         <% else %>
-          <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
+          <td class="icon has-text-danger table-icon">
+            <i class="fas fa-times"></i>
+          </td>
         <% end %>
 
         <%= case Siwapp.Invoices.status(invoice) do %>
           <% :draft -> %>
-            <td class="table-span"><span class="tag is-info">Draft</span></td>
+            <td class="table-span">
+              <span class="tag is-info">
+                Draft
+              </span>
+            </td>
             <td></td>
 
           <% :failed -> %>
-            <td class="table-span"><span class="tag is-danger">Failed</span></td>
+            <td class="table-span">
+              <span class="tag is-danger">
+                Failed
+              </span>
+            </td>
             <td></td>
 
           <% :paid -> %>
-            <td class="table-span"><span class="tag is-success">Paid</span></td>
+            <td class="table-span">
+              <span class="tag is-success">
+                Paid
+              </span>
+            </td>
             <td></td>
 
           <% :pending -> %>
-            <td class="table-span"><span class="tag is-warning">Pending</span></td>
-            <td><%= set_currency(invoice.gross_amount, invoice.currency) %></td>
+            <td class="table-span">
+              <span class="tag is-warning">
+                Pending
+              </span>
+            </td>
+            <td>
+              <%= set_currency(invoice.gross_amount, invoice.currency) %>
+            </td>
 
           <% :past_due -> %>
-            <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
-            <td><%= set_currency(invoice.gross_amount, invoice.currency) %></td>
+            <td class="table-span">
+              <span class="tag is-danger">
+                Past_Due
+              </span>
+            </td>
+            <td>
+              <%= set_currency(invoice.gross_amount, invoice.currency) %>
+            </td>
         <% end %>
 
-        <td><%= set_currency(invoice.gross_amount, invoice.currency) %></td>
+        <td>
+          <%= set_currency(invoice.gross_amount, invoice.currency) %>
+        </td>
       </tr>
     <% end %>
   </tbody>

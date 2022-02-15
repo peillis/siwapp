@@ -1,14 +1,27 @@
-<nav class={"navbar is-fixed-bottom
+<nav
+  class={"navbar is-fixed-bottom
              #{if Enum.empty?(@checked), do: "is-invisible"}"}
-            role="navigation" aria-label="main navigation">
+  role="navigation"
+  aria-label="main navigation"
+>
   <div class="navbar-menu">
     <div class="navbar-end">
       <div class="navbar-item buttons">
-        <button class="button is-danger">Delete</button>
-        <button class="button is-info">Send Email</button>
-        <button class="button is-info">Set Paid</button>
-        <button class="button is-info">Download PDF</button>
-        <button class="button is-info">Duplicate</button>
+        <button class="button is-danger">
+          Delete
+        </button>
+        <button class="button is-info">
+          Send Email
+        </button>
+        <button class="button is-info">
+          Set Paid
+        </button>
+        <button class="button is-info">
+          Download PDF
+        </button>
+        <button class="button is-info">
+          Duplicate
+        </button>
       </div>
     </div>
   </div>
@@ -17,13 +30,25 @@
 <div class="mb-4">
   <div class="is-flex is-justify-content-space-between">
     <div class="is-flex is-align-items-center">
-      <h1><%= @page_title %><span class="subtitle is-5"> (<%= @number_of_invoices %> Found)</span></h1>
+      <h1>
+        <%= @page_title %>
+        <span class="subtitle is-5">
+          ( <%= @number_of_invoices %> Found)
+        </span>
+      </h1>
     </div>
-    <header class="card card-header is-clickable is-unselectable is-size-5" phx-click="change-summary-state">
+    <header
+      class="card card-header is-clickable is-unselectable is-size-5"
+      phx-click="change-summary-state"
+    >
       <div class="card-header-content m-3">
-        <div class="card-header-title has-text-weight-bold p-0"><%= @totals.default %></div>
+        <div class="card-header-title has-text-weight-bold p-0">
+          <%= @totals.default %>
+        </div>
         <%= for currency_total <- @totals.others do %>
-         <div class="card-header-title has-text-weight-medium p-0"><%= currency_total %></div>
+          <div class="card-header-title has-text-weight-medium p-0">
+            <%= currency_total %>
+          </div>
         <% end %>
       </div>
       <button class="card-header-icon pl-0" aria-label="more options">

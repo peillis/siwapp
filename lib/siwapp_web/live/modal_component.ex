@@ -12,11 +12,12 @@ defmodule SiwappWeb.ModalComponent do
       phx-window-keydown="close"
       phx-key="escape"
       phx-target={@myself}
-      phx-page-loading>
+      phx-page-loading
+    >
 
       <div class="phx-modal-content">
-        <%= live_patch raw("&times;"), to: @return_to, class: "phx-modal-close" %>
-        <%= live_component @component, @opts %>
+        <%= live_patch(raw("&times;"), to: @return_to, class: "phx-modal-close") %>
+        <%= live_component(@component, @opts) %>
       </div>
     </div>
     """

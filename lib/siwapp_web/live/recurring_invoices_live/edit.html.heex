@@ -1,6 +1,8 @@
-<h1><%= @page_title %></h1>
+<h1>
+  <%= @page_title %>
+</h1>
 
-<.form let={f} for={@changeset} phx-change="validate" phx-submit="save" >
+<.form let={f} for={@changeset} phx-change="validate" phx-submit="save">
   <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
 
   <fieldset class="fieldset">
@@ -8,131 +10,160 @@
 
     <div class="field">
       <label class="checkbox">
-        <%= checkbox f, :enabled, phx_debounce: "blur", class: "checkbox" %> Enable this recurring invoice
+        <%= checkbox(f, :enabled, phx_debounce: "blur", class: "checkbox") %> Enable this recurring invoice
       </label>
     </div>
     <div class="field">
       <label class="checkbox">
-        <%= checkbox f, :send_by_email, phx_debounce: "blur", class: "checkbox" %> Automatically send generated invoices by email
+        <%= checkbox(f, :send_by_email, phx_debounce: "blur", class: "checkbox") %> Automatically send generated invoices by email
       </label>
     </div>
 
     <div class="field is-horizontal field-body">
       <div class="field">
-          <%= label f, :starting_date, class: "label" %>
-          <p class="control">
-            <%= date_input f, :starting_date, class: "input" %>
-          </p>
-          <%= error_tag f, :starting_date %>
+        <%= label(f, :starting_date, class: "label") %>
+        <p class="control">
+          <%= date_input(f, :starting_date, class: "input") %>
+        </p>
+        <%= error_tag(f, :starting_date) %>
       </div>
       <div class="field">
-          <%= label f, :finishing_date, class: "label" %>
-          <p class="control">
-            <%= date_input f, :finishing_date, class: "input" %>
-          </p>
-          <%= error_tag f, :finishing_date %>
+        <%= label(f, :finishing_date, class: "label") %>
+        <p class="control">
+          <%= date_input(f, :finishing_date, class: "input") %>
+        </p>
+        <%= error_tag(f, :finishing_date) %>
       </div>
     </div>
 
     <div class="field is-horizontal field-body">
       <div class="field">
-        <%= label f, :period, class: "label" %>
+        <%= label(f, :period, class: "label") %>
         <p class="control">
-          <%= number_input f, :period, class: "input" %>
+          <%= number_input(f, :period, class: "input") %>
         </p>
-        <%= error_tag f, :period %>
+        <%= error_tag(f, :period) %>
       </div>
       <div class="field">
-        <%= label f, :period_type, class: "label" %>
+        <%= label(f, :period_type, class: "label") %>
         <p class="control select is-fullwidth">
-          <%= select f, :period_type, ["Daily", "Monthly", "Yearly"] %>
+          <%= select(f, :period_type, ["Daily", "Monthly", "Yearly"]) %>
         </p>
       </div>
     </div>
 
     <div class="field is-horizontal field-body">
       <div class="field">
-        <%= label f, :max_ocurrences, class: "label" %>
+        <%= label(f, :max_ocurrences, class: "label") %>
         <p class="control">
-          <%= number_input f, :max_ocurrences, class: "input" %>
+          <%= number_input(f, :max_ocurrences, class: "input") %>
         </p>
-        <%= error_tag f, :max_ocurrences %>
+        <%= error_tag(f, :max_ocurrences) %>
       </div>
     </div>
   </fieldset>
-
 
   <fieldset class="fieldset">
     <h2>Invoice Details</h2>
     <div class="field is-horizontal field-body">
       <div class="field">
-        <%= label f, :series_id, class: "label" %>
+        <%= label(f, :series_id, class: "label") %>
         <p class=" control select is-fullwidth">
-          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}) %>
+          <%= select(f, :series_id, Enum.map(@series, &{&1.name, &1.id})) %>
         </p>
       </div>
       <div class="field">
-          <%= label f, :days_to_due, class: "label" %>
-          <p class="control">
-            <%= number_input f, :days_to_due, class: "input" %>
-          </p>
-          <%= error_tag f, :days_to_due %>
+        <%= label(f, :days_to_due, class: "label") %>
+        <p class="control">
+          <%= number_input(f, :days_to_due, class: "input") %>
+        </p>
+        <%= error_tag(f, :days_to_due) %>
       </div>
       <div class="field">
-        <%= label f, :currency, class: "label" %>
+        <%= label(f, :currency, class: "label") %>
         <p class="control select is-fullwidth">
-          <%= select f, :currency, @currency_options %>
+          <%= select(f, :currency, @currency_options) %>
         </p>
       </div>
     </div>
-    <%= render(SiwappWeb.ItemView, "item_form.html", inputs_for: pseudo_inputs_for(@changeset), f: f, changeset: @changeset) %>
+    <%= render(SiwappWeb.ItemView, "item_form.html",
+      inputs_for: pseudo_inputs_for(@changeset),
+      f: f,
+      changeset: @changeset
+    ) %>
   </fieldset>
   <fieldset class="fieldset">
     <h2>PAYMENTS</h2>
 
     <div class="field is-horizontal field-body">
       <div class="field">
-        <label class="label">Date</label>
+        <label class="label">
+          Date
+        </label>
         <p class="control">
           <input class="input" type="date">
         </p>
       </div>
       <div class="field">
-        <label class="label">Notes</label>
+        <label class="label">
+          Notes
+        </label>
         <p class="control">
           <input class="input" type="text">
         </p>
       </div>
       <div class="field">
-        <label class="label">Amount</label>
+        <label class="label">
+          Amount
+        </label>
         <p class="control">
           <input class="input" type="text">
         </p>
       </div>
       <div class="field">
-        <label  class="label is-invisible is-hidden-mobile">invisible</label>
+        <label class="label is-invisible is-hidden-mobile">
+          invisible
+        </label>
         <p class="control">
-          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Payment</button>
+          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">
+            Remove Payment
+          </button>
         </p>
       </div>
     </div>
 
-    <button class="column is-narrow-desktop button is-dark is-fullwidth">Add Payment</button>
+    <button class="column is-narrow-desktop button is-dark is-fullwidth">
+      Add Payment
+    </button>
     <label class="checkbox">
       <input type="checkbox">
       Payment collection failed
     </label>
   </fieldset>
 
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" f={f} field={:meta_attributes} />
+  <.live_component
+    module={SiwappWeb.MetaAttributesComponent}
+    id="meta_attributes"
+    f={f}
+    field={:meta_attributes}
+  />
 
   <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
     <div class="navbar-end navbar-items buttons">
       <%= if @live_action == :edit do %>
-        <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @recurring_invoice.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+        <%= link("Delete",
+          to: "#",
+          phx_click: "delete",
+          phx_value_id: @recurring_invoice.id,
+          data: [confirm: "Are you sure?"],
+          class: "button is-danger"
+        ) %>
       <% end %>
-      <%= live_redirect "Back", to: Routes.recurring_invoices_index_path(@socket, :index), class: "button is-dark" %>
-      <%= submit "Save", class: "button is-success" %>
+      <%= live_redirect("Back",
+        to: Routes.recurring_invoices_index_path(@socket, :index),
+        class: "button is-dark"
+      ) %>
+      <%= submit("Save", class: "button is-success") %>
     </div>
   </nav>
 </.form>

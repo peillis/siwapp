@@ -1,10 +1,12 @@
-<h1><%= @page_title %></h1>
+<h1>
+  <%= @page_title %>
+</h1>
 
-<.form let={f} for={@changeset} phx-change="validate" phx-submit="save" >
+<.form let={f} for={@changeset} phx-change="validate" phx-submit="save">
   <%= if @live_action == :new do %>
     <div class="field">
       <label class="checkbox">
-        <%= checkbox f, :draft, phx_debounce: "blur", class: "checkbox" %> Save as draft
+        <%= checkbox(f, :draft, phx_debounce: "blur", class: "checkbox") %> Save as draft
       </label>
     </div>
   <% end %>
@@ -16,46 +18,51 @@
 
     <div class="field is-horizontal field-body">
       <div class="field">
-        <%= label f, :series_id, class: "label" %>
+        <%= label(f, :series_id, class: "label") %>
         <p class=" control select is-fullwidth">
-          <%= select f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur" %>
+          <%= select(f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur") %>
         </p>
-        <%= error_tag f, :series_id %>
+        <%= error_tag(f, :series_id) %>
       </div>
       <%= if @live_action == :edit do %>
         <div class="field">
-            <%= label f, :number, class: "label" %>
-            <p class="control">
-              <%= number_input f, :number, phx_debounce: "blur", class: "input" %>
-            </p>
-            <%= error_tag f, :number %>
+          <%= label(f, :number, class: "label") %>
+          <p class="control">
+            <%= number_input(f, :number, phx_debounce: "blur", class: "input") %>
+          </p>
+          <%= error_tag(f, :number) %>
         </div>
       <% end %>
       <div class="field">
-        <%= label f, :currency, class: "label" %>
+        <%= label(f, :currency, class: "label") %>
         <p class="control select is-fullwidth">
-          <%= select f, :currency, @currency_options, phx_debounce: "blur" %>
+          <%= select(f, :currency, @currency_options, phx_debounce: "blur") %>
         </p>
       </div>
     </div>
 
     <div class="field is-horizontal field-body">
       <div class="field">
-          <%= label f, :issue_date, class: "label" %>
-          <p class="control">
-            <%= date_input f, :issue_date, phx_debounce: "blur", class: "input" %>
-          </p>
-          <%= error_tag f, :issue_date %>
+        <%= label(f, :issue_date, class: "label") %>
+        <p class="control">
+          <%= date_input(f, :issue_date, phx_debounce: "blur", class: "input") %>
+        </p>
+        <%= error_tag(f, :issue_date) %>
       </div>
       <div class="field">
-          <%= label f, :due_date, class: "label" %>
-          <p class="control">
-            <%= date_input f, :due_date, phx_debounce: "blur", class: "input" %>
-          </p>
-          <%= error_tag f, :due_date %>
+        <%= label(f, :due_date, class: "label") %>
+        <p class="control">
+          <%= date_input(f, :due_date, phx_debounce: "blur", class: "input") %>
+        </p>
+        <%= error_tag(f, :due_date) %>
       </div>
     </div>
-    <%= render(SiwappWeb.ItemView, "item_form.html", f: f, inputs_for: inputs_for(f, :items), changeset: @changeset, multiselect_options: @multiselect_options) %>
+    <%= render(SiwappWeb.ItemView, "item_form.html",
+      f: f,
+      inputs_for: inputs_for(f, :items),
+      changeset: @changeset,
+      multiselect_options: @multiselect_options
+    ) %>
   </fieldset>
 
   <fieldset class="fieldset">
@@ -63,47 +70,70 @@
 
     <div class="field is-horizontal field-body">
       <div class="field">
-        <label class="label">Date</label>
+        <label class="label">
+          Date
+        </label>
         <p class="control">
           <input class="input" type="date">
         </p>
       </div>
       <div class="field">
-        <label class="label">Notes</label>
+        <label class="label">
+          Notes
+        </label>
         <p class="control">
           <input class="input" type="text">
         </p>
       </div>
       <div class="field">
-        <label class="label">Amount</label>
+        <label class="label">
+          Amount
+        </label>
         <p class="control">
           <input class="input" type="text">
         </p>
       </div>
       <div class="field">
-        <label  class="label is-invisible is-hidden-mobile">invisible</label>
+        <label class="label is-invisible is-hidden-mobile">
+          invisible
+        </label>
         <p class="control">
-          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">Remove Payment</button>
+          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">
+            Remove Payment
+          </button>
         </p>
       </div>
     </div>
 
-    <button class="column is-narrow-desktop button is-dark is-fullwidth">Add Payment</button>
+    <button class="column is-narrow-desktop button is-dark is-fullwidth">
+      Add Payment
+    </button>
     <label class="checkbox">
       <input type="checkbox">
       Payment collection failed
     </label>
   </fieldset>
 
-  <.live_component module={SiwappWeb.MetaAttributesComponent} id="meta_attributes" f={f} field={:meta_attributes} />
+  <.live_component
+    module={SiwappWeb.MetaAttributesComponent}
+    id="meta_attributes"
+    f={f}
+    field={:meta_attributes}
+  />
 
   <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
     <div class="navbar-end navbar-items buttons">
       <%= if @live_action == :edit do %>
-        <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @invoice.id, data: [confirm: "Are you sure?"], class: "button is-danger" %>
+        <%= link("Delete",
+          to: "#",
+          phx_click: "delete",
+          phx_value_id: @invoice.id,
+          data: [confirm: "Are you sure?"],
+          class: "button is-danger"
+        ) %>
       <% end %>
-      <%= live_redirect "Back", to: Routes.invoices_index_path(@socket, :index), class: "button is-dark" %>
-      <%= submit "Save", class: "button is-success" %>
+      <%= live_redirect("Back", to: Routes.invoices_index_path(@socket, :index), class: "button is-dark") %>
+      <%= submit("Save", class: "button is-success") %>
     </div>
   </nav>
 </.form>
