@@ -5,7 +5,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
 
   alias Siwapp.Commons
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(%{series: series} = assigns, socket) do
     changeset = Commons.change_series(series)
 
@@ -17,7 +17,7 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
     {:ok, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"series" => series_params}, socket) do
     changeset =
       socket.assigns.series
@@ -46,6 +46,8 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
     end
   end
 
+  @spec save_series(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          {:noreply, Phoenix.LiveView.Socket.t()}
   defp save_series(socket, :edit, series_params) do
     case Commons.update_series(socket.assigns.series, series_params) do
       {:ok, _series} ->

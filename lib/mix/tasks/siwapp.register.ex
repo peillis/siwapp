@@ -11,7 +11,7 @@ defmodule Mix.Tasks.Siwapp.Register do
 
     $ mix siwapp.register "demo@example.com" "secret_pass"
   """
-  @impl true
+  @impl Mix.Task
   def run(args) do
     Mix.Task.run("app.start")
 

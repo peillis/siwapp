@@ -4,6 +4,8 @@ defmodule Siwapp.Accounts.UserToken do
   use Ecto.Schema
   import Ecto.Query
 
+  alias Siwapp.Accounts
+
   @hash_algorithm :sha256
   @rand_size 32
 
@@ -23,6 +25,7 @@ defmodule Siwapp.Accounts.UserToken do
     timestamps(updated_at: false)
   end
 
+  @spec build_session_token(%Accounts.User{}) :: {binary(), %Accounts.UserToken{}}
   @doc """
   Generates a token that will be stored in a signed place,
   such as session or cookie. As they are signed, those
@@ -44,9 +47,10 @@ defmodule Siwapp.Accounts.UserToken do
   """
   def build_session_token(user) do
     token = :crypto.strong_rand_bytes(@rand_size)
-    {token, %Siwapp.Accounts.UserToken{token: token, context: "session", user_id: user.id}}
+    {token, %Accounts.UserToken{token: token, context: "session", user_id: user.id}}
   end
 
+  @spec verify_session_token_query(binary()) :: {:ok, Ecto.Query.t()}
   @doc """
   Checks if the token is valid and returns its underlying lookup query.
 
@@ -65,6 +69,7 @@ defmodule Siwapp.Accounts.UserToken do
     {:ok, query}
   end
 
+  @spec build_email_token(%Accounts.User{}, any()) :: {binary(), %Accounts.UserToken{}}
   @doc """
   Builds a token and its hash to be delivered to the user's email.
 
@@ -82,12 +87,13 @@ defmodule Siwapp.Accounts.UserToken do
     build_hashed_token(user, context, user.email)
   end
 
+  @spec build_hashed_token(%Accounts.User{}, any(), any()) :: {binary(), %Accounts.UserToken{}}
   defp build_hashed_token(user, context, sent_to) do
     token = :crypto.strong_rand_bytes(@rand_size)
     hashed_token = :crypto.hash(@hash_algorithm, token)
 
     {Base.url_encode64(token, padding: false),
-     %Siwapp.Accounts.UserToken{
+     %Accounts.UserToken{
        token: hashed_token,
        context: context,
        sent_to: sent_to,
@@ -95,6 +101,7 @@ defmodule Siwapp.Accounts.UserToken do
      }}
   end
 
+  @spec verify_email_token_query(binary, any) :: :error | {:ok, Ecto.Query.t()}
   @doc """
   Checks if the token is valid and returns its underlying lookup query.
 
@@ -127,9 +134,12 @@ defmodule Siwapp.Accounts.UserToken do
     end
   end
 
+  @spec days_for_context(String.t()) :: non_neg_integer()
   defp days_for_context("confirm"), do: @confirm_validity_in_days
   defp days_for_context("reset_password"), do: @reset_password_validity_in_days
 
+  @spec verify_change_email_token_query(binary, String.t()) ::
+          :error | {:ok, Ecto.Query.t()}
   @doc """
   Checks if the token is valid and returns its underlying lookup query.
 
@@ -160,6 +170,7 @@ defmodule Siwapp.Accounts.UserToken do
     end
   end
 
+  @spec token_and_context_query(binary(), any) :: Ecto.Query.t()
   @doc """
   Returns the token struct for the given token value and context.
   """
@@ -167,6 +178,7 @@ defmodule Siwapp.Accounts.UserToken do
     from Siwapp.Accounts.UserToken, where: [token: ^token, context: ^context]
   end
 
+  @spec user_and_contexts_query(%Accounts.User{}, any()):: Ecto.Query.t()
   @doc """
   Gets all tokens for the given user for the given contexts.
   """

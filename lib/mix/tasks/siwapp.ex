@@ -7,7 +7,7 @@ defmodule Mix.Tasks.Siwapp do
 
   @shortdoc "Prints Siwapp scripts help information"
 
-  @impl true
+  @impl Mix.Task
   def run(args) do
     {_opts, args} = OptionParser.parse!(args, strict: [])
 

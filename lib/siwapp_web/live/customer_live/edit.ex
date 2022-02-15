@@ -5,29 +5,17 @@ defmodule SiwappWeb.CustomerLive.Edit do
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
 
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  def apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Customer")
-    |> assign(:changeset, Customers.change(%Customer{}))
-  end
-
-  def apply_action(socket, :edit, %{"id" => id}) do
-    customer = Customers.get!(String.to_integer(id))
-
-    socket
-    |> assign(:page_title, customer.name)
-    |> assign(:customer, customer)
-    |> assign(:changeset, Customers.change(customer))
-  end
-
+  @impl Phoenix.LiveView
   def handle_event("validate", %{"customer" => params}, socket) do
     changeset =
       socket.assigns.changeset.data
@@ -81,5 +69,22 @@ defmodule SiwappWeb.CustomerLive.Edit do
       Map.put(socket.assigns.changeset, :changes, %{shipping_address: invoicing_address})
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          Phoenix.LiveView.Socket.t()
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Customer")
+    |> assign(:changeset, Customers.change(%Customer{}))
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    customer = Customers.get!(String.to_integer(id))
+
+    socket
+    |> assign(:page_title, customer.name)
+    |> assign(:customer, customer)
+    |> assign(:changeset, Customers.change(customer))
   end
 end

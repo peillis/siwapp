@@ -5,7 +5,7 @@ defmodule SiwappWeb.TaxesLive.FormComponent do
 
   alias Siwapp.Commons
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(%{tax: tax} = assigns, socket) do
     changeset = Commons.change_tax(tax)
 
@@ -17,7 +17,7 @@ defmodule SiwappWeb.TaxesLive.FormComponent do
     {:ok, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"tax" => tax_params}, socket) do
     changeset =
       socket.assigns.tax
@@ -41,6 +41,8 @@ defmodule SiwappWeb.TaxesLive.FormComponent do
      |> push_redirect(to: socket.assigns.return_to)}
   end
 
+  @spec save_tax(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          {:noreply, Phoenix.LiveView.Socket.t()}
   defp save_tax(socket, :edit, tax_params) do
     case Commons.update_tax(socket.assigns.tax, tax_params) do
       {:ok, _tax} ->

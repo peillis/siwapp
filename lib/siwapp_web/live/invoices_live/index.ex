@@ -4,6 +4,16 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.{Invoices, Search}
   alias SiwappWeb.GraphicHelpers
+  alias SiwappWeb.PageView
+
+  @impl Phoenix.LiveView
+  def mount(_params, _session, %{id: "home"} = socket) do
+    {:ok,
+     socket
+     |> assign(:page, 0)
+     |> assign(:invoices, Invoices.list_past_due(0))
+     |> assign(:checked, MapSet.new())}
+  end
 
   def mount(_params, _session, socket) do
     {:ok,
@@ -16,6 +26,23 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month())
      |> assign(:totals, total_per_currencies())
      |> assign(:page_title, "Invoices")}
+     |> assign(:checked, MapSet.new())}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("load-more", _, %{id: "home"} = socket) do
+    %{
+      page: page,
+      invoices: invoices
+    } = socket.assigns
+
+    {
+      :noreply,
+      assign(socket,
+        invoices: invoices ++ Invoices.list_past_due(page + 1),
+        page: page + 1
+      )
+    }
   end
 
   def handle_event("load-more", _, socket) do
@@ -68,6 +95,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     end
   end
 
+  @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
     socket.assigns.invoices
     |> MapSet.new(& &1.id)

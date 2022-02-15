@@ -10,6 +10,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -18,32 +19,12 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
      |> assign(:customer_suggestions, [])}
   end
 
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  def apply_action(socket, :new, _params) do
-    new_recurring_invoice = %RecurringInvoice{items: [%{}]}
-
-    socket
-    |> assign(:action, :new)
-    |> assign(:page_title, "New Recurring Invoice")
-    |> assign(:recurring_invoice, new_recurring_invoice)
-    |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
-    |> assign(:customer_name, "")
-  end
-
-  def apply_action(socket, :edit, %{"id" => id}) do
-    recurring_invoice = RecurringInvoices.get!(String.to_integer(id), :preload)
-
-    socket
-    |> assign(:action, :edit)
-    |> assign(:page_title, recurring_invoice.name)
-    |> assign(:recurring_invoice, recurring_invoice)
-    |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
-    |> assign(:customer_name, recurring_invoice.name)
-  end
-
+  @impl Phoenix.LiveView
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
     params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
 
@@ -92,10 +73,35 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
+  @impl Phoenix.LiveView
   def handle_info({:update_changeset, params}, socket) do
     changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          Phoenix.LiveView.Socket.t()
+  defp apply_action(socket, :new, _params) do
+    new_recurring_invoice = %RecurringInvoice{items: [%{}]}
+
+    socket
+    |> assign(:action, :new)
+    |> assign(:page_title, "New Recurring Invoice")
+    |> assign(:recurring_invoice, new_recurring_invoice)
+    |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
+    |> assign(:customer_name, "")
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    recurring_invoice = RecurringInvoices.get!(String.to_integer(id), :preload)
+
+    socket
+    |> assign(:action, :edit)
+    |> assign(:page_title, recurring_invoice.name)
+    |> assign(:recurring_invoice, recurring_invoice)
+    |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
+    |> assign(:customer_name, recurring_invoice.name)
   end
 
   # Replicates inputs_for behavior for recurring_invoice's items even when there's no association

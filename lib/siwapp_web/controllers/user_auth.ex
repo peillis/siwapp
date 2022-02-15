@@ -13,6 +13,8 @@ defmodule SiwappWeb.UserAuth do
   @remember_me_cookie "_siwapp_web_user_remember_me"
   @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
 
+  @spec log_in_user(Plug.Conn.t(), %Accounts.User{}, map()) ::
+          Plug.Conn.t()
   @doc """
   Logs the user in.
 
@@ -37,6 +39,7 @@ defmodule SiwappWeb.UserAuth do
     |> redirect(to: user_return_to || signed_in_path(conn))
   end
 
+  @spec maybe_write_remember_me_cookie(Plug.Conn.t(), binary(), map()) :: Plug.Conn.t()
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
     put_resp_cookie(conn, @remember_me_cookie, token, @remember_me_options)
   end
@@ -45,6 +48,7 @@ defmodule SiwappWeb.UserAuth do
     conn
   end
 
+  @spec renew_session(Plug.Conn.t()) :: Plug.Conn.t()
   # This function renews the session ID and erases the whole
   # session to avoid fixation attacks. If there is any data
   # in the session you may want to preserve after log in/log out,
@@ -66,6 +70,7 @@ defmodule SiwappWeb.UserAuth do
     |> clear_session()
   end
 
+  @spec log_out_user(Plug.Conn.t()) :: Plug.Conn.t()
   @doc """
   Logs the user out.
 
@@ -85,6 +90,7 @@ defmodule SiwappWeb.UserAuth do
     |> redirect(to: "/users/log_in")
   end
 
+  @spec fetch_current_user(Plug.Conn.t(), any) :: Plug.Conn.t()
   @doc """
   Authenticates the user by looking into the session
   and remember me token.
@@ -95,6 +101,7 @@ defmodule SiwappWeb.UserAuth do
     assign(conn, :current_user, user)
   end
 
+  @spec ensure_user_token(Plug.Conn.t()) :: {%Accounts.UserToken{} | nil, Plug.Conn.t()}
   defp ensure_user_token(conn) do
     if user_token = get_session(conn, :user_token) do
       {user_token, conn}
@@ -109,6 +116,7 @@ defmodule SiwappWeb.UserAuth do
     end
   end
 
+  @spec redirect_if_user_is_authenticated(Plug.Conn.t(), any) :: Plug.Conn.t()
   @doc """
   Used for routes that require the user to not be authenticated.
   """
@@ -122,6 +130,7 @@ defmodule SiwappWeb.UserAuth do
     end
   end
 
+  @spec require_authenticated_user(Plug.Conn.t(), any) :: Plug.Conn.t()
   @doc """
   Used for routes that require the user to be authenticated.
 
@@ -140,11 +149,13 @@ defmodule SiwappWeb.UserAuth do
     end
   end
 
+  @spec maybe_store_return_to(Plug.Conn.t()) :: Plug.Conn.t()
   defp maybe_store_return_to(%{method: "GET"} = conn) do
     put_session(conn, :user_return_to, current_path(conn))
   end
 
   defp maybe_store_return_to(conn), do: conn
 
+  @spec signed_in_path(Plug.Conn.t()) :: String.t()
   defp signed_in_path(_conn), do: "/"
 end

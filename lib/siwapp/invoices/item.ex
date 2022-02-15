@@ -77,6 +77,7 @@ defmodule Siwapp.Invoices.Item do
     |> set_taxes_amount()
   end
 
+  @spec set_net_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_net_amount(changeset) do
     quantity = get_field(changeset, :quantity)
     unitary_cost = get_field(changeset, :unitary_cost)
@@ -87,6 +88,7 @@ defmodule Siwapp.Invoices.Item do
     put_change(changeset, :net_amount, net_amount)
   end
 
+  @spec set_taxes_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_taxes_amount(changeset) do
     case get_field(changeset, :taxes) do
       [] ->
@@ -108,7 +110,7 @@ defmodule Siwapp.Invoices.Item do
   # we cast it and that's it. If it actually doesn't, we find the taxes associated
   # in the attributes. If the attributes have a tax that it doesn't exist we add
   # an error in the changeset.
-
+  @spec find_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp find_taxes(changeset, attrs) do
     if get_field(changeset, :taxes) == [] do
       all_taxes = Commons.list_taxes(:cache)
@@ -127,14 +129,16 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  defp check_wrong_taxes(tax, changeset, database_taxes) do
-    if Enum.member?(database_taxes, tax) do
+  @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), [String.t()]) :: Ecto.Changeset.t()
+  defp check_wrong_taxes(tax, changeset, taxes) do
+    if Enum.member?(taxes, tax) do
       changeset
     else
       add_error(changeset, :taxes, "The tax #{tax} is not defined")
     end
   end
 
+  @spec set_unitary_cost(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
   def set_unitary_cost(changeset, attrs) do
     virtual_unitary_cost =
       Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
@@ -142,7 +146,20 @@ defmodule Siwapp.Invoices.Item do
     unitary_cost = get_field(changeset, :unitary_cost)
     put_change_unitary_cost(changeset, virtual_unitary_cost, unitary_cost)
   end
+  
+  @spec set_virtual_unitary_cost(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def set_virtual_unitary_cost(changeset) do
+    if is_nil(get_field(changeset, :unitary_cost)) do
+      changeset
+    else
+      virtual_unitary_cost =
+        :erlang.float_to_binary(get_field(changeset, :unitary_cost) / 100, decimals: 2)
 
+      put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
+    end
+  end
+
+  @spec put_change_unitary_cost(Ecto.Changeset.t(), integer() | nil, integer() | nil) :: Ecto.Changeset.t()
   defp put_change_unitary_cost(changeset, nil, nil) do
     put_change(changeset, :unitary_cost, 0)
   end
@@ -154,7 +171,7 @@ defmodule Siwapp.Invoices.Item do
 
   defp put_change_unitary_cost(changeset, virtual_unitary_cost, _unitary_cost)
        when is_binary(virtual_unitary_cost) do
-    case string_to_float(virtual_unitary_cost) do
+    case string_to_number(virtual_unitary_cost) do
       {:ok, value} -> put_change(changeset, :unitary_cost, round(value * 100))
       {:error, msg} -> add_error(changeset, :virtual_unitary_cost, msg)
     end
@@ -164,21 +181,22 @@ defmodule Siwapp.Invoices.Item do
     changeset
   end
 
-  defp string_to_float(number) do
+  @spec string_to_number(String.t()) :: {:ok, number()} | {:error, String.t()}
+  defp string_to_number(string) do
     cond do
-      number == "" ->
+      string == "" ->
         {:ok, 0}
 
-      String.ends_with?(number, ".") && String.match?(number, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
+      String.ends_with?(string, ".") && String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
         value =
-          number
+          string
           |> String.trim(".")
           |> String.to_integer()
 
         {:ok, value}
 
-      String.match?(number, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
-        {value, _} = Float.parse(number)
+      String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
+        {value, _} = Float.parse(string)
         {:ok, value}
 
       true ->
@@ -186,14 +204,4 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  def set_virtual_unitary_cost(changeset) do
-    if is_nil(get_field(changeset, :unitary_cost)) do
-      changeset
-    else
-      virtual_unitary_cost =
-        :erlang.float_to_binary(get_field(changeset, :unitary_cost) / 100, decimals: 2)
-
-      put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
-    end
-  end
 end

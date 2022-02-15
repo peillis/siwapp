@@ -5,6 +5,7 @@ defmodule SiwappWeb.MultiselectComponent do
 
   alias Phoenix.LiveView.JS
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket =
       socket
@@ -16,6 +17,7 @@ defmodule SiwappWeb.MultiselectComponent do
     {:ok, socket}
   end
 
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div class="control msa-wrapper">
@@ -46,6 +48,7 @@ defmodule SiwappWeb.MultiselectComponent do
     """
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("remove", %{"key" => key, "val" => value}, socket) do
     {key, value} = convert({key, value})
 
@@ -58,10 +61,12 @@ defmodule SiwappWeb.MultiselectComponent do
     {:noreply, update(socket, :selected, &MapSet.put(&1, {key, value}))}
   end
 
+  @spec convert({String.t(), any()}) :: {atom(), any()}
   defp convert({key, value}) do
     {String.to_atom(key), value}
   end
 
+  @spec not_selected(MapSet.t(), MapSet.t()) :: MapSet.t()
   defp not_selected(options, selected) do
     MapSet.difference(options, selected)
   end

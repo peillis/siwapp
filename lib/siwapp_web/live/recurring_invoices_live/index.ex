@@ -6,6 +6,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.{RecurringInvoices, Search}
 
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -14,6 +15,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
      |> assign(:checked, MapSet.new())}
   end
 
+  @impl Phoenix.LiveView
   def handle_event("load-more", _, socket) do
     %{
       page: page,
@@ -45,6 +47,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
   end
 
+  @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
     socket.assigns.recurring_invoices
     |> MapSet.new(& &1.id)
