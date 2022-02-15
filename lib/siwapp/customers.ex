@@ -99,7 +99,7 @@ defmodule Siwapp.Customers do
     Customer.changeset(customer, attrs)
   end
 
-  def get_customers_name do
+  def list_names do
     Customer
     |> select([c], c.name)
     |> Repo.all()
