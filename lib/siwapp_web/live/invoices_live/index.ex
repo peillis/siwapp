@@ -5,12 +5,23 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.{Invoices, Search}
   alias SiwappWeb.GraphicHelpers
 
-  def mount(_params, %{"customer_id" => customer_id}, %{id: "show_invoices"} = socket) do
+  def mount(
+        _params,
+        %{"customer_id" => customer_id, "name" => name},
+        %{id: "show_invoices"} = socket
+      ) do
+    invoices = Invoices.list(filters: [{:customer_id, customer_id}], preload: :series)
+
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Invoices.list_by([{:customer_id, customer_id}], :series))
-     |> assign(:checked, MapSet.new())}
+     |> assign(:invoices, invoices)
+     |> assign(:number_of_invoices, length(invoices))
+     |> assign(:checked, MapSet.new())
+     |> assign(:summary_state, set_summary(:closed))
+     |> assign(:totals, total_per_currencies(invoices))
+     |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month(invoices))
+     |> assign(:page_title, "Invoices for #{name}")}
   end
 
   def mount(_params, _session, socket) do
