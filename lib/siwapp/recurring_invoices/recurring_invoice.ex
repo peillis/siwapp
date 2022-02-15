@@ -73,6 +73,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     :series_id
   ]
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   schema "recurring_invoices" do
     field :identification, :string
     field :name, :string
@@ -121,7 +123,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     |> foreign_key_constraint(:customer_id)
     |> validate_inclusion(:period_type, ["Daily", "Monthly", "Yearly"])
     |> validate_number(:period, greater_than_or_equal_to: 0)
-    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> validate_format(:email, @email_regex)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)

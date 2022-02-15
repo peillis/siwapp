@@ -5,7 +5,6 @@ defmodule Siwapp.Customers.Customer do
   use Ecto.Schema
 
   import Ecto.Changeset
-  import Ecto.Query
 
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
@@ -47,6 +46,8 @@ defmodule Siwapp.Customers.Customer do
     :meta_attributes
   ]
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   schema "customers" do
     field :identification, :string
     field :name, :string
@@ -71,7 +72,7 @@ defmodule Siwapp.Customers.Customer do
     |> put_hash_id()
     |> unique_constraint(:identification)
     |> unique_constraint(:hash_id)
-    |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
+    |> validate_format(:email, @email_regex)
     |> validate_length(:name, max: 100)
     |> validate_length(:identification, max: 50)
     |> validate_length(:email, max: 100)
