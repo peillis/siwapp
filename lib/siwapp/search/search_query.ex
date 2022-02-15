@@ -10,6 +10,7 @@ defmodule Siwapp.Search.SearchQuery do
   @doc """
   For each key, one different query
   """
+  @spec filter_by(Ecto.Queryable.t(), binary, binary) :: Ecto.Queryable.t()
   def filter_by(query, "search_input", value) do
     name_email_or_id(query, value)
   end
@@ -58,6 +59,7 @@ defmodule Siwapp.Search.SearchQuery do
 
   @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Query.t()
   # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
+  @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp name_email_or_id(query, value) do
     query
     |> where(
@@ -69,6 +71,7 @@ defmodule Siwapp.Search.SearchQuery do
 
   # There are 6 types of dates; 3 "to_dates" and 3 "from_dates". Depending on the key name,
   # the function will make different queries
+  @spec type_of_date(Ecto.Queryable.t(), binary, Date.t()) :: Ecto.Queryable.t()
   defp type_of_date(query, key, value) do
     cond do
       String.starts_with?(key, "issue_from") ->
@@ -98,6 +101,7 @@ defmodule Siwapp.Search.SearchQuery do
   # or if due_date is greater than today
   # Finally if user filters by past due, the query will do the same as pending, but in this case due_date must exists
   # and has to be less than today
+  @spec type_of_status(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp type_of_status(query, value) do
     case value do
       v when v in ["Draft", "Paid", "Failed"] ->
@@ -122,7 +126,7 @@ defmodule Siwapp.Search.SearchQuery do
         |> where([q], q.due_date < ^Date.utc_today())
     end
   end
-
+  @spec convert_to_atom(binary) :: atom
   defp convert_to_atom(value) do
     value
     |> String.downcase()
@@ -130,6 +134,7 @@ defmodule Siwapp.Search.SearchQuery do
   end
 
   # Get keys of a jsonb(meta_attributes) which are associated with the value a user inputs
+  @spec get_all_keys(Ecto.Queryable.t()) :: [binary]
   defp get_all_keys(query) do
     query
     |> select([q], q.meta_attributes)
@@ -144,6 +149,7 @@ defmodule Siwapp.Search.SearchQuery do
   # the function make a first query with the first key inside of "keys".
   # Then for the rest of the keys, it makes a "where query" for each key and
   # joins all the queries with an union_all
+  @spec value_for_each_key([binary], Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp value_for_each_key(keys, query, value) do
     if keys == [] do
       where(query, [q], nil)
