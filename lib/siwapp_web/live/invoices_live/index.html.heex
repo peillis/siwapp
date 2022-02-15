@@ -14,59 +14,35 @@
   </div>
 </nav>
 
-<table class="table is-fullwidth is-striped is-bordered is-hoverable">
-  <thead>
-    <tr>
-      <th title=""><input type="checkbox" checked={Enum.member?(@checked, 0)} phx-click="click_checkbox" phx-value-id="0"></th>
-      <th title="Reference">Reference</th>
-      <th title="Customer">Customer Name</th>
-      <th title="Date">Date</th>
-      <th title="Sent">Sent</th>
-      <th title="Status">Status</th>
-      <th title="Pending">Pending</th>
-      <th title="Total">Total</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <%= for invoice <- @invoices do %>
-      <tr phx-click="redirect" phx-value-id={invoice.id} class="is-clickable">
-        <td><input type="checkbox" phx-click="click_checkbox" checked={Enum.member?(@checked, invoice.id)} phx-value-id={invoice.id}></td>
-        <td><%= "#{invoice.series.code}-#{invoice.number}" %></td>
-        <td><%= invoice.name %></td>
-        <td><%= invoice.issue_date %></td>
-
-        <%= if invoice.sent_by_email do%>
-          <td class="icon has-text-success table-icon"><i class="fas fa-check"></i></td>
-        <% else %>
-          <td class="icon has-text-danger table-icon"><i class="fas fa-times"></i></td>
+<div class="mb-4">
+  <div class="is-flex is-justify-content-space-between">
+    <div class="is-flex is-align-items-center">
+      <h1><%= @page_title %><span class="subtitle is-5"> (<%= @number_of_invoices %> Found)</span></h1>
+    </div>
+    <header class="card card-header is-clickable is-unselectable is-size-5" phx-click="change-summary-state">
+      <div class="card-header-content m-3">
+        <div class="card-header-title has-text-weight-bold p-0"><%= @totals.default %></div>
+        <%= for currency_total <- @totals.others do %>
+         <div class="card-header-title has-text-weight-medium p-0"><%= currency_total %></div>
         <% end %>
+      </div>
+      <button class="card-header-icon pl-0" aria-label="more options">
+        <span class="icon">
+          <i class={"fas #{@summary_state.icon}"} aria-hidden="true"></i>
+        </span>
+      </button>
+    </header>
+  </div>
 
-        <%= case Invoices.status(invoice) do %>
-          <% :draft -> %>
-            <td class="table-span"><span class="tag is-info">Draft</span></td>
-            <td></td>
+  <div id="summary-card" class={"card #{@summary_state.visibility}"}>
+    <div class="card-content">
+      <div class="content">
+        <%= summary_chart(@chart_data) %>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <% :failed -> %>
-            <td class="table-span"><span class="tag is-danger">Failed</span></td>
-            <td></td>
+<%= render(SiwappWeb.PageView, "invoices_table.html", invoices: @invoices, checked: @checked) %>
 
-          <% :paid -> %>
-            <td class="table-span"><span class="tag is-success">Paid</span></td>
-            <td></td>
-
-          <% :pending -> %>
-            <td class="table-span"><span class="tag is-warning">Pending</span></td>
-            <td><%= PageView.set_currency(invoice.gross_amount, invoice.currency) %></td>
-
-          <% :past_due -> %>
-            <td class="table-span"><span class="tag is-danger">Past_Due</span></td>
-            <td><%= PageView.set_currency(invoice.gross_amount, invoice.currency) %></td>
-        <% end %>
-
-        <td><%= PageView.set_currency(invoice.gross_amount, invoice.currency) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
 <div id="infinite-scroll" phx-hook="InfiniteScroll" data-page={@page}></div>

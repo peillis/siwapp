@@ -12,12 +12,16 @@ defmodule SiwappWeb.GraphicHelpers do
     options = [
       data_labels: false,
       default_style: false,
+      stroke_width: 1,
       smoothed: false
     ]
 
+    margins = %{left: 35, right: 15, top: 10, bottom: 20}
+
     data
     |> Dataset.new()
-    |> Plot.new(LinePlot, 500, 200, options)
+    |> Plot.new(LinePlot, 500, 150, options)
+    |> Map.put(:margins, margins)
     |> Plot.to_svg()
   end
 end

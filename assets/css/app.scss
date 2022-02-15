@@ -81,6 +81,10 @@ p.control.has-dropdown {
   width: 100%;
 }
 
+.card.card-header:hover {
+  background-color: #fafafa;
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile {
     display: flex;
