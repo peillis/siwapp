@@ -6,11 +6,13 @@ defmodule SiwappWeb.MultiselectComponent do
   alias Phoenix.LiveView.JS
 
   def update(assigns, socket) do
+    "ms-" <> index = assigns.id
+
     socket =
       socket
       |> assign(selected: MapSet.new(assigns.selected))
       |> assign(name: assigns.name)
-      |> assign(id: assigns.id)
+      |> assign(index: index)
       |> assign(options: MapSet.new(assigns.options))
 
     {:ok, socket}
@@ -22,22 +24,25 @@ defmodule SiwappWeb.MultiselectComponent do
       <%= for {k, _v} <- @selected do %>
         <input type="hidden" id="hidden_input" name={"#{@name}[]"} value={k}>
       <% end %>
-      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@id}")}>
+      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
         <span class="placeholder"></span>
         <%= for {k, v} <- @selected do %>
           <div class="tag-badge">
             <span>
               <%= k %>
             </span>
-            <button type="button" phx-click={JS.push("remove", target: @myself, value: %{key: k, val: v})}>
+            <button
+              type="button"
+              phx-click={JS.push("remove", target: @myself, value: %{index: @index, key: k, val: v})}
+            >
               x
             </button>
           </div>
         <% end %>
       </div>
-      <ul id={"tag-list-#{@id}"} class="tag-list" style="display: none;">
+      <ul id={"tag-list-#{@index}"} class="tag-list" style="display: none;">
         <%= for {k, v} <- not_selected(@options, @selected) do %>
-          <li phx-click={JS.push("add", target: @myself, value: %{key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@id}")}>
+          <li phx-click={JS.push("add", target: @myself, value: %{index: @index, key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@index}")}>
             <%= k %>
           </li>
         <% end %>
@@ -46,20 +51,28 @@ defmodule SiwappWeb.MultiselectComponent do
     """
   end
 
-  def handle_event("remove", %{"key" => key, "val" => value}, socket) do
-    {key, value} = convert({key, value})
+  def handle_event("remove", %{"index" => index, "key" => key, "val" => value}, socket) do
+    selected = MapSet.delete(socket.assigns.selected, {key, value})
 
-    {:noreply, update(socket, :selected, &MapSet.delete(&1, {key, value}))}
+    send(
+      self(),
+      {:multiselect_updated,
+       %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+    )
+
+    {:noreply, assign(socket, :selected, selected)}
   end
 
-  def handle_event("add", %{"key" => key, "val" => value}, socket) do
-    {key, value} = convert({key, value})
+  def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
+    selected = MapSet.put(socket.assigns.selected, {key, value})
 
-    {:noreply, update(socket, :selected, &MapSet.put(&1, {key, value}))}
-  end
+    send(
+      self(),
+      {:multiselect_updated,
+       %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+    )
 
-  defp convert({key, value}) do
-    {String.to_atom(key), value}
+    {:noreply, assign(socket, :selected, selected)}
   end
 
   defp not_selected(options, selected) do

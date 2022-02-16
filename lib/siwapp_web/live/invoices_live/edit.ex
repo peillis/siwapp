@@ -24,26 +24,27 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def apply_action(socket, :new, _params) do
     new_invoice = %Invoice{items: [%Item{taxes: []}]}
+    changeset = Invoices.change(new_invoice)
 
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
-    |> assign(
-      :changeset,
-      Invoices.change(new_invoice)
-    )
+    |> assign(:changeset, changeset)
+    |> assign(:form_params, initial_params(changeset))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
     invoice =
       Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series, :customer])
 
+    changeset = Invoices.change(invoice)
+
     socket
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice))
+    |> assign(:changeset, changeset)
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
@@ -76,34 +77,87 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       socket.assigns.invoice
       |> Invoices.change(params)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply,
+     socket
+     |> assign(:changeset, changeset)
+     |> assign(:form_params, params)}
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do
+    IO.inspect(params)
+
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply,
+     socket
+     |> assign(changeset: changeset)
+     |> assign(form_params: params)}
   end
 
   def handle_event("add_item", _, socket) do
-    changeset = ItemView.add_item(socket.assigns.changeset)
+    params = socket.assigns.form_params
 
-    {:noreply, assign(socket, changeset: changeset)}
+    next_item_index =
+      params["items"]
+      |> Enum.count()
+      |> Integer.to_string()
+
+    params = put_in(params, ["items", next_item_index], item_param())
+
+    {:noreply,
+     socket
+     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
+     |> assign(form_params: params)}
   end
 
-  def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    changeset = ItemView.remove_item(socket.assigns.changeset, String.to_integer(item_id))
+  def handle_event("remove_item", %{"item-id" => item_index}, socket) do
+    params =
+      socket.assigns.form_params
+      |> pop_in(["items", item_index])
+      |> elem(1)
 
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply,
+    socket
+    |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
+    |> assign(form_params: params)}
   end
 
-  def handle_info({:update_changeset, params}, socket) do
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(params)
+  def handle_info({:customer_updated, customer_params}, socket) do
+    params =
+      socket.assigns.form_params
+      |> Map.merge(atom_keys_to_string(customer_params))
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply,
+     socket
+     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
+     |> assign(form_params: params)}
+  end
+
+  def handle_info({:multiselect_updated, %{index: item_index, selected: selected_taxes}}, socket) do
+    params =
+      socket.assigns.form_params
+      |> put_in(["items", Integer.to_string(item_index), "taxes"], selected_taxes)
+
+    {:noreply,
+     socket
+     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
+     |> assign(form_params: params)}
+  end
+
+  defp initial_params(changeset) do
+    changeset.changes
+    |> atom_keys_to_string()
+    |> Map.put("items", %{})
+    |> put_in(["items", "0"], item_param())
+  end
+
+  defp atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
+
+  defp item_param() do
+    %Item{taxes: []}
+    |> Map.from_struct()
+    |> atom_keys_to_string()
   end
 end

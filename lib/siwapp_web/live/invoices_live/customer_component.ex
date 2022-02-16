@@ -80,15 +80,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
         :shipping_address
       ])
 
-    invoice_params = socket.assigns.changeset.changes
-    items_params = Enum.map(invoice_params.items, & &1.changes)
-
-    params =
-      invoice_params
-      |> Map.merge(%{items: items_params})
-      |> Map.merge(customer_params)
-
-    send(self(), {:update_changeset, params})
+    send(self(), {:customer_updated, customer_params})
 
     {:noreply, socket}
   end
