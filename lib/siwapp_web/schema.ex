@@ -37,6 +37,26 @@ defmodule SiwappWeb.Schema do
     field :taxes, list_of(:string)
   end
 
+  input_object :update_invoice_params do
+    field :name, :string
+    field :identification, :string
+    field :contact_person, :string
+    field :email, :string
+    field :invoicing_address, :string
+    field :shipping_address, :string
+    field :terms, :string
+    field :notes, :string
+    field :series_id, :id
+    field :currency, :string
+    field :issue_date, :date
+    field :due_date, :date
+    field :draft, :boolean
+    field :items, list_of(:items)
+    field :failed, :boolean
+    field :recurring_invoice, :id
+    field :sent_by_email, :boolean
+  end
+
   mutation do
     @desc "Create a customer"
     field :create_customer, type: :customer do
@@ -69,6 +89,19 @@ defmodule SiwappWeb.Schema do
       arg(:failed, :boolean)
 
       resolve(&Resolvers.Invoice.create/2)
+    end
+
+    field :update_invoice, type: :invoice do
+      arg(:id, non_null(:integer))
+      arg(:invoice, :update_invoice_params)
+
+      resolve(&Resolvers.Invoice.update/2)
+    end
+
+    field :delete_invoice, type: :invoice do
+      arg(:id, non_null(:integer))
+
+      resolve(&Resolvers.Invoice.delete/2)
     end
   end
 end

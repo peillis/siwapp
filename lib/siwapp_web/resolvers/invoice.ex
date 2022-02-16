@@ -36,6 +36,32 @@ defmodule SiwappWeb.Resolvers.Invoice do
     end
   end
 
+  def update(%{id: id, invoice: invoice_params}, _resolution) do
+    invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :series])
+
+    if is_nil(invoice) do
+      {:error, message: "Failed!", details: "Invoice not found"}
+    else
+      case Invoices.update(invoice, invoice_params) do
+        {:ok, invoice} ->
+          {:ok, set_correct_units(invoice)}
+
+        {:error, changeset} ->
+          {:error, message: "Failed!", details: Errors.extract(changeset)}
+      end
+    end
+  end
+
+  def delete(%{id: id}, _resolution) do
+    invoice = Invoices.get(id)
+
+    if is_nil(invoice) do
+      {:error, message: "Failed!", details: "Invoice not found"}
+    else
+      Invoices.delete(invoice)
+    end
+  end
+
   defp set_correct_units(invoice) do
     Enum.reduce([:net_amount, :gross_amount, :paid_amount], invoice, fn key, invoice ->
       Map.update(invoice, key, 0, fn existing_value ->
