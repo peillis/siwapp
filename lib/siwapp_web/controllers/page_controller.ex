@@ -1,7 +1,6 @@
 defmodule SiwappWeb.PageController do
   use SiwappWeb, :controller
   alias Siwapp.{Invoices, Templates}
-  alias Siwapp.Mailer
 
   def show_invoice(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id))
@@ -12,7 +11,8 @@ defmodule SiwappWeb.PageController do
   def download(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
     pdf_name = "#{invoice.series.code}-#{Integer.to_string(invoice.number)}.pdf"
-    str_template = Templates.string_template(invoice)
+    template = Templates.get(:print_default).template
+    str_template = Templates.string_template(invoice, template)
     {:ok, data} = ChromicPDF.print_to_pdf({:html, str_template})
     pdf_content = Base.decode64!(data)
 
@@ -22,7 +22,7 @@ defmodule SiwappWeb.PageController do
   def send_email(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
 
-    case Mailer.send_email(invoice) do
+    case Invoices.send_email(invoice) do
       :ok ->
         conn
         |> put_flash(:info, "Email successfully sent")

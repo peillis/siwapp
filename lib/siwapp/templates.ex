@@ -26,6 +26,16 @@ defmodule Siwapp.Templates do
   end
 
   @doc """
+  Returns first template in db
+  """
+  @spec first :: Template.t()
+  def first() do
+    Template
+    |> first()
+    |> Repo.one()
+  end
+
+  @doc """
   Gets a single template. You can call it with its id as parameter, or
   by indicating that you want to get a default template, giving the
   corresponding atom (':print_default' or ':email_default')
@@ -185,9 +195,7 @@ defmodule Siwapp.Templates do
     Template.changeset(template, attrs)
   end
 
-  def string_template(invoice) do
-    template = get(:print_default).template
-
+  def string_template(invoice, template) do
     invoice_eval_data =
       invoice
       |> Map.from_struct()

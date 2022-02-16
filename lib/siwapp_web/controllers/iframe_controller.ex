@@ -8,7 +8,8 @@ defmodule SiwappWeb.IframeController do
 
   def iframe(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
-    str_template = Templates.string_template(invoice)
+    template = Templates.get(:print_default).template
+    str_template = Templates.string_template(invoice, template)
 
     html(conn, str_template)
   end
