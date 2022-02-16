@@ -45,8 +45,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   @spec due(integer, integer) :: integer
   defp due(total, paid), do: total - paid
 
-  @spec final_currency([] | [String.t()]) :: atom
-  defp final_currency([]), do: nil
-  defp final_currency([currency]), do: String.to_atom(currency)
-  defp final_currency(_list), do: nil
+  @spec set_currency([] | [String.t()]) :: atom
+  defp set_currency([currency]), do: String.to_atom(currency)
+  defp set_currency(_list), do: nil
 end

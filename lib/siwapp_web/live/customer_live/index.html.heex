@@ -30,15 +30,15 @@
           <%= customer.identification %>
         </td>
         <td class="text-right">
-          <%= set_currency(due(customer.total, customer.paid), final_currency(customer.currencies)) %>
+          <%= money_format(due(customer.total, customer.paid), set_currency(customer.currencies)) %>
         </td>
         <td class="text-right">
-          <%= set_currency(customer.total, final_currency(customer.currencies)) %>
+          <%= money_format(customer.total, set_currency(customer.currencies)) %>
         </td>
         <td class="text-center">
           <%= live_redirect(" ",
             class: "icon fas fa-list",
-            to: Routes.customer_show_path(@socket, :show, customer.id)
+            to: Routes.invoices_index_path(@socket, :customer, customer.id)
           ) %>
         </td>
       </tr>
