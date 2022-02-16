@@ -75,6 +75,12 @@ defmodule Siwapp.Invoices do
     Repo.delete(invoice)
   end
 
+  @spec send_email(Invoice.t()) :: :ok | :error
+  def send_email(%Invoice{} = invoice) when is_nil(invoice.email), do: :error
+  def send_email(%Invoice{} = invoice) do
+  Siwapp.Mailer.deliver(Siwapp.InvoiceMailer.send_email(invoice))
+  end
+
   @spec get(pos_integer()) :: Invoice.t() | nil
   def get(id), do: Repo.get(Invoice, id)
 
@@ -203,4 +209,5 @@ defmodule Siwapp.Invoices do
   def change_item(%Item{} = item, currency, attrs \\ %{}) do
     Item.changeset(item, attrs, currency)
   end
+
 end
