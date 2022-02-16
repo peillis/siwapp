@@ -1,6 +1,7 @@
 defmodule SiwappWeb.PageController do
   use SiwappWeb, :controller
   alias Siwapp.{Invoices, Templates}
+  alias Siwapp.Mailer
 
   def show_invoice(conn, %{"id" => id}) do
     invoice = Invoices.get!(String.to_integer(id))
@@ -16,5 +17,23 @@ defmodule SiwappWeb.PageController do
     pdf_content = Base.decode64!(data)
 
     send_download(conn, {:binary, pdf_content}, filename: pdf_name)
+  end
+
+  def send_email(conn, %{"id" => id}) do
+    invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
+
+    case Mailer.send_email(invoice) do
+      :ok ->
+        conn
+        |> put_flash(:info, "Email successfully sent")
+
+      :error ->
+        conn
+        |> put_flash(
+          :error,
+          "Sending email was impossible. Check invoice data to see if email was provided"
+        )
+    end
+    |> redirect(to: "/")
   end
 end
