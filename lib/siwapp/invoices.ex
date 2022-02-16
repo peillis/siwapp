@@ -29,10 +29,12 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-  @spec scroll_listing(integer, integer) :: [Invoice.t()]
-  def scroll_listing(page, per_page \\ 20) do
+  @spec list_past_due(integer(), integer()) :: [Invoice.t()]
+  def list_past_due(limit \\ 20, offset \\ 0) do
     Invoice
-    |> Query.paginate(page, per_page)
+    |> InvoiceQuery.list_past_due()
+    |> limit(^limit)
+    |> offset(^offset)
     |> Query.list_preload(:series)
     |> Repo.all()
   end
@@ -122,15 +124,6 @@ defmodule Siwapp.Invoices do
     invoice
     |> Invoice.changeset(attrs)
     |> Invoice.assign_number()
-  end
-
-  @spec list_past_due(integer, integer) :: [Invoice.t()]
-  def list_past_due(page, per_page \\ 20) do
-    Invoice
-    |> InvoiceQuery.list_past_due()
-    |> Query.paginate(page, per_page)
-    |> Query.list_preload(:series)
-    |> Repo.all()
   end
 
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
