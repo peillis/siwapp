@@ -149,9 +149,9 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Converts field items from list of maps to list of Item changesets.
   # This is used to handle items validation and calculations
   defp transform_items(changeset) do
-    items_transformed =
-      get_field(changeset, :items)
-      |> Enum.map(&Item.changeset(%Item{}, &1))
+    items = get_field(changeset, :items)
+    currency = get_field(changeset, :currency)
+    items_transformed = Enum.map(items, &Item.changeset(%Item{}, &1, currency))
 
     put_change(changeset, :items, items_transformed)
   end
@@ -183,11 +183,11 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Used to recycle add_item, remove_item functions in views and
   # build item forms' for user to fill
   defp unapply_changes_items(changeset) do
-    items =
-      get_field(changeset, :items)
-      |> Enum.map(&Item.changeset(&1, %{}))
+    items = get_field(changeset, :items)
+    currency = get_field(changeset, :currency)
+    items_changeset = Enum.map(items, &Item.changeset(&1, %{}, currency))
 
-    put_change(changeset, :items, items)
+    put_change(changeset, :items, items_changeset)
   end
 
   defp make_item(%Item{description: d, quantity: q, unitary_cost: u, discount: di, taxes: t}) do

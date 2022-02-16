@@ -92,7 +92,7 @@ defmodule Siwapp.Invoices do
 
     items_with_calculations =
       invoice.items
-      |> Enum.map(&change_item/1)
+      |> Enum.map(&change_item(&1, invoice.currency))
       |> Enum.map(&Ecto.Changeset.apply_changes/1)
 
     Map.put(invoice, :items, items_with_calculations)
@@ -159,11 +159,12 @@ defmodule Siwapp.Invoices do
   Creates an item associated to an invoice
   """
 
-  @spec create_item(Invoice.t(), map()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
-  def create_item(%Invoice{} = invoice, attrs \\ %{}) do
+  @spec create_item(Invoice.t(), atom() | binary(), map()) ::
+          {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
+  def create_item(%Invoice{} = invoice, currency, attrs \\ %{}) do
     invoice
     |> Ecto.build_assoc(:items)
-    |> Item.changeset(attrs)
+    |> Item.changeset(attrs, currency)
     |> Repo.insert()
   end
 
@@ -171,11 +172,12 @@ defmodule Siwapp.Invoices do
   Updates an item
   """
 
-  @spec update_item(Item.t(), map()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
-  def update_item(%Item{} = item, attrs) do
+  @spec update_item(Item.t(), atom() | binary(), map()) ::
+          {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
+  def update_item(%Item{} = item, currency, attrs) do
     item
     |> Repo.preload(:taxes)
-    |> Item.changeset(attrs)
+    |> Item.changeset(attrs, currency)
     |> Repo.update()
   end
 
@@ -186,7 +188,7 @@ defmodule Siwapp.Invoices do
   @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def delete_item(%Item{} = item), do: Repo.delete(item)
 
-  def change_item(%Item{} = item, attrs \\ %{}) do
-    Item.changeset(item, attrs)
+  def change_item(%Item{} = item, currency, attrs \\ %{}) do
+    Item.changeset(item, attrs, currency)
   end
 end
