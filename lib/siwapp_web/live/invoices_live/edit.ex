@@ -24,35 +24,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  def apply_action(socket, :new, _params) do
-    new_invoice = %Invoice{items: [%Item{taxes: []}]}
-
-    changeset =
-      invoice
-      |> Invoices.change()
-      |> Invoices.number_assignment_when_legal()
-
-    socket
-    |> assign(:action, :new)
-    |> assign(:page_title, "New Invoice")
-    |> assign(:invoice, new_invoice)
-    |> assign(
-      :changeset,
-      Invoices.change(new_invoice)
-    )
-  end
-
-  def apply_action(socket, :edit, %{"id" => id}) do
-    invoice =
-      Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series, :customer])
-
-    socket
-    |> assign(:action, :edit)
-    |> assign(:page_title, invoice.name)
-    |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice))
-  end
-
   @impl Phoenix.LiveView
   def handle_event("save", %{"invoice" => params}, socket) do
     result =
@@ -80,9 +51,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
         %{"invoice" => params, "_target" => ["invoice", "series_id"]},
         socket
       ) do
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(params)
+    changeset = Invoices.change(socket.assigns.invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
@@ -115,18 +84,16 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
           Phoenix.LiveView.Socket.t()
   defp apply_action(socket, :new, _params) do
-    invoice = %Invoice{items: [%Item{taxes: []}]}
-
-    changeset =
-      invoice
-      |> Invoices.change()
-      |> Invoices.number_assignment_when_legal()
+    new_invoice = %Invoice{items: [%Item{taxes: []}]}
 
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
-    |> assign(:invoice, invoice)
-    |> assign(:changeset, changeset)
+    |> assign(:invoice, new_invoice)
+    |> assign(
+      :changeset,
+      Invoices.change(new_invoice)
+    )
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

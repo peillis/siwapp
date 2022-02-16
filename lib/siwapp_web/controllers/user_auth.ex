@@ -101,7 +101,7 @@ defmodule SiwappWeb.UserAuth do
     assign(conn, :current_user, user)
   end
 
-  @spec ensure_user_token(Plug.Conn.t()) :: {%Accounts.UserToken{} | nil, Plug.Conn.t()}
+  @spec ensure_user_token(Plug.Conn.t()) :: {binary() | nil, Plug.Conn.t()}
   defp ensure_user_token(conn) do
     if user_token = get_session(conn, :user_token) do
       {user_token, conn}

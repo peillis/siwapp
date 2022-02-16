@@ -5,6 +5,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
   alias SiwappWeb.PageView
   alias SiwappWeb.Resolvers.Errors
 
+  @spec list(map(), Absinthe.Resolution.t()) :: {:ok, [Invoices.Invoice.t()]}
   def list(%{customer_id: customer_id, limit: limit, offset: offset}, _resolution) do
     invoices =
       Invoices.list(
@@ -13,19 +14,20 @@ defmodule SiwappWeb.Resolvers.Invoice do
         preload: [:items],
         filters: [customer_id: customer_id]
       )
-      |> Enum.map(&set_correct_units/1)
+
+    invoices = Enum.map(invoices, &set_correct_units/1)
 
     {:ok, invoices}
   end
 
   def list(%{limit: limit, offset: offset}, _resolution) do
-    invoices =
-      Invoices.list(limit: limit, offset: offset, preload: [:items])
-      |> Enum.map(&set_correct_units/1)
+    invoices = Invoices.list(limit: limit, offset: offset, preload: [:items])
+    invoices = Enum.map(invoices, &set_correct_units/1)
 
     {:ok, invoices}
   end
 
+  @spec create(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def create(args, _resolution) do
     case Invoices.create(args) do
       {:ok, invoice} ->
@@ -36,6 +38,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
     end
   end
 
+  @spec update(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def update(%{id: id, invoice: invoice_params}, _resolution) do
     invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :series])
 
@@ -52,6 +55,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
     end
   end
 
+  @spec delete(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def delete(%{id: id}, _resolution) do
     invoice = Invoices.get(id)
 
@@ -62,6 +66,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
     end
   end
 
+  @spec set_correct_units(Invoices.Invoice.t()) :: Invoices.Invoice.t()
   defp set_correct_units(invoice) do
     Enum.reduce([:net_amount, :gross_amount, :paid_amount], invoice, fn key, invoice ->
       Map.update(invoice, key, 0, fn existing_value ->

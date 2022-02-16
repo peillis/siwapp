@@ -9,6 +9,7 @@ defmodule SiwappWeb.PageView do
     |> Money.to_string()
   end
 
+  @spec set_currency(float | integer, atom | binary, keyword) :: binary
   def set_currency(value, currency, symbol: symbol) do
     value
     |> round()

@@ -22,6 +22,7 @@ defmodule SiwappWeb.ItemView do
     |> :erlang.float_to_binary(decimals: 2)
   end
 
+  @spec add_item(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def add_item(changeset) do
     items =
       get_field(changeset, :items) ++
@@ -30,6 +31,7 @@ defmodule SiwappWeb.ItemView do
     put_change(changeset, :items, items)
   end
 
+  @spec remove_item(Ecto.Changeset.t(), integer) :: Ecto.Changeset.t()
   def remove_item(changeset, index) do
     items =
       changeset
@@ -39,6 +41,7 @@ defmodule SiwappWeb.ItemView do
     put_change(changeset, :items, items)
   end
 
+  @spec net_amount(Ecto.Changeset.t()) :: binary
   defp net_amount(changeset) do
     amount = get_field(changeset, :net_amount)
     currency = get_field(changeset, :currency)
@@ -46,7 +49,8 @@ defmodule SiwappWeb.ItemView do
     PageView.set_currency(amount, currency)
   end
 
-  defp taxes_amounts(changeset) do
+  @spec taxes_amounts(Ecto.Changeset.t()) :: list
+  def taxes_amounts(changeset) do
     amounts = get_field(changeset, :taxes_amounts)
 
     Enum.map(amounts, fn {k, v} ->
@@ -54,6 +58,7 @@ defmodule SiwappWeb.ItemView do
     end)
   end
 
+  @spec gross_amount(Ecto.Changeset.t()) :: binary
   defp gross_amount(changeset) do
     amount = get_field(changeset, :gross_amount)
     currency = get_field(changeset, :currency)

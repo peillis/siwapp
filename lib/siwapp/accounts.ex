@@ -121,6 +121,8 @@ defmodule Siwapp.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec apply_user_email(%User{}, binary(), map()) ::
+          {:ok, Ecto.Schema.t() | map()} | {:error, Ecto.Changeset.t()}
   def apply_user_email(user, password, attrs) do
     user
     |> User.email_changeset(attrs)
@@ -146,6 +148,7 @@ defmodule Siwapp.Accounts do
     end
   end
 
+  @spec user_email_multi(%User{}, binary(), any()) :: Ecto.Multi.t()
   defp user_email_multi(user, email, context) do
     changeset = user |> User.email_changeset(%{email: email}) |> User.confirm_changeset()
 
@@ -196,6 +199,8 @@ defmodule Siwapp.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec update_user_password(%User{}, binary(), map()) ::
+          {:ok, %User{}} | {:error, Ecto.Changeset.t()}
   def update_user_password(user, password, attrs) do
     changeset =
       user
@@ -226,6 +231,7 @@ defmodule Siwapp.Accounts do
   @doc """
   Gets the user with the given signed token.
   """
+  @spec get_user_by_session_token(binary()) :: %User{} | nil
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
     Repo.one(query)

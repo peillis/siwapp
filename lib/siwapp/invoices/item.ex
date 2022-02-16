@@ -146,7 +146,7 @@ defmodule Siwapp.Invoices.Item do
     unitary_cost = get_field(changeset, :unitary_cost)
     put_change_unitary_cost(changeset, virtual_unitary_cost, unitary_cost)
   end
-  
+
   @spec set_virtual_unitary_cost(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def set_virtual_unitary_cost(changeset) do
     if is_nil(get_field(changeset, :unitary_cost)) do
@@ -159,7 +159,8 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  @spec put_change_unitary_cost(Ecto.Changeset.t(), integer() | nil, integer() | nil) :: Ecto.Changeset.t()
+  @spec put_change_unitary_cost(Ecto.Changeset.t(), integer() | nil, integer() | nil) ::
+          Ecto.Changeset.t()
   defp put_change_unitary_cost(changeset, nil, nil) do
     put_change(changeset, :unitary_cost, 0)
   end
@@ -203,5 +204,4 @@ defmodule Siwapp.Invoices.Item do
         {:error, "Invalid format"}
     end
   end
-
 end

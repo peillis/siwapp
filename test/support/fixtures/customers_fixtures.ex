@@ -9,6 +9,7 @@ defmodule Siwapp.CustomersFixtures do
 
   def unique_customer_email, do: "customer#{System.unique_integer()}@example.com"
 
+  @spec valid_customer_attributes(map()) :: map()
   def valid_customer_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_customer_email(),
@@ -17,6 +18,7 @@ defmodule Siwapp.CustomersFixtures do
     })
   end
 
+  @spec customer_fixture(map()) :: Siwapp.Customers.Customer.t()
   def customer_fixture(attrs \\ %{}) do
     {:ok, customer} =
       attrs

@@ -33,6 +33,9 @@ defmodule Siwapp.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
+
+  @spec registration_changeset(%__MODULE__{} | Ecto.Changeset.t(), map(), list()) ::
+          Ecto.Changeset.t()
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
@@ -101,6 +104,8 @@ defmodule Siwapp.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
+  @spec password_changeset(%__MODULE__{} | Ecto.Changeset.t(), map(), list()) ::
+          Ecto.Changeset.t()
   def password_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:password])

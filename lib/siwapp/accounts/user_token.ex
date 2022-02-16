@@ -178,7 +178,7 @@ defmodule Siwapp.Accounts.UserToken do
     from Siwapp.Accounts.UserToken, where: [token: ^token, context: ^context]
   end
 
-  @spec user_and_contexts_query(%Accounts.User{}, any()):: Ecto.Query.t()
+  @spec user_and_contexts_query(%Accounts.User{}, any()) :: Ecto.Query.t()
   @doc """
   Gets all tokens for the given user for the given contexts.
   """
