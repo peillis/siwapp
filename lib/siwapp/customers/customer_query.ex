@@ -21,7 +21,7 @@ defmodule Siwapp.Customers.CustomerQuery do
     |> select([c, i], %Customer{
       total: sum(i.gross_amount),
       paid: sum(i.paid_amount),
-      currency: fragment("array_agg(?)", i.currency),
+      currencies: fragment("array_agg(?)", i.currency),
       name: c.name,
       identification: c.identification,
       id: c.id
