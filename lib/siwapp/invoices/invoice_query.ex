@@ -4,8 +4,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   """
   import Ecto.Query
 
-  @spec list_past_due(Ecto.Queryable.t()) :: Ecto.Query.t()
-  def list_past_due(query) do
+  def past_due(query) do
     date_today = Date.utc_today()
 
     query
@@ -76,11 +75,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
         where(query, series_id: ^value)
 
       {:with_status, :past_due} ->
-        date_today = Date.utc_today()
-
-        query
-        |> where([i], not is_nil(i.due_date))
-        |> where([i], i.due_date < ^date_today)
+        past_due(query)
 
       {:with_status, value} ->
         where(query, ^[{value, true}])

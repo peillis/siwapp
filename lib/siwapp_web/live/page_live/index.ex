@@ -12,7 +12,10 @@ defmodule SiwappWeb.PageLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Invoices.list_past_due(20, 0))}
+     |> assign(
+       :invoices,
+       Invoices.list(limit: 20, offset: 0, preload: [:series], filters: [with_status: :past_due])
+     )}
   end
 
   @doc """
@@ -36,7 +39,14 @@ defmodule SiwappWeb.PageLive.Index do
     {
       :noreply,
       assign(socket,
-        invoices: invoices ++ Invoices.list_past_due(20, (page + 1) * 20),
+        invoices:
+          invoices ++
+            Invoices.list(
+              limit: 20,
+              offset: (page + 1) * 20,
+              preload: [:series],
+              filters: [with_status: :past_due]
+            ),
         page: page + 1
       )
     }

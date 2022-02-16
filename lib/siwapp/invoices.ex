@@ -29,16 +29,6 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-  @spec list_past_due(integer(), integer()) :: [Invoice.t()]
-  def list_past_due(limit \\ 20, offset \\ 0) do
-    Invoice
-    |> InvoiceQuery.list_past_due()
-    |> limit(^limit)
-    |> offset(^offset)
-    |> Query.list_preload(:series)
-    |> Repo.all()
-  end
-
   @spec count :: integer | nil
   def count do
     Repo.aggregate(Invoice, :count)
