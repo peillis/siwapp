@@ -38,18 +38,18 @@ defmodule SiwappWeb.ItemView do
 
   defp net_amount(changeset) do
     get_field(changeset, :net_amount)
-    |> PageView.set_currency(get_field(changeset, :currency))
+    |> PageView.money_format(get_field(changeset, :currency))
   end
 
   defp taxes_amounts(changeset) do
     get_field(changeset, :taxes_amounts)
     |> Enum.map(fn {k, v} ->
-      {k, PageView.set_currency(v, get_field(changeset, :currency))}
+      {k, PageView.money_format(v, get_field(changeset, :currency))}
     end)
   end
 
   defp gross_amount(changeset) do
     get_field(changeset, :gross_amount)
-    |> PageView.set_currency(get_field(changeset, :currency))
+    |> PageView.money_format(get_field(changeset, :currency))
   end
 end
