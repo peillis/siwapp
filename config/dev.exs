@@ -1,5 +1,8 @@
 import Config
 
+config :siwapp,
+  env: :dev
+
 # Configure your database
 config :siwapp, Siwapp.Repo,
   username: "postgres",
