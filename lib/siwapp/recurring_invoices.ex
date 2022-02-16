@@ -12,17 +12,15 @@ defmodule Siwapp.RecurringInvoices do
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
 
-  @spec list :: [RecurringInvoice.t()]
-  def list do
-    # query = Query.invoices()
-    Repo.all(RecurringInvoice)
-  end
+  @spec list(keyword()) :: [RecurringInvoice.t()]
+  def list(options \\ []) do
+    default = [limit: 100, offset: 0, preload: []]
+    options = Keyword.merge(default, options)
 
-  @spec scroll_listing(integer, integer) :: [RecurringInvoice.t()]
-  def scroll_listing(page, per_page \\ 20) do
     RecurringInvoice
-    |> Query.paginate(page, per_page)
-    |> Query.list_preload(:series)
+    |> limit(^options[:limit])
+    |> offset(^options[:offset])
+    |> Query.list_preload(options[:preload])
     |> Repo.all()
   end
 
