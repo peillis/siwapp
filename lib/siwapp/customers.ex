@@ -16,11 +16,8 @@ defmodule Siwapp.Customers do
   Lists customers in database only providing necessary fields to render index, including
   virtuals
   """
-  def list_index(limit \\ 100, offset \\ 0) do
-    CustomerQuery.list_for_index(limit, offset)
-    |> Repo.all()
-    |> Enum.map(&%{&1 | currency: final_currency(&1.currency), due: &1.total - &1.paid})
-  end
+  def list_index(limit \\ 100, offset \\ 0),
+    do: CustomerQuery.list_for_index(limit, offset) |> Repo.all()
 
   def suggest_by_name(""), do: []
   def suggest_by_name(nil), do: []
@@ -84,13 +81,6 @@ defmodule Siwapp.Customers do
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
   end
-
-  # Returns currency converted to atom only if
-  # input was a list containing just one currency
-  @spec final_currency([] | [String.t()]) :: atom
-  defp final_currency([]), do: nil
-  defp final_currency([currency]), do: String.to_atom(currency)
-  defp final_currency(_list), do: nil
 
   @spec get_by_hash_id(binary, binary) :: Customer.t() | nil
   defp get_by_hash_id(identification, name) do

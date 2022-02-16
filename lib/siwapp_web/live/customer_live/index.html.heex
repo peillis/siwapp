@@ -30,10 +30,10 @@
           <%= customer.identification %>
         </td>
         <td class="text-right">
-          <%= set_currency(customer.due, customer.currency) %>
+          <%= set_currency(due(customer.total, customer.paid), final_currency(customer.currencies)) %>
         </td>
         <td class="text-right">
-          <%= set_currency(customer.total, customer.currency) %>
+          <%= set_currency(customer.total, final_currency(customer.currencies)) %>
         </td>
         <td class="text-center">
           <%= live_redirect(" ",

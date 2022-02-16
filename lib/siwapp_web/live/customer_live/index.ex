@@ -41,4 +41,12 @@ defmodule SiwappWeb.CustomerLive.Index do
     customers = Search.filters(Customer, params["search_input"])
     {:noreply, assign(socket, :customers, customers)}
   end
+
+  @spec due(integer, integer) :: integer
+  defp due(total, paid), do: total - paid
+
+  @spec final_currency([] | [String.t()]) :: atom
+  defp final_currency([]), do: nil
+  defp final_currency([currency]), do: String.to_atom(currency)
+  defp final_currency(_list), do: nil
 end
