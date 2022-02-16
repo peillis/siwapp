@@ -119,9 +119,9 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> elem(1)
 
     {:noreply,
-    socket
-    |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
-    |> assign(form_params: params)}
+     socket
+     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
+     |> assign(form_params: params)}
   end
 
   def handle_info({:customer_updated, customer_params}, socket) do
