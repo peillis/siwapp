@@ -3,7 +3,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias SiwappWeb.InvoicesLive.CustomerComponent
-  alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
   alias Siwapp.Invoices
@@ -82,34 +81,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
      |> assign(form_params: params)}
   end
 
-  def handle_event("add_item", _, socket) do
-    params = socket.assigns.form_params
-
-    next_item_index =
-      params["items"]
-      |> Enum.count()
-      |> Integer.to_string()
-
-    params = put_in(params, ["items", next_item_index], item_param())
-
-    {:noreply,
-     socket
-     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
-     |> assign(form_params: params)}
-  end
-
-  def handle_event("remove_item", %{"item-id" => item_index}, socket) do
-    params =
-      socket.assigns.form_params
-      |> pop_in(["items", item_index])
-      |> elem(1)
-
-    {:noreply,
-     socket
-     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
-     |> assign(form_params: params)}
-  end
-
   def handle_info({:customer_updated, customer_params}, socket) do
     params =
       socket.assigns.form_params
@@ -126,6 +97,13 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       socket.assigns.form_params
       |> put_in(["items", Integer.to_string(item_index), "taxes"], selected_taxes)
 
+    {:noreply,
+     socket
+     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
+     |> assign(form_params: params)}
+  end
+
+  def handle_info({:items_updated, params}, socket) do
     {:noreply,
      socket
      |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
