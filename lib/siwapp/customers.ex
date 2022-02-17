@@ -14,11 +14,11 @@ defmodule Siwapp.Customers do
   def list(limit \\ 100, offset \\ 0), do: CustomerQuery.list(limit, offset) |> Repo.all()
 
   @doc """
-  Lists customers in database following CustomerQuery.list_with_virtual_fields/2 query
+  Lists customers in database following CustomerQuery.list_with_assoc_invoice_fields/2 query
   """
-  @spec list_with_virtual_fields(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
-  def list_with_virtual_fields(limit \\ 100, offset \\ 0),
-    do: CustomerQuery.list_with_virtual_fields(limit, offset) |> Repo.all()
+  @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
+  def list_with_assoc_invoice_fields(limit \\ 100, offset \\ 0),
+    do: CustomerQuery.list_with_assoc_invoice_fields(limit, offset) |> Repo.all()
 
   def suggest_by_name(""), do: []
   def suggest_by_name(nil), do: []

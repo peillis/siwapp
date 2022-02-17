@@ -23,8 +23,8 @@ defmodule Siwapp.Customers.CustomerQuery do
   paid and currencies (sum of gross amount, sum of paid amount and list of
   all currencies, respectively, used in all invoices associated to customer)
   """
-  @spec list_with_virtual_fields(non_neg_integer(), non_neg_integer()) :: Ecto.Query.t()
-  def list_with_virtual_fields(limit, offset) do
+  @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: Ecto.Query.t()
+  def list_with_assoc_invoice_fields(limit, offset) do
     list(limit, offset)
     |> join(:left, [c], i in assoc(c, :invoices))
     |> where([c, i], not (i.draft or i.failed))
