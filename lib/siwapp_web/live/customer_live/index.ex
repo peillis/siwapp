@@ -36,7 +36,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {:noreply, push_redirect(socket, to: Routes.customer_edit_path(socket, :edit, id))}
   end
 
-  def handle_info({:serach, params}, socket) do
+  def handle_info({:search, params}, socket) do
     customers = Search.filters(Customer, params)
 
     {:noreply, assign(socket, :customers, customers)}
