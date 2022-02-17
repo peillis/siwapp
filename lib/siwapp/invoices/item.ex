@@ -151,7 +151,7 @@ defmodule Siwapp.Invoices.Item do
 
       true ->
         case Money.parse(virtual_unitary_cost, currency) do
-          {:ok, money} -> put_change(changeset, :unitary_cost, money.amount)
+          {:ok, %Money{amount: amount}} -> put_change(changeset, :unitary_cost, amount)
           :error -> add_error(changeset, :virtual_unitary_cost, "Invalid format")
         end
     end
