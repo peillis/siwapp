@@ -9,6 +9,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   This module manages the customer index view
   """
 
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -17,6 +18,7 @@ defmodule SiwappWeb.CustomerLive.Index do
      |> assign(page_title: "Customers")}
   end
 
+  @impl Phoenix.LiveView
   def handle_event("load-more", _, socket) do
     %{
       page: page,

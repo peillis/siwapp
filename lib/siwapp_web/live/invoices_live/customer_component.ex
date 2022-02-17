@@ -4,6 +4,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
 
   alias Siwapp.Customers
 
+  @impl Phoenix.LiveComponent
   def mount(socket) do
     {:ok,
      socket
@@ -11,6 +12,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
      |> assign(:customer_suggestions, [])}
   end
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     changeset = assigns.f.source
 
@@ -34,6 +36,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     {:ok, socket}
   end
 
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <fieldset class="fieldset">
@@ -68,6 +71,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     """
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("pick_customer", %{"id" => customer_id}, socket) do
     customer_params =
       customer_id

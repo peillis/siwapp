@@ -6,10 +6,12 @@ defmodule SiwappWeb.UserSettingsController do
 
   plug :assign_email_and_password_changesets
 
+  @spec edit(Plug.Conn.t(), list) :: Plug.Conn.t()
   def edit(conn, _params) do
     render(conn, "edit.html")
   end
 
+  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"action" => "update_email"} = params) do
     %{"current_password" => password, "user" => user_params} = params
     user = conn.assigns.current_user
@@ -50,6 +52,7 @@ defmodule SiwappWeb.UserSettingsController do
     end
   end
 
+  @spec confirm_email(Plug.Conn.t(), map) :: Plug.Conn.t()
   def confirm_email(conn, %{"token" => token}) do
     case Accounts.update_user_email(conn.assigns.current_user, token) do
       :ok ->
@@ -64,6 +67,7 @@ defmodule SiwappWeb.UserSettingsController do
     end
   end
 
+  @spec assign_email_and_password_changesets(Plug.Conn.t(), list) :: Plug.Conn.t()
   defp assign_email_and_password_changesets(conn, _opts) do
     user = conn.assigns.current_user
 

@@ -116,15 +116,18 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(0)
   end
 
+  @spec summary_chart([tuple]) :: {:safe, [...]}
   defp summary_chart(invoices_data_for_a_month) do
     invoices_data_for_a_month
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot()
   end
 
+  @spec set_summary(:opened | :closed) :: map()
   defp set_summary(:opened), do: %{visibility: "is-block", icon: "fa-angle-up"}
   defp set_summary(:closed), do: %{visibility: "is-hidden", icon: "fa-angle-down"}
 
+  @spec total_per_currencies([Invoice.t()]) :: map()
   defp total_per_currencies(invoices \\ Invoices.list()) do
     totals = Invoices.Statistics.get_accumulated_amount_per_currencies(invoices)
     default_currency = Siwapp.Settings.value(:currency)
