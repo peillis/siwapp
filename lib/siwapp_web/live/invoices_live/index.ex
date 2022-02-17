@@ -49,11 +49,15 @@ defmodule SiwappWeb.InvoicesLive.Index do
     end
   end
 
-  def handle_event("search", params, socket) do
-    params =
-      params
-      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
+  def handle_event("change-summary-state", _params, socket) do
+    if socket.assigns.summary_state.visibility == "is-hidden" do
+      {:noreply, assign(socket, :summary_state, set_summary(:opened))}
+    else
+      {:noreply, assign(socket, :summary_state, set_summary(:closed))}
+    end
+  end
 
+  def handle_info({:search, params}, socket) do
     invoices = Search.filters(Invoice, params)
 
     {:noreply,
@@ -62,14 +66,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:number_of_invoices, length(invoices))
      |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month(invoices))
      |> assign(:totals, total_per_currencies(invoices))}
-  end
-
-  def handle_event("change-summary-state", _params, socket) do
-    if socket.assigns.summary_state.visibility == "is-hidden" do
-      {:noreply, assign(socket, :summary_state, set_summary(:opened))}
-    else
-      {:noreply, assign(socket, :summary_state, set_summary(:closed))}
-    end
   end
 
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do

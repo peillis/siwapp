@@ -39,8 +39,8 @@ defmodule SiwappWeb.LayoutView do
     ]
 
     if socket.view in views_with_search do
-      component = which_component(socket.view)
-      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", component: component)
+      filters = which_filters(socket.view)
+      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", filters: filters)
     end
   end
 
@@ -52,16 +52,16 @@ defmodule SiwappWeb.LayoutView do
     live_redirect(text, to: to, method: :get, class: "button is-primary")
   end
 
-  defp which_component(view) do
+  defp which_filters(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->
-        SiwappWeb.SearchLive.InvoiceComponent
+        "invoice_filters"
 
       SiwappWeb.CustomerLive.Index ->
-        nil
+        "customer_filters"
 
       SiwappWeb.RecurringInvoicesLive.Index ->
-        SiwappWeb.SearchLive.RecurringInvoiceComponent
+        "recurring_invoice_filters"
     end
   end
 end

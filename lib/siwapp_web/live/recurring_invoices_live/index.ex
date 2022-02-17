@@ -39,11 +39,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:noreply, push_redirect(socket, to: Routes.recurring_invoices_edit_path(socket, :edit, id))}
   end
 
-  def handle_event("search", params, socket) do
-    params =
-      params
-      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
-
+  def handle_info({:search, params}, socket) do
     recurring_invoices = Search.filters(RecurringInvoice, params)
 
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
