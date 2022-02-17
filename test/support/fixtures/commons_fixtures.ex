@@ -6,12 +6,16 @@ defmodule Siwapp.CommonsFixtures do
 
   alias Siwapp.Commons
 
+  @spec unique_series_name :: binary
   def unique_series_name, do: "#{System.unique_integer()}"
 
+  @spec unique_series_code :: binary
   def unique_series_code, do: "#{System.unique_integer()}"
 
+  @spec unique_taxes_name :: binary
   def unique_taxes_name, do: "#{System.unique_integer()}"
 
+  @spec unique_taxes_value :: integer
   def unique_taxes_value, do: :rand.uniform(30)
 
   @spec series_fixture(map()) :: Commons.Series.t()

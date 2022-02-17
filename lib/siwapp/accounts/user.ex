@@ -43,6 +43,7 @@ defmodule Siwapp.Accounts.User do
     |> validate_password(opts)
   end
 
+  @spec validate_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])
@@ -52,6 +53,7 @@ defmodule Siwapp.Accounts.User do
     |> unique_constraint(:email)
   end
 
+  @spec validate_password(Ecto.Changeset.t(), keyword) :: Ecto.Changeset.t()
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
@@ -62,6 +64,7 @@ defmodule Siwapp.Accounts.User do
     |> maybe_hash_password(opts)
   end
 
+  @spec maybe_hash_password(Ecto.Changeset.t(), keyword()) :: Ecto.Changeset.t()
   defp maybe_hash_password(changeset, opts) do
     hash_password? = Keyword.get(opts, :hash_password, true)
     password = get_change(changeset, :password)
@@ -82,6 +85,7 @@ defmodule Siwapp.Accounts.User do
 
   It requires the email to change otherwise an error is added.
   """
+  @spec email_changeset(%Siwapp.Accounts.User{}, map) :: Ecto.Changeset.t()
   def email_changeset(user, attrs) do
     user
     |> cast(attrs, [:email])
@@ -116,6 +120,7 @@ defmodule Siwapp.Accounts.User do
   @doc """
   Confirms the account by setting `confirmed_at`.
   """
+  @spec confirm_changeset(%Siwapp.Accounts.User{} | Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def confirm_changeset(user) do
     now = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
     change(user, confirmed_at: now)
@@ -127,6 +132,7 @@ defmodule Siwapp.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
+  @spec valid_password?(%Siwapp.Accounts.User{}, binary) :: boolean()
   def valid_password?(%Siwapp.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
@@ -140,6 +146,7 @@ defmodule Siwapp.Accounts.User do
   @doc """
   Validates the current password otherwise adds an error to the changeset.
   """
+  @spec validate_current_password(Ecto.Changeset.t(), binary) :: Ecto.Changeset.t()
   def validate_current_password(changeset, password) do
     if valid_password?(changeset.data, password) do
       changeset

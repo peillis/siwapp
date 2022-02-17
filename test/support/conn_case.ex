@@ -47,6 +47,7 @@ defmodule SiwappWeb.ConnCase do
   It stores an updated connection and a registered user in the
   test context.
   """
+  @spec register_and_log_in_user(map) :: map
   def register_and_log_in_user(%{conn: conn}) do
     user = Siwapp.AccountsFixtures.user_fixture()
     %{conn: log_in_user(conn, user), user: user}
@@ -57,6 +58,7 @@ defmodule SiwappWeb.ConnCase do
 
   It returns an updated `conn`.
   """
+  @spec log_in_user(Plug.Conn.t(), %Siwapp.Accounts.User{}) :: Plug.Conn.t()
   def log_in_user(conn, user) do
     token = Siwapp.Accounts.generate_user_session_token(user)
 

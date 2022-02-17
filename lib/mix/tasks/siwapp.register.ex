@@ -22,6 +22,7 @@ defmodule Mix.Tasks.Siwapp.Register do
     register_user(email, password)
   end
 
+  @spec register_user(binary, binary) :: :ok | no_return()
   defp register_user(email, password) do
     case Accounts.register_user(%{email: email, password: password}) do
       {:ok, user} ->
@@ -34,12 +35,14 @@ defmodule Mix.Tasks.Siwapp.Register do
     end
   end
 
+  @spec validate_args!(list | term()) :: no_return()
   defp validate_args!([_, _]), do: :ok
 
   defp validate_args!(_) do
     raise_with_help("Invalid arguments")
   end
 
+  @spec raise_with_help(binary) :: no_return()
   defp raise_with_help(msg) do
     Mix.raise("""
     #{msg}
@@ -48,7 +51,7 @@ defmodule Mix.Tasks.Siwapp.Register do
     that is going to be registered in the Siwapp system.
 
     For example:
-        mix siwapp.register "demo@example.com" "secret_pass"
+        mix siwapp.register "demo@example.com" "secret_password"
     """)
   end
 end

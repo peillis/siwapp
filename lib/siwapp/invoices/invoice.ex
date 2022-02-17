@@ -107,6 +107,7 @@ defmodule Siwapp.Invoices.Invoice do
     timestamps()
   end
 
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
@@ -133,6 +134,7 @@ defmodule Siwapp.Invoices.Invoice do
   @doc """
   Assigns the series next number to the invoice changeset.
   """
+  @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def assign_number(changeset) do
     cond do
       # It's illegal to assign a number to a draft
@@ -155,6 +157,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec assign_issue_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_issue_date(changeset) do
     if get_field(changeset, :issue_date) do
       changeset
@@ -163,6 +166,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec assign_due_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_due_date(changeset) do
     if get_field(changeset, :due_date) do
       changeset
@@ -175,6 +179,7 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   # you can't convert an existing invoice to draft
+  @spec only_new_invoice_can_be_draft(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp only_new_invoice_can_be_draft(changeset) do
     if get_field(changeset, :id) != nil and
          get_change(changeset, :draft) == true do
@@ -185,6 +190,7 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   # When draft there are few restrictions
+  @spec validate_required_draft(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_required_draft(changeset) do
     if get_field(changeset, :draft) do
       changeset

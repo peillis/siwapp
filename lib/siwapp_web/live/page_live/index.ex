@@ -6,7 +6,8 @@ defmodule SiwappWeb.PageLive.Index do
   alias Siwapp.Invoices
   alias SiwappWeb.GraphicHelpers
 
-  @spec mount(map(), %Phoenix.LiveView.Session{}, Phoenix.LiveView.Socket.t()) :: {:ok, Phoenix.LiveView.Socket.t()}
+  @spec mount(map(), %Phoenix.LiveView.Session{}, Phoenix.LiveView.Socket.t()) ::
+          {:ok, Phoenix.LiveView.Socket.t()}
   def mount(_params, _session, socket) do
     {:ok,
      socket

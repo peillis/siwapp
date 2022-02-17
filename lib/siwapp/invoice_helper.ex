@@ -8,6 +8,7 @@ defmodule Siwapp.InvoiceHelper do
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
 
+  @spec maybe_find_customer_or_new(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def maybe_find_customer_or_new(changeset) do
     if is_nil(get_field(changeset, :customer_id)) do
       find_customer_or_new(changeset)
@@ -22,6 +23,7 @@ defmodule Siwapp.InvoiceHelper do
     end
   end
 
+  @spec assign_currency(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def assign_currency(changeset) do
     if get_field(changeset, :currency) do
       changeset
@@ -41,6 +43,7 @@ defmodule Siwapp.InvoiceHelper do
     |> set_gross_amount()
   end
 
+  @spec find_customer_or_new(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp find_customer_or_new(changeset) do
     identification = get_field(changeset, :identification)
     name = get_field(changeset, :name)
@@ -58,11 +61,13 @@ defmodule Siwapp.InvoiceHelper do
     end
   end
 
+  @spec changes_in_name_or_identification?(Ecto.Changeset.t()) :: boolean()
   defp changes_in_name_or_identification?(changeset) do
     Map.has_key?(changeset.changes, :name) or
       Map.has_key?(changeset.changes, :identification)
   end
 
+  @spec bring_customer_errors(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp bring_customer_errors(changeset) do
     changeset
     |> traverse_errors(& &1)
@@ -72,9 +77,11 @@ defmodule Siwapp.InvoiceHelper do
     end)
   end
 
+  @spec add_error(Ecto.Changeset.t(), {atom, list()}) :: Ecto.Changeset.t()
   defp add_error(changeset, {key, [{message, opts}]}),
     do: add_error(changeset, key, message, opts)
 
+  @spec set_net_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_net_amount(changeset) do
     total_net_amount =
       get_field(changeset, :items)
@@ -85,6 +92,7 @@ defmodule Siwapp.InvoiceHelper do
     put_change(changeset, :net_amount, total_net_amount)
   end
 
+  @spec set_taxes_amounts(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_taxes_amounts(changeset) do
     total_taxes_amounts =
       get_field(changeset, :items)
@@ -94,6 +102,7 @@ defmodule Siwapp.InvoiceHelper do
     put_change(changeset, :taxes_amounts, total_taxes_amounts)
   end
 
+  @spec set_gross_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_gross_amount(changeset) do
     net_amount = get_field(changeset, :net_amount)
 

@@ -16,6 +16,7 @@ defmodule Siwapp.RecurringInvoices do
     Repo.all(RecurringInvoice)
   end
 
+  @spec scroll_listing(integer, integer) :: [RecurringInvoice.t()]
   def scroll_listing(page, per_page \\ 20) do
     RecurringInvoice
     |> Query.paginate(page, per_page)

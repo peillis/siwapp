@@ -6,6 +6,7 @@ defmodule Siwapp.Accounts.UserNotifier do
   alias Siwapp.Mailer
 
   # Delivers the email using the application mailer.
+  @spec deliver(Swoosh.Email.Recipient.t(), binary, binary) :: {:ok, term()} | {:error, term()}
   defp deliver(recipient, subject, body) do
     email =
       new()

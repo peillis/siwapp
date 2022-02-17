@@ -9,6 +9,7 @@ defmodule Siwapp.RecurringInvoicesFixtures do
   alias Siwapp.RecurringInvoices
   alias Siwapp.Repo
 
+  @spec valid_recurring_invoice_attributes(map) :: map
   def valid_recurring_invoice_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       name: CustomersFixtures.unique_customer_name(),
@@ -22,6 +23,7 @@ defmodule Siwapp.RecurringInvoicesFixtures do
     })
   end
 
+  @spec recurring_invoice_fixture(map) :: RecurringInvoice.t()
   def recurring_invoice_fixture(attrs \\ %{}) do
     {:ok, recurring_invoice} =
       attrs

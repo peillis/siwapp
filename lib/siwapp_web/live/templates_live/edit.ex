@@ -17,27 +17,6 @@ defmodule SiwappWeb.TemplatesLive.Edit do
   end
 
   @impl Phoenix.LiveView
-  def apply_action(socket, :new, _params) do
-    template = %Template{}
-
-    socket
-    |> assign(:action, :new)
-    |> assign(:page_title, "New Template")
-    |> assign(:template, template)
-    |> assign(:changeset, Templates.change(template))
-  end
-
-  def apply_action(socket, :edit, %{"id" => id}) do
-    template = id |> String.to_integer() |> Templates.get()
-
-    socket
-    |> assign(:action, :edit)
-    |> assign(:page_title, template.name)
-    |> assign(:template, template)
-    |> assign(:changeset, Templates.change(template))
-  end
-
-  @impl Phoenix.LiveView
   def handle_event("validate", %{"template" => template_params}, socket) do
     changeset =
       socket.assigns.template
@@ -64,6 +43,28 @@ defmodule SiwappWeb.TemplatesLive.Edit do
       {:error, _msg} ->
         {:noreply, put_flash(socket, :error, "You can't delete the default template.")}
     end
+  end
+
+  @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          Phoenix.LiveView.Socket.t()
+  defp apply_action(socket, :new, _params) do
+    template = %Template{}
+
+    socket
+    |> assign(:action, :new)
+    |> assign(:page_title, "New Template")
+    |> assign(:template, template)
+    |> assign(:changeset, Templates.change(template))
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    template = id |> String.to_integer() |> Templates.get()
+
+    socket
+    |> assign(:action, :edit)
+    |> assign(:page_title, template.name)
+    |> assign(:template, template)
+    |> assign(:changeset, Templates.change(template))
   end
 
   @spec save_template(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::

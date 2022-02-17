@@ -6,6 +6,7 @@ defmodule Siwapp.SettingsFixtures do
 
   alias Siwapp.Settings
 
+  @spec valid_settings_attributes(map) :: keyword()
   def valid_settings_attributes(attrs \\ []) do
     Keyword.merge(attrs,
       company: "Doofinder",
@@ -20,6 +21,7 @@ defmodule Siwapp.SettingsFixtures do
     )
   end
 
+  @spec settings_fixture(map) :: %Siwapp.Settings.SettingBundle{}
   def settings_fixture(attrs \\ []) do
     attrs
     |> valid_settings_attributes()

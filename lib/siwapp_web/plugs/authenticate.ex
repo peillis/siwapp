@@ -3,8 +3,10 @@ defmodule SiwappWeb.Plugs.Authenticate do
   import Plug.Conn
   require Logger
 
+  @spec init(any) :: any
   def init(default), do: default
 
+  @spec call(Plug.Conn.t(), keyword) :: Plug.Conn.t()
   def call(conn, _opts) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, data} <- Siwapp.ApiToken.verify(token) do

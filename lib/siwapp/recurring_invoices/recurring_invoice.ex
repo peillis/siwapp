@@ -135,6 +135,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   Converts field items from list of Item changesets to list of maps when
   changeset is valid to be able to save in database
   """
+  @spec untransform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def untransform_items(%{valid?: true} = changeset) do
     items =
       get_field(changeset, :items)
@@ -148,6 +149,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   # Converts field items from list of maps to list of Item changesets.
   # This is used to handle items validation and calculations
+  @spec transform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp transform_items(changeset) do
     items_transformed =
       changeset
@@ -158,6 +160,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   end
 
   # Adds error to changeset if any item is invalid
+  @spec validate_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_items(changeset) do
     items_valid? =
       changeset
@@ -173,6 +176,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   # Applies changes (builds Item struct) to each Item changeset in field items.
   # Used to recycle calculate functions in invoice_helper, that use Item structs
+  @spec apply_changes_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp apply_changes_items(changeset) do
     items =
       changeset
@@ -185,6 +189,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Converts each Item struct in a changeset (changing empty map).
   # Used to recycle add_item, remove_item functions in views and
   # build item forms' for user to fill
+  @spec unapply_changes_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp unapply_changes_items(changeset) do
     items =
       changeset
@@ -194,6 +199,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     put_change(changeset, :items, items)
   end
 
+  @spec make_item(Item.t()) :: map
   defp make_item(%Item{description: d, quantity: q, unitary_cost: u, discount: di, taxes: t}) do
     %{
       "description" => d,

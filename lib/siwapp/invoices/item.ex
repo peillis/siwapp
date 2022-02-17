@@ -11,7 +11,7 @@ defmodule Siwapp.Invoices.Item do
   alias Siwapp.Invoices.Invoice
 
   @type t :: %__MODULE__{
-          id: pos_integer(),
+          id: pos_integer() | nil,
           quantity: pos_integer(),
           discount: non_neg_integer(),
           description: binary() | nil,
@@ -54,6 +54,7 @@ defmodule Siwapp.Invoices.Item do
       on_replace: :delete
   end
 
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, @fields)

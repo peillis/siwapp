@@ -185,6 +185,7 @@ defmodule Siwapp.Templates do
     Template.changeset(template, attrs)
   end
 
+  @spec string_template(Invoices.Invoice.t()) :: binary()
   def string_template(invoice) do
     template = get(:print_default).template
 
@@ -200,6 +201,7 @@ defmodule Siwapp.Templates do
     EEx.eval_string(template, all_eval_data)
   end
 
+  @spec have_items_discount?(list) :: boolean
   defp have_items_discount?([]) do
     false
   end

@@ -65,6 +65,7 @@ defmodule Siwapp.Customers.Customer do
   end
 
   @doc false
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(customer, attrs \\ %{}) do
     customer
     |> cast(attrs, @fields)
@@ -92,6 +93,7 @@ defmodule Siwapp.Customers.Customer do
   end
 
   # Validates if either a name or an identification is set
+  @spec validate_required_customer(Ecto.Changeset.t(), list) :: Ecto.Changeset.t()
   defp validate_required_customer(changeset, fields) do
     if Enum.any?(fields, &get_field(changeset, &1)) do
       changeset
@@ -100,6 +102,7 @@ defmodule Siwapp.Customers.Customer do
     end
   end
 
+  @spec put_hash_id(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp put_hash_id(changeset) do
     name = get_field_or_empty(changeset, :name)
     identification = get_field_or_empty(changeset, :identification)
@@ -107,6 +110,7 @@ defmodule Siwapp.Customers.Customer do
     put_change(changeset, :hash_id, create_hash_id(identification, name))
   end
 
+  @spec get_field_or_empty(Ecto.Changeset.t(), atom) :: binary
   defp get_field_or_empty(changeset, field) do
     get_field(changeset, field) || ""
   end

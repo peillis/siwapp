@@ -36,6 +36,7 @@ defmodule Siwapp.Settings do
   @doc """
   Performs the SettingBundle changeset
   """
+  @spec change_bundle(%SettingBundle{}, map) :: Ecto.Changeset.t()
   def change_bundle(%SettingBundle{} = setting_bundle, attrs \\ %{}) do
     SettingBundle.changeset(setting_bundle, attrs)
   end
@@ -75,6 +76,7 @@ defmodule Siwapp.Settings do
   Returns the value of the setting associated to key (atom or string). Returns nil if
   this setting doesn't exist
   """
+  @spec value(atom) :: binary
   def value(key) do
     case get(key) do
       nil -> nil
@@ -82,6 +84,7 @@ defmodule Siwapp.Settings do
     end
   end
 
+  @spec value(atom, atom) :: binary
   def value(key, :cache) do
     case Cachex.get(:siwapp_cache, key) do
       {:ok, nil} ->

@@ -3,6 +3,7 @@ defmodule SiwappWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
+  @spec start_link(list) :: {:ok, pid()} | {:error, {:already_started, pid()} | term()}
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end

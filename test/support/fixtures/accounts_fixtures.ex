@@ -4,7 +4,10 @@ defmodule Siwapp.AccountsFixtures do
   entities via the `Siwapp.Accounts` context.
   """
 
+  @spec unique_user_email :: binary
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
+
+  @spec valid_user_password :: binary
   def valid_user_password, do: "hello world!"
 
   @spec valid_user_attributes(map()) :: map()
