@@ -31,7 +31,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
     |> assign(:changeset, changeset)
-    |> assign(:form_params, initial_params(changeset))
+    |> assign(:form_params, initial_params(changeset, :new))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -40,11 +40,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     changeset = Invoices.change(invoice)
 
+    IO.inspect(initial_params(changeset, :edit))
+
     socket
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
     |> assign(:changeset, changeset)
+    |> assign(:form_params, initial_params(changeset, :edit))
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
@@ -68,24 +71,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     end
   end
 
-  def handle_event(
-        "validate",
-        %{"invoice" => params, "_target" => ["invoice", "series_id"]},
-        socket
-      ) do
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(params)
-
-    {:noreply,
-     socket
-     |> assign(:changeset, changeset)
-     |> assign(:form_params, params)}
-  end
-
   def handle_event("validate", %{"invoice" => params}, socket) do
-    IO.inspect(params)
-
     changeset =
       socket.assigns.invoice
       |> Invoices.change(params)
@@ -146,18 +132,53 @@ defmodule SiwappWeb.InvoicesLive.Edit do
      |> assign(form_params: params)}
   end
 
-  defp initial_params(changeset) do
+  defp initial_params(changeset, :new) do
     changeset.changes
     |> atom_keys_to_string()
     |> Map.put("items", %{})
     |> put_in(["items", "0"], item_param())
   end
 
+  defp initial_params(changeset, :edit) do
+    changeset.data
+    |> Map.from_struct()
+    |> Map.take([
+      :contact_person,
+      :currency,
+      :due_date,
+      :email,
+      :identification,
+      :invoicing_address,
+      :issue_date,
+      :items,
+      :meta_attributes,
+      :name,
+      :notes,
+      :number,
+      :series_id,
+      :shipping_address,
+      :terms
+    ])
+    |> atom_keys_to_string()
+    |> transform_items_to_params()
+  end
+
+  defp transform_items_to_params(params) do
+    items =
+      params
+      |> Map.get("items")
+      |> Enum.with_index()
+      |> Map.new(fn {item, index} -> {Integer.to_string(index), item_param(item)} end)
+
+    Map.put(params, "items", items)
+  end
+
   defp atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
 
-  defp item_param() do
-    %Item{taxes: []}
+  defp item_param(item \\ %Item{taxes: []}) do
+    item
     |> Map.from_struct()
+    |> Map.take([:description, :discount, :taxes, :quantity, :virtual_unitary_cost])
     |> atom_keys_to_string()
   end
 end
