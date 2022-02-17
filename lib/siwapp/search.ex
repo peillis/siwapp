@@ -32,4 +32,10 @@ defmodule Siwapp.Search do
     |> Query.list_preload(:series)
     |> Repo.all()
   end
+
+  def get_customers_names(query, value, page) do
+    query
+    |> SearchQuery.customers_names(value, page)
+    |> Repo.all()
+  end
 end

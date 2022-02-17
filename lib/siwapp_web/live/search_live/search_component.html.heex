@@ -1,4 +1,10 @@
-<form class="navbar-item is-active" phx-submit="search">
+<form
+  id="form"
+  class="navbar-item is-active"
+  phx-change="search_customers"
+  phx-submit="search"
+  phx-target={@myself}
+>
   <div class="search-input">
     <button id="search-button" class="button" type="button" phx-click={JS.toggle(to: "#search-menu")}>
       <span class="icon is-small">
@@ -15,29 +21,11 @@
 
   <div class="search-menu">
     <div class="search-menu-content" id="search-menu">
-      <%= if is_nil(@component) do %>
-        <div class="columns">
-          <div class="column is-6">
-            <label class="label">
-              KEY:
-            </label>
-            <input class="input" type="text">
-          </div>
-          <div class="column is-6">
-            <label class="label">
-              VALUE:
-            </label>
-            <input class="input" type="text">
-          </div>
-        </div>
-      <% else %>
-        <.live_component
-          module={@component}
-          id="search-content"
-          customers_names={@customers_names}
-          series_names={@series_names}
-        />
-      <% end %>
+      <%= render(
+        SiwappWeb.PageView,
+        "#{@filters}.html",
+        series_names: @series_names
+      ) %>
       <div class="buttons is-right">
         <button class="button is-info">
           Export to csv

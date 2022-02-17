@@ -57,7 +57,16 @@ defmodule Siwapp.Search.SearchQuery do
     value_for_each_key(keys, query, value)
   end
 
-  @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Query.t()
+  def customers_names(query, value, page) do
+    offset_by = 10 * page
+
+    query
+    |> where([q], ilike(q.name, ^"%#{value}%"))
+    |> select([q], q.name)
+    |> limit(10)
+    |> offset(^offset_by)
+  end
+
   # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
   @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp name_email_or_id(query, value) do
