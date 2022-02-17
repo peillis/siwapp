@@ -151,7 +151,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     totals = Invoices.Statistics.get_accumulated_amount_per_currencies(invoices)
     default_currency = Siwapp.Settings.value(:currency)
 
-    default_total = totals[default_currency]
+    default_total = totals[default_currency] || 0
     others_totals = Map.drop(totals, [default_currency])
 
     %{
