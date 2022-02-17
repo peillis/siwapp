@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <.live_component module={CustomerComponent} id="customer" f={f} form_params={@form_params} />
+  <.live_component module={CustomerComponent} id="customer" f={f} />
 
   <fieldset class="fieldset">
     <h2>Invoice Details</h2>
@@ -63,8 +63,6 @@
       id="items"
       f={f}
       inputs_for={inputs_for(f, :items)}
-      changeset={@changeset}
-      form_params={@form_params}
     />
 
   </fieldset>

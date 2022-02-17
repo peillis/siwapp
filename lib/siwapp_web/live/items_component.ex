@@ -6,43 +6,49 @@ defmodule SiwappWeb.ItemsComponent do
   alias Phoenix.HTML.FormData
   alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
+  alias Ecto.Changeset
 
-  import Ecto.Changeset
+  import SiwappWeb.InvoiceFormHelpers
 
   def mount(socket) do
     {:ok, assign(socket, :multiselect_options, Siwapp.Commons.list_taxes_for_multiselect())}
   end
 
+  def update(assigns, socket) do
+    {:ok,
+    socket
+    |> assign(f: assigns.f)
+    |> assign(changeset: assigns.f.source)
+    |> assign(inputs_for: assigns.inputs_for)}
+  end
+
   def handle_event("add", _, socket) do
-    params = socket.assigns.form_params
+    params =
+      socket.assigns.changeset
+      |> Ecto.Changeset.apply_changes()
+      |> get_params()
 
     next_item_index =
       params["items"]
       |> Enum.count()
       |> Integer.to_string()
 
-    params = put_in(params, ["items", next_item_index], item_param())
-
-    send(self(), {:params_updated, params})
+    send(self(), {:params_updated, put_in(params, ["items", next_item_index], item_param())})
 
     {:noreply, socket}
   end
 
   def handle_event("remove", %{"item-id" => item_index}, socket) do
     params =
-      socket.assigns.form_params
+      socket.assigns.changeset
+      |> Ecto.Changeset.apply_changes()
+      |> get_params()
       |> pop_in(["items", item_index])
       |> elem(1)
 
     send(self(), {:params_updated, params})
 
     {:noreply, socket}
-  end
-
-  @spec get_existing_taxes(FormData.t()) :: [] | [tuple]
-  defp get_existing_taxes(fi) do
-    get_field(fi.source, :taxes)
-    |> Enum.map(&{&1.name, &1.id})
   end
 
   @spec item_net_amount(Ecto.Changeset.t(), FormData.t()) :: binary
@@ -53,28 +59,22 @@ defmodule SiwappWeb.ItemsComponent do
   end
 
   defp net_amount(changeset) do
-    get_field(changeset, :net_amount)
-    |> PageView.money_format(get_field(changeset, :currency))
+    changeset
+    |> Changeset.get_field(:net_amount)
+    |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
 
   defp taxes_amounts(changeset) do
-    get_field(changeset, :taxes_amounts)
+    changeset
+    |> Changeset.get_field(:taxes_amounts)
     |> Enum.map(fn {k, v} ->
-      {k, PageView.money_format(v, get_field(changeset, :currency))}
+      {k, PageView.money_format(v, Changeset.get_field(changeset, :currency))}
     end)
   end
 
   defp gross_amount(changeset) do
-    get_field(changeset, :gross_amount)
-    |> PageView.money_format(get_field(changeset, :currency))
+    changeset
+    |> Changeset.get_field(:gross_amount)
+    |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
-
-  defp item_param(item \\ %Item{taxes: []}) do
-    item
-    |> Map.from_struct()
-    |> Map.take([:description, :discount, :taxes, :quantity, :virtual_unitary_cost])
-    |> atom_keys_to_string()
-  end
-
-  defp atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
 end

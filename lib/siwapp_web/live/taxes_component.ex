@@ -4,18 +4,26 @@ defmodule SiwappWeb.TaxesComponent do
   use SiwappWeb, :live_component
 
   alias Phoenix.LiveView.JS
+  alias SiwappWeb.InvoiceFormHelpers
 
   def update(assigns, socket) do
     "ms-" <> index = assigns.id
 
-    socket =
-      socket
-      |> assign(selected: MapSet.new(assigns.selected))
-      |> assign(name: assigns.name)
-      |> assign(index: index)
-      |> assign(options: MapSet.new(assigns.options))
+    selected =
+      assigns.changeset
+      |> Ecto.Changeset.get_field(:items)
+      |> Enum.at(String.to_integer(index))
+      |> Map.get(:taxes)
+      |> Enum.map(&{&1.name, &1.id})
+      |> MapSet.new()
 
-    {:ok, socket}
+    {:ok,
+    socket
+    |> assign(selected: selected)
+    |> assign(name: assigns.name)
+    |> assign(index: index)
+    |> assign(options: MapSet.new(assigns.options))
+    |> assign(changeset: assigns.changeset)}
   end
 
   def render(assigns) do
@@ -55,31 +63,33 @@ defmodule SiwappWeb.TaxesComponent do
     selected =
       socket.assigns.selected
       |> MapSet.delete({key, value})
-      |> Enum.map(fn {k, _v} -> k end)
 
-    send(
-      self(),
-      {:params_updated, put_in(socket.assigns.form_params, ["items", index, "taxes"], selected)}
-    )
+    send(self(), {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)})
 
-    {:noreply, assign(socket, :selected, selected)}
+    {:noreply, assign(socket, selected: selected)}
   end
 
   def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
     selected =
       socket.assigns.selected
       |> MapSet.put({key, value})
-      |> Enum.map(fn {k, _v} -> k end)
 
-    send(
-      self(),
-      {:params_updated, put_in(socket.assigns.form_params, ["items", index, "taxes"], selected)}
-    )
+    send(self(), {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)})
 
-    {:noreply, assign(socket, :selected, selected)}
+    {:noreply, assign(socket, selected: selected)}
   end
 
   defp not_selected(options, selected) do
     MapSet.difference(options, selected)
+  end
+
+  defp get_params_with_taxes(changeset, index, selected) do
+    changeset
+    |> Ecto.Changeset.apply_changes()
+    |> InvoiceFormHelpers.get_params()
+    |> put_in(
+      ["items", index, "taxes"],
+      Enum.map(selected, fn {k, _v} -> k end)
+    )
   end
 end

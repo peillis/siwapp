@@ -38,8 +38,8 @@
           module={SiwappWeb.TaxesComponent}
           id={"ms-#{fi.index}"}
           name={"#{@f.id}[items][#{fi.index}][taxes]"}
-          selected={get_existing_taxes(fi)}
           options={@multiselect_options}
+          changeset={@changeset}
         />
       </div>
       <div class="column is-1-desktop is-full-mobile">
