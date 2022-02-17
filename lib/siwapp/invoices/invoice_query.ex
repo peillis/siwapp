@@ -4,6 +4,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   """
   import Ecto.Query
 
+  @spec past_due(Ecto.Query.t()) :: Ecto.Query.t()
   def past_due(query) do
     date_today = Date.utc_today()
 
@@ -57,6 +58,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   @doc """
   Gets a query on the invoices that match with the params
   """
+  @spec list_by_query(Ecto.Query.t(), atom, any) :: Ecto.Query.t()
   def list_by_query(query, key, value) do
     case {key, value} do
       {:with_terms, value} ->
