@@ -111,14 +111,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:noreply, socket}
   end
 
-  def handle_event("change-summary-state", _params, socket) do
-    if socket.assigns.summary_state.visibility == "is-hidden" do
-      {:noreply, assign(socket, :summary_state, set_summary(:opened))}
-    else
-      {:noreply, assign(socket, :summary_state, set_summary(:closed))}
-    end
-  end
-
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
     invoices = Search.filters(Invoice, params)
