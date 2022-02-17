@@ -10,14 +10,15 @@ defmodule Siwapp.Customers do
   @doc """
   Lists customers in database
   """
+  @spec list(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
   def list(limit \\ 100, offset \\ 0), do: CustomerQuery.list(limit, offset) |> Repo.all()
 
   @doc """
-  Lists customers in database only providing necessary fields to render index, including
-  virtuals
+  Lists customers in database following CustomerQuery.list_with_virtual_fields/2 query
   """
-  def list_index(limit \\ 100, offset \\ 0),
-    do: CustomerQuery.list_for_index(limit, offset) |> Repo.all()
+  @spec list_with_virtual_fields(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
+  def list_with_virtual_fields(limit \\ 100, offset \\ 0),
+    do: CustomerQuery.list_with_virtual_fields(limit, offset) |> Repo.all()
 
   def suggest_by_name(""), do: []
   def suggest_by_name(nil), do: []
