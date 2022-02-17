@@ -7,7 +7,7 @@ defmodule SiwappWeb.TaxesComponent do
   alias SiwappWeb.InvoiceFormHelpers
 
   def update(assigns, socket) do
-    "ms-" <> index = assigns.id
+    "taxes-" <> index = assigns.id
 
     selected =
       assigns.changeset
