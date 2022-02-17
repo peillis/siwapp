@@ -13,17 +13,17 @@ defmodule SiwappWeb.TaxesComponent do
       assigns.changeset
       |> Ecto.Changeset.get_field(:items)
       |> Enum.at(String.to_integer(index))
-      |> Map.get(:taxes)
+      |> get_taxes()
       |> Enum.map(&{&1.name, &1.id})
       |> MapSet.new()
 
     {:ok,
-    socket
-    |> assign(selected: selected)
-    |> assign(name: assigns.name)
-    |> assign(index: index)
-    |> assign(options: MapSet.new(assigns.options))
-    |> assign(changeset: assigns.changeset)}
+     socket
+     |> assign(selected: selected)
+     |> assign(name: assigns.name)
+     |> assign(index: index)
+     |> assign(options: MapSet.new(assigns.options))
+     |> assign(changeset: assigns.changeset)}
   end
 
   def render(assigns) do
@@ -64,7 +64,10 @@ defmodule SiwappWeb.TaxesComponent do
       socket.assigns.selected
       |> MapSet.delete({key, value})
 
-    send(self(), {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)})
+    send(
+      self(),
+      {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)}
+    )
 
     {:noreply, assign(socket, selected: selected)}
   end
@@ -74,7 +77,10 @@ defmodule SiwappWeb.TaxesComponent do
       socket.assigns.selected
       |> MapSet.put({key, value})
 
-    send(self(), {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)})
+    send(
+      self(),
+      {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)}
+    )
 
     {:noreply, assign(socket, selected: selected)}
   end
@@ -91,5 +97,13 @@ defmodule SiwappWeb.TaxesComponent do
       ["items", index, "taxes"],
       Enum.map(selected, fn {k, _v} -> k end)
     )
+  end
+
+  defp get_taxes(item) do
+    if is_struct(item, Siwapp.Invoices.Item) do
+      Map.get(item, :taxes)
+    else
+      Ecto.Changeset.get_field(item, :taxes)
+    end
   end
 end

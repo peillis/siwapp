@@ -24,24 +24,22 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def apply_action(socket, :new, _params) do
     new_invoice = %Invoice{items: [%Item{taxes: []}]}
-    changeset = Invoices.change(new_invoice)
 
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, new_invoice)
-    |> assign(:changeset, changeset)
+    |> assign(:changeset, Invoices.change(new_invoice))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
     invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series, :customer])
-    changeset = Invoices.change(invoice)
 
     socket
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.name)
     |> assign(:invoice, invoice)
-    |> assign(:changeset, changeset)
+    |> assign(:changeset, Invoices.change(invoice))
   end
 
   def handle_event("save", %{"invoice" => params}, socket) do
@@ -66,19 +64,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("validate", %{"invoice" => params}, socket) do
-    changeset =
-      socket.assigns.invoice
-      |> Invoices.change(params)
+    changeset = Invoices.change(socket.assigns.invoice, params)
 
-    {:noreply,
-     socket
-     |> assign(changeset: changeset)
-     |> assign(form_params: params)}
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_info({:params_updated, params}, socket) do
-    {:noreply,
-     socket
-     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))}
+    changeset = Invoices.change(socket.assigns.invoice, params)
+
+    {:noreply, assign(socket, changeset: changeset)}
   end
 end

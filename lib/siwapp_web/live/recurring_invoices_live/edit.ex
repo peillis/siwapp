@@ -23,14 +23,13 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
-    new_recurring_invoice = %RecurringInvoice{items: [%{}]}
+    new_recurring_invoice = %RecurringInvoice{items: %{0 => %{}}}
 
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, new_recurring_invoice)
     |> assign(:changeset, RecurringInvoices.change(new_recurring_invoice))
-    |> assign(:customer_name, "")
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do
@@ -41,7 +40,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:page_title, recurring_invoice.name)
     |> assign(:recurring_invoice, recurring_invoice)
     |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
-    |> assign(:customer_name, recurring_invoice.name)
   end
 
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
@@ -67,37 +65,16 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     end
   end
 
-  def handle_event("validate", %{"recurring_invoice" => params = %{"items" => _items}}, socket) do
-    params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
-    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
-
-    {:noreply, assign(socket, :changeset, changeset)}
-  end
-
   def handle_event("validate", %{"recurring_invoice" => params}, socket) do
     changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("add_item", _, socket) do
-    changeset = ItemView.add_item(socket.assigns.changeset)
+  def handle_info({:params_updated, params}, socket) do
+    changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
 
     {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    changeset = ItemView.remove_item(socket.assigns.changeset, String.to_integer(item_id))
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  def handle_info({:update_changeset, params}, socket) do
-    changeset =
-      socket.assigns.recurring_invoice
-      |> RecurringInvoices.change(params)
-
-    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   # Replicates inputs_for behavior for recurring_invoice's items even when there's no association

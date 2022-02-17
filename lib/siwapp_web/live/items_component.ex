@@ -16,10 +16,10 @@ defmodule SiwappWeb.ItemsComponent do
 
   def update(assigns, socket) do
     {:ok,
-    socket
-    |> assign(f: assigns.f)
-    |> assign(changeset: assigns.f.source)
-    |> assign(inputs_for: assigns.inputs_for)}
+     socket
+     |> assign(f: assigns.f)
+     |> assign(changeset: assigns.f.source)
+     |> assign(inputs_for: assigns.inputs_for)}
   end
 
   def handle_event("add", _, socket) do

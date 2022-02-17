@@ -36,6 +36,8 @@ defmodule SiwappWeb.InvoiceFormHelpers do
   end
 
   def item_param(item \\ %Item{taxes: []}) do
+    item = if is_struct(item, Ecto.Changeset), do: Ecto.Changeset.apply_changes(item), else: item
+
     item
     |> Map.from_struct()
     |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])
