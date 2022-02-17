@@ -4,6 +4,9 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   """
   import Ecto.Query
 
+  @doc """
+  Gets a query on the invoices with status :past_due
+  """
   @spec past_due(Ecto.Query.t()) :: Ecto.Query.t()
   def past_due(query) do
     date_today = Date.utc_today()
