@@ -35,7 +35,7 @@
           Taxes
         </label>
         <.live_component
-          module={SiwappWeb.MultiselectComponent}
+          module={SiwappWeb.TaxesComponent}
           id={"ms-#{fi.index}"}
           name={"#{@f.id}[items][#{fi.index}][taxes]"}
           selected={get_existing_taxes(fi)}
@@ -70,7 +70,12 @@
   <% end %>
   <div class="columns is-desktop">
     <div class="column is-2">
-      <%= link("Add Line", to: "#", phx_click: "add", phx_target: @myself, class: "button is-dark is-fullwidth") %>
+      <%= link("Add Line",
+        to: "#",
+        phx_click: "add",
+        phx_target: @myself,
+        class: "button is-dark is-fullwidth"
+      ) %>
     </div>
     <div class="column is-3 is-offset-8">
       <table class="table is-fullwidth">

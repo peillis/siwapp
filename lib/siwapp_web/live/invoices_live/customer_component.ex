@@ -3,6 +3,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
   use SiwappWeb, :live_component
 
   alias Siwapp.Customers
+  alias SiwappWeb.PageView
 
   def mount(socket) do
     {:ok,
@@ -27,6 +28,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
     socket =
       socket
       |> assign(f: assigns.f)
+      |> assign(form_params: assigns.form_params)
       |> assign(customer_name: customer_name.data)
       |> assign(customer_suggestions: customer_suggestions)
       |> assign(changeset: changeset)
@@ -80,7 +82,11 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
         :shipping_address
       ])
 
-    send(self(), {:customer_updated, customer_params})
+    send(
+      self(),
+      {:params_updated,
+       Map.merge(socket.assigns.form_params, PageView.atom_keys_to_string(customer_params))}
+    )
 
     {:noreply, socket}
   end

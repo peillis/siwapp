@@ -9,6 +9,10 @@ defmodule SiwappWeb.ItemsComponent do
 
   import Ecto.Changeset
 
+  def mount(socket) do
+    {:ok, assign(socket, :multiselect_options, Siwapp.Commons.list_taxes_for_multiselect())}
+  end
+
   def handle_event("add", _, socket) do
     params = socket.assigns.form_params
 
@@ -19,7 +23,7 @@ defmodule SiwappWeb.ItemsComponent do
 
     params = put_in(params, ["items", next_item_index], item_param())
 
-    send(self(), {:items_updated, params})
+    send(self(), {:params_updated, params})
 
     {:noreply, socket}
   end
@@ -30,7 +34,7 @@ defmodule SiwappWeb.ItemsComponent do
       |> pop_in(["items", item_index])
       |> elem(1)
 
-    send(self(), {:items_updated, params})
+    send(self(), {:params_updated, params})
 
     {:noreply, socket}
   end
@@ -73,5 +77,4 @@ defmodule SiwappWeb.ItemsComponent do
   end
 
   defp atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
-
 end

@@ -8,10 +8,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Invoices
   alias Siwapp.Invoices.{Invoice, Item}
 
+  alias SiwappWeb.PageView
+
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:multiselect_options, Commons.list_taxes_for_multiselect())
      |> assign(:series, Commons.list_series())
      |> assign(:currency_options, Invoices.list_currencies())
      |> assign(:customer_suggestions, [])}
@@ -81,29 +82,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
      |> assign(form_params: params)}
   end
 
-  def handle_info({:customer_updated, customer_params}, socket) do
-    params =
-      socket.assigns.form_params
-      |> Map.merge(atom_keys_to_string(customer_params))
-
-    {:noreply,
-     socket
-     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
-     |> assign(form_params: params)}
-  end
-
-  def handle_info({:multiselect_updated, %{index: item_index, selected: selected_taxes}}, socket) do
-    params =
-      socket.assigns.form_params
-      |> put_in(["items", Integer.to_string(item_index), "taxes"], selected_taxes)
-
-    {:noreply,
-     socket
-     |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
-     |> assign(form_params: params)}
-  end
-
-  def handle_info({:items_updated, params}, socket) do
+  def handle_info({:params_updated, params}, socket) do
     {:noreply,
      socket
      |> assign(changeset: Invoices.change(socket.assigns.invoice, params))
@@ -112,7 +91,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   defp initial_params(changeset, :new) do
     changeset.changes
-    |> atom_keys_to_string()
+    |> PageView.atom_keys_to_string()
     |> Map.put("items", %{})
     |> put_in(["items", "0"], item_param())
   end
@@ -137,7 +116,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       :shipping_address,
       :terms
     ])
-    |> atom_keys_to_string()
+    |> PageView.atom_keys_to_string()
     |> transform_items_to_params()
   end
 
@@ -151,12 +130,10 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     Map.put(params, "items", items)
   end
 
-  defp atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
-
   defp item_param(item \\ %Item{taxes: []}) do
     item
     |> Map.from_struct()
     |> Map.take([:description, :discount, :taxes, :quantity, :virtual_unitary_cost])
-    |> atom_keys_to_string()
+    |> PageView.atom_keys_to_string()
   end
 end

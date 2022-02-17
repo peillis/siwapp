@@ -1,4 +1,4 @@
-defmodule SiwappWeb.MultiselectComponent do
+defmodule SiwappWeb.TaxesComponent do
   @moduledoc false
 
   use SiwappWeb, :live_component
@@ -52,24 +52,28 @@ defmodule SiwappWeb.MultiselectComponent do
   end
 
   def handle_event("remove", %{"index" => index, "key" => key, "val" => value}, socket) do
-    selected = MapSet.delete(socket.assigns.selected, {key, value})
+    selected =
+      socket.assigns.selected
+      |> MapSet.delete({key, value})
+      |> Enum.map(fn {k, _v} -> k end)
 
     send(
       self(),
-      {:multiselect_updated,
-       %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+      {:params_updated, put_in(socket.assigns.form_params, ["items", index, "taxes"], selected)}
     )
 
     {:noreply, assign(socket, :selected, selected)}
   end
 
   def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
-    selected = MapSet.put(socket.assigns.selected, {key, value})
+    selected =
+      socket.assigns.selected
+      |> MapSet.put({key, value})
+      |> Enum.map(fn {k, _v} -> k end)
 
     send(
       self(),
-      {:multiselect_updated,
-       %{index: String.to_integer(index), selected: Enum.map(selected, fn {k, _v} -> k end)}}
+      {:params_updated, put_in(socket.assigns.form_params, ["items", index, "taxes"], selected)}
     )
 
     {:noreply, assign(socket, :selected, selected)}
