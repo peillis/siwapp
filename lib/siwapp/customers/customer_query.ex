@@ -6,6 +6,10 @@ defmodule Siwapp.Customers.CustomerQuery do
 
   import Ecto.Query
 
+  @doc """
+  Query to get customers in db, ordered desc. by id with limit and offset
+  """
+  @spec list(non_neg_integer(), non_neg_integer()) :: Ecto.Query.t()
   def list(limit, offset) do
     Customer
     |> order_by(desc: :id)
@@ -13,7 +17,14 @@ defmodule Siwapp.Customers.CustomerQuery do
     |> offset(^offset)
   end
 
-  def list_for_index(limit, offset) do
+  @doc """
+  Query to get customers in db, ordered desc. by id with limit and offset
+  just selecting fields: id, name, identification; and virtual fields: total,
+  paid and currencies (sum of gross amount, sum of paid amount and list of
+  all currencies, respectively, used in all invoices associated to customer)
+  """
+  @spec list_with_virtual_fields(non_neg_integer(), non_neg_integer()) :: Ecto.Query.t()
+  def list_with_virtual_fields(limit, offset) do
     list(limit, offset)
     |> join(:left, [c], i in assoc(c, :invoices))
     |> where([c, i], not (i.draft or i.failed))
