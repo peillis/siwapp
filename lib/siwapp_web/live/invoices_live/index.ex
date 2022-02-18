@@ -3,8 +3,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   use SiwappWeb, :live_view
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Search
-  alias SiwappWeb.GraphicHelpers
+  alias Siwapp.{Invoices, Search}
 
   @impl Phoenix.LiveView
   def mount(_params, _session, %{id: "home"} = socket) do
@@ -51,8 +50,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:invoices, Invoices.list(limit: 20, offset: 0, preload: [:series]))
      |> assign(:number_of_invoices, Invoices.count())
      |> assign(:checked, MapSet.new())
-     |> assign(:summary_state, set_summary(:closed))
-     |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month())
+     |> assign(:month_data, Invoices.Statistics.get_data_for_a_month())
      |> assign(:totals, total_per_currencies())
      |> assign(:page_title, "Invoices")
      |> assign(:checked, MapSet.new())}
@@ -153,7 +151,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      socket
      |> assign(:invoices, invoices)
      |> assign(:number_of_invoices, length(invoices))
-     |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month(invoices))
+     |> assign(:month_data, Invoices.Statistics.get_data_for_a_month(invoices))
      |> assign(:totals, total_per_currencies(invoices))}
   end
 
@@ -177,17 +175,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
-
-  @spec summary_chart([tuple]) :: {:safe, [...]}
-  defp summary_chart(invoices_data_for_a_month) do
-    invoices_data_for_a_month
-    |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
-    |> GraphicHelpers.line_plot()
-  end
-
-  @spec set_summary(:opened | :closed) :: map()
-  defp set_summary(:opened), do: %{visibility: "is-block", icon: "fa-angle-up"}
-  defp set_summary(:closed), do: %{visibility: "is-hidden", icon: "fa-angle-down"}
 
   @spec total_per_currencies([Invoice.t()]) :: map()
   defp total_per_currencies(invoices \\ Invoices.list()) do

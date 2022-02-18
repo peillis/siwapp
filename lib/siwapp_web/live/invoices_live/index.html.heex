@@ -27,46 +27,7 @@
   </div>
 </nav>
 
-<div class="mb-4">
-  <div class="is-flex is-justify-content-space-between">
-    <div class="is-flex is-align-items-center">
-      <h1>
-        <%= @page_title %>
-        <span class="subtitle is-5">
-          (<%= @number_of_invoices %> Found)
-        </span>
-      </h1>
-    </div>
-    <header
-      class="card card-header is-clickable is-unselectable is-size-5"
-      phx-click="change-summary-state"
-    >
-      <div class="card-header-content m-3">
-        <div class="card-header-title has-text-weight-bold p-0">
-          <%= @totals.default %>
-        </div>
-        <%= for currency_total <- @totals.others do %>
-          <div class="card-header-title has-text-weight-medium p-0">
-            <%= currency_total %>
-          </div>
-        <% end %>
-      </div>
-      <button class="card-header-icon pl-0" aria-label="more options">
-        <span class="icon">
-          <i class={"fas #{@summary_state.icon}"} aria-hidden="true"></i>
-        </span>
-      </button>
-    </header>
-  </div>
-
-  <div id="summary-card" class={"card #{@summary_state.visibility}"}>
-    <div class="card-content">
-      <div class="content">
-        <%= summary_chart(@chart_data) %>
-      </div>
-    </div>
-  </div>
-</div>
+<.live_component module={SiwappWeb.IndexHeaderComponent} id="index-header" page_title={@page_title} count={@number_of_invoices} totals={@totals} chart_data={@month_data}/>
 
 <%= render(SiwappWeb.PageView, "invoices_table.html", invoices: @invoices, checked: @checked) %>
 
