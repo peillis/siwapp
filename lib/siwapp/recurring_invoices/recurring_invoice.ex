@@ -137,10 +137,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   """
   @spec untransform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def untransform_items(%{valid?: true} = changeset) do
-    items =
-      get_field(changeset, :items)
-      |> Enum.map(&apply_changes(&1))
-      |> Enum.map(&make_item(&1))
+    items = Enum.map(get_field(changeset, :items), &make_item(apply_changes(&1)))
 
     put_change(changeset, :items, items)
   end

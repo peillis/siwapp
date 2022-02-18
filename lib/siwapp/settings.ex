@@ -103,7 +103,8 @@ defmodule Siwapp.Settings do
   """
   @spec update({atom, any}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def update({key, value}) do
-    get(key)
+    key
+    |> get()
     |> change({to_string(key), to_string(value)})
     |> Repo.update()
   end

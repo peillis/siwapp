@@ -146,7 +146,9 @@ defmodule Siwapp.RecurringInvoices do
          period_type,
          %Date{} = max_date
        ) do
-    Stream.iterate(starting_date, &next_date(&1, period, period_type))
+    stream_iterate = Stream.iterate(starting_date, &next_date(&1, period, period_type))
+
+    stream_iterate
     |> Enum.take_while(&(Date.compare(&1, max_date) != :gt))
     |> length()
   end

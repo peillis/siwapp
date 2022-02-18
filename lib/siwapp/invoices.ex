@@ -17,7 +17,8 @@ defmodule Siwapp.Invoices do
     default = [limit: 100, offset: 0, preload: [], filters: []]
     options = Keyword.merge(default, options)
 
-    Enum.reduce(options[:filters], Invoice, fn {field, value}, acc_query ->
+    options[:filters]
+    |> Enum.reduce(Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
     end)
     |> limit(^options[:limit])
@@ -97,9 +98,7 @@ defmodule Siwapp.Invoices do
       |> Repo.preload(list)
 
     items_with_calculations =
-      invoice.items
-      |> Enum.map(&change_item(&1, invoice.currency))
-      |> Enum.map(&Ecto.Changeset.apply_changes/1)
+      Enum.map(invoice.items, &Ecto.Changeset.apply_changes(change_item(&1, invoice.currency)))
 
     Map.put(invoice, :items, items_with_calculations)
   end

@@ -39,9 +39,11 @@ defmodule Siwapp.Invoices.Statistics do
     Date.utc_today()
     |> Date.add(-days)
     |> Date.range(Date.utc_today())
-    |> Enum.map(&%{issue_date: &1, gross_amount: 0})
     |> Enum.map(fn day ->
-      Map.merge(day, Enum.find(invoices_data, %{}, &(&1[:issue_date] == day[:issue_date])))
+      Map.merge(
+        %{issue_date: day, gross_amount: 0},
+        Enum.find(invoices_data, %{}, &(&1[:issue_date] == day))
+      )
     end)
   end
 
