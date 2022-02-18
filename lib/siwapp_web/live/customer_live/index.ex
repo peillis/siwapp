@@ -45,7 +45,11 @@ defmodule SiwappWeb.CustomerLive.Index do
   @spec due(integer, integer) :: integer
   defp due(total, paid), do: total - paid
 
-  @spec set_currency([] | [String.t()]) :: atom
-  defp set_currency([currency]), do: String.to_atom(currency)
-  defp set_currency(_list), do: nil
+  @spec set_currency([] | [String.t()]) :: binary
+  defp set_currency([]), do: "USD"
+  defp set_currency(currencies), do: List.first(currencies)
+
+  @spec symbol_option([] | [String.t()]) :: [{:symbol, true}] | [{:symbol, false}]
+  defp symbol_option([_currency]), do: [{:symbol, true}]
+  defp symbol_option(_currencies), do: [{:symbol, false}]
 end

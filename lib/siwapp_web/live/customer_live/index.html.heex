@@ -30,10 +30,18 @@
           <%= customer.identification %>
         </td>
         <td class="text-right">
-          <%= money_format(due(customer.total, customer.paid), set_currency(customer.currencies)) %>
+          <%= money_format(
+            due(customer.total, customer.paid),
+            set_currency(customer.currencies),
+            symbol_option(customer.currencies)
+          ) %>
         </td>
         <td class="text-right">
-          <%= money_format(customer.total, set_currency(customer.currencies)) %>
+          <%= money_format(
+            customer.total,
+            set_currency(customer.currencies),
+            symbol_option(customer.currencies)
+          ) %>
         </td>
         <td class="text-center">
           <%= live_redirect(" ",
