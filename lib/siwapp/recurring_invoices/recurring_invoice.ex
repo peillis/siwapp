@@ -151,10 +151,9 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # This is used to handle items validation and calculations
   @spec transform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp transform_items(changeset) do
-    items_transformed =
-      changeset
-      |> get_field(:items)
-      |> Enum.map(&Item.changeset(%Item{}, &1))
+    items = get_field(changeset, :items)
+    currency = get_field(changeset, :currency)
+    items_transformed = Enum.map(items, &Item.changeset(%Item{}, &1, currency))
 
     put_change(changeset, :items, items_transformed)
   end
@@ -191,12 +190,11 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # build item forms' for user to fill
   @spec unapply_changes_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp unapply_changes_items(changeset) do
-    items =
-      changeset
-      |> get_field(:items)
-      |> Enum.map(&Item.changeset(&1, %{}))
+    items = get_field(changeset, :items)
+    currency = get_field(changeset, :currency)
+    items_changeset = Enum.map(items, &Item.changeset(&1, %{}, currency))
 
-    put_change(changeset, :items, items)
+    put_change(changeset, :items, items_changeset)
   end
 
   @spec make_item(Item.t()) :: map

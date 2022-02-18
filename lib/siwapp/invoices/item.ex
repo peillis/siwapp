@@ -9,6 +9,7 @@ defmodule Siwapp.Invoices.Item do
   alias Siwapp.Commons
   alias Siwapp.Commons.Tax
   alias Siwapp.Invoices.Invoice
+  alias SiwappWeb.PageView
 
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
@@ -54,18 +55,17 @@ defmodule Siwapp.Invoices.Item do
       on_replace: :delete
   end
 
-  @spec changeset(t(), map) :: Ecto.Changeset.t()
-  def changeset(item, attrs \\ %{}) do
+  def changeset(item, attrs \\ %{}, currency) do
     item
     |> cast(attrs, @fields)
-    |> set_unitary_cost(attrs)
+    |> set_unitary_cost(attrs, currency)
     |> find_taxes(attrs)
     |> foreign_key_constraint(:invoice_id)
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
     |> calculate()
-    |> set_virtual_unitary_cost()
+    |> set_virtual_unitary_cost(currency)
   end
 
   @doc """
@@ -139,70 +139,36 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  @spec set_unitary_cost(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
-  def set_unitary_cost(changeset, attrs) do
+  @spec set_unitary_cost(Ecto.Changeset.t(), map, atom() | binary()) :: Ecto.Changeset.t()
+  def set_unitary_cost(changeset, attrs, currency) do
     virtual_unitary_cost =
       Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
 
-    unitary_cost = get_field(changeset, :unitary_cost)
-    put_change_unitary_cost(changeset, virtual_unitary_cost, unitary_cost)
+    cond do
+      is_nil(virtual_unitary_cost) ->
+        changeset
+
+      virtual_unitary_cost == "" ->
+        put_change(changeset, :unitary_cost, 0)
+
+      true ->
+        case Money.parse(virtual_unitary_cost, currency) do
+          {:ok, %Money{amount: amount}} -> put_change(changeset, :unitary_cost, amount)
+          :error -> add_error(changeset, :virtual_unitary_cost, "Invalid format")
+        end
+    end
   end
 
-  @spec set_virtual_unitary_cost(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  def set_virtual_unitary_cost(changeset) do
+  @spec set_virtual_unitary_cost(Ecto.Changeset.t(), atom() | binary()) :: Ecto.Changeset.t()
+  def set_virtual_unitary_cost(changeset, currency) do
     if is_nil(get_field(changeset, :unitary_cost)) do
       changeset
     else
       virtual_unitary_cost =
-        :erlang.float_to_binary(get_field(changeset, :unitary_cost) / 100, decimals: 2)
+        get_field(changeset, :unitary_cost)
+        |> PageView.set_currency(currency, symbol: false, separator: "")
 
       put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
-    end
-  end
-
-  @spec put_change_unitary_cost(Ecto.Changeset.t(), integer() | nil, integer() | nil) ::
-          Ecto.Changeset.t()
-  defp put_change_unitary_cost(changeset, nil, nil) do
-    put_change(changeset, :unitary_cost, 0)
-  end
-
-  defp put_change_unitary_cost(changeset, virtual_unitary_cost, _unitary_cost)
-       when is_float(virtual_unitary_cost) or is_integer(virtual_unitary_cost) do
-    put_change(changeset, :unitary_cost, round(virtual_unitary_cost * 100))
-  end
-
-  defp put_change_unitary_cost(changeset, virtual_unitary_cost, _unitary_cost)
-       when is_binary(virtual_unitary_cost) do
-    case string_to_number(virtual_unitary_cost) do
-      {:ok, value} -> put_change(changeset, :unitary_cost, round(value * 100))
-      {:error, msg} -> add_error(changeset, :virtual_unitary_cost, msg)
-    end
-  end
-
-  defp put_change_unitary_cost(changeset, _virtual_unitary_cost, _unitary_cost) do
-    changeset
-  end
-
-  @spec string_to_number(String.t()) :: {:ok, number()} | {:error, String.t()}
-  defp string_to_number(string) do
-    cond do
-      string == "" ->
-        {:ok, 0}
-
-      String.ends_with?(string, ".") && String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
-        value =
-          string
-          |> String.trim(".")
-          |> String.to_integer()
-
-        {:ok, value}
-
-      String.match?(string, ~r/^[+-]?[0-9]*\.?[0-9]*$/) ->
-        {value, _} = Float.parse(string)
-        {:ok, value}
-
-      true ->
-        {:error, "Invalid format"}
     end
   end
 end

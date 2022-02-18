@@ -14,19 +14,18 @@ defmodule SiwappWeb.ItemView do
     |> Enum.map(&{&1.name, &1.id})
   end
 
-  @spec item_net_amount(FormData.t()) :: binary
-  def item_net_amount(fi) do
-    fi.source
-    |> get_field(:net_amount)
-    |> Kernel./(100)
-    |> :erlang.float_to_binary(decimals: 2)
+  @spec item_net_amount(Ecto.Changeset.t(), FormData.t()) :: binary
+  def item_net_amount(changeset, fi) do
+    value = get_field(fi.source, :net_amount)
+    currency = get_field(changeset, :currency)
+    PageView.set_currency(value, currency, symbol: false, separator: "")
   end
 
   @spec add_item(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def add_item(changeset) do
     items =
       get_field(changeset, :items) ++
-        [Item.changeset(%Item{}, %{})]
+        [Item.changeset(%Item{}, %{}, get_field(changeset, :currency))]
 
     put_change(changeset, :items, items)
   end

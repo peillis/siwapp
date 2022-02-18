@@ -111,8 +111,8 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
-    |> cast_assoc(:items)
     |> assign_currency()
+    |> cast_items()
     |> assign_issue_date()
     |> assign_due_date()
     |> only_new_invoice_can_be_draft()
@@ -129,6 +129,12 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 3)
     |> calculate()
+  end
+
+  @spec cast_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def cast_items(changeset) do
+    currency = get_field(changeset, :currency)
+    cast_assoc(changeset, :items, with: {Item, :changeset, [currency]})
   end
 
   @doc """
