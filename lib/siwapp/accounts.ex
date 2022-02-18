@@ -318,7 +318,8 @@ defmodule Siwapp.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
-  @spec deliver_user_reset_password_instructions(User.t(), fun) :: {:ok, term()} | {:error, term()}
+  @spec deliver_user_reset_password_instructions(User.t(), fun) ::
+          {:ok, term()} | {:error, term()}
   def deliver_user_reset_password_instructions(%User{} = user, reset_password_url_fun)
       when is_function(reset_password_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")

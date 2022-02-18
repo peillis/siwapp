@@ -7,13 +7,13 @@ defmodule Siwapp.Accounts.UserToken do
   alias Siwapp.Accounts
 
   @type t :: %__MODULE__{
-    id: pos_integer() | nil,
-    token: binary | nil,
-    context: binary | nil,
-    sent_to: binary | nil,
-    user: Ecto.Association.NotLoaded.t() | Siwapp.Accounts.User.t(),
-    inserted_at: DateTime.t() | nil,
-  }
+          id: pos_integer() | nil,
+          token: binary | nil,
+          context: binary | nil,
+          sent_to: binary | nil,
+          user: Ecto.Association.NotLoaded.t() | Siwapp.Accounts.User.t(),
+          inserted_at: DateTime.t() | nil
+        }
 
   @hash_algorithm :sha256
   @rand_size 32

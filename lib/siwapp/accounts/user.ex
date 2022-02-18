@@ -6,14 +6,14 @@ defmodule Siwapp.Accounts.User do
   import Ecto.Changeset
 
   @type t :: %__MODULE__{
-    id: pos_integer() | nil,
-    email: binary | nil,
-    password: binary | nil,
-    hashed_password: binary | nil,
-    confirmed_at: DateTime.t() | nil,
-    updated_at: DateTime.t() | nil,
-    inserted_at: DateTime.t() | nil,
-  }
+          id: pos_integer() | nil,
+          email: binary | nil,
+          password: binary | nil,
+          hashed_password: binary | nil,
+          confirmed_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil,
+          inserted_at: DateTime.t() | nil
+        }
 
   @email_regex Application.compile_env!(:siwapp, :email_regex)
 
