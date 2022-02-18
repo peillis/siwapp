@@ -17,6 +17,7 @@ defmodule SiwappWeb do
   and import those modules here.
   """
 
+  @spec controller :: tuple
   def controller do
     quote do
       use Phoenix.Controller, namespace: SiwappWeb
@@ -27,6 +28,7 @@ defmodule SiwappWeb do
     end
   end
 
+  @spec view :: tuple
   def view do
     quote do
       use Phoenix.View,
@@ -40,12 +42,14 @@ defmodule SiwappWeb do
       # Include shared imports and aliases for views
       unquote(view_helpers())
 
+      @spec template_not_found(binary, map) :: binary
       def template_not_found(template, _assigns) do
         Phoenix.Controller.status_message_from_template(template)
       end
     end
   end
 
+  @spec live_view :: tuple
   def live_view do
     quote do
       use Phoenix.LiveView,
@@ -55,6 +59,7 @@ defmodule SiwappWeb do
     end
   end
 
+  @spec live_component :: tuple
   def live_component do
     quote do
       use Phoenix.LiveComponent
@@ -63,6 +68,7 @@ defmodule SiwappWeb do
     end
   end
 
+  @spec router :: tuple
   def router do
     quote do
       use Phoenix.Router
@@ -73,6 +79,7 @@ defmodule SiwappWeb do
     end
   end
 
+  @spec channel :: tuple
   def channel do
     quote do
       use Phoenix.Channel
@@ -80,6 +87,7 @@ defmodule SiwappWeb do
     end
   end
 
+  @spec view_helpers :: tuple
   defp view_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)

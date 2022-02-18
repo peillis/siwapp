@@ -42,6 +42,7 @@ defmodule Siwapp.Commons.Series do
     has_many :recurring_invoices, RecurringInvoice
   end
 
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(series, attrs \\ %{}) do
     series
     |> cast(attrs, @fields)

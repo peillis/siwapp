@@ -34,6 +34,7 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
+  @spec count :: integer | nil
   def count do
     Repo.aggregate(Invoice, :count)
   end
@@ -142,6 +143,7 @@ defmodule Siwapp.Invoices do
     end
   end
 
+  @spec list_currencies :: [atom]
   def list_currencies do
     Money.Currency.all()
     |> Map.keys()
@@ -196,7 +198,7 @@ defmodule Siwapp.Invoices do
   @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def delete_item(%Item{} = item), do: Repo.delete(item)
 
-
+  @spec change_item(Item.t(), binary | atom, map) :: Ecto.Changeset.t()
   def change_item(%Item{} = item, currency, attrs \\ %{}) do
     Item.changeset(item, attrs, currency)
   end

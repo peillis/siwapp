@@ -7,6 +7,7 @@ defmodule Siwapp.Search.SearchQuery do
   @doc """
   Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
   """
+  @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Query.t()
   def name_email_or_id(query, value) do
     query
     |> where([q], ilike(q.name, ^"%#{value}%"))

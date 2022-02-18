@@ -44,6 +44,7 @@ defmodule Siwapp.Settings do
   @doc """
   Returns current SettingBundle (which is also useful to be changed and fill the SettingBundle form)
   """
+  @spec current_bundle :: %SettingBundle{}
   def current_bundle, do: struct(SettingBundle, list_pairs())
 
   @doc """

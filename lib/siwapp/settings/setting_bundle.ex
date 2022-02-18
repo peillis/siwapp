@@ -25,6 +25,7 @@ defmodule Siwapp.Settings.SettingBundle do
 
   defstruct @labels
 
+  @spec changeset(%__MODULE__{}, map) :: Ecto.Changeset.t()
   def changeset(setting_bundle, attrs \\ %{}) do
     {setting_bundle, fields_map()}
     |> cast(attrs, @labels)

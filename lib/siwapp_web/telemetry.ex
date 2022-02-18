@@ -21,6 +21,7 @@ defmodule SiwappWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics :: [Telemetry.Metrics.Summary.t()]
   def metrics do
     [
       # Phoenix Metrics
@@ -63,6 +64,7 @@ defmodule SiwappWeb.Telemetry do
     ]
   end
 
+  @spec periodic_measurements :: list
   defp periodic_measurements do
     [
       # A module, function and arguments to be invoked periodically.

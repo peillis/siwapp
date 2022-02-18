@@ -30,6 +30,7 @@ defmodule Siwapp.Templates.Template do
     timestamps()
   end
 
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(template, attrs \\ %{}) do
     template
     |> cast(attrs, @fields)

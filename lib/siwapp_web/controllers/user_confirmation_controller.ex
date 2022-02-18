@@ -3,10 +3,12 @@ defmodule SiwappWeb.UserConfirmationController do
 
   alias Siwapp.Accounts
 
+  @spec new(Plug.Conn.t(), map) :: Plug.Conn.t()
   def new(conn, _params) do
     render(conn, "new.html")
   end
 
+  @spec create(Plug.Conn.t(), map) :: Plug.Conn.t()
   def create(conn, %{"user" => %{"email" => email}}) do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_confirmation_instructions(
@@ -25,12 +27,14 @@ defmodule SiwappWeb.UserConfirmationController do
     |> redirect(to: "/")
   end
 
+  @spec edit(Plug.Conn.t(), map) :: Plug.Conn.t()
   def edit(conn, %{"token" => token}) do
     render(conn, "edit.html", token: token)
   end
 
   # Do not log in the user after confirmation to avoid a
   # leaked token giving the user access to the account.
+  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"token" => token}) do
     case Accounts.confirm_user(token) do
       {:ok, _} ->

@@ -55,6 +55,7 @@ defmodule Siwapp.Invoices.Item do
       on_replace: :delete
   end
 
+  @spec changeset(t(), map, binary | atom) :: Ecto.Changeset.t()
   def changeset(item, attrs \\ %{}, currency) do
     item
     |> cast(attrs, @fields)
@@ -164,9 +165,10 @@ defmodule Siwapp.Invoices.Item do
     if is_nil(get_field(changeset, :unitary_cost)) do
       changeset
     else
+      unitary_cost = get_field(changeset, :unitary_cost)
+
       virtual_unitary_cost =
-        get_field(changeset, :unitary_cost)
-        |> PageView.set_currency(currency, symbol: false, separator: "")
+        PageView.set_currency(unitary_cost, currency, symbol: false, separator: "")
 
       put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
     end

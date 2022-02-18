@@ -31,6 +31,7 @@ defmodule Siwapp.Commons.Tax do
       on_replace: :delete
   end
 
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(tax, attrs \\ %{}) do
     tax
     |> cast(attrs, @fields)

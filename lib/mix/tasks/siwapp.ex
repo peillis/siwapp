@@ -17,6 +17,7 @@ defmodule Mix.Tasks.Siwapp do
     end
   end
 
+  @spec general :: binary
   defp general do
     Application.ensure_all_started(:ecto)
 
