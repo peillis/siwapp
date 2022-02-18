@@ -7,6 +7,18 @@ defmodule Siwapp.Settings.SettingBundle do
   (which are initialized in the seeds)
   """
 
+  @type t :: %__MODULE__{
+    company: binary | nil,
+    company_vat_id: binary | nil,
+    company_phone: binary | nil,
+    company_email: binary | nil,
+    company_website: binary | nil,
+    currency: binary | nil,
+    days_to_due: binary | nil,
+    company_address: binary | nil,
+    legal_terms: binary | nil
+  }
+
   @fields_keywordlist [
     company: :string,
     company_vat_id: :string,

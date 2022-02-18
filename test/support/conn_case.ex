@@ -26,6 +26,7 @@ defmodule SiwappWeb.ConnCase do
       import Phoenix.ConnTest
       import SiwappWeb.ConnCase
 
+      alias Siwapp.Accounts.User
       alias SiwappWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
@@ -58,7 +59,7 @@ defmodule SiwappWeb.ConnCase do
 
   It returns an updated `conn`.
   """
-  @spec log_in_user(Plug.Conn.t(), %Siwapp.Accounts.User{}) :: Plug.Conn.t()
+  @spec log_in_user(Plug.Conn.t(), User.t()) :: Plug.Conn.t()
   def log_in_user(conn, user) do
     token = Siwapp.Accounts.generate_user_session_token(user)
 

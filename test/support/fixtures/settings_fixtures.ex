@@ -21,7 +21,7 @@ defmodule Siwapp.SettingsFixtures do
     )
   end
 
-  @spec settings_fixture(map) :: %Siwapp.Settings.SettingBundle{}
+  @spec settings_fixture(map) :: Siwapp.Settings.SettingBundle.t()
   def settings_fixture(attrs \\ []) do
     attrs
     |> valid_settings_attributes()

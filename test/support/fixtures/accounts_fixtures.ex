@@ -18,7 +18,7 @@ defmodule Siwapp.AccountsFixtures do
     })
   end
 
-  @spec user_fixture(map()) :: %Siwapp.Accounts.User{}
+  @spec user_fixture(map()) :: Siwapp.Accounts.User.t()
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs

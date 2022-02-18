@@ -36,7 +36,7 @@ defmodule Siwapp.Settings do
   @doc """
   Performs the SettingBundle changeset
   """
-  @spec change_bundle(%SettingBundle{}, map) :: Ecto.Changeset.t()
+  @spec change_bundle(SettingBundle.t(), map) :: Ecto.Changeset.t()
   def change_bundle(%SettingBundle{} = setting_bundle, attrs \\ %{}) do
     SettingBundle.changeset(setting_bundle, attrs)
   end
@@ -44,7 +44,7 @@ defmodule Siwapp.Settings do
   @doc """
   Returns current SettingBundle (which is also useful to be changed and fill the SettingBundle form)
   """
-  @spec current_bundle :: %SettingBundle{}
+  @spec current_bundle :: SettingBundle.t()
   def current_bundle, do: struct(SettingBundle, list_pairs())
 
   @doc """

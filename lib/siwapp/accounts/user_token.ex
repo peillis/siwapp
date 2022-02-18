@@ -6,6 +6,15 @@ defmodule Siwapp.Accounts.UserToken do
 
   alias Siwapp.Accounts
 
+  @type t :: %__MODULE__{
+    id: pos_integer() | nil,
+    token: binary | nil,
+    context: binary | nil,
+    sent_to: binary | nil,
+    user: Ecto.Association.NotLoaded.t() | Siwapp.Accounts.User.t(),
+    inserted_at: DateTime.t() | nil,
+  }
+
   @hash_algorithm :sha256
   @rand_size 32
 
@@ -25,7 +34,7 @@ defmodule Siwapp.Accounts.UserToken do
     timestamps(updated_at: false)
   end
 
-  @spec build_session_token(%Accounts.User{}) :: {binary(), %Accounts.UserToken{}}
+  @spec build_session_token(Accounts.User.t()) :: {binary(), t()}
   @doc """
   Generates a token that will be stored in a signed place,
   such as session or cookie. As they are signed, those
@@ -69,7 +78,7 @@ defmodule Siwapp.Accounts.UserToken do
     {:ok, query}
   end
 
-  @spec build_email_token(%Accounts.User{}, any()) :: {binary(), %Accounts.UserToken{}}
+  @spec build_email_token(Accounts.User.t(), any()) :: {binary(), t()}
   @doc """
   Builds a token and its hash to be delivered to the user's email.
 
@@ -87,7 +96,7 @@ defmodule Siwapp.Accounts.UserToken do
     build_hashed_token(user, context, user.email)
   end
 
-  @spec build_hashed_token(%Accounts.User{}, any(), any()) :: {binary(), %Accounts.UserToken{}}
+  @spec build_hashed_token(Accounts.User.t(), any(), any()) :: {binary(), t()}
   defp build_hashed_token(user, context, sent_to) do
     token = :crypto.strong_rand_bytes(@rand_size)
     hashed_token = :crypto.hash(@hash_algorithm, token)
@@ -178,7 +187,7 @@ defmodule Siwapp.Accounts.UserToken do
     from Siwapp.Accounts.UserToken, where: [token: ^token, context: ^context]
   end
 
-  @spec user_and_contexts_query(%Accounts.User{}, any()) :: Ecto.Query.t()
+  @spec user_and_contexts_query(Accounts.User.t(), any()) :: Ecto.Query.t()
   @doc """
   Gets all tokens for the given user for the given contexts.
   """
