@@ -8,30 +8,40 @@ defmodule Siwapp.InvoiceMailer do
 
   import Swoosh.Email
 
+  @doc """
+  Given an invoice, returns {:ok, email} if it's possible
+  to build email struct from data. Otherwise, {:error, msg}
+  """
+  @spec build_invoice_email(Siwapp.Invoices.Invoice.t()) ::
+          {:ok, Swoosh.Email.t()} | {:error, binary}
   def build_invoice_email(invoice) do
     {subject, email_body} = Templates.subject_and_email_body(invoice)
-    new()
-    |> to({invoice.name, invoice.email})
-    |> from({Settings.value(:company), Settings.value(:company_email)})
-    |> subject(subject)
-    |> html_body(email_body)
-    |> add_attachment(invoice)
+
+    email =
+      new()
+      |> to({invoice.name, invoice.email})
+      |> from({Settings.value(:company), Settings.value(:company_email)})
+      |> subject(subject)
+      |> html_body(email_body)
+      |> attachment(attachment_struct(invoice))
+
+    {:ok, email}
+  rescue
+    _e in ArgumentError ->
+      {:error, "Sending email is impossible if no email address in invoice
+    data is provided. Please edit the invoice and fill email field if
+      you want to be able to send it"}
   end
 
+  @spec attachment_struct(Siwapp.Invoices.Invoice.t()) :: Attachment.t()
+  defp attachment_struct(invoice) do
+    {pdf_content, pdf_name} = Templates.pdf_content_and_name(invoice)
 
-  defp add_attachment(email, invoice) do
-    pdf_name = "#{invoice.series.code}-#{Integer.to_string(invoice.number)}.pdf"
-    str_template = Templates.print_str_template(invoice)
-    {:ok, data} = ChromicPDF.print_to_pdf({:html, str_template})
-    pdf_content = Base.decode64!(data)
-    attachment = Attachment.new(
+    Attachment.new(
       {:data, pdf_content},
       filename: pdf_name,
       content_type: "application/pdf",
       type: :attachment
     )
-    email
-    |> attachment(attachment)
   end
-
 end
