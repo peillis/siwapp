@@ -3,7 +3,6 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
   use SiwappWeb, :live_component
 
   alias Siwapp.Customers
-  alias SiwappWeb.InvoiceFormHelpers
 
   def mount(socket) do
     {:ok,
@@ -80,15 +79,11 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
         :invoicing_address,
         :shipping_address
       ])
-      |> InvoiceFormHelpers.atom_keys_to_string()
+      |> SiwappWeb.PageView.atom_keys_to_string()
 
-    params =
-      socket.assigns.changeset
-      |> Ecto.Changeset.apply_changes()
-      |> InvoiceFormHelpers.get_params()
-
-    send(self(), {:params_updated, Map.merge(params, customer_params)})
+    send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
 
     {:noreply, socket}
   end
+
 end

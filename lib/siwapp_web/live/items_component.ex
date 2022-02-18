@@ -5,9 +5,8 @@ defmodule SiwappWeb.ItemsComponent do
 
   alias Ecto.Changeset
   alias Phoenix.HTML.FormData
+  alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
-
-  import SiwappWeb.InvoiceFormHelpers
 
   def mount(socket) do
     {:ok, assign(socket, :multiselect_options, Siwapp.Commons.list_taxes_for_multiselect())}
@@ -23,10 +22,7 @@ defmodule SiwappWeb.ItemsComponent do
   end
 
   def handle_event("add", _, socket) do
-    params =
-      socket.assigns.changeset
-      |> Changeset.apply_changes()
-      |> get_params()
+    params = IO.inspect socket.assigns.f.params
 
     next_item_index =
       params["items"]
@@ -40,9 +36,7 @@ defmodule SiwappWeb.ItemsComponent do
 
   def handle_event("remove", %{"item-id" => item_index}, socket) do
     params =
-      socket.assigns.changeset
-      |> Changeset.apply_changes()
-      |> get_params()
+      socket.assigns.f.params
       |> pop_in(["items", item_index])
       |> elem(1)
 
@@ -75,5 +69,12 @@ defmodule SiwappWeb.ItemsComponent do
     changeset
     |> Changeset.get_field(:gross_amount)
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
+  end
+
+  defp item_param() do
+    %Item{taxes: []}
+    |> Map.from_struct()
+    |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])
+    |> SiwappWeb.PageView.atom_keys_to_string()
   end
 end

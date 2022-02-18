@@ -16,4 +16,7 @@ defmodule SiwappWeb.PageView do
     |> Money.new(currency)
     |> Money.to_string(symbol: options[:symbol], separator: options[:separator])
   end
+
+  def atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
+
 end

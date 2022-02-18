@@ -21,13 +21,11 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def apply_action(socket, :new, _params) do
-    new_invoice = %Invoice{items: [%Item{taxes: []}]}
-
     socket
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
-    |> assign(:invoice, new_invoice)
-    |> assign(:changeset, Invoices.change(new_invoice))
+    |> assign(:invoice, %Invoice{})
+    |> assign(:changeset, Invoices.change(%Invoice{}, %{"items" => %{"0" => %{"taxes" => []}}}))
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do

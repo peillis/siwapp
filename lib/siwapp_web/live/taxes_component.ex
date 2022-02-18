@@ -9,8 +9,10 @@ defmodule SiwappWeb.TaxesComponent do
   def update(assigns, socket) do
     "taxes-" <> index = assigns.id
 
+    changeset = assigns.f.source
+
     selected =
-      assigns.changeset
+      changeset
       |> Ecto.Changeset.get_field(:items)
       |> Enum.at(String.to_integer(index))
       |> get_taxes()
@@ -23,7 +25,8 @@ defmodule SiwappWeb.TaxesComponent do
      |> assign(name: assigns.name)
      |> assign(index: index)
      |> assign(options: MapSet.new(assigns.options))
-     |> assign(changeset: assigns.changeset)}
+     |> assign(changeset: changeset)
+     |> assign(f: assigns.f)}
   end
 
   def render(assigns) do
@@ -64,9 +67,13 @@ defmodule SiwappWeb.TaxesComponent do
       socket.assigns.selected
       |> MapSet.delete({key, value})
 
+    params = put_in(socket.assigns.f.params,
+      ["items", index, "taxes"],
+      Enum.map(selected, fn {k, _v} -> k end))
+
     send(
       self(),
-      {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)}
+      {:params_updated, params}
     )
 
     {:noreply, assign(socket, selected: selected)}
@@ -77,9 +84,13 @@ defmodule SiwappWeb.TaxesComponent do
       socket.assigns.selected
       |> MapSet.put({key, value})
 
+    params = put_in(socket.assigns.f.params,
+      ["items", index, "taxes"],
+      Enum.map(selected, fn {k, _v} -> k end))
+
     send(
       self(),
-      {:params_updated, get_params_with_taxes(socket.assigns.changeset, index, selected)}
+      {:params_updated, params}
     )
 
     {:noreply, assign(socket, selected: selected)}
@@ -87,16 +98,6 @@ defmodule SiwappWeb.TaxesComponent do
 
   defp not_selected(options, selected) do
     MapSet.difference(options, selected)
-  end
-
-  defp get_params_with_taxes(changeset, index, selected) do
-    changeset
-    |> Ecto.Changeset.apply_changes()
-    |> InvoiceFormHelpers.get_params()
-    |> put_in(
-      ["items", index, "taxes"],
-      Enum.map(selected, fn {k, _v} -> k end)
-    )
   end
 
   defp get_taxes(item) do
