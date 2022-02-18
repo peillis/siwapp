@@ -26,16 +26,6 @@ defmodule Siwapp.Templates do
   end
 
   @doc """
-  Returns first template in db
-  """
-  @spec first :: Template.t()
-  def first() do
-    Template
-    |> first()
-    |> Repo.one()
-  end
-
-  @doc """
   Gets a single template. You can call it with its id as parameter, or
   by indicating that you want to get a default template, giving the
   corresponding atom (':print_default' or ':email_default')
@@ -195,7 +185,43 @@ defmodule Siwapp.Templates do
     Template.changeset(template, attrs)
   end
 
-  def string_template(invoice, template) do
+  @doc """
+  Returns {pdf_content, pdf_name} where pdf_content
+  uses evaluated print_default template using invoice
+  data.
+  """
+  @spec pdf_content_and_name(Siwapp.Invoices.Invoice.t()) :: {binary, binary}
+  def pdf_content_and_name(invoice) do
+    {:ok, data} = ChromicPDF.print_to_pdf({:html, print_str_template(invoice)})
+
+    {Base.decode64!(data), "#{invoice.series.code}-#{invoice.number}.pdf"}
+  end
+
+  @doc """
+  Returns evaluated print_default template (html) using invoice data
+  """
+  @spec print_str_template(Siwapp.Invoices.Invoice.t()) :: binary
+  def print_str_template(invoice) do
+    get(:print_default).template
+    |> string_template(invoice)
+  end
+
+  @doc """
+  Returns {subject, email_body} where subject is defined by email_default template (struct)
+  so as email_body, which is the evaluated email_template (html) using invoice data
+  """
+  @spec subject_and_email_body(Siwapp.Invoices.Invoice.t()) :: {binary, binary}
+  def subject_and_email_body(invoice) do
+    %Template{template: email_template, subject: subject} = get(:email_default)
+
+    {subject,
+     email_template
+     |> string_template(invoice)}
+  end
+
+  # Returns evaluated template using invoice data
+  @spec string_template(binary, Siwapp.Invoices.Invoice.t()) :: binary
+  defp string_template(template, invoice) do
     invoice_eval_data =
       invoice
       |> Map.from_struct()
