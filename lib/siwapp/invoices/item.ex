@@ -164,7 +164,7 @@ defmodule Siwapp.Invoices.Item do
     else
       virtual_unitary_cost =
         get_field(changeset, :unitary_cost)
-        |> PageView.set_currency(currency, symbol: false, separator: "")
+        |> PageView.money_format(currency, symbol: false, separator: "")
 
       put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
     end

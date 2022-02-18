@@ -17,7 +17,7 @@ defmodule SiwappWeb.ItemView do
   def item_net_amount(changeset, fi) do
     value = get_field(fi.source, :net_amount)
     currency = get_field(changeset, :currency)
-    PageView.set_currency(value, currency, symbol: false, separator: "")
+    PageView.money_format(value, currency, symbol: false, separator: "")
   end
 
   def add_item(changeset) do
