@@ -18,5 +18,4 @@ defmodule SiwappWeb.PageView do
   end
 
   def atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
-
 end

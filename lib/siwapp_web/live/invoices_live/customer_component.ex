@@ -85,5 +85,4 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
 
     {:noreply, socket}
   end
-
 end

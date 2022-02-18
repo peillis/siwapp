@@ -22,7 +22,7 @@ defmodule SiwappWeb.ItemsComponent do
   end
 
   def handle_event("add", _, socket) do
-    params = IO.inspect socket.assigns.f.params
+    params = socket.assigns.f.params
 
     next_item_index =
       params["items"]
@@ -71,7 +71,7 @@ defmodule SiwappWeb.ItemsComponent do
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
 
-  defp item_param() do
+  defp item_param do
     %Item{taxes: []}
     |> Map.from_struct()
     |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])

@@ -26,7 +26,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Recurring Invoice")
     |> assign(:recurring_invoice, %RecurringInvoice{})
-    |> assign(:changeset, RecurringInvoices.change(%RecurringInvoice{}, %{"items" => %{"0" => %{"taxes" => []}}}))
+    |> assign(
+      :changeset,
+      RecurringInvoices.change(%RecurringInvoice{}, %{"items" => %{"0" => %{"taxes" => []}}})
+    )
   end
 
   def apply_action(socket, :edit, %{"id" => id}) do

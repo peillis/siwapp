@@ -67,9 +67,12 @@ defmodule SiwappWeb.TaxesComponent do
       socket.assigns.selected
       |> MapSet.delete({key, value})
 
-    params = put_in(socket.assigns.f.params,
-      ["items", index, "taxes"],
-      Enum.map(selected, fn {k, _v} -> k end))
+    params =
+      put_in(
+        socket.assigns.f.params,
+        ["items", index, "taxes"],
+        Enum.map(selected, fn {k, _v} -> k end)
+      )
 
     send(
       self(),
@@ -84,9 +87,12 @@ defmodule SiwappWeb.TaxesComponent do
       socket.assigns.selected
       |> MapSet.put({key, value})
 
-    params = put_in(socket.assigns.f.params,
-      ["items", index, "taxes"],
-      Enum.map(selected, fn {k, _v} -> k end))
+    params =
+      put_in(
+        socket.assigns.f.params,
+        ["items", index, "taxes"],
+        Enum.map(selected, fn {k, _v} -> k end)
+      )
 
     send(
       self(),
