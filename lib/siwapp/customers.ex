@@ -2,22 +2,23 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
-  import Ecto.Query
 
-  alias Siwapp.Customers.Customer
+  alias Siwapp.Customers.{Customer, CustomerQuery}
   alias Siwapp.Query
   alias Siwapp.Repo
 
   @doc """
   Lists customers in database
   """
-  def list(limit \\ 100, offset \\ 0) do
-    Customer
-    |> order_by(desc: :id)
-    |> limit(^limit)
-    |> offset(^offset)
-    |> Repo.all()
-  end
+  @spec list(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
+  def list(limit \\ 100, offset \\ 0), do: CustomerQuery.list(limit, offset) |> Repo.all()
+
+  @doc """
+  Lists customers in database following CustomerQuery.list_with_assoc_invoice_fields/2 query
+  """
+  @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
+  def list_with_assoc_invoice_fields(limit \\ 100, offset \\ 0),
+    do: CustomerQuery.list_with_assoc_invoice_fields(limit, offset) |> Repo.all()
 
   def suggest_by_name(""), do: []
   def suggest_by_name(nil), do: []

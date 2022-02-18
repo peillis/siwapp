@@ -263,7 +263,7 @@
         <%= status %>
       </div>
       <div class="amount">
-        <%= SiwappWeb.PageView.set_currency(gross_amount, currency) %>
+        <%= SiwappWeb.PageView.money_format(gross_amount, currency) %>
         <span class="amount__currency"><%= currency %></span>
       </div>
     </div>
@@ -284,11 +284,11 @@
           <tr>
             <td> <%= item.description %> </td>
             <%= if item.discount != 0 do %>
-              <td> <%= SiwappWeb.PageView.set_currency(item.unitary_cost, currency) %> </td>
+            <td> <%= SiwappWeb.PageView.money_format(item.unitary_cost, currency) %> </td>
               <td> <%= item.discount %> </td>
             <% end %>
             <td class="total">
-              <%= SiwappWeb.PageView.set_currency(item.net_amount, currency) %>
+              <%= SiwappWeb.PageView.money_format(item.net_amount, currency) %>
             </td>
           </tr>
         <% end %>
@@ -312,7 +312,7 @@
             <tr>
               <th>Subtotal</th>
               <td class="total">
-                <%= SiwappWeb.PageView.set_currency(net_amount, currency) %>
+                <%= SiwappWeb.PageView.money_format(net_amount, currency) %>
               </td>
             </tr>
             <%# <%= for tax <- @invoice.taxes do  %>
@@ -326,7 +326,7 @@
             <tr class="grand-total">
               <th>Total</th>
               <td class="total">
-                <%= SiwappWeb.PageView.set_currency(gross_amount, currency) %>
+                <%= SiwappWeb.PageView.money_format(gross_amount, currency) %>
               </td>
             </tr>
           </tbody>

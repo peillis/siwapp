@@ -3,6 +3,7 @@ defmodule SiwappWeb.CustomerLive.Index do
 
   alias Siwapp.Customers.Customer
   alias Siwapp.{Customers, Search}
+  import SiwappWeb.PageView
 
   @moduledoc """
 
@@ -13,7 +14,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(customers: Customers.list(20, 0))
+     |> assign(customers: Customers.list_with_assoc_invoice_fields(20, 0))
      |> assign(page_title: "Customers")}
   end
 
@@ -26,7 +27,7 @@ defmodule SiwappWeb.CustomerLive.Index do
     {
       :noreply,
       assign(socket,
-        customers: customers ++ Customers.list(20, (page + 1) * 20),
+        customers: customers ++ Customers.list_with_assoc_invoice_fields(20, (page + 1) * 20),
         page: page + 1
       )
     }
@@ -40,4 +41,15 @@ defmodule SiwappWeb.CustomerLive.Index do
     customers = Search.filters(Customer, params["search_input"])
     {:noreply, assign(socket, :customers, customers)}
   end
+
+  @spec due(integer, integer) :: integer
+  defp due(total, paid), do: total - paid
+
+  @spec set_currency([] | [String.t()]) :: binary
+  defp set_currency([]), do: "USD"
+  defp set_currency(currencies), do: List.first(currencies)
+
+  @spec symbol_option([] | [String.t()]) :: [{:symbol, true}] | [{:symbol, false}]
+  defp symbol_option([_currency]), do: [{:symbol, true}]
+  defp symbol_option(_currencies), do: [{:symbol, false}]
 end

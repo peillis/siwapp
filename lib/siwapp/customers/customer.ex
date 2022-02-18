@@ -19,7 +19,10 @@ defmodule Siwapp.Customers.Customer do
           deleted_at: DateTime.t() | nil,
           invoicing_address: binary | nil,
           shipping_address: binary | nil,
-          meta_attributes: map,
+          meta_attributes: map | nil,
+          total: integer | nil,
+          paid: integer | nil,
+          currencies: [String.t()] | [] | nil,
           inserted_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil
         }
@@ -58,6 +61,9 @@ defmodule Siwapp.Customers.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map, default: %{}
+    field :total, :integer, virtual: true
+    field :paid, :integer, virtual: true
+    field :currencies, {:array, :string}, virtual: true
     has_many :recurring_invoices, RecurringInvoice
     has_many :invoices, Invoice
 
