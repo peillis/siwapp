@@ -59,7 +59,7 @@ defmodule Siwapp.Invoices.Item do
     item
     |> cast(attrs, @fields)
     |> set_unitary_cost(attrs, currency)
-    |> find_taxes(attrs)
+    |> assoc_taxes(attrs)
     |> foreign_key_constraint(:invoice_id)
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
@@ -109,31 +109,38 @@ defmodule Siwapp.Invoices.Item do
   # we cast it and that's it. If it actually doesn't, we find the taxes associated
   # in the attributes. If the attributes have a tax that it doesn't exist we add
   # an error in the changeset.
+  @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
+  defp assoc_taxes(changeset, attrs) do
+    attr_taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
 
-  defp find_taxes(changeset, attrs) do
-    if get_field(changeset, :taxes) == [] do
-      taxes =
-        (Map.get(attrs, :taxes) || Map.get(attrs, "taxes", []))
-        |> Enum.map(&String.downcase/1)
-
-      list_taxes = Commons.list_taxes(:cache)
-      taxes_assoc = Enum.filter(list_taxes, &(String.downcase(&1.name) in taxes))
-      database_taxes = Enum.map(list_taxes, &String.downcase(&1.name))
-
-      Enum.reduce(taxes, changeset, fn tax, acc_changeset ->
-        check_wrong_taxes(tax, acc_changeset, database_taxes)
-      end)
-      |> put_assoc(:taxes, taxes_assoc)
-    else
+    if associated_taxes?(changeset, attr_taxes) do
       cast_assoc(changeset, :taxes)
+    else
+      find_taxes(changeset, attr_taxes)
     end
   end
 
-  defp check_wrong_taxes(tax, changeset, database_taxes) do
-    if Enum.member?(database_taxes, tax) do
+  defp associated_taxes?(_changeset, [%Ecto.Changeset{} | _tail]), do: true
+  defp associated_taxes?(changeset, _attr_taxes), do: get_field(changeset, :taxes) != []
+
+  defp find_taxes(changeset, attr_taxes_names) do
+    all_taxes = Commons.list_taxes(:cache)
+    all_taxes_names = Enum.map(all_taxes, &String.upcase(&1.name))
+
+    attr_taxes_names = Enum.map(attr_taxes_names, &String.upcase/1)
+    attr_taxes = Enum.filter(all_taxes, &(String.upcase(&1.name) in attr_taxes_names))
+
+    attr_taxes_names
+    |> Enum.reduce(changeset, &check_wrong_taxes(&1, &2, all_taxes_names))
+    |> put_assoc(:taxes, attr_taxes)
+  end
+
+  @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), [String.t()]) :: Ecto.Changeset.t()
+  defp check_wrong_taxes(tax, changeset, taxes) do
+    if Enum.member?(taxes, tax) do
       changeset
     else
-      add_error(changeset, :taxes, "The tax #{String.upcase(tax)} is not defined")
+      add_error(changeset, :taxes, "The tax #{tax} is not defined")
     end
   end
 

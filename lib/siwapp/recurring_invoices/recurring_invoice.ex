@@ -31,7 +31,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           series_id: nil | pos_integer(),
           currency: nil | <<_::24>>,
           days_to_due: nil | integer,
-          items: nil | [map],
+          items: nil | map,
           send_by_email: boolean,
           max_ocurrences: nil | pos_integer(),
           period: nil | pos_integer,
@@ -98,7 +98,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :notes, :string
     field :terms, :string
     field :meta_attributes, :map, default: %{}
-    field :items, {:array, :map}, default: []
+    field :items, :map, default: %{}
     belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :series, Series
     has_many :invoices, Invoice, on_replace: :delete
@@ -111,7 +111,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   def changeset(recurring_invoice, attrs) do
     recurring_invoice
     |> cast(attrs, @fields)
-    |> maybe_find_customer_or_new()
     |> assign_currency()
     |> transform_items()
     |> validate_items()
@@ -140,6 +139,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
       get_field(changeset, :items)
       |> Enum.map(&apply_changes(&1))
       |> Enum.map(&make_item(&1))
+      |> Enum.with_index()
+      |> Map.new(fn {item, i} -> {i, item} end)
 
     put_change(changeset, :items, items)
   end
@@ -149,9 +150,11 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Converts field items from list of maps to list of Item changesets.
   # This is used to handle items validation and calculations
   defp transform_items(changeset) do
-    items = get_field(changeset, :items)
     currency = get_field(changeset, :currency)
-    items_transformed = Enum.map(items, &Item.changeset(%Item{}, &1, currency))
+
+    items_transformed =
+      get_field(changeset, :items)
+      |> Enum.map(fn {_i, item} -> Item.changeset(%Item{}, item, currency) end)
 
     put_change(changeset, :items, items_transformed)
   end

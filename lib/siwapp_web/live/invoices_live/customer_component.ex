@@ -79,16 +79,9 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
         :invoicing_address,
         :shipping_address
       ])
+      |> SiwappWeb.PageView.atom_keys_to_string()
 
-    invoice_params = socket.assigns.changeset.changes
-    items_params = Enum.map(invoice_params.items, & &1.changes)
-
-    params =
-      invoice_params
-      |> Map.merge(%{items: items_params})
-      |> Map.merge(customer_params)
-
-    send(self(), {:update_changeset, params})
+    send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
 
     {:noreply, socket}
   end
