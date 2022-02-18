@@ -151,6 +151,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # This is used to handle items validation and calculations
   defp transform_items(changeset) do
     currency = get_field(changeset, :currency)
+
     items_transformed =
       get_field(changeset, :items)
       |> Enum.map(fn {_i, item} -> Item.changeset(%Item{}, item, currency) end)
