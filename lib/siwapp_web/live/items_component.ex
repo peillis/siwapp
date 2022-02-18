@@ -18,13 +18,14 @@ defmodule SiwappWeb.ItemsComponent do
      socket
      |> assign(f: assigns.f)
      |> assign(changeset: assigns.f.source)
+     |> assign(currency: Changeset.get_field(assigns.f.source, :currency))
      |> assign(inputs_for: assigns.inputs_for)}
   end
 
   def handle_event("add", _, socket) do
     params =
       socket.assigns.changeset
-      |> Ecto.Changeset.apply_changes()
+      |> Changeset.apply_changes()
       |> get_params()
 
     next_item_index =
@@ -40,7 +41,7 @@ defmodule SiwappWeb.ItemsComponent do
   def handle_event("remove", %{"item-id" => item_index}, socket) do
     params =
       socket.assigns.changeset
-      |> Ecto.Changeset.apply_changes()
+      |> Changeset.apply_changes()
       |> get_params()
       |> pop_in(["items", item_index])
       |> elem(1)
@@ -50,10 +51,9 @@ defmodule SiwappWeb.ItemsComponent do
     {:noreply, socket}
   end
 
-  @spec item_net_amount(Ecto.Changeset.t(), FormData.t()) :: binary
-  defp item_net_amount(changeset, fi) do
-    value = get_field(fi.source, :net_amount)
-    currency = get_field(changeset, :currency)
+  @spec item_net_amount(Changeset.t(), FormData.t()) :: binary
+  defp item_net_amount(changeset, currency) do
+    value = Changeset.get_field(changeset, :net_amount)
     PageView.money_format(value, currency, symbol: false, separator: "")
   end
 
