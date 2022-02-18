@@ -3,7 +3,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias Phoenix.HTML.FormData
-  alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
   alias Siwapp.Invoices
@@ -43,7 +42,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
-    params = Map.put(params, "items", Enum.map(params["items"], fn {_index, item} -> item end))
+    IO.inspect params
 
     result =
       case socket.assigns.live_action do

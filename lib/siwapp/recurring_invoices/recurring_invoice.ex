@@ -139,6 +139,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
       get_field(changeset, :items)
       |> Enum.map(&apply_changes(&1))
       |> Enum.map(&make_item(&1))
+      |> Enum.with_index()
+      |> Map.new(fn {item, i} -> {i, item} end)
 
     put_change(changeset, :items, items)
   end
