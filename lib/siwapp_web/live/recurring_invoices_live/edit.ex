@@ -42,8 +42,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   end
 
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
-    IO.inspect params
-
     result =
       case socket.assigns.live_action do
         :new -> RecurringInvoices.create(params)

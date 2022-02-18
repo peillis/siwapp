@@ -1,4 +1,8 @@
 defmodule SiwappWeb.InvoiceFormHelpers do
+  @moduledoc """
+  Helpers functions for adapting invoice params to the form format
+  """
+
   alias Siwapp.Invoices.Item
 
   def get_params(invoice) do

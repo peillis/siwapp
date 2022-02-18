@@ -3,10 +3,9 @@ defmodule SiwappWeb.ItemsComponent do
 
   use SiwappWeb, :live_component
 
-  alias Phoenix.HTML.FormData
-  alias Siwapp.Invoices.Item
-  alias SiwappWeb.PageView
   alias Ecto.Changeset
+  alias Phoenix.HTML.FormData
+  alias SiwappWeb.PageView
 
   import SiwappWeb.InvoiceFormHelpers
 
