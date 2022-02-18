@@ -6,6 +6,7 @@ defmodule Siwapp.Templates.Template do
 
   import Ecto.Changeset
 
+  @fields [:name, :template, :print_default, :email_default, :subject, :deleted_at]
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
           name: binary | nil,
@@ -17,7 +18,6 @@ defmodule Siwapp.Templates.Template do
           inserted_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil
         }
-  @fields [:name, :template, :print_default, :email_default, :subject, :deleted_at]
 
   schema "templates" do
     field :name, :string

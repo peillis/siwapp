@@ -1,11 +1,11 @@
 defmodule SiwappWeb.ItemView do
   use SiwappWeb, :view
 
+  import Ecto.Changeset
+
   alias Phoenix.HTML.FormData
   alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
-
-  import Ecto.Changeset
 
   @spec get_existing_taxes(FormData.t()) :: [] | [tuple]
   def get_existing_taxes(fi) do

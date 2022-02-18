@@ -1,8 +1,9 @@
 defmodule SiwappWeb.InvoicesLive.Index do
   @moduledoc false
   use SiwappWeb, :live_view
+  alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.{Invoices, Search}
+  alias Siwapp.Search
   alias SiwappWeb.GraphicHelpers
   alias SiwappWeb.PageView
 

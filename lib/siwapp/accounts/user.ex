@@ -5,6 +5,8 @@ defmodule Siwapp.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
+
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
           email: binary | nil,
@@ -14,8 +16,6 @@ defmodule Siwapp.Accounts.User do
           updated_at: DateTime.t() | nil,
           inserted_at: DateTime.t() | nil
         }
-
-  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
   schema "users" do
     field :email, :string

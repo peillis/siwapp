@@ -1,14 +1,14 @@
 defmodule Siwapp.InvoiceTest do
   use Siwapp.DataCase
 
+  import Siwapp.InvoicesFixtures
+  import Siwapp.SettingsFixtures
+  import Siwapp.CommonsFixtures
+
   alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Settings
-
-  import Siwapp.InvoicesFixtures
-  import Siwapp.SettingsFixtures
-  import Siwapp.CommonsFixtures
 
   setup do
     series = series_fixture(%{name: "A-Series", code: "A-"})

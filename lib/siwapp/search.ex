@@ -2,7 +2,8 @@ defmodule Siwapp.Search do
   @moduledoc """
   Search Context
   """
-  alias Siwapp.{Query, Repo}
+  alias Siwapp.Query
+  alias Siwapp.Repo
   alias Siwapp.Search.SearchQuery
 
   @doc """

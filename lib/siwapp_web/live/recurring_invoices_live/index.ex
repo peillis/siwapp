@@ -3,8 +3,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   This module manages the recurring_invoices LiveView events
   """
   use SiwappWeb, :live_view
+  alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
-  alias Siwapp.{RecurringInvoices, Search}
+  alias Siwapp.Search
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do

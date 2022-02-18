@@ -4,8 +4,10 @@ defmodule Siwapp.Commons do
   """
 
   import Ecto.Query, warn: false
+
+  alias Siwapp.Commons.Series
+  alias Siwapp.Commons.Tax
   alias Siwapp.Repo
-  alias Siwapp.Commons.{Series, Tax}
 
   ### SERIES ###
 

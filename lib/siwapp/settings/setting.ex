@@ -1,4 +1,8 @@
 defmodule Siwapp.Settings.Setting do
+  @moduledoc """
+  A Setting's a schema used to manage settings database, which has key and value columns. Therefore,
+  no matter which key, values are always strings.
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
@@ -11,11 +15,6 @@ defmodule Siwapp.Settings.Setting do
           inserted_at: nil | DateTime.t(),
           updated_at: nil | DateTime.t()
         }
-
-  @moduledoc """
-  A Setting's a schema used to manage settings database, which has key and value columns. Therefore,
-  no matter which key, values are always strings.
-  """
 
   schema "settings" do
     field :key, :string

@@ -1,7 +1,4 @@
 defmodule Mix.Tasks.Siwapp.Register do
-  use Mix.Task
-  alias Siwapp.Accounts
-
   @shortdoc "Register a new user"
 
   @moduledoc """
@@ -11,6 +8,10 @@ defmodule Mix.Tasks.Siwapp.Register do
 
     $ mix siwapp.register "demo@example.com" "secret_pass"
   """
+  use Mix.Task
+
+  alias Siwapp.Accounts
+
   @impl Mix.Task
   def run(args) do
     Mix.Task.run("app.start")

@@ -8,6 +8,8 @@ defmodule Siwapp.Commons.Tax do
 
   alias Siwapp.Invoices.Item
 
+  @fields [:name, :value, :enabled, :default, :deleted_at]
+
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
           name: binary | nil,
@@ -16,8 +18,6 @@ defmodule Siwapp.Commons.Tax do
           default: boolean(),
           deleted_at: DateTime.t() | nil
         }
-
-  @fields [:name, :value, :enabled, :default, :deleted_at]
 
   schema "taxes" do
     field :name, :string

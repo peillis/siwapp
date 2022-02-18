@@ -11,15 +11,6 @@ defmodule Siwapp.Invoices.Item do
   alias Siwapp.Invoices.Invoice
   alias SiwappWeb.PageView
 
-  @type t :: %__MODULE__{
-          id: pos_integer() | nil,
-          quantity: pos_integer(),
-          discount: non_neg_integer(),
-          description: binary() | nil,
-          unitary_cost: integer(),
-          deleted_at: DateTime.t() | nil,
-          invoice_id: pos_integer() | nil
-        }
   @derive {Jason.Encoder,
            only: [
              :quantity,
@@ -38,6 +29,16 @@ defmodule Siwapp.Invoices.Item do
     :deleted_at,
     :invoice_id
   ]
+
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          quantity: pos_integer(),
+          discount: non_neg_integer(),
+          description: binary() | nil,
+          unitary_cost: integer(),
+          deleted_at: DateTime.t() | nil,
+          invoice_id: pos_integer() | nil
+        }
 
   schema "items" do
     field :quantity, :integer, default: 1

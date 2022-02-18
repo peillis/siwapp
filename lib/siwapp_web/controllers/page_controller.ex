@@ -1,6 +1,7 @@
 defmodule SiwappWeb.PageController do
   use SiwappWeb, :controller
-  alias Siwapp.{Invoices, Templates}
+  alias Siwapp.Invoices
+  alias Siwapp.Templates
 
   @spec show_invoice(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show_invoice(conn, %{"id" => id}) do

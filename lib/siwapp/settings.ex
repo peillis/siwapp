@@ -1,9 +1,4 @@
 defmodule Siwapp.Settings do
-  alias Siwapp.Repo
-  alias Siwapp.Settings.{Setting, SettingBundle}
-
-  import Ecto.Query
-
   @moduledoc """
   This module manage settings. For those with predefined keys in SettingBundle,
   which are also initialized using seeds, bundle operations can be used directly
@@ -11,6 +6,11 @@ defmodule Siwapp.Settings do
   long as they have unique key, even though they won't be accessible to user using
   the form but only to developers using terminal.
   """
+  import Ecto.Query
+
+  alias Siwapp.Repo
+  alias Siwapp.Settings.Setting
+  alias Siwapp.Settings.SettingBundle
 
   @doc """
   Creates a setting given a key-value tuple (used only in seeds)

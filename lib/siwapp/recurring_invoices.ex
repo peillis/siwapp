@@ -5,7 +5,8 @@ defmodule Siwapp.RecurringInvoices do
   import Ecto.Query, warn: false
 
   alias Siwapp.Invoices
-  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo

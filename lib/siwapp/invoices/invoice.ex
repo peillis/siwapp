@@ -9,9 +9,39 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{InvoiceQuery, Item}
+  alias Siwapp.Invoices.InvoiceQuery
+  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
+
+  @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :net_amount,
+    :gross_amount,
+    :paid_amount,
+    :draft,
+    :paid,
+    :sent_by_email,
+    :number,
+    :issue_date,
+    :due_date,
+    :failed,
+    :currency,
+    :invoicing_address,
+    :shipping_address,
+    :notes,
+    :terms,
+    :deleted_at,
+    :meta_attributes,
+    :series_id,
+    :customer_id,
+    :recurring_invoice_id
+  ]
+
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -46,35 +76,6 @@ defmodule Siwapp.Invoices.Invoice do
           inserted_at: DateTime.t() | nil,
           deleted_at: DateTime.t() | nil
         }
-
-  @fields [
-    :name,
-    :identification,
-    :email,
-    :contact_person,
-    :net_amount,
-    :gross_amount,
-    :paid_amount,
-    :draft,
-    :paid,
-    :sent_by_email,
-    :number,
-    :issue_date,
-    :due_date,
-    :failed,
-    :currency,
-    :invoicing_address,
-    :shipping_address,
-    :notes,
-    :terms,
-    :deleted_at,
-    :meta_attributes,
-    :series_id,
-    :customer_id,
-    :recurring_invoice_id
-  ]
-
-  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
   schema "invoices" do
     field :identification, :string

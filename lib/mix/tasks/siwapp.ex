@@ -1,11 +1,11 @@
 defmodule Mix.Tasks.Siwapp do
+  @shortdoc "Prints Siwapp scripts help information"
+
   @moduledoc false
 
   use Mix.Task
 
   alias Mix.Tasks.Help
-
-  @shortdoc "Prints Siwapp scripts help information"
 
   @impl Mix.Task
   def run(args) do

@@ -1,9 +1,9 @@
 defmodule SiwappWeb.UserAuthTest do
   use SiwappWeb.ConnCase, async: true
 
+  import Siwapp.AccountsFixtures
   alias Siwapp.Accounts
   alias SiwappWeb.UserAuth
-  import Siwapp.AccountsFixtures
 
   @remember_me_cookie "_siwapp_web_user_remember_me"
 

@@ -6,15 +6,6 @@ defmodule Siwapp.Accounts.UserToken do
 
   alias Siwapp.Accounts
 
-  @type t :: %__MODULE__{
-          id: pos_integer() | nil,
-          token: binary | nil,
-          context: binary | nil,
-          sent_to: binary | nil,
-          user: Ecto.Association.NotLoaded.t() | Siwapp.Accounts.User.t(),
-          inserted_at: DateTime.t() | nil
-        }
-
   @hash_algorithm :sha256
   @rand_size 32
 
@@ -24,6 +15,15 @@ defmodule Siwapp.Accounts.UserToken do
   @confirm_validity_in_days 7
   @change_email_validity_in_days 7
   @session_validity_in_days 60
+
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          token: binary | nil,
+          context: binary | nil,
+          sent_to: binary | nil,
+          user: Ecto.Association.NotLoaded.t() | Siwapp.Accounts.User.t(),
+          inserted_at: DateTime.t() | nil
+        }
 
   schema "users_tokens" do
     field :token, :binary

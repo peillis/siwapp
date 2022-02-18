@@ -1,13 +1,13 @@
 defmodule SiwappWeb.CustomerLive.Index do
-  use SiwappWeb, :live_view
-
-  alias Siwapp.Customers.Customer
-  alias Siwapp.{Customers, Search}
-
   @moduledoc """
 
   This module manages the customer index view
   """
+  use SiwappWeb, :live_view
+
+  alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Search
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do

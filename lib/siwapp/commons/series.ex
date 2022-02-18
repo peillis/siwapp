@@ -9,16 +9,6 @@ defmodule Siwapp.Commons.Series do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
-  @type t :: %__MODULE__{
-          id: pos_integer() | nil,
-          name: binary | nil,
-          code: binary | nil,
-          enabled: boolean(),
-          default: boolean(),
-          first_number: pos_integer() | nil,
-          deleted_at: DateTime.t() | nil
-        }
-
   @derive {Jason.Encoder,
            only: [
              :default,
@@ -30,6 +20,16 @@ defmodule Siwapp.Commons.Series do
            ]}
 
   @fields [:name, :code, :enabled, :default, :deleted_at, :first_number]
+
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          name: binary | nil,
+          code: binary | nil,
+          enabled: boolean(),
+          default: boolean(),
+          first_number: pos_integer() | nil,
+          deleted_at: DateTime.t() | nil
+        }
 
   schema "series" do
     field :name, :string
