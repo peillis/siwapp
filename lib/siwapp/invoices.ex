@@ -29,11 +29,6 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-  @spec count :: integer | nil
-  def count do
-    Repo.aggregate(Invoice, :count)
-  end
-
   @doc """
   Creates an invoice
   """

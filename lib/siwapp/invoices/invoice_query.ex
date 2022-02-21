@@ -2,6 +2,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   @moduledoc """
   Invoices Querys
   """
+  alias Siwapp.Invoices.Invoice
   import Ecto.Query
 
   @doc """
@@ -39,6 +40,11 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> or_where([i], ilike(i.name, ^"%#{terms}%"))
     |> or_where([i], ilike(i.identification, ^"%#{terms}%"))
     |> distinct([i], i.id)
+  end
+
+  def list_by_customer(query \\ Invoice, customer_id) do
+    query
+    |> where(customer_id: ^customer_id)
   end
 
   @spec issue_date_gteq(Ecto.Queryable.t(), Date.t()) :: Ecto.Query.t()
