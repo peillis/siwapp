@@ -75,10 +75,24 @@ defmodule Siwapp.Invoices do
     Repo.delete(invoice)
   end
 
+  @doc """
+  Adds virtual fields to invoice struct
+  """
+  @spec with_virtual_fields(Invoice.t()) :: Invoice.t()
+  def with_virtual_fields(invoice) do
+    change(invoice)
+    |> Ecto.Changeset.apply_changes()
+  end
+
+  @doc """
+  Sends email with email_default template as email_body, attaching
+  pdf made with print_default template using invoice data
+  """
+  @spec send_email(Invoice.t()) :: {:ok, pos_integer} | {:error, binary}
   def send_email(invoice) do
     case Siwapp.InvoiceMailer.build_invoice_email(invoice) do
       {:error, msg} -> {:error, msg}
-      {:ok, email} -> Siwapp.Mailer.deliver!(email)
+      {:ok, email} -> Siwapp.Mailer.deliver(email)
     end
   end
 
