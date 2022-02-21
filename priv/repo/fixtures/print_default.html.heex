@@ -315,11 +315,11 @@
                 <%= SiwappWeb.PageView.money_format(net_amount, currency) %>
               </td>
             </tr>
-            <%# <%= for tax <- @invoice.taxes do  %>
+            <%= for {tax_name, tax_value} <- taxes_amounts do  %>
               <tr>
-                <th> tax </th>
+                <th><%= tax_name %></th>
                 <td class="total">
-                  tax.value
+                  <%= SiwappWeb.PageView.set_currency(tax_value, currency) %>
                 </td>
               </tr>
             <%# <% end %>
