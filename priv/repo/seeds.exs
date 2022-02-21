@@ -57,12 +57,23 @@ settings = [
 Enum.each(settings, &Settings.create(&1))
 
 # SEEDING TEMPLATES
-{:ok, file} = File.read("#{__DIR__}/fixtures/print_default.html.heex")
+
+{:ok, print_default} = File.read("#{__DIR__}/fixtures/print_default.html.heex")
+{:ok, email_default} = File.read("#{__DIR__}/fixtures/email_default.html.heex")
 
 Templates.create(%{
   name: "Print Default",
-  template: file
+  template: print_default
 })
+
+{:ok, email_template} =
+  Templates.create(%{
+    name: "Email Default",
+    template: email_default,
+    subject: "Payment Confirmation: <%= invoice %> "
+  })
+
+Templates.set_default(:email, email_template)
 
 # SEEDING SERIES
 series = [
