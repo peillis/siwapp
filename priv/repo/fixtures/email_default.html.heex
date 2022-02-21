@@ -503,7 +503,7 @@
                                             </td>
                                             <%= if have_discount? do %>
                                               <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: left; vertical-align: top; word-wrap: break-word">
-                                                  <%= SiwappWeb.PageView.set_currency(item.unitary_cost, currency) %>
+                                                  <%= SiwappWeb.PageView.money_format(item.unitary_cost, currency) %>
                                               </td>
                                               <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: left; vertical-align: top; word-wrap: break-word">
                                                 <%= if item.discount != 0 do %>
@@ -512,7 +512,7 @@
                                               </td>
                                             <% end %>
                                             <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                              <%= SiwappWeb.PageView.set_currency(item.net_amount, currency) %>
+                                                <%= SiwappWeb.PageView.money_format(item.net_amount, currency) %>
                                             </td>
                                           </tr>
                                         <% end %>
@@ -550,7 +550,7 @@
                                             Subtotal
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                              <%= SiwappWeb.PageView.set_currency(net_amount, currency) %>
+                                              <%= SiwappWeb.PageView.money_format(net_amount, currency) %>
                                           </td>
                                         </tr>
                                         <%= for {tax_name, tax_value} <- taxes_amounts do  %>
@@ -559,7 +559,7 @@
                                               <%= tax_name %>
                                             </th>
                                             <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                                <%= SiwappWeb.PageView.set_currency(tax_value, currency) %>
+                                                <%= SiwappWeb.PageView.money_format(tax_value, currency) %>
                                             </td>
                                           </tr>
                                         <% end %>
@@ -568,7 +568,7 @@
                                             Total
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 1.5rem; font-weight: bold; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                              <%= SiwappWeb.PageView.set_currency(gross_amount, currency) %>
+                                              <%= SiwappWeb.PageView.money_format(gross_amount, currency) %>
                                           </td>
                                         </tr>
                                       </tbody>

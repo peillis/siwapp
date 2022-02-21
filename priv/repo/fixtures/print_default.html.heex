@@ -319,7 +319,7 @@
               <tr>
                 <th><%= tax_name %></th>
                 <td class="total">
-                  <%= SiwappWeb.PageView.set_currency(tax_value, currency) %>
+                  <%= SiwappWeb.PageView.money_format(tax_value, currency) %>
                 </td>
               </tr>
             <% end %>
