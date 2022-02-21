@@ -192,35 +192,4 @@ defmodule Siwapp.Search.SearchQuery do
     |> String.downcase()
     |> String.to_atom()
   end
-
-  # Get keys of a jsonb(meta_attributes) which are associated with the value a user inputs
-  @spec get_all_keys(Ecto.Queryable.t()) :: [binary]
-  defp get_all_keys(query) do
-    query
-    |> select([q], q.meta_attributes)
-    |> Repo.all()
-    |> Enum.reject(&(&1 == %{}))
-    |> Enum.map(&Map.keys(&1))
-    |> List.flatten()
-    |> Enum.uniq()
-  end
-
-  # If there are keys associated to the value a user inputs,
-  # the function make a first query with the first key inside of "keys".
-  # Then for the rest of the keys, it makes a "where query" for each key and
-  # joins all the queries with an union_all
-  @spec value_for_each_key([binary], Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
-  defp value_for_each_key(keys, query, value) do
-    if keys == [] do
-      where(query, [q], nil)
-    else
-      [first_key | rest_of_keys] = keys
-      first_query = where(query, [q], q.meta_attributes[^first_key] == ^value)
-
-      Enum.reduce(rest_of_keys, first_query, fn key_associated, acc_query ->
-        where(query, [a], a.meta_attributes[^key_associated] == ^value)
-        |> union_all(^acc_query)
-      end)
-    end
-  end
 end
