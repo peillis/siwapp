@@ -49,13 +49,17 @@ defmodule Siwapp.Search.SearchQuery do
 
   def filter_by(query, "key", value) do
     query
-    |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes), on: m.key == ^value)
+    |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes),
+      on: m.key == ^value
+    )
     |> group_by([q], q.id)
   end
 
   def filter_by(query, "value", value) do
     query
-    |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes), on: m.value == ^value)
+    |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes),
+      on: m.value == ^value
+    )
     |> group_by([q], q.id)
   end
 
