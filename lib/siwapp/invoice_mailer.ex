@@ -2,11 +2,11 @@ defmodule Siwapp.InvoiceMailer do
   @moduledoc """
   This module manages building a invoice email ready to be delivered
   """
+  import Swoosh.Email
+
   alias Siwapp.Settings
   alias Siwapp.Templates
   alias Swoosh.Attachment
-
-  import Swoosh.Email
 
   @doc """
   Given an invoice, returns {:ok, email} if it's possible

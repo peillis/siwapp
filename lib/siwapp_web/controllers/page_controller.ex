@@ -1,7 +1,8 @@
 defmodule SiwappWeb.PageController do
   use SiwappWeb, :controller
 
-  alias Siwapp.{Invoices, Templates}
+  alias Siwapp.Invoices
+  alias Siwapp.Templates
 
   @spec show_invoice(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show_invoice(conn, %{"id" => id}) do
@@ -18,6 +19,7 @@ defmodule SiwappWeb.PageController do
     send_download(conn, {:binary, pdf_content}, filename: pdf_name)
   end
 
+  @spec send_email(Plug.Conn.t(), map) :: Plug.Conn.t()
   def send_email(conn, %{"id" => id}) do
     invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
 

@@ -80,8 +80,8 @@ defmodule Siwapp.Invoices do
   """
   @spec with_virtual_fields(Invoice.t()) :: Invoice.t()
   def with_virtual_fields(invoice) do
-    change(invoice)
-    |> Ecto.Changeset.apply_changes()
+    changeset = change(invoice)
+    Ecto.Changeset.apply_changes(changeset)
   end
 
   @doc """
