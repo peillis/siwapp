@@ -4,6 +4,7 @@ defmodule Siwapp.Query do
   """
   import Ecto.Query
 
+  @spec paginate(Ecto.Queryable.t(), integer, integer) :: Ecto.Query.t()
   def paginate(query, page, per_page) do
     offset_by = per_page * page
 
@@ -12,17 +13,16 @@ defmodule Siwapp.Query do
     |> offset(^offset_by)
   end
 
-  def by(query, field, value) do
-    query
-    |> where(^[{field, value}])
-  end
+  @spec by(Ecto.Queryable.t(), atom, any) :: Ecto.Query.t()
+  def by(query, field, value), do: where(query, ^[{field, value}])
 
+  @spec list_preload(Ecto.Queryable.t(), atom | [atom]) :: Ecto.Query.t()
   def list_preload(query, term) do
     preload(query, ^term)
   end
 
+  @spec search_in_string(Ecto.Queryable.t(), atom, binary) :: Ecto.Query.t()
   def search_in_string(query, string_field, search) do
-    query
-    |> where([q], ilike(field(q, ^string_field), ^search))
+    where(query, [q], ilike(field(q, ^string_field), ^search))
   end
 end

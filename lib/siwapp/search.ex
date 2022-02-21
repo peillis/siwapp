@@ -2,12 +2,14 @@ defmodule Siwapp.Search do
   @moduledoc """
   Search Context
   """
-  alias Siwapp.{Query, Repo}
+  alias Siwapp.Query
+  alias Siwapp.Repo
   alias Siwapp.Search.SearchQuery
 
   @doc """
   Filter invoices, customers or recurring_invoices by the selected parameters
   """
+  @spec filters(Ecto.Queryable.t(), binary) :: list
   def filters(Siwapp.Customers.Customer = customer, value) do
     customer
     |> SearchQuery.name_email_or_id(value)

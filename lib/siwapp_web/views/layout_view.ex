@@ -27,6 +27,7 @@ defmodule SiwappWeb.LayoutView do
     end
   end
 
+  @spec shared_button(Plug.Conn.t()) :: any()
   def shared_button(%Plug.Conn{} = conn) do
     new_button("New Invoice", Routes.invoices_edit_path(conn, :new))
   end
@@ -45,14 +46,17 @@ defmodule SiwappWeb.LayoutView do
     end
   end
 
+  @spec render_search_live(Plug.Conn.t()) :: nil
   def render_search_live(%Plug.Conn{}) do
     nil
   end
 
+  @spec new_button(binary, binary) :: any()
   defp new_button(text, to) do
     live_redirect(text, to: to, method: :get, class: "button is-primary")
   end
 
+  @spec which_component(atom()) :: atom()
   defp which_component(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->

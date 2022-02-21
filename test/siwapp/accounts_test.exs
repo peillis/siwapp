@@ -1,10 +1,11 @@
 defmodule Siwapp.AccountsTest do
   use Siwapp.DataCase
 
-  alias Siwapp.Accounts
-
   import Siwapp.AccountsFixtures
-  alias Siwapp.Accounts.{User, UserToken}
+
+  alias Siwapp.Accounts
+  alias Siwapp.Accounts.User
+  alias Siwapp.Accounts.UserToken
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do

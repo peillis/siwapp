@@ -1,15 +1,18 @@
 defmodule SiwappWeb.CustomerLive.Index do
-  use SiwappWeb, :live_view
-
-  alias Siwapp.Customers.Customer
-  alias Siwapp.{Customers, Search}
-  import SiwappWeb.PageView
-
   @moduledoc """
 
   This module manages the customer index view
   """
 
+  use SiwappWeb, :live_view
+
+  import SiwappWeb.PageView
+
+  alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Search
+
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -18,6 +21,7 @@ defmodule SiwappWeb.CustomerLive.Index do
      |> assign(page_title: "Customers")}
   end
 
+  @impl Phoenix.LiveView
   def handle_event("load-more", _, socket) do
     %{
       page: page,

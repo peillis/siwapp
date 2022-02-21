@@ -4,10 +4,12 @@ defmodule SiwappWeb.UserSessionController do
   alias Siwapp.Accounts
   alias SiwappWeb.UserAuth
 
+  @spec new(Plug.Conn.t(), map) :: Plug.Conn.t()
   def new(conn, _params) do
     render(conn, "new.html", error_message: nil)
   end
 
+  @spec create(Plug.Conn.t(), map) :: Plug.Conn.t()
   def create(conn, %{"user" => user_params}) do
     %{"email" => email, "password" => password} = user_params
 
@@ -19,6 +21,7 @@ defmodule SiwappWeb.UserSessionController do
     end
   end
 
+  @spec delete(Plug.Conn.t(), map) :: Plug.Conn.t()
   def delete(conn, _params) do
     conn
     |> put_flash(:info, "Logged out successfully.")

@@ -1,9 +1,4 @@
 defmodule Siwapp.Settings do
-  alias Siwapp.Repo
-  alias Siwapp.Settings.{Setting, SettingBundle}
-
-  import Ecto.Query
-
   @moduledoc """
   This module manage settings. For those with predefined keys in SettingBundle,
   which are also initialized using seeds, bundle operations can be used directly
@@ -11,6 +6,11 @@ defmodule Siwapp.Settings do
   long as they have unique key, even though they won't be accessible to user using
   the form but only to developers using terminal.
   """
+  import Ecto.Query
+
+  alias Siwapp.Repo
+  alias Siwapp.Settings.Setting
+  alias Siwapp.Settings.SettingBundle
 
   @doc """
   Creates a setting given a key-value tuple (used only in seeds)
@@ -36,6 +36,7 @@ defmodule Siwapp.Settings do
   @doc """
   Performs the SettingBundle changeset
   """
+  @spec change_bundle(SettingBundle.t(), map) :: Ecto.Changeset.t()
   def change_bundle(%SettingBundle{} = setting_bundle, attrs \\ %{}) do
     SettingBundle.changeset(setting_bundle, attrs)
   end
@@ -43,6 +44,7 @@ defmodule Siwapp.Settings do
   @doc """
   Returns current SettingBundle (which is also useful to be changed and fill the SettingBundle form)
   """
+  @spec current_bundle :: SettingBundle.t()
   def current_bundle, do: struct(SettingBundle, list_pairs())
 
   @doc """
@@ -75,6 +77,7 @@ defmodule Siwapp.Settings do
   Returns the value of the setting associated to key (atom or string). Returns nil if
   this setting doesn't exist
   """
+  @spec value(atom) :: binary
   def value(key) do
     case get(key) do
       nil -> nil
@@ -82,6 +85,7 @@ defmodule Siwapp.Settings do
     end
   end
 
+  @spec value(atom, atom) :: binary
   def value(key, :cache) do
     case Cachex.get(:siwapp_cache, key) do
       {:ok, nil} ->
@@ -99,7 +103,8 @@ defmodule Siwapp.Settings do
   """
   @spec update({atom, any}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def update({key, value}) do
-    get(key)
+    key
+    |> get()
     |> change({to_string(key), to_string(value)})
     |> Repo.update()
   end

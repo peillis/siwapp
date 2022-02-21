@@ -6,6 +6,8 @@ defmodule SiwappWeb.PageLive.Index do
   alias Siwapp.Invoices
   alias SiwappWeb.GraphicHelpers
 
+  @spec mount(map(), map, Phoenix.LiveView.Socket.t()) ::
+          {:ok, Phoenix.LiveView.Socket.t()}
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -23,6 +25,8 @@ defmodule SiwappWeb.PageLive.Index do
     |> GraphicHelpers.line_plot()
   end
 
+  @spec handle_event(binary, map(), Phoenix.LiveView.Socket.t()) ::
+          {:noreply, Phoenix.LiveView.Socket.t()} | {:reply, map(), Phoenix.LiveView.Socket.t()}
   def handle_event("load-more", _, socket) do
     %{
       page: page,

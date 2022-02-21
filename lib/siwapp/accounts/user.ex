@@ -7,6 +7,16 @@ defmodule Siwapp.Accounts.User do
 
   @email_regex Application.compile_env!(:siwapp, :email_regex)
 
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          email: binary | nil,
+          password: binary | nil,
+          hashed_password: binary | nil,
+          confirmed_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil,
+          inserted_at: DateTime.t() | nil
+        }
+
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
@@ -33,6 +43,9 @@ defmodule Siwapp.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
+
+  @spec registration_changeset(%__MODULE__{} | Ecto.Changeset.t(), map(), list()) ::
+          Ecto.Changeset.t()
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
@@ -40,6 +53,7 @@ defmodule Siwapp.Accounts.User do
     |> validate_password(opts)
   end
 
+  @spec validate_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])
@@ -49,6 +63,7 @@ defmodule Siwapp.Accounts.User do
     |> unique_constraint(:email)
   end
 
+  @spec validate_password(Ecto.Changeset.t(), keyword) :: Ecto.Changeset.t()
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
@@ -59,6 +74,7 @@ defmodule Siwapp.Accounts.User do
     |> maybe_hash_password(opts)
   end
 
+  @spec maybe_hash_password(Ecto.Changeset.t(), keyword()) :: Ecto.Changeset.t()
   defp maybe_hash_password(changeset, opts) do
     hash_password? = Keyword.get(opts, :hash_password, true)
     password = get_change(changeset, :password)
@@ -79,6 +95,7 @@ defmodule Siwapp.Accounts.User do
 
   It requires the email to change otherwise an error is added.
   """
+  @spec email_changeset(t(), map) :: Ecto.Changeset.t()
   def email_changeset(user, attrs) do
     user
     |> cast(attrs, [:email])
@@ -101,6 +118,8 @@ defmodule Siwapp.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
+  @spec password_changeset(%__MODULE__{} | Ecto.Changeset.t(), map(), list()) ::
+          Ecto.Changeset.t()
   def password_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:password])
@@ -111,8 +130,9 @@ defmodule Siwapp.Accounts.User do
   @doc """
   Confirms the account by setting `confirmed_at`.
   """
+  @spec confirm_changeset(t() | Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    now = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
     change(user, confirmed_at: now)
   end
 
@@ -122,6 +142,7 @@ defmodule Siwapp.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
+  @spec valid_password?(t(), binary) :: boolean()
   def valid_password?(%Siwapp.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
@@ -135,6 +156,7 @@ defmodule Siwapp.Accounts.User do
   @doc """
   Validates the current password otherwise adds an error to the changeset.
   """
+  @spec validate_current_password(Ecto.Changeset.t(), binary) :: Ecto.Changeset.t()
   def validate_current_password(changeset, password) do
     if valid_password?(changeset.data, password) do
       changeset

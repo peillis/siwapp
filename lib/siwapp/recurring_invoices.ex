@@ -6,7 +6,8 @@ defmodule Siwapp.RecurringInvoices do
 
   alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
-  alias Siwapp.Invoices.{Invoice, InvoiceQuery}
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
@@ -17,6 +18,7 @@ defmodule Siwapp.RecurringInvoices do
     Repo.all(RecurringInvoice)
   end
 
+  @spec scroll_listing(integer, integer) :: [RecurringInvoice.t()]
   def scroll_listing(page, per_page \\ 20) do
     RecurringInvoice
     |> Query.paginate(page, per_page)
@@ -28,8 +30,11 @@ defmodule Siwapp.RecurringInvoices do
   def get!(id), do: Repo.get!(RecurringInvoice, id)
 
   @spec get!(pos_integer(), :preload) :: RecurringInvoice.t()
-  def get!(id, :preload),
-    do: Repo.get!(RecurringInvoice, id) |> Repo.preload([:customer, :series])
+  def get!(id, :preload) do
+    RecurringInvoice
+    |> Repo.get!(id)
+    |> Repo.preload([:customer, :series])
+  end
 
   @spec create(map) :: {:ok, RecurringInvoice.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
@@ -145,7 +150,9 @@ defmodule Siwapp.RecurringInvoices do
          period_type,
          %Date{} = max_date
        ) do
-    Stream.iterate(starting_date, &next_date(&1, period, period_type))
+    stream_iterate = Stream.iterate(starting_date, &next_date(&1, period, period_type))
+
+    stream_iterate
     |> Enum.take_while(&(Date.compare(&1, max_date) != :gt))
     |> length()
   end

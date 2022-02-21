@@ -6,37 +6,17 @@ defmodule SiwappWeb.TemplatesLive.Edit do
   alias Siwapp.Templates
   alias Siwapp.Templates.Template
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  def apply_action(socket, :new, _params) do
-    template = %Template{}
-
-    socket
-    |> assign(:action, :new)
-    |> assign(:page_title, "New Template")
-    |> assign(:template, template)
-    |> assign(:changeset, Templates.change(template))
-  end
-
-  def apply_action(socket, :edit, %{"id" => id}) do
-    template = id |> String.to_integer() |> Templates.get()
-
-    socket
-    |> assign(:action, :edit)
-    |> assign(:page_title, template.name)
-    |> assign(:template, template)
-    |> assign(:changeset, Templates.change(template))
-  end
-
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("validate", %{"template" => template_params}, socket) do
     changeset =
       socket.assigns.template
@@ -61,12 +41,34 @@ defmodule SiwappWeb.TemplatesLive.Edit do
          |> push_redirect(to: Routes.templates_index_path(socket, :index))}
 
       {:error, _msg} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "You can't delete the default template.")}
+        {:noreply, put_flash(socket, :error, "You can't delete the default template.")}
     end
   end
 
+  @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          Phoenix.LiveView.Socket.t()
+  defp apply_action(socket, :new, _params) do
+    template = %Template{}
+
+    socket
+    |> assign(:action, :new)
+    |> assign(:page_title, "New Template")
+    |> assign(:template, template)
+    |> assign(:changeset, Templates.change(template))
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    template = id |> String.to_integer() |> Templates.get()
+
+    socket
+    |> assign(:action, :edit)
+    |> assign(:page_title, template.name)
+    |> assign(:template, template)
+    |> assign(:changeset, Templates.change(template))
+  end
+
+  @spec save_template(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
+          {:noreply, Phoenix.LiveView.Socket.t()}
   defp save_template(socket, :edit, template_params) do
     case Templates.update(socket.assigns.template, template_params) do
       {:ok, _template} ->

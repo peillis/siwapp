@@ -6,7 +6,9 @@ defmodule Siwapp.Accounts do
   import Ecto.Query, warn: false
   alias Siwapp.Repo
 
-  alias Siwapp.Accounts.{User, UserNotifier, UserToken}
+  alias Siwapp.Accounts.User
+  alias Siwapp.Accounts.UserNotifier
+  alias Siwapp.Accounts.UserToken
 
   ## Database getters
 
@@ -22,6 +24,7 @@ defmodule Siwapp.Accounts do
       nil
 
   """
+  @spec get_user_by_email(binary) :: User.t() | nil
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
   end
@@ -38,6 +41,7 @@ defmodule Siwapp.Accounts do
       nil
 
   """
+  @spec get_user_by_email_and_password(binary, binary) :: User.t() | nil
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
     user = Repo.get_by(User, email: email)
@@ -58,6 +62,7 @@ defmodule Siwapp.Accounts do
       ** (Ecto.NoResultsError)
 
   """
+  @spec get_user!(pos_integer()) :: User.t()
   def get_user!(id), do: Repo.get!(User, id)
 
   ## User registration
@@ -74,6 +79,7 @@ defmodule Siwapp.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec register_user(map) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
@@ -89,6 +95,7 @@ defmodule Siwapp.Accounts do
       %Ecto.Changeset{data: %User{}}
 
   """
+  @spec change_user_registration(User.t(), map) :: Ecto.Changeset.t()
   def change_user_registration(%User{} = user, attrs \\ %{}) do
     User.registration_changeset(user, attrs, hash_password: false)
   end
@@ -104,6 +111,7 @@ defmodule Siwapp.Accounts do
       %Ecto.Changeset{data: %User{}}
 
   """
+  @spec change_user_email(User.t(), map) :: Ecto.Changeset.t()
   def change_user_email(user, attrs \\ %{}) do
     User.email_changeset(user, attrs)
   end
@@ -121,6 +129,8 @@ defmodule Siwapp.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec apply_user_email(User.t(), binary(), map()) ::
+          {:ok, Ecto.Schema.t() | map()} | {:error, Ecto.Changeset.t()}
   def apply_user_email(user, password, attrs) do
     user
     |> User.email_changeset(attrs)
@@ -134,6 +144,7 @@ defmodule Siwapp.Accounts do
   If the token matches, the user email is updated and the token is deleted.
   The confirmed_at date is also updated to the current time.
   """
+  @spec update_user_email(User.t(), binary) :: :ok | :error
   def update_user_email(user, token) do
     context = "change:#{user.email}"
 
@@ -146,6 +157,7 @@ defmodule Siwapp.Accounts do
     end
   end
 
+  @spec user_email_multi(User.t(), binary(), any()) :: Ecto.Multi.t()
   defp user_email_multi(user, email, context) do
     changeset = user |> User.email_changeset(%{email: email}) |> User.confirm_changeset()
 
@@ -163,6 +175,8 @@ defmodule Siwapp.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
+  @spec deliver_update_email_instructions(User.t(), binary, fun) ::
+          {:ok, term()} | {:error, term()}
   def deliver_update_email_instructions(%User{} = user, current_email, update_email_url_fun)
       when is_function(update_email_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
@@ -180,6 +194,7 @@ defmodule Siwapp.Accounts do
       %Ecto.Changeset{data: %User{}}
 
   """
+  @spec change_user_password(User.t(), map) :: Ecto.Changeset.t()
   def change_user_password(user, attrs \\ %{}) do
     User.password_changeset(user, attrs, hash_password: false)
   end
@@ -196,6 +211,8 @@ defmodule Siwapp.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec update_user_password(User.t(), binary(), map()) ::
+          {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update_user_password(user, password, attrs) do
     changeset =
       user
@@ -217,6 +234,7 @@ defmodule Siwapp.Accounts do
   @doc """
   Generates a session token.
   """
+  @spec generate_user_session_token(User.t()) :: binary()
   def generate_user_session_token(user) do
     {token, user_token} = UserToken.build_session_token(user)
     Repo.insert!(user_token)
@@ -226,6 +244,7 @@ defmodule Siwapp.Accounts do
   @doc """
   Gets the user with the given signed token.
   """
+  @spec get_user_by_session_token(binary()) :: User.t() | nil
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
     Repo.one(query)
@@ -234,6 +253,7 @@ defmodule Siwapp.Accounts do
   @doc """
   Deletes the signed token with the given context.
   """
+  @spec delete_session_token(binary) :: :ok
   def delete_session_token(token) do
     Repo.delete_all(UserToken.token_and_context_query(token, "session"))
     :ok
@@ -253,6 +273,7 @@ defmodule Siwapp.Accounts do
       {:error, :already_confirmed}
 
   """
+  @spec deliver_user_confirmation_instructions(User.t(), fun) :: {:ok, term()} | {:error, term()}
   def deliver_user_confirmation_instructions(%User{} = user, confirmation_url_fun)
       when is_function(confirmation_url_fun, 1) do
     if user.confirmed_at do
@@ -270,6 +291,7 @@ defmodule Siwapp.Accounts do
   If the token matches, the user account is marked as confirmed
   and the token is deleted.
   """
+  @spec confirm_user(binary) :: {:ok, User.t()} | :error
   def confirm_user(token) do
     with {:ok, query} <- UserToken.verify_email_token_query(token, "confirm"),
          %User{} = user <- Repo.one(query),
@@ -280,6 +302,7 @@ defmodule Siwapp.Accounts do
     end
   end
 
+  @spec confirm_user_multi(User.t()) :: Ecto.Multi.t()
   defp confirm_user_multi(user) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:user, User.confirm_changeset(user))
@@ -297,6 +320,8 @@ defmodule Siwapp.Accounts do
       {:ok, %{to: ..., body: ...}}
 
   """
+  @spec deliver_user_reset_password_instructions(User.t(), fun) ::
+          {:ok, term()} | {:error, term()}
   def deliver_user_reset_password_instructions(%User{} = user, reset_password_url_fun)
       when is_function(reset_password_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
@@ -316,6 +341,7 @@ defmodule Siwapp.Accounts do
       nil
 
   """
+  @spec get_user_by_reset_password_token(binary) :: User.t() | nil
   def get_user_by_reset_password_token(token) do
     with {:ok, query} <- UserToken.verify_email_token_query(token, "reset_password"),
          %User{} = user <- Repo.one(query) do
@@ -337,6 +363,7 @@ defmodule Siwapp.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec reset_user_password(User.t(), map) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def reset_user_password(user, attrs) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))

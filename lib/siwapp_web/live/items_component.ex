@@ -8,10 +8,12 @@ defmodule SiwappWeb.ItemsComponent do
   alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
 
+  @impl Phoenix.LiveComponent
   def mount(socket) do
     {:ok, assign(socket, :multiselect_options, Siwapp.Commons.list_taxes_for_multiselect())}
   end
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -21,6 +23,7 @@ defmodule SiwappWeb.ItemsComponent do
      |> assign(inputs_for: assigns.inputs_for)}
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("add", _, socket) do
     params = socket.assigns.f.params
 
@@ -51,12 +54,14 @@ defmodule SiwappWeb.ItemsComponent do
     PageView.money_format(value, currency, symbol: false, separator: "")
   end
 
+  @spec net_amount(Ecto.Changeset.t()) :: binary
   defp net_amount(changeset) do
     changeset
     |> Changeset.get_field(:net_amount)
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
 
+  @spec taxes_amounts(Ecto.Changeset.t()) :: list
   defp taxes_amounts(changeset) do
     changeset
     |> Changeset.get_field(:taxes_amounts)
@@ -65,12 +70,14 @@ defmodule SiwappWeb.ItemsComponent do
     end)
   end
 
+  @spec gross_amount(Ecto.Changeset.t()) :: binary
   defp gross_amount(changeset) do
     changeset
     |> Changeset.get_field(:gross_amount)
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
 
+  @spec item_param :: map
   defp item_param do
     %Item{taxes: []}
     |> Map.from_struct()

@@ -1,8 +1,8 @@
 defmodule SiwappWeb.UserSettingsControllerTest do
   use SiwappWeb.ConnCase, async: true
 
-  alias Siwapp.Accounts
   import Siwapp.AccountsFixtures
+  alias Siwapp.Accounts
 
   setup :register_and_log_in_user
 

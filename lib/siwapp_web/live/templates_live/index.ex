@@ -4,7 +4,7 @@ defmodule SiwappWeb.TemplatesLive.Index do
 
   alias Siwapp.Templates
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     socket =
       socket
@@ -14,7 +14,7 @@ defmodule SiwappWeb.TemplatesLive.Index do
     {:ok, assign(socket, templates: Templates.list())}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("defaultClicked", %{"id" => id, "type" => type}, socket) do
     template = id |> String.to_integer() |> Templates.get()
     Templates.set_default(String.to_atom(type), template)

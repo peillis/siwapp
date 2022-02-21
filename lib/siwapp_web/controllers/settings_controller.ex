@@ -4,6 +4,7 @@ defmodule SiwappWeb.SettingsController do
   alias Siwapp.Invoices
   alias Siwapp.Settings
 
+  @spec edit(Plug.Conn.t(), map) :: Plug.Conn.t()
   def edit(conn, _params) do
     data = Settings.current_bundle()
     changeset = Settings.change_bundle(data)
@@ -14,6 +15,7 @@ defmodule SiwappWeb.SettingsController do
     |> render("edit.html")
   end
 
+  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"setting_bundle" => attrs}) do
     case Settings.apply_user_bundle(attrs) do
       {:ok, changeset} ->

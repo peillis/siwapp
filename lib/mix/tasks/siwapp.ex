@@ -1,13 +1,13 @@
 defmodule Mix.Tasks.Siwapp do
+  @shortdoc "Prints Siwapp scripts help information"
+
   @moduledoc false
 
   use Mix.Task
 
   alias Mix.Tasks.Help
 
-  @shortdoc "Prints Siwapp scripts help information"
-
-  @impl true
+  @impl Mix.Task
   def run(args) do
     {_opts, args} = OptionParser.parse!(args, strict: [])
 
@@ -17,6 +17,7 @@ defmodule Mix.Tasks.Siwapp do
     end
   end
 
+  @spec general :: binary
   defp general do
     Application.ensure_all_started(:ecto)
 

@@ -4,8 +4,8 @@ defmodule SiwappWeb.TaxesComponent do
   use SiwappWeb, :live_component
 
   alias Phoenix.LiveView.JS
-  alias SiwappWeb.InvoiceFormHelpers
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     "taxes-" <> index = assigns.id
 
@@ -29,6 +29,7 @@ defmodule SiwappWeb.TaxesComponent do
      |> assign(f: assigns.f)}
   end
 
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div class="control msa-wrapper">
@@ -62,10 +63,9 @@ defmodule SiwappWeb.TaxesComponent do
     """
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("remove", %{"index" => index, "key" => key, "val" => value}, socket) do
-    selected =
-      socket.assigns.selected
-      |> MapSet.delete({key, value})
+    selected = MapSet.delete(socket.assigns.selected, {key, value})
 
     params =
       put_in(
@@ -83,9 +83,7 @@ defmodule SiwappWeb.TaxesComponent do
   end
 
   def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
-    selected =
-      socket.assigns.selected
-      |> MapSet.put({key, value})
+    selected = MapSet.put(socket.assigns.selected, {key, value})
 
     params =
       put_in(
@@ -102,10 +100,12 @@ defmodule SiwappWeb.TaxesComponent do
     {:noreply, assign(socket, selected: selected)}
   end
 
+  @spec not_selected(MapSet.t(), MapSet.t()) :: MapSet.t()
   defp not_selected(options, selected) do
     MapSet.difference(options, selected)
   end
 
+  @spec get_taxes(Siwapp.Invoices.Item.t() | Ecto.Changeset.t()) :: [Siwapp.Commons.Tax.t()]
   defp get_taxes(item) do
     if is_struct(item, Siwapp.Invoices.Item) do
       Map.get(item, :taxes)

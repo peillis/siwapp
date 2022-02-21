@@ -9,6 +9,7 @@ defmodule Siwapp.InvoicesFixtures do
   alias Siwapp.Invoices
   alias Siwapp.Repo
 
+  @spec valid_item_attributes(map) :: map
   def valid_item_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       quantity: 1,
@@ -18,6 +19,7 @@ defmodule Siwapp.InvoicesFixtures do
     })
   end
 
+  @spec valid_invoice_attributes(map) :: map
   def valid_invoice_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       name: CustomersFixtures.unique_customer_name(),
@@ -28,6 +30,7 @@ defmodule Siwapp.InvoicesFixtures do
     })
   end
 
+  @spec invoice_fixture(map) :: Invoice.t()
   def invoice_fixture(attrs \\ %{}) do
     {:ok, invoice} =
       attrs

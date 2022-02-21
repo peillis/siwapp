@@ -4,6 +4,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   """
   import Ecto.Query
 
+  @spec list_past_due(Ecto.Queryable.t()) :: Ecto.Query.t()
   def list_past_due(query) do
     date_today = Date.utc_today()
 
@@ -15,6 +16,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> where([i], i.due_date < ^date_today)
   end
 
+  @spec with_terms(Ecto.Queryable.t(), any) :: Ecto.Query.t()
   def with_terms(query, terms) do
     query
     |> join(:left, [i], it in Siwapp.Invoices.Item, on: it.invoice_id == i.id)
@@ -25,14 +27,14 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> distinct([i], i.id)
   end
 
+  @spec issue_date_gteq(Ecto.Queryable.t(), Date.t()) :: Ecto.Query.t()
   def issue_date_gteq(query, date) do
-    query
-    |> where([i], i.issue_date >= ^date)
+    where(query, [i], i.issue_date >= ^date)
   end
 
+  @spec issue_date_lteq(Ecto.Queryable.t(), Date.t()) :: Ecto.Query.t()
   def issue_date_lteq(query, date) do
-    query
-    |> where([i], i.issue_date <= ^date)
+    where(query, [i], i.issue_date <= ^date)
   end
 
   @spec last_number_with_series_id(Ecto.Queryable.t(), pos_integer()) :: Ecto.Query.t()
@@ -43,6 +45,16 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> limit(1)
   end
 
+  @spec list_by_query(
+          Ecto.Query.t(),
+          :customer_id
+          | :issue_date_gteq
+          | :issue_date_lteq
+          | :series_id
+          | :with_status
+          | :with_terms,
+          any
+        ) :: Ecto.Query.t()
   @doc """
   Gets a query on the invoices that match with the params
   """
@@ -66,7 +78,8 @@ defmodule Siwapp.Invoices.InvoiceQuery do
       {:with_status, :past_due} ->
         date_today = Date.utc_today()
 
-        where(query, [i], not is_nil(i.due_date))
+        query
+        |> where([i], not is_nil(i.due_date))
         |> where([i], i.due_date < ^date_today)
 
       {:with_status, value} ->

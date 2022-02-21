@@ -1,9 +1,19 @@
 defmodule SiwappWeb.InvoicesLive.Index do
   @moduledoc false
   use SiwappWeb, :live_view
+  alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.{Invoices, Search}
+  alias Siwapp.Search
   alias SiwappWeb.GraphicHelpers
+
+  @impl Phoenix.LiveView
+  def mount(_params, _session, %{id: "home"} = socket) do
+    {:ok,
+     socket
+     |> assign(:page, 0)
+     |> assign(:invoices, Invoices.list_past_due(0))
+     |> assign(:checked, MapSet.new())}
+  end
 
   def mount(%{"id" => id}, _session, socket) do
     customer_id = String.to_integer(id)
@@ -41,7 +51,24 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:summary_state, set_summary(:closed))
      |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month())
      |> assign(:totals, total_per_currencies())
-     |> assign(:page_title, "Invoices")}
+     |> assign(:page_title, "Invoices")
+     |> assign(:checked, MapSet.new())}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("load-more", _, %{id: "home"} = socket) do
+    %{
+      page: page,
+      invoices: invoices
+    } = socket.assigns
+
+    {
+      :noreply,
+      assign(socket,
+        invoices: invoices ++ Invoices.list_past_due(page + 1),
+        page: page + 1
+      )
+    }
   end
 
   def handle_event("load-more", _, %{live_action: :customer} = socket) do
@@ -118,6 +145,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     end
   end
 
+  @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
   defp update_checked(%{"id" => "0", "value" => "on"}, socket) do
     socket.assigns.invoices
     |> MapSet.new(& &1.id)
@@ -138,15 +166,18 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(0)
   end
 
+  @spec summary_chart([tuple]) :: {:safe, [...]}
   defp summary_chart(invoices_data_for_a_month) do
     invoices_data_for_a_month
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot()
   end
 
+  @spec set_summary(:opened | :closed) :: map()
   defp set_summary(:opened), do: %{visibility: "is-block", icon: "fa-angle-up"}
   defp set_summary(:closed), do: %{visibility: "is-hidden", icon: "fa-angle-down"}
 
+  @spec total_per_currencies([Invoice.t()]) :: map()
   defp total_per_currencies(invoices \\ Invoices.list()) do
     totals = Invoices.Statistics.get_accumulated_amount_per_currencies(invoices)
     default_currency = Siwapp.Settings.value(:currency)

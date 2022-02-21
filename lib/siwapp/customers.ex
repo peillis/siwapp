@@ -3,7 +3,8 @@ defmodule Siwapp.Customers do
   The Customers context.
   """
 
-  alias Siwapp.Customers.{Customer, CustomerQuery}
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query
   alias Siwapp.Repo
 
@@ -11,15 +12,16 @@ defmodule Siwapp.Customers do
   Lists customers in database
   """
   @spec list(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
-  def list(limit \\ 100, offset \\ 0), do: CustomerQuery.list(limit, offset) |> Repo.all()
+  def list(limit \\ 100, offset \\ 0), do: Repo.all(CustomerQuery.list(limit, offset))
 
   @doc """
   Lists customers in database following CustomerQuery.list_with_assoc_invoice_fields/2 query
   """
   @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
   def list_with_assoc_invoice_fields(limit \\ 100, offset \\ 0),
-    do: CustomerQuery.list_with_assoc_invoice_fields(limit, offset) |> Repo.all()
+    do: Repo.all(CustomerQuery.list_with_assoc_invoice_fields(limit, offset))
 
+  @spec suggest_by_name(binary | nil) :: list
   def suggest_by_name(""), do: []
   def suggest_by_name(nil), do: []
 
@@ -32,6 +34,7 @@ defmodule Siwapp.Customers do
   @doc """
   Create a new customer
   """
+  @spec create(map) :: {:ok, Customer.t()} | {:error, Ecto.Changeset.t()}
   def create(attrs \\ %{}) do
     %Customer{}
     |> Customer.changeset(attrs)
@@ -41,6 +44,7 @@ defmodule Siwapp.Customers do
   @doc """
   Update a customer
   """
+  @spec update(Customer.t(), map) :: Customer.t()
   def update(%Customer{} = customer, attrs) do
     customer
     |> Customer.changeset(attrs)
@@ -50,6 +54,7 @@ defmodule Siwapp.Customers do
   @doc """
   Delete a customer
   """
+  @spec delete(Customer.t()) :: {:ok, Customer.t()} | {:error, binary}
   def delete(%Customer{} = customer) do
     Repo.delete(customer)
   rescue
@@ -59,12 +64,15 @@ defmodule Siwapp.Customers do
   @doc """
   Gets a customer by id
   """
+  @spec get!(binary | integer) :: Customer.t()
   def get!(id), do: Repo.get!(Customer, id)
-  def get!(id, :preload), do: Repo.get!(Customer, id) |> Repo.preload([:invoices])
+  @spec get!(binary, atom) :: Customer.t()
+  def get!(id, :preload), do: Customer |> Repo.get!(id) |> Repo.preload([:invoices])
 
   @doc """
   Gets a customer by id
   """
+  @spec get(binary) :: Customer.t()
   def get(id), do: Repo.get(Customer, id)
 
   @spec get(binary | nil, binary | nil) :: Customer.t() | nil
@@ -79,6 +87,7 @@ defmodule Siwapp.Customers do
     end
   end
 
+  @spec change(Customer.t(), map) :: Ecto.Changeset.t()
   def change(%Customer{} = customer, attrs \\ %{}) do
     Customer.changeset(customer, attrs)
   end

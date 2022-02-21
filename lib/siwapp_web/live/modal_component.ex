@@ -2,7 +2,7 @@ defmodule SiwappWeb.ModalComponent do
   @moduledoc false
   use SiwappWeb, :live_component
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div
@@ -23,7 +23,7 @@ defmodule SiwappWeb.ModalComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("close", _, socket) do
     {:noreply, push_patch(socket, to: socket.assigns.return_to)}
   end

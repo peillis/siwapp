@@ -5,18 +5,22 @@ defmodule Siwapp.Invoices do
   import Ecto.Query, warn: false
 
   alias Siwapp.InvoiceHelper
-  alias Siwapp.Invoices.{Invoice, InvoiceQuery, Item}
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.InvoiceQuery
+  alias Siwapp.Invoices.Item
   alias Siwapp.Query
   alias Siwapp.Repo
 
   @doc """
   Gets a list of invoices by updated date with the parameters included in the options
   """
+  @spec list(keyword()) :: [Invoice.t()]
   def list(options \\ []) do
     default = [limit: 100, offset: 0, preload: [], filters: []]
     options = Keyword.merge(default, options)
 
-    Enum.reduce(options[:filters], Invoice, fn {field, value}, acc_query ->
+    options[:filters]
+    |> Enum.reduce(Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
     end)
     |> limit(^options[:limit])
@@ -25,6 +29,7 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
+  @spec scroll_listing(integer, integer) :: [Invoice.t()]
   def scroll_listing(page, per_page \\ 20) do
     Invoice
     |> Query.paginate(page, per_page)
@@ -32,6 +37,7 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
+  @spec count :: integer | nil
   def count do
     Repo.aggregate(Invoice, :count)
   end
@@ -69,8 +75,10 @@ defmodule Siwapp.Invoices do
     Repo.delete(invoice)
   end
 
+  @spec get(pos_integer()) :: Invoice.t() | nil
   def get(id), do: Repo.get(Invoice, id)
 
+  @spec get(pos_integer(), keyword()) :: Invoice.t() | nil
   def get(id, preload: list) do
     Invoice
     |> Repo.get(id)
@@ -81,9 +89,10 @@ defmodule Siwapp.Invoices do
   Gets an invoice by id
   """
 
-  @spec get!(pos_integer() | binary(), none() | keyword()) :: Invoice.t()
+  @spec get!(pos_integer() | binary()) :: Invoice.t()
   def get!(id), do: Repo.get!(Invoice, id)
 
+  @spec get!(pos_integer(), keyword()) :: Invoice.t()
   def get!(id, preload: list) do
     invoice =
       Invoice
@@ -91,9 +100,7 @@ defmodule Siwapp.Invoices do
       |> Repo.preload(list)
 
     items_with_calculations =
-      invoice.items
-      |> Enum.map(&change_item(&1, invoice.currency))
-      |> Enum.map(&Ecto.Changeset.apply_changes/1)
+      Enum.map(invoice.items, &Ecto.Changeset.apply_changes(change_item(&1, invoice.currency)))
 
     Map.put(invoice, :items, items_with_calculations)
   end
@@ -110,12 +117,14 @@ defmodule Siwapp.Invoices do
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking invoice changes.
   """
+  @spec change(Invoice.t(), map) :: Ecto.Changeset.t()
   def change(%Invoice{} = invoice, attrs \\ %{}) do
     invoice
     |> Invoice.changeset(attrs)
     |> Invoice.assign_number()
   end
 
+  @spec list_past_due(integer, integer) :: [Invoice.t()]
   def list_past_due(page, per_page \\ 20) do
     Invoice
     |> InvoiceQuery.list_past_due()
@@ -135,12 +144,14 @@ defmodule Siwapp.Invoices do
     end
   end
 
+  @spec list_currencies :: [atom]
   def list_currencies do
     Money.Currency.all()
     |> Map.keys()
     |> Enum.sort()
   end
 
+  @spec due_date_status(DateTime.t()) :: :pendig | :past_due
   defp due_date_status(due_date) do
     if Date.diff(due_date, Date.utc_today()) > 0 do
       :pending
@@ -188,6 +199,7 @@ defmodule Siwapp.Invoices do
   @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def delete_item(%Item{} = item), do: Repo.delete(item)
 
+  @spec change_item(Item.t(), binary | atom, map) :: Ecto.Changeset.t()
   def change_item(%Item{} = item, currency, attrs \\ %{}) do
     Item.changeset(item, attrs, currency)
   end

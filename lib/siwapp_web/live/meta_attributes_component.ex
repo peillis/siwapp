@@ -5,6 +5,7 @@ defmodule SiwappWeb.MetaAttributesComponent do
 
   alias Phoenix.HTML.Form
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     attributes =
       case Form.input_value(assigns.f, assigns.field) do
@@ -23,6 +24,7 @@ defmodule SiwappWeb.MetaAttributesComponent do
     {:ok, socket}
   end
 
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <fieldset>
@@ -75,6 +77,7 @@ defmodule SiwappWeb.MetaAttributesComponent do
     """
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("remove", %{"key" => key}, socket) do
     {:noreply, update(socket, :attributes, &Map.delete(&1, key))}
   end

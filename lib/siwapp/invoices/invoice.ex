@@ -9,9 +9,39 @@ defmodule Siwapp.Invoices.Invoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{InvoiceQuery, Item}
+  alias Siwapp.Invoices.InvoiceQuery
+  alias Siwapp.Invoices.Item
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
+
+  @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :net_amount,
+    :gross_amount,
+    :paid_amount,
+    :draft,
+    :paid,
+    :sent_by_email,
+    :number,
+    :issue_date,
+    :due_date,
+    :failed,
+    :currency,
+    :invoicing_address,
+    :shipping_address,
+    :notes,
+    :terms,
+    :deleted_at,
+    :meta_attributes,
+    :series_id,
+    :customer_id,
+    :recurring_invoice_id
+  ]
+
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
   @type t :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -47,35 +77,6 @@ defmodule Siwapp.Invoices.Invoice do
           deleted_at: DateTime.t() | nil
         }
 
-  @fields [
-    :name,
-    :identification,
-    :email,
-    :contact_person,
-    :net_amount,
-    :gross_amount,
-    :paid_amount,
-    :draft,
-    :paid,
-    :sent_by_email,
-    :number,
-    :issue_date,
-    :due_date,
-    :failed,
-    :currency,
-    :invoicing_address,
-    :shipping_address,
-    :notes,
-    :terms,
-    :deleted_at,
-    :meta_attributes,
-    :series_id,
-    :customer_id,
-    :recurring_invoice_id
-  ]
-
-  @email_regex Application.compile_env!(:siwapp, :email_regex)
-
   schema "invoices" do
     field :identification, :string
     field :name, :string
@@ -107,6 +108,7 @@ defmodule Siwapp.Invoices.Invoice do
     timestamps()
   end
 
+  @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
@@ -139,6 +141,7 @@ defmodule Siwapp.Invoices.Invoice do
   @doc """
   Assigns the series next number to the invoice changeset.
   """
+  @spec assign_number(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def assign_number(changeset) do
     cond do
       # It's illegal to assign a number to a draft
@@ -161,6 +164,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec assign_issue_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_issue_date(changeset) do
     if get_field(changeset, :issue_date) do
       changeset
@@ -169,6 +173,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec assign_due_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_due_date(changeset) do
     if get_field(changeset, :due_date) do
       changeset
@@ -181,6 +186,7 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   # you can't convert an existing invoice to draft
+  @spec only_new_invoice_can_be_draft(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp only_new_invoice_can_be_draft(changeset) do
     if get_field(changeset, :id) != nil and
          get_change(changeset, :draft) == true do
@@ -191,6 +197,7 @@ defmodule Siwapp.Invoices.Invoice do
   end
 
   # When draft there are few restrictions
+  @spec validate_required_draft(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_required_draft(changeset) do
     if get_field(changeset, :draft) do
       changeset

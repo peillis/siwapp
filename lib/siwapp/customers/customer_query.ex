@@ -2,9 +2,9 @@ defmodule Siwapp.Customers.CustomerQuery do
   @moduledoc """
   Module to manage Customer queries
   """
-  alias Siwapp.Customers.Customer
-
   import Ecto.Query
+
+  alias Siwapp.Customers.Customer
 
   @doc """
   Query to get customers in db, ordered desc. by id with limit and offset
@@ -25,7 +25,8 @@ defmodule Siwapp.Customers.CustomerQuery do
   """
   @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: Ecto.Query.t()
   def list_with_assoc_invoice_fields(limit, offset) do
-    list(limit, offset)
+    limit
+    |> list(offset)
     |> join(:left, [c], i in assoc(c, :invoices))
     |> where([c, i], not (i.draft or i.failed))
     |> group_by([c, i], c.id)

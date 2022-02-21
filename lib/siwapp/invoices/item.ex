@@ -11,15 +11,6 @@ defmodule Siwapp.Invoices.Item do
   alias Siwapp.Invoices.Invoice
   alias SiwappWeb.PageView
 
-  @type t :: %__MODULE__{
-          id: pos_integer(),
-          quantity: pos_integer(),
-          discount: non_neg_integer(),
-          description: binary() | nil,
-          unitary_cost: integer(),
-          deleted_at: DateTime.t() | nil,
-          invoice_id: pos_integer() | nil
-        }
   @derive {Jason.Encoder,
            only: [
              :quantity,
@@ -39,6 +30,16 @@ defmodule Siwapp.Invoices.Item do
     :invoice_id
   ]
 
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          quantity: pos_integer(),
+          discount: non_neg_integer(),
+          description: binary() | nil,
+          unitary_cost: integer(),
+          deleted_at: DateTime.t() | nil,
+          invoice_id: pos_integer() | nil
+        }
+
   schema "items" do
     field :quantity, :integer, default: 1
     field :discount, :integer, default: 0
@@ -55,6 +56,7 @@ defmodule Siwapp.Invoices.Item do
       on_replace: :delete
   end
 
+  @spec changeset(t(), map, binary | atom) :: Ecto.Changeset.t()
   def changeset(item, attrs \\ %{}, currency) do
     item
     |> cast(attrs, @fields)
@@ -78,6 +80,7 @@ defmodule Siwapp.Invoices.Item do
     |> set_taxes_amount()
   end
 
+  @spec set_net_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_net_amount(changeset) do
     quantity = get_field(changeset, :quantity)
     unitary_cost = get_field(changeset, :unitary_cost)
@@ -88,6 +91,7 @@ defmodule Siwapp.Invoices.Item do
     put_change(changeset, :net_amount, net_amount)
   end
 
+  @spec set_taxes_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_taxes_amount(changeset) do
     case get_field(changeset, :taxes) do
       [] ->
@@ -109,6 +113,7 @@ defmodule Siwapp.Invoices.Item do
   # we cast it and that's it. If it actually doesn't, we find the taxes associated
   # in the attributes. If the attributes have a tax that it doesn't exist we add
   # an error in the changeset.
+
   @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp assoc_taxes(changeset, attrs) do
     attr_taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
@@ -120,9 +125,11 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
+  @spec associated_taxes?(Ecto.Changeset.t(), list | map) :: boolean
   defp associated_taxes?(_changeset, [%Ecto.Changeset{} | _tail]), do: true
   defp associated_taxes?(changeset, _attr_taxes), do: get_field(changeset, :taxes) != []
 
+  @spec find_taxes(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
   defp find_taxes(changeset, attr_taxes_names) do
     all_taxes = Commons.list_taxes(:cache)
     all_taxes_names = Enum.map(all_taxes, &String.upcase(&1.name))
@@ -169,9 +176,10 @@ defmodule Siwapp.Invoices.Item do
     if is_nil(get_field(changeset, :unitary_cost)) do
       changeset
     else
+      unitary_cost = get_field(changeset, :unitary_cost)
+
       virtual_unitary_cost =
-        get_field(changeset, :unitary_cost)
-        |> PageView.money_format(currency, symbol: false, separator: "")
+        PageView.money_format(unitary_cost, currency, symbol: false, separator: "")
 
       put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
     end

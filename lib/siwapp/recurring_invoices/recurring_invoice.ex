@@ -10,7 +10,37 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
-  alias Siwapp.Invoices.{Invoice, Item}
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.Item
+
+  @fields [
+    :name,
+    :identification,
+    :email,
+    :contact_person,
+    :invoicing_address,
+    :shipping_address,
+    :net_amount,
+    :gross_amount,
+    :send_by_email,
+    :days_to_due,
+    :enabled,
+    :max_ocurrences,
+    :period,
+    :period_type,
+    :starting_date,
+    :finishing_date,
+    :currency,
+    :deleted_at,
+    :notes,
+    :terms,
+    :meta_attributes,
+    :items,
+    :customer_id,
+    :series_id
+  ]
+
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -45,35 +75,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           inserted_at: nil | DateTime.t(),
           deleted_at: nil | Date.t()
         }
-
-  @fields [
-    :name,
-    :identification,
-    :email,
-    :contact_person,
-    :invoicing_address,
-    :shipping_address,
-    :net_amount,
-    :gross_amount,
-    :send_by_email,
-    :days_to_due,
-    :enabled,
-    :max_ocurrences,
-    :period,
-    :period_type,
-    :starting_date,
-    :finishing_date,
-    :currency,
-    :deleted_at,
-    :notes,
-    :terms,
-    :meta_attributes,
-    :items,
-    :customer_id,
-    :series_id
-  ]
-
-  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
   schema "recurring_invoices" do
     field :identification, :string
@@ -134,11 +135,13 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   Converts field items from list of Item changesets to list of maps when
   changeset is valid to be able to save in database
   """
+  @spec untransform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def untransform_items(%{valid?: true} = changeset) do
+    items = get_field(changeset, :items)
+
     items =
-      get_field(changeset, :items)
-      |> Enum.map(&apply_changes(&1))
-      |> Enum.map(&make_item(&1))
+      items
+      |> Enum.map(&make_item(apply_changes(&1)))
       |> Enum.with_index()
       |> Map.new(fn {item, i} -> {i, item} end)
 
@@ -149,20 +152,24 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   # Converts field items from list of maps to list of Item changesets.
   # This is used to handle items validation and calculations
+  @spec transform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp transform_items(changeset) do
     currency = get_field(changeset, :currency)
 
     items_transformed =
-      get_field(changeset, :items)
-      |> Enum.map(fn {_i, item} -> Item.changeset(%Item{}, item, currency) end)
+      Enum.map(get_field(changeset, :items), fn {_i, item} ->
+        Item.changeset(%Item{}, item, currency)
+      end)
 
     put_change(changeset, :items, items_transformed)
   end
 
   # Adds error to changeset if any item is invalid
+  @spec validate_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_items(changeset) do
     items_valid? =
-      get_field(changeset, :items)
+      changeset
+      |> get_field(:items)
       |> Enum.all?(& &1.valid?)
 
     if items_valid? do
@@ -174,9 +181,11 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   # Applies changes (builds Item struct) to each Item changeset in field items.
   # Used to recycle calculate functions in invoice_helper, that use Item structs
+  @spec apply_changes_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp apply_changes_items(changeset) do
     items =
-      get_field(changeset, :items)
+      changeset
+      |> get_field(:items)
       |> Enum.map(&apply_changes(&1))
 
     put_change(changeset, :items, items)
@@ -185,6 +194,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
   # Converts each Item struct in a changeset (changing empty map).
   # Used to recycle add_item, remove_item functions in views and
   # build item forms' for user to fill
+  @spec unapply_changes_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp unapply_changes_items(changeset) do
     items = get_field(changeset, :items)
     currency = get_field(changeset, :currency)
@@ -193,6 +203,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     put_change(changeset, :items, items_changeset)
   end
 
+  @spec make_item(Item.t()) :: map
   defp make_item(%Item{description: d, quantity: q, unitary_cost: u, discount: di, taxes: t}) do
     %{
       "description" => d,

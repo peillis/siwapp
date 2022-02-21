@@ -1,9 +1,9 @@
 defmodule SiwappWeb.UserConfirmationControllerTest do
   use SiwappWeb.ConnCase, async: true
 
+  import Siwapp.AccountsFixtures
   alias Siwapp.Accounts
   alias Siwapp.Repo
-  import Siwapp.AccountsFixtures
 
   setup do
     %{user: user_fixture()}
