@@ -13,7 +13,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:page, 0)
      |> assign(
        :invoices,
-       Invoices.list(limit: 20, offset: 0, preload: [:series], filters: [with_status: :past_due]))
+       Invoices.list(limit: 20, offset: 0, preload: [:series], filters: [with_status: :past_due])
+     )
      |> assign(:checked, MapSet.new())}
   end
 
