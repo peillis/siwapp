@@ -21,12 +21,12 @@ defmodule SiwappWeb.HeaderComponent do
     others_totals = Map.drop(totals, [socket.assigns.default_currency])
 
     {:ok,
-    socket
-    |> assign(page_title: assigns.page_title)
-    |> assign(count: Statistics.count(assigns.query))
-    |> assign(chart_data: Statistics.get_amount_per_day(assigns.query))
-    |> assign(default_total: default_total)
-    |> assign(other_totals: others_totals)}
+     socket
+     |> assign(page_title: assigns.page_title)
+     |> assign(count: Statistics.count(assigns.query))
+     |> assign(chart_data: Statistics.get_amount_per_day(assigns.query))
+     |> assign(default_total: default_total)
+     |> assign(other_totals: others_totals)}
   end
 
   @impl Phoenix.LiveComponent
@@ -89,7 +89,9 @@ defmodule SiwappWeb.HeaderComponent do
   defp summary_chart(invoices_data) do
     invoices_data
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
-    |> GraphicHelpers.line_plot(y_formatter: &PageView.money_format(&1, "USD", symbol: false, fractional_unit: false))
+    |> GraphicHelpers.line_plot(
+      y_formatter: &PageView.money_format(&1, "USD", symbol: false, fractional_unit: false)
+    )
   end
 
   @spec set_summary(:opened | :closed) :: map()

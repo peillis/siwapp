@@ -26,7 +26,14 @@ defmodule Siwapp.Invoices.Statistics do
       |> select([q], %{date: q.issue_date, amount: sum(q.gross_amount)})
 
     subquery(amount_per_date)
-    |> join(:right, [q], d in fragment("select i.date from generate_series(current_date - interval '30 day', current_date, '1 day') as i"), on: q.date == d.date)
+    |> join(
+      :right,
+      [q],
+      d in fragment(
+        "select i.date from generate_series(current_date - interval '30 day', current_date, '1 day') as i"
+      ),
+      on: q.date == d.date
+    )
     |> select([q, d], {d.date, coalesce(q.amount, 0)})
     |> Repo.all()
   end

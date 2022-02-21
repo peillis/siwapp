@@ -18,7 +18,7 @@ defmodule SiwappWeb.GraphicHelpers do
       stroke_width: 1,
       smoothed: false,
       custom_x_formatter: options[:x_formatter],
-      custom_y_formatter: options[:y_formatter],
+      custom_y_formatter: options[:y_formatter]
     ]
 
     margins = %{left: 35, right: 15, top: 10, bottom: 20}
