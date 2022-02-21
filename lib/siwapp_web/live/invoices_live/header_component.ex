@@ -1,4 +1,4 @@
-defmodule SiwappWeb.HeaderComponent do
+defmodule SiwappWeb.InvoicesLive.HeaderComponent do
   @moduledoc false
   use SiwappWeb, :live_component
 
