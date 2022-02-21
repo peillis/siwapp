@@ -6,11 +6,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   alias Siwapp.Commons
   alias Siwapp.Invoices
-<<<<<<< HEAD
   alias Siwapp.Invoices.Invoice
-=======
-  alias Siwapp.Invoices.{Invoice}
->>>>>>> 5d7dc47 (small adjustments)
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
