@@ -48,6 +48,9 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> limit(1)
   end
 
+  @doc """
+  Gets a query on the invoices that match with the params
+  """
   @spec list_by_query(
           Ecto.Query.t(),
           :customer_id
@@ -58,10 +61,6 @@ defmodule Siwapp.Invoices.InvoiceQuery do
           | :with_terms,
           any
         ) :: Ecto.Query.t()
-  @doc """
-  Gets a query on the invoices that match with the params
-  """
-  @spec list_by_query(Ecto.Query.t(), atom, any) :: Ecto.Query.t()
   def list_by_query(query, key, value) do
     case {key, value} do
       {:with_terms, value} ->

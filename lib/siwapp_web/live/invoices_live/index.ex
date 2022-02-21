@@ -11,7 +11,9 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Invoices.list_past_due(0))
+     |> assign(
+       :invoices,
+       Invoices.list(limit: 20, offset: 0, preload: [:series], filters: [with_status: :past_due]))
      |> assign(:checked, MapSet.new())}
   end
 
@@ -65,7 +67,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {
       :noreply,
       assign(socket,
-        invoices: invoices ++ Invoices.list_past_due(page + 1),
+        invoices:
+          invoices ++
+            Invoices.list(
+              limit: 20,
+              offset: (page + 1) * 20,
+              preload: [:series],
+              filters: [with_status: :past_due]
+            ),
         page: page + 1
       )
     }
