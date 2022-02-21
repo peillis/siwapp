@@ -6,7 +6,7 @@ defmodule Siwapp.Templates do
   import Ecto.Query, warn: false
   alias Siwapp.Invoices
   alias Siwapp.Repo
-
+  alias Siwapp.Settings
   alias Siwapp.Templates.Template
 
   @doc """
@@ -202,8 +202,8 @@ defmodule Siwapp.Templates do
   """
   @spec print_str_template(Siwapp.Invoices.Invoice.t()) :: binary
   def print_str_template(invoice) do
-    get(:print_default).template
-    |> string_template(invoice)
+    template = get(:print_default).template
+    string_template(template, invoice)
   end
 
   @doc """
@@ -214,21 +214,31 @@ defmodule Siwapp.Templates do
   def subject_and_email_body(invoice) do
     %Template{template: email_template, subject: subject} = get(:email_default)
 
-    {subject,
-     email_template
-     |> string_template(invoice)}
+    email_body = string_template(email_template, invoice)
+    {subject, email_body}
   end
 
   # Returns evaluated template using invoice data
   @spec string_template(binary, Siwapp.Invoices.Invoice.t()) :: binary
   defp string_template(template, invoice) do
+    invoice = Siwapp.Invoices.with_virtual_fields(invoice)
+
+    settings_eval_data =
+      Settings.current_bundle()
+      |> Map.from_struct()
+      |> Map.filter(fn {k, _v} ->
+        k in [:company, :company_vat_id, :company_address, :company_email]
+      end)
+      |> Map.to_list()
+
     invoice_eval_data =
       invoice
       |> Map.from_struct()
-      |> Enum.map(fn {key, value} -> {key, value} end)
+      |> Map.to_list()
 
     all_eval_data =
       invoice_eval_data ++
+        settings_eval_data ++
         [have_discount?: have_items_discount?(invoice.items), status: Invoices.status(invoice)]
 
     EEx.eval_string(template, all_eval_data)
