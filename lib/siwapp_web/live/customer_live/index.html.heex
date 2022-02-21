@@ -29,21 +29,26 @@
         <td class="no-wrap">
           <%= customer.identification %>
         </td>
-        <!-- my suggestion is creating total and due as helper functions receiving customer.invoices -->
         <td class="text-right">
-          DUE
+          <%= money_format(
+            due(customer.total, customer.paid),
+            set_currency(customer.currencies),
+            symbol_option(customer.currencies)
+          ) %>
         </td>
         <td class="text-right">
-          TOTAL
+          <%= money_format(
+            customer.total,
+            set_currency(customer.currencies),
+            symbol_option(customer.currencies)
+          ) %>
         </td>
         <td class="text-center">
           <%= live_redirect(" ",
             class: "icon fas fa-list",
-            to: Routes.customer_edit_path(@socket, :edit, customer.id)
+            to: Routes.invoices_index_path(@socket, :customer, customer.id)
           ) %>
         </td>
-        <!-- we will change last redirection to invoices for customer -->
-
       </tr>
     <% end %>
   </tbody>

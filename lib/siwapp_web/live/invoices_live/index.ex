@@ -16,6 +16,32 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:checked, MapSet.new())}
   end
 
+  def mount(%{"id" => id}, _session, socket) do
+    customer_id = String.to_integer(id)
+
+    invoices =
+      Invoices.list(
+        filters: [{:customer_id, customer_id}],
+        preload: :series,
+        limit: 20,
+        offset: 0
+      )
+
+    name = Siwapp.Customers.get!(customer_id).name
+
+    {:ok,
+     socket
+     |> assign(:page, 0)
+     |> assign(:invoices, invoices)
+     |> assign(:number_of_invoices, length(invoices))
+     |> assign(:checked, MapSet.new())
+     |> assign(:summary_state, set_summary(:closed))
+     |> assign(:totals, total_per_currencies(invoices))
+     |> assign(:chart_data, Invoices.Statistics.get_data_for_a_month(invoices))
+     |> assign(:page_title, "Invoices for #{name}")
+     |> assign(:customer_id, customer_id)}
+  end
+
   def mount(_params, _session, socket) do
     {:ok,
      socket
@@ -41,6 +67,30 @@ defmodule SiwappWeb.InvoicesLive.Index do
       :noreply,
       assign(socket,
         invoices: invoices ++ Invoices.list_past_due(page + 1),
+        page: page + 1
+      )
+    }
+  end
+
+  def handle_event("load-more", _, %{live_action: :customer} = socket) do
+    %{
+      page: page,
+      invoices: invoices,
+      customer_id: customer_id
+    } = socket.assigns
+
+    more_invoices =
+      Invoices.list(
+        filters: [{:customer_id, customer_id}],
+        preload: :series,
+        limit: 20,
+        offset: (page + 1) * 20
+      )
+
+    {
+      :noreply,
+      assign(socket,
+        invoices: invoices ++ more_invoices,
         page: page + 1
       )
     }
@@ -133,14 +183,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     totals = Invoices.Statistics.get_accumulated_amount_per_currencies(invoices)
     default_currency = Siwapp.Settings.value(:currency)
 
-    default_total = totals[default_currency]
+    default_total = totals[default_currency] || 0
     others_totals = Map.drop(totals, [default_currency])
 
     %{
-      default: PageView.set_currency(default_total, default_currency),
+      default: SiwappWeb.PageView.money_format(default_total, default_currency),
       others:
         Enum.map(others_totals, fn {currency, amount} ->
-          PageView.set_currency(amount, currency)
+          SiwappWeb.PageView.money_format(amount, currency)
         end)
     }
   end

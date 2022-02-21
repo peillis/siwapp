@@ -3,7 +3,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   use SiwappWeb, :live_view
 
   alias SiwappWeb.InvoicesLive.CustomerComponent
-  alias SiwappWeb.ItemView
 
   alias Siwapp.Commons
   alias Siwapp.Invoices
@@ -14,7 +13,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:multiselect_options, Commons.list_taxes_for_multiselect())
      |> assign(:series, Commons.list_series())
      |> assign(:currency_options, Invoices.list_currencies())
      |> assign(:customer_suggestions, [])}
@@ -47,64 +45,15 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     end
   end
 
-  def handle_event(
-        "validate",
-        %{"invoice" => params, "_target" => ["invoice", "series_id"]},
-        socket
-      ) do
-    changeset = Invoices.change(socket.assigns.invoice, params)
-
-    {:noreply, assign(socket, :changeset, changeset)}
-  end
-
   def handle_event("validate", %{"invoice" => params}, socket) do
     changeset = Invoices.change(socket.assigns.invoice, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("add_item", _, socket) do
-    changeset = ItemView.add_item(socket.assigns.changeset)
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  def handle_event("remove_item", %{"item-id" => item_id}, socket) do
-    changeset = ItemView.remove_item(socket.assigns.changeset, String.to_integer(item_id))
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  @impl Phoenix.LiveView
-  def handle_info({:update_changeset, params}, socket) do
+  def handle_info({:params_updated, params}, socket) do
     changeset = Invoices.change(socket.assigns.invoice, params)
 
-    {:noreply, assign(socket, :changeset, changeset)}
-  end
-
-  @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
-          Phoenix.LiveView.Socket.t()
-  defp apply_action(socket, :new, _params) do
-    new_invoice = %Invoice{items: [%Item{taxes: []}]}
-
-    socket
-    |> assign(:action, :new)
-    |> assign(:page_title, "New Invoice")
-    |> assign(:invoice, new_invoice)
-    |> assign(
-      :changeset,
-      Invoices.change(new_invoice)
-    )
-  end
-
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    invoice =
-      Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series, :customer])
-
-    socket
-    |> assign(:action, :edit)
-    |> assign(:page_title, invoice.name)
-    |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice))
+    {:noreply, assign(socket, changeset: changeset)}
   end
 end

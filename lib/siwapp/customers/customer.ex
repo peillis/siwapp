@@ -10,43 +10,46 @@ defmodule Siwapp.Customers.Customer do
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
   @derive {Jason.Encoder,
-           only: [
-             :name,
-             :identification,
-             :email,
-             :contact_person,
-             :invoicing_address,
-             :shipping_address
-           ]}
-
-  @fields [
+  only: [
     :name,
     :identification,
-    :hash_id,
     :email,
     :contact_person,
-    :deleted_at,
     :invoicing_address,
-    :shipping_address,
-    :meta_attributes
-  ]
+    :shipping_address
+    ]}
 
-  @email_regex Application.compile_env!(:siwapp, :email_regex)
+    @fields [
+      :name,
+      :identification,
+      :hash_id,
+      :email,
+      :contact_person,
+      :deleted_at,
+      :invoicing_address,
+      :shipping_address,
+      :meta_attributes
+    ]
 
-  @type t :: %__MODULE__{
-          id: pos_integer() | nil,
-          name: binary | nil,
-          identification: binary | nil,
-          hash_id: binary | nil,
-          email: binary | nil,
-          contact_person: binary | nil,
-          deleted_at: DateTime.t() | nil,
-          invoicing_address: binary | nil,
-          shipping_address: binary | nil,
-          meta_attributes: map,
-          inserted_at: DateTime.t() | nil,
-          updated_at: DateTime.t() | nil
-        }
+    @email_regex Application.compile_env!(:siwapp, :email_regex)
+
+    @type t :: %__MODULE__{
+            id: pos_integer() | nil,
+            name: binary | nil,
+            identification: binary | nil,
+            hash_id: binary | nil,
+            email: binary | nil,
+            contact_person: binary | nil,
+            deleted_at: DateTime.t() | nil,
+            invoicing_address: binary | nil,
+            shipping_address: binary | nil,
+            meta_attributes: map | nil,
+            total: integer | nil,
+            paid: integer | nil,
+            currencies: [String.t()] | [] | nil,
+            inserted_at: DateTime.t() | nil,
+            updated_at: DateTime.t() | nil
+          }
 
   schema "customers" do
     field :identification, :string
@@ -58,6 +61,9 @@ defmodule Siwapp.Customers.Customer do
     field :invoicing_address, :string
     field :shipping_address, :string
     field :meta_attributes, :map, default: %{}
+    field :total, :integer, virtual: true
+    field :paid, :integer, virtual: true
+    field :currencies, {:array, :string}, virtual: true
     has_many :recurring_invoices, RecurringInvoice
     has_many :invoices, Invoice
 

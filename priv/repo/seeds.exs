@@ -146,15 +146,15 @@ recurring_invoices = [
     starting_date: Date.add(today, -60),
     series_id: 2,
     customer_id: 2,
-    items: [
-      %{
+    items: %{
+      "0" => %{
         "description" => "description",
         "quantity" => 1,
         "unitary_cost" => 0,
         "discount" => 0,
         "taxes" => ["RETENTION"]
       }
-    ]
+    }
   },
   %{
     name: Faker.Person.name(),
@@ -163,15 +163,15 @@ recurring_invoices = [
     starting_date: Date.add(today, -400),
     series_id: 3,
     customer_id: 3,
-    items: [
-      %{
+    items: %{
+      "0" => %{
         "description" => "description",
         "quantity" => 1,
         "unitary_cost" => 0,
         "discount" => 0,
         "taxes" => ["VAT"]
       }
-    ]
+    }
   }
 ]
 

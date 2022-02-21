@@ -4,6 +4,7 @@ defmodule Siwapp.RecurringInvoices do
   """
   import Ecto.Query, warn: false
 
+  alias Siwapp.InvoiceHelper
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Invoices.InvoiceQuery
@@ -39,6 +40,7 @@ defmodule Siwapp.RecurringInvoices do
   def create(attrs \\ %{}) do
     %RecurringInvoice{}
     |> RecurringInvoice.changeset(attrs)
+    |> InvoiceHelper.maybe_find_customer_or_new()
     |> RecurringInvoice.untransform_items()
     |> Repo.insert()
   end
@@ -53,6 +55,7 @@ defmodule Siwapp.RecurringInvoices do
   def update(recurring_invoice, attrs) do
     recurring_invoice
     |> RecurringInvoice.changeset(attrs)
+    |> InvoiceHelper.maybe_find_customer_or_new()
     |> RecurringInvoice.untransform_items()
     |> Repo.update()
   end
