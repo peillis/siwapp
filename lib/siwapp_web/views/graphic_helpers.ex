@@ -9,7 +9,7 @@ defmodule SiwappWeb.GraphicHelpers do
 
   'data' must be a list of tuples with size of 2.
   """
-  @spec line_plot([{any(), any()}]) :: {:safe, [...]}
+  @spec line_plot([{any(), any()}], keyword()) :: {:safe, [...]}
   def line_plot(data, options \\ []) do
     default = [x_formatter: nil, y_formatter: nil]
     options = Keyword.merge(default, options)

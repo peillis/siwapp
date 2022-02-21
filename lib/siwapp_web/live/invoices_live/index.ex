@@ -4,7 +4,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Invoices.InvoiceQuery
-  alias Siwapp.{Invoices, Search}
+  alias Siwapp.Search
 
   @impl Phoenix.LiveView
   def mount(_params, _session, %{id: "home"} = socket) do
@@ -143,9 +143,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_info({:search, params}, socket) do
     invoices = Search.filters(Invoice, params)
 
-    {:noreply,
-     socket
-     |> assign(:invoices, invoices)}
+    {:noreply, assign(socket, :invoices, invoices)}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()

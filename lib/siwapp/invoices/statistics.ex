@@ -2,12 +2,13 @@ defmodule Siwapp.Invoices.Statistics do
   @moduledoc """
   Statistics utils.
   """
+  import Ecto.Query
+
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Repo
 
-  import Ecto.Query
-
+  @spec count(Ecto.Queryable.t()) :: non_neg_integer()
   def count(query) do
     Repo.aggregate(query, :count)
   end
@@ -25,7 +26,8 @@ defmodule Siwapp.Invoices.Statistics do
       |> group_by([q], q.issue_date)
       |> select([q], %{date: q.issue_date, amount: sum(q.gross_amount)})
 
-    subquery(amount_per_date)
+    amount_per_date
+    |> subquery()
     |> join(
       :right,
       [q],

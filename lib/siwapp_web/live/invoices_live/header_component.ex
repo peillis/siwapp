@@ -2,9 +2,9 @@ defmodule SiwappWeb.HeaderComponent do
   @moduledoc false
   use SiwappWeb, :live_component
 
+  alias Siwapp.Invoices.Statistics
   alias SiwappWeb.GraphicHelpers
   alias SiwappWeb.PageView
-  alias Siwapp.Invoices.Statistics
 
   @impl Phoenix.LiveComponent
   def mount(socket) do

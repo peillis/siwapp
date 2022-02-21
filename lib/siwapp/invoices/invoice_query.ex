@@ -2,8 +2,8 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   @moduledoc """
   Invoices Querys
   """
-  alias Siwapp.Invoices.Invoice
   import Ecto.Query
+  alias Siwapp.Invoices.Invoice
 
   @doc """
   Gets a query on the invoices with status :past_due
@@ -42,9 +42,9 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> distinct([i], i.id)
   end
 
+  @spec list_by_customer(Ecto.Queryable.t(), pos_integer()) :: Ecto.Query.t()
   def list_by_customer(query \\ Invoice, customer_id) do
-    query
-    |> where(customer_id: ^customer_id)
+    where(query, customer_id: ^customer_id)
   end
 
   @spec issue_date_gteq(Ecto.Queryable.t(), Date.t()) :: Ecto.Query.t()
