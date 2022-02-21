@@ -6,7 +6,7 @@ defmodule Siwapp.Templates do
   import Ecto.Query, warn: false
   alias Siwapp.Invoices
   alias Siwapp.Repo
-
+  alias Siwapp.Settings
   alias Siwapp.Templates.Template
 
   @doc """
@@ -185,17 +185,60 @@ defmodule Siwapp.Templates do
     Template.changeset(template, attrs)
   end
 
-  @spec string_template(Invoices.Invoice.t()) :: binary()
-  def string_template(invoice) do
+  @doc """
+  Returns {pdf_content, pdf_name} where pdf_content
+  uses evaluated print_default template using invoice
+  data.
+  """
+  @spec pdf_content_and_name(Siwapp.Invoices.Invoice.t()) :: {binary, binary}
+  def pdf_content_and_name(invoice) do
+    {:ok, data} = ChromicPDF.print_to_pdf({:html, print_str_template(invoice)})
+
+    {Base.decode64!(data), "#{invoice.series.code}-#{invoice.number}.pdf"}
+  end
+
+  @doc """
+  Returns evaluated print_default template (html) using invoice data
+  """
+  @spec print_str_template(Siwapp.Invoices.Invoice.t()) :: binary
+  def print_str_template(invoice) do
     template = get(:print_default).template
+    string_template(template, invoice)
+  end
+
+  @doc """
+  Returns {subject, email_body} where subject is defined by email_default template (struct)
+  so as email_body, which is the evaluated email_template (html) using invoice data
+  """
+  @spec subject_and_email_body(Siwapp.Invoices.Invoice.t()) :: {binary, binary}
+  def subject_and_email_body(invoice) do
+    %Template{template: email_template, subject: subject} = get(:email_default)
+
+    email_body = string_template(email_template, invoice)
+    {subject, email_body}
+  end
+
+  # Returns evaluated template using invoice data
+  @spec string_template(binary, Siwapp.Invoices.Invoice.t()) :: binary
+  defp string_template(template, invoice) do
+    invoice = Siwapp.Invoices.with_virtual_fields(invoice)
+
+    settings_eval_data =
+      Settings.current_bundle()
+      |> Map.from_struct()
+      |> Map.filter(fn {k, _v} ->
+        k in [:company, :company_vat_id, :company_address, :company_email]
+      end)
+      |> Map.to_list()
 
     invoice_eval_data =
       invoice
       |> Map.from_struct()
-      |> Enum.map(fn {key, value} -> {key, value} end)
+      |> Map.to_list()
 
     all_eval_data =
       invoice_eval_data ++
+        settings_eval_data ++
         [have_discount?: have_items_discount?(invoice.items), status: Invoices.status(invoice)]
 
     EEx.eval_string(template, all_eval_data)
