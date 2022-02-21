@@ -8,13 +8,10 @@ defmodule SiwappWeb.PageView do
   """
   @spec money_format(number, atom | binary, keyword) :: binary
   def money_format(value, currency, options \\ []) do
-    default = [symbol: true, separator: ","]
-    options = Keyword.merge(default, options)
-
     value
     |> round()
     |> Money.new(currency)
-    |> Money.to_string(symbol: options[:symbol], separator: options[:separator])
+    |> Money.to_string(options)
   end
 
   @spec atom_keys_to_string(map) :: map
