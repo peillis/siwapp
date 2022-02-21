@@ -19,19 +19,13 @@ defmodule SiwappWeb.PageController do
   end
 
   def send_email(conn, %{"id" => id}) do
-    Invoices.get!(id, preload: [{:items, :taxes}, :series])
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
+
+    invoice
     |> Invoices.send_email()
     |> case do
-      {:ok, _id} ->
-        conn
-        |> put_flash(:info, "Email successfully sent")
-
-      {:error, msg} ->
-        conn
-        |> put_flash(
-          :error,
-          msg
-        )
+      {:ok, _id} -> put_flash(conn, :info, "Email successfully sent")
+      {:error, msg} -> put_flash(conn, :error, msg)
     end
     |> redirect(to: "/")
   end
