@@ -3,7 +3,8 @@ defmodule Siwapp.Customers do
   The Customers context.
   """
 
-  alias Siwapp.Customers.{Customer, CustomerQuery}
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query
   alias Siwapp.Repo
 
@@ -11,14 +12,14 @@ defmodule Siwapp.Customers do
   Lists customers in database
   """
   @spec list(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
-  def list(limit \\ 100, offset \\ 0), do: CustomerQuery.list(limit, offset) |> Repo.all()
+  def list(limit \\ 100, offset \\ 0), do: Repo.all(CustomerQuery.list(limit, offset))
 
   @doc """
   Lists customers in database following CustomerQuery.list_with_assoc_invoice_fields/2 query
   """
   @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: [Customer.t()]
   def list_with_assoc_invoice_fields(limit \\ 100, offset \\ 0),
-    do: CustomerQuery.list_with_assoc_invoice_fields(limit, offset) |> Repo.all()
+    do: Repo.all(CustomerQuery.list_with_assoc_invoice_fields(limit, offset))
 
   @spec suggest_by_name(binary | nil) :: list
   def suggest_by_name(""), do: []

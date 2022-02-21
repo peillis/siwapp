@@ -1,5 +1,4 @@
 defmodule SiwappWeb.CustomerLive.Index do
-
   @moduledoc """
 
   This module manages the customer index view
@@ -7,11 +6,11 @@ defmodule SiwappWeb.CustomerLive.Index do
 
   use SiwappWeb, :live_view
 
+  import SiwappWeb.PageView
+
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
   alias Siwapp.Search
-
-  import SiwappWeb.PageView
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do

@@ -125,9 +125,11 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
+  @spec associated_taxes?(Ecto.Changeset.t(), list | map) :: boolean
   defp associated_taxes?(_changeset, [%Ecto.Changeset{} | _tail]), do: true
   defp associated_taxes?(changeset, _attr_taxes), do: get_field(changeset, :taxes) != []
 
+  @spec find_taxes(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
   defp find_taxes(changeset, attr_taxes_names) do
     all_taxes = Commons.list_taxes(:cache)
     all_taxes_names = Enum.map(all_taxes, &String.upcase(&1.name))

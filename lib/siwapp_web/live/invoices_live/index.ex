@@ -5,7 +5,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Search
   alias SiwappWeb.GraphicHelpers
-  alias SiwappWeb.PageView
 
   @impl Phoenix.LiveView
   def mount(_params, _session, %{id: "home"} = socket) do

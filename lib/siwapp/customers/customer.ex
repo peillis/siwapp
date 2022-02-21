@@ -10,46 +10,46 @@ defmodule Siwapp.Customers.Customer do
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
   @derive {Jason.Encoder,
-  only: [
+           only: [
+             :name,
+             :identification,
+             :email,
+             :contact_person,
+             :invoicing_address,
+             :shipping_address
+           ]}
+
+  @fields [
     :name,
     :identification,
+    :hash_id,
     :email,
     :contact_person,
+    :deleted_at,
     :invoicing_address,
-    :shipping_address
-    ]}
+    :shipping_address,
+    :meta_attributes
+  ]
 
-    @fields [
-      :name,
-      :identification,
-      :hash_id,
-      :email,
-      :contact_person,
-      :deleted_at,
-      :invoicing_address,
-      :shipping_address,
-      :meta_attributes
-    ]
+  @email_regex Application.compile_env!(:siwapp, :email_regex)
 
-    @email_regex Application.compile_env!(:siwapp, :email_regex)
-
-    @type t :: %__MODULE__{
-            id: pos_integer() | nil,
-            name: binary | nil,
-            identification: binary | nil,
-            hash_id: binary | nil,
-            email: binary | nil,
-            contact_person: binary | nil,
-            deleted_at: DateTime.t() | nil,
-            invoicing_address: binary | nil,
-            shipping_address: binary | nil,
-            meta_attributes: map | nil,
-            total: integer | nil,
-            paid: integer | nil,
-            currencies: [String.t()] | [] | nil,
-            inserted_at: DateTime.t() | nil,
-            updated_at: DateTime.t() | nil
-          }
+  @type t :: %__MODULE__{
+          id: pos_integer() | nil,
+          name: binary | nil,
+          identification: binary | nil,
+          hash_id: binary | nil,
+          email: binary | nil,
+          contact_person: binary | nil,
+          deleted_at: DateTime.t() | nil,
+          invoicing_address: binary | nil,
+          shipping_address: binary | nil,
+          meta_attributes: map | nil,
+          total: integer | nil,
+          paid: integer | nil,
+          currencies: [String.t()] | [] | nil,
+          inserted_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil
+        }
 
   schema "customers" do
     field :identification, :string

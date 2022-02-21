@@ -141,8 +141,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
     items =
       items
-      |> Enum.map(&apply_changes(&1))
-      |> Enum.map(&make_item(&1))
+      |> Enum.map(&make_item(apply_changes(&1)))
       |> Enum.with_index()
       |> Map.new(fn {item, i} -> {i, item} end)
 
@@ -158,8 +157,9 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     currency = get_field(changeset, :currency)
 
     items_transformed =
-      get_field(changeset, :items)
-      |> Enum.map(fn {_i, item} -> Item.changeset(%Item{}, item, currency) end)
+      Enum.map(get_field(changeset, :items), fn {_i, item} ->
+        Item.changeset(%Item{}, item, currency)
+      end)
 
     put_change(changeset, :items, items_transformed)
   end

@@ -89,7 +89,7 @@ defmodule Siwapp.Invoices do
   Gets an invoice by id
   """
 
-  @spec get!(pos_integer() | binary(), none() | keyword()) :: Invoice.t()
+  @spec get!(pos_integer() | binary()) :: Invoice.t()
   def get!(id), do: Repo.get!(Invoice, id)
 
   @spec get!(pos_integer(), keyword()) :: Invoice.t()
