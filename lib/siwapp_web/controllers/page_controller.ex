@@ -12,12 +12,22 @@ defmodule SiwappWeb.PageController do
 
   @spec download(Plug.Conn.t(), map) :: Plug.Conn.t()
   def download(conn, %{"id" => id}) do
-    invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
-    pdf_name = "#{invoice.series.code}-#{Integer.to_string(invoice.number)}.pdf"
-    str_template = Templates.string_template(invoice)
-    {:ok, data} = ChromicPDF.print_to_pdf({:html, str_template})
-    pdf_content = Base.decode64!(data)
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
+    {pdf_content, pdf_name} = Templates.pdf_content_and_name(invoice)
 
     send_download(conn, {:binary, pdf_content}, filename: pdf_name)
+  end
+
+  @spec send_email(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def send_email(conn, %{"id" => id}) do
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
+
+    invoice
+    |> Invoices.send_email()
+    |> case do
+      {:ok, _id} -> put_flash(conn, :info, "Email successfully sent")
+      {:error, msg} -> put_flash(conn, :error, msg)
+    end
+    |> redirect(to: "/")
   end
 end
