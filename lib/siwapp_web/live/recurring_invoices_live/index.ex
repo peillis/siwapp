@@ -12,7 +12,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:recurring_invoices, RecurringInvoices.scroll_listing(0))
+     |> assign(
+       :recurring_invoices,
+       RecurringInvoices.list(limit: 20, offset: 0, preload: [:series])
+     )
      |> assign(:checked, MapSet.new())}
   end
 
@@ -26,7 +29,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {
       :noreply,
       assign(socket,
-        recurring_invoices: recurring_invoices ++ RecurringInvoices.scroll_listing(page + 1),
+        recurring_invoices:
+          recurring_invoices ++
+            RecurringInvoices.list(limit: 20, offset: (page + 1) * 20, preload: [:series]),
         page: page + 1
       )
     }

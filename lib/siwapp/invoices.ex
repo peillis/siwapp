@@ -29,14 +29,6 @@ defmodule Siwapp.Invoices do
     |> Repo.all()
   end
 
-  @spec scroll_listing(integer, integer) :: [Invoice.t()]
-  def scroll_listing(page, per_page \\ 20) do
-    Invoice
-    |> Query.paginate(page, per_page)
-    |> Query.list_preload(:series)
-    |> Repo.all()
-  end
-
   @spec count :: integer | nil
   def count do
     Repo.aggregate(Invoice, :count)
@@ -124,15 +116,6 @@ defmodule Siwapp.Invoices do
     |> Invoice.assign_number()
   end
 
-  @spec list_past_due(integer, integer) :: [Invoice.t()]
-  def list_past_due(page, per_page \\ 20) do
-    Invoice
-    |> InvoiceQuery.list_past_due()
-    |> Query.paginate(page, per_page)
-    |> Query.list_preload(:series)
-    |> Repo.all()
-  end
-
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
   def status(invoice) do
     cond do
@@ -153,7 +136,7 @@ defmodule Siwapp.Invoices do
 
   @spec due_date_status(DateTime.t()) :: :pendig | :past_due
   defp due_date_status(due_date) do
-    if Date.diff(due_date, Date.utc_today()) > 0 do
+    if Date.diff(due_date, Date.utc_today()) >= 0 do
       :pending
     else
       :past_due
