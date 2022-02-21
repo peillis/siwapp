@@ -23,9 +23,9 @@ defmodule SiwappWeb.PageLive.Index do
   """
   @spec dashboard_chart :: {:safe, [...]}
   def dashboard_chart do
-    Invoices.Statistics.get_data_for_a_month()
+    Invoices.Statistics.get_amount_per_day()
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
-    |> GraphicHelpers.line_plot()
+    |> GraphicHelpers.line_plot(y_formatter: &SiwappWeb.PageView.money_format(&1, "USD", symbol: false, fractional_unit: false))
   end
 
   @spec handle_event(binary, map(), Phoenix.LiveView.Socket.t()) ::
