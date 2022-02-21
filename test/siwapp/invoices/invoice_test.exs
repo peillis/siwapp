@@ -177,7 +177,7 @@ defmodule Siwapp.InvoiceTest do
       assert invoice_fixture().due_date == Date.add(today, 5)
     end
 
-    test "If you provide a due date, that one is set" do
+    test "If you provide a due date, that one is set if is equal or greater than the issue_date" do
       invoice = invoice_fixture(%{due_date: ~D[2023-12-12]})
 
       assert invoice.due_date == ~D[2023-12-12]

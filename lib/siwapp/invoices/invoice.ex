@@ -175,17 +175,20 @@ defmodule Siwapp.Invoices.Invoice do
 
   @spec assign_due_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_due_date(changeset) do
-    due_date = get_field(changeset, :issue_date)
+    due_date = get_field(changeset, :due_date)
     issue_date = get_field(changeset, :issue_date)
+
     cond do
       is_nil(due_date) ->
         days_to_due = Siwapp.Settings.value(:days_to_due, :cache)
         due_date = Date.add(issue_date, String.to_integer(days_to_due))
         put_change(changeset, :due_date, due_date)
 
-      due_date < issue_date -> add_error(changeset, :due_date, "due date cannot be earlier than issue date")
+      Date.diff(due_date, issue_date) < 0 ->
+        add_error(changeset, :due_date, "due date cannot be earlier than issue date")
 
-      true -> changeset
+      true ->
+        changeset
     end
   end
 
