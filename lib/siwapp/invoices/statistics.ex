@@ -19,12 +19,9 @@ defmodule Siwapp.Invoices.Statistics do
   """
   @spec get_amount_per_day(Ecto.Queryable.t()) :: [{Date.t(), non_neg_integer()}]
   def get_amount_per_day(query \\ Invoice) do
-    amount_per_date =
-      query
-      |> group_by([q], q.issue_date)
-      |> select([q], %{date: q.issue_date, amount: sum(q.gross_amount)})
-
-    amount_per_date
+    query
+    |> group_by([q], q.issue_date)
+    |> select([q], %{date: q.issue_date, amount: sum(q.gross_amount)})
     |> subquery()
     |> join(
       :right,
