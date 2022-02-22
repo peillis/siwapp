@@ -9,16 +9,6 @@ defmodule Siwapp.Commons.Series do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
-  @derive {Jason.Encoder,
-           only: [
-             :default,
-             :enabled,
-             :first_number,
-             :id,
-             :name,
-             :code
-           ]}
-
   @fields [:name, :code, :enabled, :default, :deleted_at, :first_number]
 
   @type t :: %__MODULE__{
