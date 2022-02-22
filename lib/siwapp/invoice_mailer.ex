@@ -28,8 +28,8 @@ defmodule Siwapp.InvoiceMailer do
     {:ok, email}
   rescue
     _e in ArgumentError ->
-      {:error, "Sending email is impossible if no email address in invoice
-    data is provided. Please edit the invoice and fill email field if
+      {:error, "Sending email is impossible if no email address
+      is provided. Please edit the invoice and fill email field if
       you want to be able to send it"}
   end
 
