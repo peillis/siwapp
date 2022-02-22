@@ -115,11 +115,7 @@ defmodule Siwapp.Search.SearchQuery do
         where(query, [q], field(q, ^value) == true)
 
       "Pending" ->
-        query
-        |> where(draft: false)
-        |> where(paid: false)
-        |> where(failed: false)
-        |> where([q], is_nil(q.due_date) or q.due_date >= ^Date.utc_today())
+        InvoiceQuery.pending(query)
 
       "Past Due" ->
         InvoiceQuery.past_due(query)
