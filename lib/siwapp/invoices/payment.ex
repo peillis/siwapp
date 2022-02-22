@@ -24,7 +24,7 @@ defmodule Siwapp.Invoices.Payment do
           invoice_id: pos_integer() | nil
         }
 
-  schema "items" do
+  schema "payments" do
     field :date, :date
     field :amount, :integer
     field :notes, :string
