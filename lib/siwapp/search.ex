@@ -10,12 +10,10 @@ defmodule Siwapp.Search do
           Siwapp.Invoices.Invoice.t()
           | Siwapp.Customers.Customer.t()
           | Siwapp.RecurringInvoices.RecurringInvoice.t()
-  @type key :: binary()
-  @type value :: binary()
   @doc """
   Filter invoices, customers or recurring_invoices by the selected parameters
   """
-  @spec filters(Ecto.Queryable.t(), [{key, value}]) :: [type_of_struct()]
+  @spec filters(Ecto.Queryable.t(), [{binary, binary}]) :: [type_of_struct()]
   def filters(Siwapp.Customers.Customer = customer, params) do
     params
     |> Enum.reduce(customer, fn {key, value}, acc_query ->
