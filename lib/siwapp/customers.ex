@@ -2,7 +2,6 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
-  import Ecto.Query
   alias Siwapp.Customers.Customer
   alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query
@@ -94,9 +93,7 @@ defmodule Siwapp.Customers do
 
   @spec list_names :: [binary()]
   def list_names do
-    Customer
-    |> select([c], c.name)
-    |> Repo.all()
+    Repo.all(CustomerQuery.names)
   end
 
   @spec get_by_hash_id(binary, binary) :: Customer.t() | nil

@@ -39,4 +39,9 @@ defmodule Siwapp.Customers.CustomerQuery do
       id: c.id
     })
   end
+
+  @spec names :: Ecto.Query.t()
+  def names do
+    select(Customer, [q], q.name)
+  end
 end
