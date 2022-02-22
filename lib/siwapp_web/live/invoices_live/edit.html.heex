@@ -64,57 +64,71 @@
       f={f}
       inputs_for={inputs_for(f, :items)}
     />
-
   </fieldset>
 
+  <%= if @live_action == :edit do %>
   <fieldset class="fieldset">
     <h2>Payments</h2>
 
-    <div class="field is-horizontal field-body">
-      <div class="field">
+    <%= for fp <- inputs_for(f, :payments) do %>
+    <div class="columns is-multiline-mobile is-1 is-variable">
+      <div class="column is-3-desktop is-full-mobile">  
         <label class="label">
           Date
         </label>
         <p class="control">
-          <input class="input" type="date">
+          <%= date_input(fp, :date, phx_debounce: "blur", class: "input") %>
         </p>
+        <%= error_tag(fp, :date) %>
       </div>
-      <div class="field">
+      <div class="column is-6-desktop is-full-mobile">  
         <label class="label">
           Notes
         </label>
         <p class="control">
-          <input class="input" type="text">
+          <%= textarea(fp, :notes, phx_debounce: "blur", class: "textarea", rows: "1") %>
         </p>
+        <%= error_tag(fp, :notes) %>
+
       </div>
-      <div class="field">
+      <div class="column is-1-desktop is-full-mobile">  
         <label class="label">
           Amount
         </label>
         <p class="control">
-          <input class="input" type="text">
+          <%= text_input(fp, :amount, class: "input") %>
         </p>
+        <%= error_tag(fp, :amount) %>
       </div>
-      <div class="field">
+      <div class="column is-narrow-desktop is-full-mobile">  
         <label class="label is-invisible is-hidden-mobile">
           invisible
         </label>
         <p class="control">
-          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">
-            Remove Payment
-          </button>
+        <% IO.inspect fp.index %>
+          <%= link("Remove Line",
+            to: "#",
+            phx_click: "remove_payment",
+            phx_value_payment_id: fp.index,
+            class: "button is-danger is-light is-fullwidth"
+          ) %>
         </p>
       </div>
     </div>
+    <% end %>
 
-    <button class="column is-narrow-desktop button is-dark is-fullwidth">
-      Add Payment
-    </button>
+    <%= link("Add Payment",
+      to: "#",
+      phx_click: "add_payment",
+      class: "button is-dark is-fullwidth column is-2"
+    ) %>
+    <br>
     <label class="checkbox">
       <input type="checkbox">
       Payment collection failed
     </label>
   </fieldset>
+  <% end %>
 
   <.live_component
     module={SiwappWeb.MetaAttributesComponent}

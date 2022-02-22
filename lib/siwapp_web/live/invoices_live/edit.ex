@@ -7,14 +7,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
+  alias Siwapp.Invoices.Payment
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok,
      socket
      |> assign(:series, Commons.list_series())
-     |> assign(:currency_options, Invoices.list_currencies())
-     |> assign(:customer_suggestions, [])}
+     |> assign(:currency_options, Invoices.list_currencies())}
   end
 
   @impl Phoenix.LiveView
@@ -61,6 +61,32 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, socket}
   end
 
+  def handle_event("add_payment", _, socket) do
+    existing_payments = Map.get(socket.assigns.changeset.changes, :payments, [])
+
+    payments =
+      existing_payments ++ [Invoices.change_payment(%Payment{})]
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:payments, payments)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("remove_payment", %{"payment-id" => payment_index}, socket) do
+    payments =
+      socket.assigns.changeset
+      |> Ecto.Changeset.get_field(:payments)
+      |> List.delete_at(String.to_integer(payment_index))
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:payments, payments)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:params_updated, params}, socket) do
     changeset = Invoices.change(socket.assigns.invoice, params)
@@ -79,7 +105,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series, :customer])
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :payments, :series, :customer])
 
     socket
     |> assign(:action, :edit)
