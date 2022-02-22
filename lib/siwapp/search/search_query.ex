@@ -3,6 +3,7 @@ defmodule Siwapp.Search.SearchQuery do
   Search Queries
   """
   import Ecto.Query
+  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoiceQuery
@@ -63,13 +64,12 @@ defmodule Siwapp.Search.SearchQuery do
     |> group_by([q], q.id)
   end
 
-  @spec customers_names(Ecto.Queryable.t(), binary, non_neg_integer) :: Ecto.Queryable.t()
-  def customers_names(query, value, page) do
+  @spec customers_names(binary, non_neg_integer) :: Ecto.Queryable.t()
+  def customers_names(value, page) do
     offset_by = 10 * page
 
-    query
+    CustomerQuery.names
     |> where([q], ilike(q.name, ^"%#{value}%"))
-    |> select([q], q.name)
     |> limit(10)
     |> offset(^offset_by)
   end

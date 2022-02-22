@@ -31,10 +31,9 @@ defmodule Siwapp.Search do
     |> Repo.all()
   end
 
-  @spec get_customers_names(Ecto.Queryable.t(), binary, non_neg_integer) :: list()
-  def get_customers_names(query, value, page) do
-    query
-    |> SearchQuery.customers_names(value, page)
+  @spec get_customers_names(binary, non_neg_integer) :: list()
+  def get_customers_names(value, page) do
+    SearchQuery.customers_names(value, page)
     |> Repo.all()
   end
 end

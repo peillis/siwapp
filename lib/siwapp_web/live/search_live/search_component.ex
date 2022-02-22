@@ -3,7 +3,6 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   use SiwappWeb, :live_component
   alias Phoenix.LiveView.JS
   alias Siwapp.Commons
-  alias Siwapp.Customers.Customer
   alias Siwapp.Search
 
   @impl Phoenix.LiveComponent
@@ -23,7 +22,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
 
       {:noreply, socket}
     else
-      customers_names = Search.get_customers_names(Customer, value, 0)
+      customers_names = Search.get_customers_names(value, 0)
 
       send_update(SiwappWeb.SearchLive.CustomersInputComponent,
         id: "customers",
