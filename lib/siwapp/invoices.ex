@@ -42,6 +42,9 @@ defmodule Siwapp.Invoices do
     Repo.aggregate(Invoice, :count)
   end
 
+  @spec reference(binary, integer) :: binary
+  def reference(series_code, number), do: series_code <> "-#{number}"
+
   @doc """
   Creates an invoice
   """
