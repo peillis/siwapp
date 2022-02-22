@@ -11,16 +11,6 @@ defmodule Siwapp.Invoices.Item do
   alias Siwapp.Invoices.Invoice
   alias SiwappWeb.PageView
 
-  @derive {Jason.Encoder,
-           only: [
-             :quantity,
-             :discount,
-             :description,
-             :unitary_cost,
-             :deleted_at,
-             :invoice_id
-           ]}
-
   @fields [
     :quantity,
     :discount,
