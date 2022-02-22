@@ -3,7 +3,6 @@ defmodule Siwapp.Search.SearchQuery do
   Search Queries
   """
   import Ecto.Query
-  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoiceQuery
@@ -64,16 +63,6 @@ defmodule Siwapp.Search.SearchQuery do
     |> group_by([q], q.id)
   end
 
-  @spec customers_names(binary, non_neg_integer) :: Ecto.Queryable.t()
-  def customers_names(value, page) do
-    offset_by = 10 * page
-
-    CustomerQuery.names()
-    |> where([q], ilike(q.name, ^"%#{value}%"))
-    |> limit(10)
-    |> offset(^offset_by)
-  end
-
   # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
   @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp name_email_or_id(query, value) do
@@ -130,15 +119,10 @@ defmodule Siwapp.Search.SearchQuery do
         |> where(draft: false)
         |> where(paid: false)
         |> where(failed: false)
-        |> where([q], is_nil(q.due_date) or q.due_date > ^Date.utc_today())
+        |> where([q], is_nil(q.due_date) or q.due_date >= ^Date.utc_today())
 
       "Past Due" ->
-        query
-        |> where(draft: false)
-        |> where(paid: false)
-        |> where(failed: false)
-        |> where([q], not is_nil(q.due_date))
-        |> where([q], q.due_date < ^Date.utc_today())
+        InvoiceQuery.past_due(query)
     end
   end
 

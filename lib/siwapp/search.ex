@@ -4,6 +4,7 @@ defmodule Siwapp.Search do
   """
   alias Siwapp.Query
   alias Siwapp.Repo
+  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Search.SearchQuery
 
   @type type_of_struct ::
@@ -33,6 +34,6 @@ defmodule Siwapp.Search do
 
   @spec get_customers_names(binary, non_neg_integer) :: list()
   def get_customers_names(value, page) do
-    Repo.all(SearchQuery.customers_names(value, page))
+    Repo.all(CustomerQuery.names(value, page))
   end
 end
