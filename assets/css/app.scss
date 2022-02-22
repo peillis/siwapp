@@ -41,7 +41,7 @@ td.table-span:not([align]) {
 .search-menu-content {
   border: 1px solid #ced4da;
   padding: 1rem;
-  display: none; 
+  display: none;
 }
 
 .search-menu-content label{
@@ -79,6 +79,26 @@ p.control.has-dropdown {
   padding-top: 0px;
   max-width: 100%;
   width: 100%;
+}
+
+.customers_list{
+  position: absolute;
+  width: 46%;  
+  z-index: 5;
+}
+.customers_list_content{
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0px 0 1px rgb(10 10 10 / 2%);
+  background-color: white;
+  text-align: center;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.customers_list_content option:hover{  
+  background-color: hsl(0, 0%, 96%);
 }
 
 .card.card-header:hover {

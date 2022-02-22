@@ -5,9 +5,13 @@
         CUSTOMER:
       </label>
       <div class="select is-fullwidth">
-        <select>
+        <select name="name">
           <option>Choose...</option>
-          <option>With options</option>
+          <%= for name <- @customers_names do %>
+            <option>
+              <%= name %>
+            </option>
+          <% end %>
         </select>
       </div>
     </div>
@@ -15,13 +19,13 @@
       <label class="label">
         ISSUE DATE FROM:
       </label>
-      <input class="input" type="date">
+      <input name="issue_from_date" class="input" type="date">
     </div>
     <div class="column is-3">
       <label class="label">
         TO:
       </label>
-      <input class="input" type="date">
+      <input name="issue_to_date" class="input" type="date">
     </div>
   </div>
   <div class="columns">
@@ -30,9 +34,13 @@
         SERIES:
       </label>
       <div class="select is-fullwidth">
-        <select>
+        <select name="series">
           <option>Choose...</option>
-          <option>With options</option>
+          <%= for name <- @series_names do %>
+            <option>
+              <%= name %>
+            </option>
+          <% end %>
         </select>
       </div>
     </div>
@@ -40,16 +48,20 @@
       <label class="label">
         NUMBER:
       </label>
-      <input class="input" type="text">
+      <input name="number" class="input" type="text">
     </div>
     <div class="column is-6">
       <label class="label">
         STATUS:
       </label>
       <div class="select is-fullwidth">
-        <select>
+        <select name="status">
           <option>Choose...</option>
-          <option>With options</option>
+          <option>Draft</option>
+          <option>Paid</option>
+          <option>Pending</option>
+          <option>Past Due</option>
+          <option>Failed</option>
         </select>
       </div>
     </div>
@@ -59,13 +71,13 @@
       <label class="label">
         KEY
       </label>
-      <input class="input" type="text">
+      <input class="input" name="key" type="text">
     </div>
     <div class="column">
       <label class="label">
         VALUE
       </label>
-      <input class="input" type="text">
+      <input class="input" name="value" type="text">
     </div>
   </div>
 </div>

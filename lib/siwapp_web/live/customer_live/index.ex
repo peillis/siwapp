@@ -41,8 +41,10 @@ defmodule SiwappWeb.CustomerLive.Index do
     {:noreply, push_redirect(socket, to: Routes.customer_edit_path(socket, :edit, id))}
   end
 
-  def handle_event("search", params, socket) do
-    customers = Search.filters(Customer, params["search_input"])
+  @impl Phoenix.LiveView
+  def handle_info({:search, params}, socket) do
+    customers = Search.filters(Customer, params)
+
     {:noreply, assign(socket, :customers, customers)}
   end
 

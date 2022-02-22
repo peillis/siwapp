@@ -39,4 +39,15 @@ defmodule Siwapp.Customers.CustomerQuery do
       id: c.id
     })
   end
+
+  @spec names(binary, non_neg_integer) :: Ecto.Query.t()
+  def names(value, page) do
+    offset_by = 10 * page
+
+    Customer
+    |> select([q], q.name)
+    |> where([q], ilike(q.name, ^"%#{value}%"))
+    |> limit(10)
+    |> offset(^offset_by)
+  end
 end
