@@ -5,11 +5,11 @@ defmodule Siwapp.Invoices.Item do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Siwapp.Invoices.AmountHelper
 
   alias Siwapp.Commons
   alias Siwapp.Commons.Tax
   alias Siwapp.Invoices.Invoice
-  alias SiwappWeb.PageView
 
   @fields [
     :quantity,
@@ -17,7 +17,8 @@ defmodule Siwapp.Invoices.Item do
     :description,
     :unitary_cost,
     :deleted_at,
-    :invoice_id
+    :invoice_id,
+    :virtual_unitary_cost
   ]
 
   @type t :: %__MODULE__{
@@ -38,7 +39,7 @@ defmodule Siwapp.Invoices.Item do
     field :deleted_at, :utc_datetime
     field :net_amount, :float, virtual: true, default: 0.0
     field :taxes_amount, :map, virtual: true, default: %{}
-    field :virtual_unitary_cost, :float, virtual: true, default: 0.0
+    field :virtual_unitary_cost, :float, virtual: true
     belongs_to :invoice, Invoice
 
     many_to_many :taxes, Tax,
@@ -50,14 +51,14 @@ defmodule Siwapp.Invoices.Item do
   def changeset(item, attrs \\ %{}, currency) do
     item
     |> cast(attrs, @fields)
-    |> set_unitary_cost(attrs, currency)
+    |> set_amount(:unitary_cost, :virtual_unitary_cost, currency)
     |> assoc_taxes(attrs)
     |> foreign_key_constraint(:invoice_id)
     |> validate_length(:description, max: 20_000)
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
     |> calculate()
-    |> set_virtual_unitary_cost(currency)
+    |> set_virtual_amount(:unitary_cost, :virtual_unitary_cost, currency)
   end
 
   @doc """
@@ -138,40 +139,6 @@ defmodule Siwapp.Invoices.Item do
       changeset
     else
       add_error(changeset, :taxes, "The tax #{tax} is not defined")
-    end
-  end
-
-  @spec set_unitary_cost(Ecto.Changeset.t(), map, atom() | binary()) :: Ecto.Changeset.t()
-  def set_unitary_cost(changeset, attrs, currency) do
-    virtual_unitary_cost =
-      Map.get(attrs, :virtual_unitary_cost) || Map.get(attrs, "virtual_unitary_cost")
-
-    cond do
-      is_nil(virtual_unitary_cost) ->
-        changeset
-
-      virtual_unitary_cost == "" ->
-        put_change(changeset, :unitary_cost, 0)
-
-      true ->
-        case Money.parse(virtual_unitary_cost, currency) do
-          {:ok, %Money{amount: amount}} -> put_change(changeset, :unitary_cost, amount)
-          :error -> add_error(changeset, :virtual_unitary_cost, "Invalid format")
-        end
-    end
-  end
-
-  @spec set_virtual_unitary_cost(Ecto.Changeset.t(), atom() | binary()) :: Ecto.Changeset.t()
-  def set_virtual_unitary_cost(changeset, currency) do
-    if is_nil(get_field(changeset, :unitary_cost)) do
-      changeset
-    else
-      unitary_cost = get_field(changeset, :unitary_cost)
-
-      virtual_unitary_cost =
-        PageView.money_format(unitary_cost, currency, symbol: false, separator: "")
-
-      put_change(changeset, :virtual_unitary_cost, virtual_unitary_cost)
     end
   end
 end
