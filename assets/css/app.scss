@@ -105,6 +105,21 @@ p.control.has-dropdown {
   background-color: #fafafa;
 }
 
+/* CHARTS STYLING*/
+/* Styling for tick text */
+.exc-tick text {
+  fill: black;
+  font-weight: 300;
+  font-size: 0.5rem;
+  stroke: none;
+}
+
+/* Styling for axis line */
+.exc-domain {
+  stroke:  black;
+  stroke-width: 0.5;
+}
+
 @media screen and (max-width: 600px) {
   .columns.is-multiline-mobile {
     display: flex;

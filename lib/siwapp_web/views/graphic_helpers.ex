@@ -9,20 +9,23 @@ defmodule SiwappWeb.GraphicHelpers do
 
   'data' must be a list of tuples with size of 2.
   """
-  @spec line_plot([{any(), any()}]) :: {:safe, [...]}
-  def line_plot(data) do
-    options = [
-      data_labels: false,
-      default_style: false,
+  @spec line_plot([{any(), any()}], keyword()) :: {:safe, [...]}
+  def line_plot(data, options \\ []) do
+    default = [x_formatter: nil, y_formatter: nil]
+    options = Keyword.merge(default, options)
+
+    plot_options = [
       stroke_width: 1,
-      smoothed: false
+      smoothed: false,
+      custom_x_formatter: options[:x_formatter],
+      custom_y_formatter: options[:y_formatter]
     ]
 
     margins = %{left: 35, right: 15, top: 10, bottom: 20}
 
     data
     |> Dataset.new()
-    |> Plot.new(LinePlot, 500, 150, options)
+    |> Plot.new(LinePlot, 500, 110, plot_options)
     |> Map.put(:margins, margins)
     |> Plot.to_svg()
   end
