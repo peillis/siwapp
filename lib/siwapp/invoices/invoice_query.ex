@@ -3,7 +3,6 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   Invoices Querys
   """
   import Ecto.Query
-  alias Siwapp.Invoices.Invoice
 
   @doc """
   Gets a query on the invoices with status :past_due
