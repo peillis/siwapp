@@ -17,10 +17,8 @@ defmodule Siwapp.Invoices.Statistics do
   Returns a list of tuples, each containing the accumulated amount of money from all the invoices
   per day, for the given selection of 'invoices'.
   """
-  @spec get_amount_per_day(Ecto.Queryable.t()) :: [tuple()]
+  @spec get_amount_per_day(Ecto.Queryable.t()) :: [{Date.t(), non_neg_integer()}]
   def get_amount_per_day(query \\ Invoice) do
-    today = Date.utc_today()
-
     amount_per_date =
       query
       |> group_by([q], q.issue_date)
