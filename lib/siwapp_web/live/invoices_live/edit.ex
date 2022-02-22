@@ -65,12 +65,9 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     existing_payments = Map.get(socket.assigns.changeset.changes, :payments, [])
     currency = Ecto.Changeset.get_field(socket.assigns.changeset, :currency)
 
-    payments =
-      existing_payments ++ [Invoices.change_payment(%Payment{}, currency)]
+    payments = existing_payments ++ [Invoices.change_payment(%Payment{}, currency)]
 
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_assoc(:payments, payments)
+    changeset = Ecto.Changeset.put_assoc(socket.assigns.changeset, :payments, payments)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -81,9 +78,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       |> Ecto.Changeset.get_field(:payments)
       |> List.delete_at(String.to_integer(payment_index))
 
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_assoc(:payments, payments)
+    changeset = Ecto.Changeset.put_assoc(socket.assigns.changeset, :payments, payments)
 
     {:noreply, assign(socket, changeset: changeset)}
   end

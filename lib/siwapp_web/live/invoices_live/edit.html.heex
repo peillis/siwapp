@@ -67,66 +67,66 @@
   </fieldset>
 
   <%= if @live_action == :edit do %>
-  <fieldset class="fieldset">
-    <h2>Payments</h2>
+    <fieldset class="fieldset">
+      <h2>Payments</h2>
 
-    <%= for fp <- inputs_for(f, :payments) do %>
-    <div class="columns is-multiline-mobile is-1 is-variable">
-      <div class="column is-3-desktop is-full-mobile">  
-        <label class="label">
-          Date
-        </label>
-        <p class="control">
-          <%= date_input(fp, :date, phx_debounce: "blur", class: "input") %>
-        </p>
-        <%= error_tag(fp, :date) %>
-      </div>
-      <div class="column is-6-desktop is-full-mobile">  
-        <label class="label">
-          Notes
-        </label>
-        <p class="control">
-          <%= textarea(fp, :notes, phx_debounce: "blur", class: "textarea", rows: "1") %>
-        </p>
-        <%= error_tag(fp, :notes) %>
+      <%= for fp <- inputs_for(f, :payments) do %>
+        <div class="columns is-multiline-mobile is-1 is-variable">
+          <div class="column is-3-desktop is-full-mobile">
+            <label class="label">
+              Date
+            </label>
+            <p class="control">
+              <%= date_input(fp, :date, phx_debounce: "blur", class: "input") %>
+            </p>
+            <%= error_tag(fp, :date) %>
+          </div>
+          <div class="column is-6-desktop is-full-mobile">
+            <label class="label">
+              Notes
+            </label>
+            <p class="control">
+              <%= textarea(fp, :notes, phx_debounce: "blur", class: "textarea", rows: "1") %>
+            </p>
+            <%= error_tag(fp, :notes) %>
 
-      </div>
-      <div class="column is-1-desktop is-full-mobile">  
-        <label class="label">
-          Amount
-        </label>
-        <p class="control">
-          <%= text_input(fp, :virtual_amount, class: "input") %>
-        </p>
-        <%= error_tag(fp, :virtual_amount) %>
-      </div>
-      <div class="column is-narrow-desktop is-full-mobile">  
-        <label class="label is-invisible is-hidden-mobile">
-          invisible
-        </label>
-        <p class="control">
-          <%= link("Remove Line",
-            to: "#",
-            phx_click: "remove_payment",
-            phx_value_payment_id: fp.index,
-            class: "button is-danger is-light is-fullwidth"
-          ) %>
-        </p>
-      </div>
-    </div>
-    <% end %>
+          </div>
+          <div class="column is-1-desktop is-full-mobile">
+            <label class="label">
+              Amount
+            </label>
+            <p class="control">
+              <%= text_input(fp, :virtual_amount, class: "input") %>
+            </p>
+            <%= error_tag(fp, :virtual_amount) %>
+          </div>
+          <div class="column is-narrow-desktop is-full-mobile">
+            <label class="label is-invisible is-hidden-mobile">
+              invisible
+            </label>
+            <p class="control">
+              <%= link("Remove Line",
+                to: "#",
+                phx_click: "remove_payment",
+                phx_value_payment_id: fp.index,
+                class: "button is-danger is-light is-fullwidth"
+              ) %>
+            </p>
+          </div>
+        </div>
+      <% end %>
 
-    <%= link("Add Payment",
-      to: "#",
-      phx_click: "add_payment",
-      class: "button is-dark is-fullwidth column is-2"
-    ) %>
-    <br>
-    <label class="checkbox">
-      <input type="checkbox">
-      Payment collection failed
-    </label>
-  </fieldset>
+      <%= link("Add Payment",
+        to: "#",
+        phx_click: "add_payment",
+        class: "button is-dark is-fullwidth column is-2"
+      ) %>
+      <br>
+      <label class="checkbox">
+        <input type="checkbox">
+        Payment collection failed
+      </label>
+    </fieldset>
   <% end %>
 
   <.live_component
