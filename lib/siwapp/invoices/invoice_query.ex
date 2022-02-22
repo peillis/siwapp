@@ -42,11 +42,6 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> distinct([i], i.id)
   end
 
-  @spec list_by_customer(Ecto.Queryable.t(), pos_integer()) :: Ecto.Query.t()
-  def list_by_customer(query \\ Invoice, customer_id) do
-    where(query, customer_id: ^customer_id)
-  end
-
   @spec issue_date_gteq(Ecto.Queryable.t(), Date.t()) :: Ecto.Query.t()
   def issue_date_gteq(query, date) do
     where(query, [i], i.issue_date >= ^date)

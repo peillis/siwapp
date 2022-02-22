@@ -3,7 +3,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   use SiwappWeb, :live_view
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Invoices.InvoiceQuery
+  alias Siwapp.Query
   alias Siwapp.Search
 
   @impl Phoenix.LiveView
@@ -37,7 +37,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:invoices, invoices)
      |> assign(:checked, MapSet.new())
      |> assign(:page_title, "Invoices for #{name}")
-     |> assign(:query, InvoiceQuery.list_by_customer(customer_id))
+     |> assign(:query, Query.by(Invoice, :customer_id, customer_id))
      |> assign(:customer_id, customer_id)}
   end
 
