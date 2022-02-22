@@ -153,44 +153,4 @@ defmodule Siwapp.Search.SearchQuery do
         RecurringInvoiceQuery.finishing_date_lteq(query, value)
     end
   end
-
-  # It implements the same algorithm of the Invoices Context Status function.
-  # If a user filters by draft, paid or failed,
-  # the query will search if the field with same name as value is true.
-  # If user filters by pending, the query will search if draft, paid and failed are false and also if due_date is nil
-  # or if due_date is greater than today
-  # Finally if user filters by past due, the query will do the same as pending, but in this case due_date must exists
-  # and has to be less than today
-  @spec type_of_status(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
-  defp type_of_status(query, value) do
-    case value do
-      v when v in ["Draft", "Paid", "Failed"] ->
-        value = convert_to_atom(value)
-
-        query
-        |> where([q], field(q, ^value) == true)
-
-      "Pending" ->
-        query
-        |> where(draft: false)
-        |> where(paid: false)
-        |> where(failed: false)
-        |> where([q], is_nil(q.due_date) or q.due_date > ^Date.utc_today())
-
-      "Past Due" ->
-        query
-        |> where(draft: false)
-        |> where(paid: false)
-        |> where(failed: false)
-        |> where([q], not is_nil(q.due_date))
-        |> where([q], q.due_date < ^Date.utc_today())
-    end
-  end
-
-  @spec convert_to_atom(binary) :: atom
-  defp convert_to_atom(value) do
-    value
-    |> String.downcase()
-    |> String.to_atom()
-  end
 end
