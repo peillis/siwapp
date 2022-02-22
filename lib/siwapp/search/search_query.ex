@@ -68,7 +68,7 @@ defmodule Siwapp.Search.SearchQuery do
   def customers_names(value, page) do
     offset_by = 10 * page
 
-    CustomerQuery.names
+    CustomerQuery.names()
     |> where([q], ilike(q.name, ^"%#{value}%"))
     |> limit(10)
     |> offset(^offset_by)
