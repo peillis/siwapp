@@ -182,6 +182,16 @@ defmodule Siwapp.InvoiceTest do
 
       assert invoice.due_date == ~D[2023-12-12]
     end
+
+    test "If you provide a due date earlier than the issue date the changeset is invalid" do
+      changeset =
+        Invoices.change(
+          %Invoice{},
+          valid_invoice_attributes(%{issue_date: ~D[2020-10-10], due_date: ~D[2015-10-10]})
+        )
+
+      assert changeset.errors == [due_date: {"due date cannot be earlier than issue date", []}]
+    end
   end
 
   describe "If number is introduced manually, it's respected" do
