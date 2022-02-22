@@ -205,7 +205,7 @@ defmodule Siwapp.Invoices do
   @doc """
   Creates a payment associated to an invoice
   """
-  @spec create_payment(Invoice.t(), atom() | binary(), map()) ::
+  @spec create_payment(Invoice.t(), map()) ::
           {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
   def create_payment(%Invoice{} = invoice, attrs \\ %{}) do
     invoice
@@ -217,7 +217,7 @@ defmodule Siwapp.Invoices do
   @doc """
   Updates a payment
   """
-  @spec update_payment(Payment.t(), atom() | binary(), map()) ::
+  @spec update_payment(Payment.t(), map()) ::
           {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
   def update_payment(%Payment{} = payment, attrs) do
     payment
@@ -234,7 +234,7 @@ defmodule Siwapp.Invoices do
   @doc """
   Change a payment
   """
-  @spec change_payment(Payment.t(), binary | atom, map) :: Ecto.Changeset.t()
+  @spec change_payment(Payment.t(), map) :: Ecto.Changeset.t()
   def change_payment(%Payment{} = payment, attrs \\ %{}) do
     Payment.changeset(payment, attrs)
   end
