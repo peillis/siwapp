@@ -3,6 +3,7 @@ defmodule Siwapp.Search.SearchQuery do
   Search Queries
   """
   import Ecto.Query
+  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoiceQuery
