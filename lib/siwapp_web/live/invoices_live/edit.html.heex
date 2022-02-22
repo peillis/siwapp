@@ -96,16 +96,15 @@
           Amount
         </label>
         <p class="control">
-          <%= text_input(fp, :amount, class: "input") %>
+          <%= text_input(fp, :virtual_amount, class: "input") %>
         </p>
-        <%= error_tag(fp, :amount) %>
+        <%= error_tag(fp, :virtual_amount) %>
       </div>
       <div class="column is-narrow-desktop is-full-mobile">  
         <label class="label is-invisible is-hidden-mobile">
           invisible
         </label>
         <p class="control">
-        <% IO.inspect fp.index %>
           <%= link("Remove Line",
             to: "#",
             phx_click: "remove_payment",

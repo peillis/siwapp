@@ -63,9 +63,10 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   def handle_event("add_payment", _, socket) do
     existing_payments = Map.get(socket.assigns.changeset.changes, :payments, [])
+    currency = Ecto.Changeset.get_field(socket.assigns.changeset, :currency)
 
     payments =
-      existing_payments ++ [Invoices.change_payment(%Payment{})]
+      existing_payments ++ [Invoices.change_payment(%Payment{}, currency)]
 
     changeset =
       socket.assigns.changeset

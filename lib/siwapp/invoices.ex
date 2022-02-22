@@ -205,23 +205,23 @@ defmodule Siwapp.Invoices do
   @doc """
   Creates a payment associated to an invoice
   """
-  @spec create_payment(Invoice.t(), map()) ::
+  @spec create_payment(Invoice.t(), atom() | binary(), map()) ::
           {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
-  def create_payment(%Invoice{} = invoice, attrs \\ %{}) do
+  def create_payment(%Invoice{} = invoice, currency, attrs \\ %{}) do
     invoice
     |> Ecto.build_assoc(:payments)
-    |> Payment.changeset(attrs)
+    |> Payment.changeset(attrs, currency)
     |> Repo.insert()
   end
 
   @doc """
   Updates a payment
   """
-  @spec update_payment(Payment.t(), map()) ::
+  @spec update_payment(Payment.t(), atom() | binary(), map()) ::
           {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
-  def update_payment(%Payment{} = payment, attrs) do
+  def update_payment(%Payment{} = payment, currency, attrs) do
     payment
-    |> Payment.changeset(attrs)
+    |> Payment.changeset(attrs, currency)
     |> Repo.update()
   end
 
@@ -234,8 +234,8 @@ defmodule Siwapp.Invoices do
   @doc """
   Change a payment
   """
-  @spec change_payment(Payment.t(), map) :: Ecto.Changeset.t()
-  def change_payment(%Payment{} = payment, attrs \\ %{}) do
-    Payment.changeset(payment, attrs)
+  @spec change_payment(Payment.t(), atom() | binary(), map) :: Ecto.Changeset.t()
+  def change_payment(%Payment{} = payment, currency, attrs \\ %{}) do
+    Payment.changeset(payment, attrs, currency)
   end
 end
