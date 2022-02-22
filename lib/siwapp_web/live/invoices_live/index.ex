@@ -130,13 +130,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
     end
   end
 
-  @impl Phoenix.LiveView
-  def handle_info({:search, params}, socket) do
-    invoices = Search.filters(Invoice, params)
-
-    {:noreply, assign(socket, :invoices, invoices)}
-  end
-
   def handle_event("delete", _params, socket) do
     socket.assigns.checked
     |> MapSet.to_list()
@@ -149,6 +142,13 @@ defmodule SiwappWeb.InvoicesLive.Index do
       |> push_redirect(to: Routes.invoices_index_path(socket, :index))
 
     {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:search, params}, socket) do
+    invoices = Search.filters(Invoice, params)
+
+    {:noreply, assign(socket, :invoices, invoices)}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
