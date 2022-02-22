@@ -38,6 +38,7 @@ defmodule Siwapp.Invoices do
     %Invoice{}
     |> change(attrs)
     |> InvoiceHelper.maybe_find_customer_or_new()
+    |> Invoice.assign_number()
     |> Repo.insert()
   end
 
@@ -50,6 +51,7 @@ defmodule Siwapp.Invoices do
     invoice
     |> change(attrs)
     |> InvoiceHelper.maybe_find_customer_or_new()
+    |> Invoice.assign_number()
     |> Repo.update()
   end
 
@@ -106,9 +108,7 @@ defmodule Siwapp.Invoices do
   """
   @spec change(Invoice.t(), map) :: Ecto.Changeset.t()
   def change(%Invoice{} = invoice, attrs \\ %{}) do
-    invoice
-    |> Invoice.changeset(attrs)
-    |> Invoice.assign_number()
+    Invoice.changeset(invoice, attrs)
   end
 
   @spec status(Invoice.t()) :: :draft | :failed | :paid | :pending | :past_due
