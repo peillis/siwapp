@@ -48,8 +48,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:invoices, Invoices.list(limit: 20, offset: 0, preload: [:series]))
      |> assign(:checked, MapSet.new())
      |> assign(:query, Invoice)
-     |> assign(:page_title, "Invoices")
-     |> assign(:checked, MapSet.new())}
+     |> assign(:page_title, "Invoices")}
   end
 
   @impl Phoenix.LiveView
@@ -136,6 +135,20 @@ defmodule SiwappWeb.InvoicesLive.Index do
     invoices = Search.filters(Invoice, params)
 
     {:noreply, assign(socket, :invoices, invoices)}
+  end
+
+  def handle_event("delete", _params, socket) do
+    socket.assigns.checked
+    |> MapSet.to_list()
+    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}]))
+    |> Enum.each(&Invoices.delete(&1))
+
+    socket =
+      socket
+      |> put_flash(:info, "Invoices succesfully deleted")
+      |> push_redirect(to: Routes.invoices_index_path(socket, :index))
+
+    {:noreply, socket}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
