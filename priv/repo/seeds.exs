@@ -70,7 +70,7 @@ Templates.create(%{
   Templates.create(%{
     name: "Email Default",
     template: email_default,
-    subject: "Payment Confirmation: <%= invoice %> "
+    subject: "Invoice: <%= Siwapp.Invoices.reference(series.code, number)%> "
   })
 
 Templates.set_default(:email, email_template)
