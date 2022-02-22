@@ -2,8 +2,11 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   @moduledoc false
   use SiwappWeb, :live_component
   alias Phoenix.LiveView.JS
-  alias Siwapp.{Commons, Customers.Customer, Search}
+  alias Siwapp.Commons
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Search
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket =
       socket
@@ -13,6 +16,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
     {:ok, socket}
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("search_customers", %{"_target" => ["name"], "name" => value}, socket) do
     if value == "" do
       send_update(SiwappWeb.SearchLive.CustomersInputComponent, id: "customers")
@@ -36,9 +40,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   end
 
   def handle_event("search", params, socket) do
-    params =
-      params
-      |> Enum.reject(fn {_key, val} -> val in ["", "Choose..."] end)
+    params = Enum.reject(params, fn {_key, val} -> val in ["", "Choose..."] end)
 
     send(self(), {:search, params})
 

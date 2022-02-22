@@ -1,8 +1,10 @@
 defmodule SiwappWeb.SearchLive.CustomersInputComponent do
   @moduledoc false
   use SiwappWeb, :live_component
-  alias Siwapp.{Customers.Customer, Search}
+  alias Siwapp.Customers.Customer
+  alias Siwapp.Search
 
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -11,6 +13,7 @@ defmodule SiwappWeb.SearchLive.CustomersInputComponent do
      |> assign(:page, 0)}
   end
 
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -37,6 +40,7 @@ defmodule SiwappWeb.SearchLive.CustomersInputComponent do
     """
   end
 
+  @impl Phoenix.LiveComponent
   def handle_event("pick_customer", %{"value" => name}, socket) do
     {:noreply,
      socket
@@ -60,6 +64,7 @@ defmodule SiwappWeb.SearchLive.CustomersInputComponent do
      )}
   end
 
+  @spec assign_customers(Phoenix.LiveView.Socket.t(), map()) :: Phoenix.LiveView.Socket.t()
   defp assign_customers(socket, %{customers_names: customers_names, value: value}) do
     socket
     |> assign(:customers_names, customers_names)

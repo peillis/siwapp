@@ -2,7 +2,7 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
-
+  import Ecto.Query
   alias Siwapp.Customers.Customer
   alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query

@@ -55,8 +55,7 @@ defmodule SiwappWeb.LayoutView do
     live_redirect(text, to: to, method: :get, class: "button is-primary")
   end
 
-
-  @spec which_filters(atom()) :: atom()
+  @spec which_filters(atom()) :: binary()
   defp which_filters(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->

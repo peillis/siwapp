@@ -63,6 +63,7 @@ defmodule Siwapp.Search.SearchQuery do
     |> group_by([q], q.id)
   end
 
+  @spec customers_names(Ecto.Queryable.t(), binary, non_neg_integer) :: Ecto.Queryable.t()
   def customers_names(query, value, page) do
     offset_by = 10 * page
 
@@ -76,8 +77,8 @@ defmodule Siwapp.Search.SearchQuery do
   # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
   @spec name_email_or_id(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp name_email_or_id(query, value) do
-    query
-    |> where(
+    where(
+      query,
       [q],
       ilike(q.name, ^"%#{value}%") or ilike(q.email, ^"%#{value}%") or
         ilike(q.identification, ^"%#{value}%")
@@ -122,8 +123,7 @@ defmodule Siwapp.Search.SearchQuery do
       v when v in ["Draft", "Paid", "Failed"] ->
         value = convert_to_atom(value)
 
-        query
-        |> where([q], field(q, ^value) == true)
+        where(query, [q], field(q, ^value) == true)
 
       "Pending" ->
         query
