@@ -44,7 +44,8 @@ defmodule Siwapp.Customers.CustomerQuery do
   def names(value, page) do
     offset_by = 10 * page
 
-    select(Customer, [q], q.name)
+    Customer
+    |> select([q], q.name)
     |> where([q], ilike(q.name, ^"%#{value}%"))
     |> limit(10)
     |> offset(^offset_by)

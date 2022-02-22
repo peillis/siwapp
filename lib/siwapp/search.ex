@@ -2,9 +2,9 @@ defmodule Siwapp.Search do
   @moduledoc """
   Search Context
   """
+  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query
   alias Siwapp.Repo
-  alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Search.SearchQuery
 
   @type type_of_struct ::

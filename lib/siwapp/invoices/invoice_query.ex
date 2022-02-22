@@ -19,6 +19,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> where([i], i.due_date < ^date_today)
   end
 
+  @spec pending(Ecto.Query.t()) :: Ecto.Query.t()
   def pending(query) do
     date_today = Date.utc_today()
 
