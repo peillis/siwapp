@@ -33,7 +33,6 @@ defmodule Siwapp.Search do
 
   @spec get_customers_names(binary, non_neg_integer) :: list()
   def get_customers_names(value, page) do
-    SearchQuery.customers_names(value, page)
-    |> Repo.all()
+    Repo.all(SearchQuery.customers_names(value, page))
   end
 end
