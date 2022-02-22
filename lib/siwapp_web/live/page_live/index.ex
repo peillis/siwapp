@@ -51,4 +51,8 @@ defmodule SiwappWeb.PageLive.Index do
       )
     }
   end
+
+  def handle_event("redirect", %{"id" => id}, socket) do
+    {:noreply, push_redirect(socket, to: Routes.invoices_edit_path(socket, :edit, id))}
+  end
 end

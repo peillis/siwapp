@@ -7,17 +7,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias SiwappWeb.GraphicHelpers
 
   @impl Phoenix.LiveView
-  def mount(_params, _session, %{id: "home"} = socket) do
-    {:ok,
-     socket
-     |> assign(:page, 0)
-     |> assign(
-       :invoices,
-       Invoices.list(limit: 20, offset: 0, preload: [:series], filters: [with_status: :past_due])
-     )
-     |> assign(:checked, MapSet.new())}
-  end
-
   def mount(%{"id" => id}, _session, socket) do
     customer_id = String.to_integer(id)
 
@@ -59,28 +48,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("load-more", _, %{id: "home"} = socket) do
-    %{
-      page: page,
-      invoices: invoices
-    } = socket.assigns
-
-    {
-      :noreply,
-      assign(socket,
-        invoices:
-          invoices ++
-            Invoices.list(
-              limit: 20,
-              offset: (page + 1) * 20,
-              preload: [:series],
-              filters: [with_status: :past_due]
-            ),
-        page: page + 1
-      )
-    }
-  end
-
   def handle_event("load-more", _, %{live_action: :customer} = socket) do
     %{
       page: page,
@@ -128,7 +95,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   def handle_event("redirect", %{"id" => id}, socket) do
-    invoice = Invoices.get!(String.to_integer(id))
+    invoice = Invoices.get!(id)
 
     if Invoices.status(invoice) == :paid do
       {:noreply, push_redirect(socket, to: Routes.page_path(socket, :show_invoice, id))}
