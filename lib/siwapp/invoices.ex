@@ -8,6 +8,7 @@ defmodule Siwapp.Invoices do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Invoices.Item
+  alias Siwapp.Invoices.Payment
   alias Siwapp.Query
   alias Siwapp.Repo
 
@@ -160,7 +161,6 @@ defmodule Siwapp.Invoices do
   @doc """
   Creates an item associated to an invoice
   """
-
   @spec create_item(Invoice.t(), atom() | binary(), map()) ::
           {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def create_item(%Invoice{} = invoice, currency, attrs \\ %{}) do
@@ -173,7 +173,6 @@ defmodule Siwapp.Invoices do
   @doc """
   Updates an item
   """
-
   @spec update_item(Item.t(), atom() | binary(), map()) ::
           {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def update_item(%Item{} = item, currency, attrs) do
@@ -186,12 +185,57 @@ defmodule Siwapp.Invoices do
   @doc """
   Deletes an item
   """
-
   @spec delete_item(Item.t()) :: {:ok, Item.t()} | {:error, Ecto.Changeset.t()}
   def delete_item(%Item{} = item), do: Repo.delete(item)
 
+  @doc """
+  Change an item
+  """
   @spec change_item(Item.t(), binary | atom, map) :: Ecto.Changeset.t()
   def change_item(%Item{} = item, currency, attrs \\ %{}) do
     Item.changeset(item, attrs, currency)
+  end
+
+  @doc """
+  Gets a payment by id
+  """
+  @spec get_payment_by_id!(pos_integer()) :: Payment.t()
+  def get_payment_by_id!(id), do: Repo.get!(Payment, id)
+
+  @doc """
+  Creates a payment associated to an invoice
+  """
+  @spec create_payment(Invoice.t(), atom() | binary(), map()) ::
+          {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
+  def create_payment(%Invoice{} = invoice, attrs \\ %{}) do
+    invoice
+    |> Ecto.build_assoc(:payments)
+    |> Payment.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a payment
+  """
+  @spec update_payment(Payment.t(), atom() | binary(), map()) ::
+          {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
+  def update_payment(%Payment{} = payment, attrs) do
+    payment
+    |> Payment.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a payment
+  """
+  @spec delete_payment(Payment.t()) :: {:ok, Payment.t()} | {:error, Ecto.Changeset.t()}
+  def delete_payment(%Payment{} = payment), do: Repo.delete(payment)
+
+  @doc """
+  Change a payment
+  """
+  @spec change_payment(Payment.t(), binary | atom, map) :: Ecto.Changeset.t()
+  def change_payment(%Payment{} = payment, attrs \\ %{}) do
+    Payment.changeset(payment, attrs)
   end
 end
