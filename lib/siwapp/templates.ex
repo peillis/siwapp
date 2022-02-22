@@ -212,9 +212,10 @@ defmodule Siwapp.Templates do
   """
   @spec subject_and_email_body(Siwapp.Invoices.Invoice.t()) :: {binary, binary}
   def subject_and_email_body(invoice) do
-    %Template{template: email_template, subject: subject} = get(:email_default)
+    %Template{template: email_template, subject: subject_template} = get(:email_default)
 
     email_body = string_template(email_template, invoice)
+    subject = EEx.eval_string(subject_template, series: invoice.series, number: invoice.number)
     {subject, email_body}
   end
 
@@ -223,25 +224,14 @@ defmodule Siwapp.Templates do
   defp string_template(template, invoice) do
     invoice = Siwapp.Invoices.with_virtual_fields(invoice)
 
-    settings_eval_data =
-      Settings.current_bundle()
-      |> Map.from_struct()
-      |> Map.filter(fn {k, _v} ->
-        k in [:company, :company_vat_id, :company_address, :company_email]
-      end)
-      |> Map.to_list()
+    eval_data = [
+      invoice: invoice,
+      settings: Settings.current_bundle(),
+      have_discount?: have_items_discount?(invoice.items),
+      status: Invoices.status(invoice)
+    ]
 
-    invoice_eval_data =
-      invoice
-      |> Map.from_struct()
-      |> Map.to_list()
-
-    all_eval_data =
-      invoice_eval_data ++
-        settings_eval_data ++
-        [have_discount?: have_items_discount?(invoice.items), status: Invoices.status(invoice)]
-
-    EEx.eval_string(template, all_eval_data)
+    EEx.eval_string(template, eval_data)
   end
 
   @spec have_items_discount?(list) :: boolean

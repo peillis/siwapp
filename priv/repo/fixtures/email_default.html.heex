@@ -330,6 +330,7 @@
                               <table style="border-collapse: collapse; border-spacing: 0; padding: 0; text-align: left; vertical-align: top; width: 100%">
                                 <tr style="padding: 0; text-align: left; vertical-align: top">
                                   <th style="Margin: 0; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; padding: 0; text-align: left">
+                                      <!-- here was company_logo -->
                                   </th>
                                 </tr>
                               </table>
@@ -348,17 +349,17 @@
                                   <th style="Margin: 0; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; padding: 0; text-align: left">
                                     <div class="company company--right" style="line-height: 1.25; margin: 0; padding: 0">
                                       <p class="text-bold" style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: right">
-                                        <%= company %>
-                                        <%= if company_vat_id do %>
+                                        <%= settings.company %>
+                                        <%= if settings.company_vat_id do %>
                                           <br>
-                                          <%= company_vat_id %>
+                                          <%= settings.company_vat_id %>
                                         <% end %>
                                       </p>
                                       <p style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: right">
-                                        <%= company_address %>
+                                        <%= settings.company_address %>
                                       </p>
                                       <p style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: right">
-                                        <%= company_email %>
+                                        <a href="mailto:company_email"><%= settings.company_email %></a>
                                       </p>
                                     </div>
                                   </th>
@@ -398,30 +399,30 @@
                                       Billed to:
                                     </p>
                                     <div class="company customer" style="line-height: 1.25; margin: 0; padding: 0">
-                                      <%= if name do %>
+                                      <%= if invoice.name do %>
                                         <p class="company__name" style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 1.2rem; font-weight: normal; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: left">
-                                          <%= name %>
+                                          <%= invoice.name %>
                                         </p>
                                       <% end %>
-                                      <%= if identification do %>
+                                      <%= if invoice.identification do %>
                                         <p class="company__id" style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: left">
-                                          <%= identification %>
+                                          <%= invoice.identification %>
                                         </p>
                                       <% end %>
-                                      <%= if invoicing_address || contact_person do %>
+                                      <%= if invoice.invoicing_address || invoice.contact_person do %>
                                         <p class="company__address" style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: left">
-                                          <%= if contact_person do %>
-                                            <%= contact_person %>
+                                          <%= if invoice.contact_person do %>
+                                            <%= invoice.contact_person %>
                                             <br>
                                           <% end %>
-                                          <%= if invoicing_address do %>
-                                            <%= invoicing_address %>
+                                          <%= if invoice.invoicing_address do %>
+                                            <%= invoice.invoicing_address %>
                                           <% end %>
                                         </p>
                                       <% end %>
-                                      <%= if email do %>
+                                      <%= if invoice.email do %>
                                         <p style="Margin: 0; Margin-bottom: 10px; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; line-height: 1.5; margin: 0; margin-bottom: 0; padding: 0; padding-bottom: 8px; text-align: left">
-                                          <%= email %>
+                                          <a href="mailto:invoice.email"><%= invoice.email %></a>
                                         </p>
                                       <% end %>
                                     </div>
@@ -440,7 +441,7 @@
                                             Invoice Number:
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .5rem; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                            <%= series.code <> "-" <> Integer.to_string(number) %>
+                                            <%= Siwapp.Invoices.reference(invoice.series.code, invoice.number) %>
                                           </td>
                                         </tr>
                                         <tr style="background-color: #f2f2ef; padding: 0; text-align: left; vertical-align: top">
@@ -448,7 +449,7 @@
                                             Billed:
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .5rem; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                            <%= issue_date %>
+                                            <%= invoice.issue_date %>
                                           </td>
                                         </tr>
                                         <tr style="padding: 0; text-align: left; vertical-align: top">
@@ -456,7 +457,7 @@
                                             Due on:
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .5rem; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                            <%= due_date %>
+                                            <%= invoice.due_date %>
                                           </td>
                                         </tr>
                                       </tbody>
@@ -496,14 +497,14 @@
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        <%= for item <- items do %>
+                                        <%= for item <- invoice.items do %>
                                           <tr style="padding: 0; text-align: left; vertical-align: top">
                                             <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: left; vertical-align: top; word-wrap: break-word">
                                               <%= item.description %>
                                             </td>
                                             <%= if have_discount? do %>
                                               <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: left; vertical-align: top; word-wrap: break-word">
-                                                  <%= SiwappWeb.PageView.money_format(item.unitary_cost, currency) %>
+                                                  <%= SiwappWeb.PageView.money_format(item.unitary_cost, invoice.currency) %>
                                               </td>
                                               <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: left; vertical-align: top; word-wrap: break-word">
                                                 <%= if item.discount != 0 do %>
@@ -512,7 +513,7 @@
                                               </td>
                                             <% end %>
                                             <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                                <%= SiwappWeb.PageView.money_format(item.net_amount, currency) %>
+                                                <%= SiwappWeb.PageView.money_format(item.net_amount, invoice.currency) %>
                                             </td>
                                           </tr>
                                         <% end %>
@@ -550,16 +551,16 @@
                                             Subtotal
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                              <%= SiwappWeb.PageView.money_format(net_amount, currency) %>
+                                            <%= SiwappWeb.PageView.money_format(invoice.net_amount, invoice.currency) %>
                                           </td>
                                         </tr>
-                                        <%= for {tax_name, tax_value} <- taxes_amounts do  %>
+                                        <%= for {tax_name, tax_value} <- invoice.taxes_amounts do  %>
                                           <tr style="padding: 0; text-align: left; vertical-align: top">
                                             <th style="Margin: 0; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right">
                                               <%= tax_name %>
                                             </th>
                                             <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: normal; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                                <%= SiwappWeb.PageView.money_format(tax_value, currency) %>
+                                                <%= SiwappWeb.PageView.money_format(tax_value, invoice.currency) %>
                                             </td>
                                           </tr>
                                         <% end %>
@@ -568,7 +569,7 @@
                                             Total
                                           </th>
                                           <td class="total" style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #3d3f3e; font-family: Helvetica, Arial, sans-serif; font-size: 1.5rem; font-weight: bold; hyphens: auto; line-height: 1.5; margin: 0; padding: .625rem; padding-top: 0; text-align: right; vertical-align: top; white-space: nowrap; word-wrap: break-word">
-                                              <%= SiwappWeb.PageView.money_format(gross_amount, currency) %>
+                                            <%= SiwappWeb.PageView.money_format(invoice.gross_amount, invoice.currency) %>
                                           </td>
                                         </tr>
                                       </tbody>
@@ -580,7 +581,7 @@
                           </tr>
                         </tbody>
                       </table>
-                      <%= if terms do %>
+                      <%= if invoice.terms do %>
                         <br>
                         <table class="row" style="border-collapse: collapse; border-spacing: 0; display: table; padding: 0; position: relative; text-align: left; vertical-align: top; width: 100%">
                           <tbody>
@@ -594,7 +595,7 @@
                                           Terms &amp; Conditions
                                         </p>
                                         <div class="notes__content">
-                                          <%= terms %>
+                                          <%= invoice.terms %>
                                         </div>
                                       </div>
                                     </th>
