@@ -43,7 +43,7 @@ defmodule Siwapp.Settings.SettingBundle do
     |> validate_email()
     # Example list of currency, will be updated to whole
     |> validate_length(:currency, max: 3)
-    |> non_neg_days_to_due()
+    |> validate_days_to_due()
   end
 
   @spec fields_map :: map
@@ -56,8 +56,8 @@ defmodule Siwapp.Settings.SettingBundle do
     |> validate_length(:company_email, max: 160)
   end
 
-  @spec non_neg_days_to_due(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp non_neg_days_to_due(changeset) do
+  @spec validate_days_to_due(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp validate_days_to_due(changeset) do
     days_to_due =
       changeset
       |> get_field(:days_to_due)
