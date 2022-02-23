@@ -2,8 +2,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   @moduledoc false
   use SiwappWeb, :live_view
 
-  alias SiwappWeb.InvoicesLive.CustomerComponent
-
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice

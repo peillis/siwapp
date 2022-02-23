@@ -91,7 +91,6 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     customer_params =
       customer_id
       |> Customers.get()
-      |> IO.inspect()
       |> Map.take([
         :name,
         :identification,
@@ -120,11 +119,13 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     {:noreply,
      assign(socket,
        customer_suggestions:
-         customer_suggestions ++ Customers.suggest_by_name(customer_name, limit: 10, offset: 10*next_page),
+         customer_suggestions ++
+           Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * next_page),
        page: next_page
      )}
   end
 
+  @spec changes_in_name?(Ecto.Changeset.t()) :: boolean()
   defp changes_in_name?(changeset) do
     if Ecto.Changeset.get_change(changeset, :name), do: true, else: false
   end

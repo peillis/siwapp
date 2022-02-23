@@ -22,7 +22,7 @@ defmodule Siwapp.Customers do
   def list_with_assoc_invoice_fields(limit \\ 100, offset \\ 0),
     do: Repo.all(CustomerQuery.list_with_assoc_invoice_fields(limit, offset))
 
-  @spec suggest_by_name(binary | nil) :: list
+  @spec suggest_by_name(binary | nil, keyword()) :: list
   def suggest_by_name(name, options \\ [])
   def suggest_by_name("", _options), do: []
   def suggest_by_name(nil, _options), do: []
