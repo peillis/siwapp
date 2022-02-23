@@ -23,6 +23,7 @@ defmodule Siwapp.Invoices do
     |> Enum.reduce(Invoice, fn {field, value}, acc_query ->
       InvoiceQuery.list_by_query(acc_query, field, value)
     end)
+    |> Query.not_deleted()
     |> limit(^options[:limit])
     |> offset(^options[:offset])
     |> Query.list_preload(options[:preload])
@@ -59,15 +60,20 @@ defmodule Siwapp.Invoices do
 
   @spec delete(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def delete(%Invoice{} = invoice) do
-    Repo.delete(invoice)
+    __MODULE__.update(invoice, %{deleted_at: DateTime.utc_now()})
   end
 
   @spec get(pos_integer()) :: Invoice.t() | nil
-  def get(id), do: Repo.get(Invoice, id)
+  def get(id) do
+    Invoice
+    |> Query.not_deleted()
+    |> Repo.get(id)
+  end
 
   @spec get(pos_integer(), keyword()) :: Invoice.t() | nil
   def get(id, preload: list) do
     Invoice
+    |> Query.not_deleted()
     |> Repo.get(id)
     |> Repo.preload(list)
   end
@@ -77,12 +83,17 @@ defmodule Siwapp.Invoices do
   """
 
   @spec get!(pos_integer() | binary()) :: Invoice.t()
-  def get!(id), do: Repo.get!(Invoice, id)
+  def get!(id) do
+    Invoice
+    |> Query.not_deleted()
+    |> Repo.get!(id)
+  end
 
   @spec get!(pos_integer(), keyword()) :: Invoice.t()
   def get!(id, preload: list) do
     invoice =
       Invoice
+      |> Query.not_deleted()
       |> Repo.get!(id)
       |> Repo.preload(list)
 
@@ -98,7 +109,9 @@ defmodule Siwapp.Invoices do
 
   @spec get_by!(atom(), any()) :: Invoice.t()
   def get_by!(key, value) do
-    Repo.get_by!(Invoice, %{key => value})
+    Invoice
+    |> Query.not_deleted()
+    |> Repo.get_by!(%{key => value})
   end
 
   @doc """

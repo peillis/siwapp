@@ -7,9 +7,12 @@
   <div class="navbar-menu">
     <div class="navbar-end">
       <div class="navbar-item buttons">
-        <button class="button is-danger">
-          Delete
-        </button>
+        <%= link("Delete",
+          to: "#",
+          phx_click: "delete",
+          data: [confirm: "Are you sure?"],
+          class: "button is-danger"
+        ) %>
         <button class="button is-info">
           Send Email
         </button>

@@ -50,6 +50,17 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
+  def handle_event("delete", _params, socket) do
+    Invoices.delete(socket.assigns.invoice)
+
+    socket =
+      socket
+      |> put_flash(:info, "Invoice succesfully deleted")
+      |> push_redirect(to: Routes.invoices_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:params_updated, params}, socket) do
     changeset = Invoices.change(socket.assigns.invoice, params)
