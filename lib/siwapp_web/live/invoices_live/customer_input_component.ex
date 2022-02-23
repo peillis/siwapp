@@ -88,7 +88,9 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
         :contact_person,
         :email,
         :invoicing_address,
-        :shipping_address      ])
+        :shipping_address,
+        :meta_attributes
+      ])
       |> SiwappWeb.PageView.atom_keys_to_string()
 
     send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
