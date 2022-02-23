@@ -1,4 +1,4 @@
-defmodule SiwappWeb.InvoicesLive.CustomerComponent do
+defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   @moduledoc false
   use SiwappWeb, :live_component
 
@@ -39,35 +39,43 @@ defmodule SiwappWeb.InvoicesLive.CustomerComponent do
   @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
-    <fieldset class="fieldset">
-      <h2>Customer</h2>
-
-      <%= render(SiwappWeb.PageView, "customer_form.html",
-        f: @f,
-        myself: @myself,
-        customer_name: @customer_name,
-        customer_suggestions: @customer_suggestions
-      ) %>
-
-      <div class="field is-horizontal field-body">
-        <div class="field">
-          <%= label(@f, :terms, "Legal terms and conditions", class: "label") %>
-          <p class="control">
-            <%= textarea(@f, :terms, phx_debounce: "blur", class: "textarea") %>
-          </p>
-          <%= error_tag(@f, :terms) %>
-        </div>
-
-        <div class="field">
-          <%= label(@f, :notes, class: "label") %>
-          <p class="control">
-            <%= textarea(@f, :notes, phx_debounce: "blur", class: "textarea") %>
-          </p>
-          <%= error_tag(@f, :notes) %>
-        </div>
-      </div>
-
-    </fieldset>
+    <div class="field">
+      <%= label(@f, :name, class: "label") %>
+      <%= if Map.has_key?(assigns, :customer_suggestions) do %>
+        <p class="control has-dropdown">
+          <div class="input-with-dropdown control">
+            <%= text_input(@f, :name,
+              phx_debounce: "500",
+              class: "input",
+              value: @customer_name,
+              autocomplete: "off"
+            ) %>
+            <%= if @customer_suggestions != [] do %>
+              <div class="dropdown below-input is-active">
+                <div class="dropdown-menu dropdown-content" id="dropdown-menu" role="menu">
+                  <%= for customer_suggestion <- @customer_suggestions do %>
+                    <a
+                      href="#"
+                      phx-click="pick_customer"
+                      phx-value-id={customer_suggestion.id}
+                      phx-target={@myself}
+                      class="dropdown-item"
+                    >
+                      <%= customer_suggestion.name %>
+                    </a>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </p>
+      <% else %>
+        <p class="control">
+          <%= text_input(@f, :name, phx_debounce: "blur", class: "input") %>
+        </p>
+      <% end %>
+      <%= error_tag(@f, :name) %>
+    </div>
     """
   end
 

@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <.live_component module={CustomerComponent} id="customer" f={f} />
+  <%= render(SiwappWeb.PageView, "invoice_customer_form.html", f: f) %>
 
   <fieldset class="fieldset">
     <h2>Invoice Details</h2>
