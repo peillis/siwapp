@@ -6,74 +6,71 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
-    {:ok,
-     socket
-     |> assign(:customer_name, "")
-     |> assign(:customer_suggestions, [])}
+    {:ok, assign(socket, status: "is-active")}
   end
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
-    changeset = assigns.f.source
+    status =
+      if changes_in_name?(assigns.f.source) and socket.assigns.status != "just-picked" do
+        "is-active"
+      else
+        "not-active"
+      end
 
-    customer_name = %{
-      data: Ecto.Changeset.get_field(changeset, :name),
-      change: Ecto.Changeset.get_change(changeset, :name)
-    }
+    customer_name = Ecto.Changeset.get_field(assigns.f.source, :name)
 
-    customer_suggestions =
-      if socket.assigns.customer_name == customer_name.change,
-        do: socket.assigns.customer_suggestions,
-        else: Customers.suggest_by_name(customer_name.change)
-
-    socket =
-      socket
-      |> assign(f: assigns.f)
-      |> assign(customer_name: customer_name.data)
-      |> assign(customer_suggestions: customer_suggestions)
-      |> assign(changeset: changeset)
-
-    {:ok, socket}
+    {:ok,
+     socket
+     |> assign(view: socket.view)
+     |> assign(f: assigns.f)
+     |> assign(customer_name: customer_name)
+     |> assign(customer_suggestions: Customers.suggest_by_name(customer_name))
+     |> assign(status: status)}
   end
 
   @impl Phoenix.LiveComponent
+  def render(%{view: SiwappWeb.CustomerLive.Edit} = assigns) do
+    ~H"""
+    <div class="field">
+      <%= label(@f, :name, class: "label") %>
+      <p class="control">
+        <%= text_input(@f, :name, phx_debounce: "blur", class: "input") %>
+      </p>
+      <%= error_tag(@f, :name) %>
+    </div>
+    """
+  end
+
   def render(assigns) do
     ~H"""
     <div class="field">
       <%= label(@f, :name, class: "label") %>
-      <%= if Map.has_key?(assigns, :customer_suggestions) do %>
-        <p class="control has-dropdown">
-          <div class="input-with-dropdown control">
-            <%= text_input(@f, :name,
-              phx_debounce: "500",
-              class: "input",
-              value: @customer_name,
-              autocomplete: "off"
-            ) %>
-            <%= if @customer_suggestions != [] do %>
-              <div class="dropdown below-input is-active">
-                <div class="dropdown-menu dropdown-content" id="dropdown-menu" role="menu">
-                  <%= for customer_suggestion <- @customer_suggestions do %>
-                    <a
-                      href="#"
-                      phx-click="pick_customer"
-                      phx-value-id={customer_suggestion.id}
-                      phx-target={@myself}
-                      class="dropdown-item"
-                    >
-                      <%= customer_suggestion.name %>
-                    </a>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
+      <p class="control has-dropdown">
+        <div class="input-with-dropdown control">
+          <%= text_input(@f, :name,
+            phx_debounce: "500",
+            class: "input",
+            value: @customer_name,
+            autocomplete: "off"
+          ) %>
+          <div class={"dropdown below-input #{@status}"}>
+            <div class="dropdown-menu dropdown-content" id="dropdown-menu" role="menu">
+              <%= for customer_suggestion <- @customer_suggestions do %>
+                <a
+                  href="#"
+                  phx-click="pick_customer"
+                  phx-value-id={customer_suggestion.id}
+                  phx-target={@myself}
+                  class="dropdown-item"
+                >
+                  <%= customer_suggestion.name %>
+                </a>
+              <% end %>
+            </div>
           </div>
-        </p>
-      <% else %>
-        <p class="control">
-          <%= text_input(@f, :name, phx_debounce: "blur", class: "input") %>
-        </p>
-      <% end %>
+        </div>
+      </p>
       <%= error_tag(@f, :name) %>
     </div>
     """
@@ -84,18 +81,22 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     customer_params =
       customer_id
       |> Customers.get()
+      |> IO.inspect()
       |> Map.take([
         :name,
         :identification,
         :contact_person,
         :email,
         :invoicing_address,
-        :shipping_address
-      ])
+        :shipping_address      ])
       |> SiwappWeb.PageView.atom_keys_to_string()
 
     send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
 
-    {:noreply, socket}
+    {:noreply, assign(socket, status: "just-picked")}
+  end
+
+  defp changes_in_name?(changeset) do
+    if Ecto.Changeset.get_change(changeset, :name), do: true, else: false
   end
 end

@@ -1,6 +1,10 @@
 <fieldset class="fieldset">
   <div class="field is-horizontal field-body">
-    <.live_component module={SiwappWeb.InvoicesLive.CustomerInputComponent} id="customer_input" f={@f}/>
+    <.live_component
+      module={SiwappWeb.InvoicesLive.CustomerInputComponent}
+      id="customer_input"
+      f={@f}
+    />
 
     <div class="field">
       <%= label(@f, :identification, class: "label") %>
