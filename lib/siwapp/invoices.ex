@@ -76,13 +76,24 @@ defmodule Siwapp.Invoices do
 
   @doc """
   Sends email with email_default template as email_body, attaching
-  pdf made with print_default template using invoice data
+  pdf made with print_default template using invoice data and if
+  operation successes, updates invoice sent_by_email field to true
   """
   @spec send_email(Invoice.t()) :: {:ok, pos_integer} | {:error, binary}
   def send_email(invoice) do
     case Siwapp.InvoiceMailer.build_invoice_email(invoice) do
-      {:error, msg} -> {:error, msg}
-      {:ok, email} -> Siwapp.Mailer.deliver(email)
+      {:error, msg} ->
+        {:error, msg}
+
+      {:ok, email} ->
+        case Siwapp.Mailer.deliver(email) do
+          {:ok, id} ->
+            __MODULE__.update(invoice, %{sent_by_email: true})
+            {:ok, id}
+
+          {:error, msg} ->
+            {:error, msg}
+        end
     end
   end
 
