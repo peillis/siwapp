@@ -65,13 +65,18 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   @doc """
-  Generates invoices associated to recurring_invoice if this is enabled
+  Generates invoices associated to recurring_invoice, if this is enabled, and sends them
+  by email if they are meant to (set in recurring_invoice send_by_email field)
   """
   @spec generate_invoices(pos_integer()) :: :ok
   def generate_invoices(id) do
-    rec_inv = Repo.get!(RecurringInvoice, id)
-    n = invoices_to_generate(id)
-    Enum.each(1..n//1, fn _ -> Invoices.create(build_invoice_attrs(rec_inv)) end)
+    rec_inv = get!(id)
+
+    id
+    |> invoices_to_generate()
+    |> Range.new(1, -1)
+    |> Enum.map(fn _ -> Invoices.create(build_invoice_attrs(rec_inv)) end)
+    |> Enum.each(fn {:ok, invoice} -> maybe_send_by_email(invoice, rec_inv.send_by_email) end)
   end
 
   @spec build_invoice_attrs(RecurringInvoice.t()) :: map
@@ -92,6 +97,15 @@ defmodule Siwapp.RecurringInvoices do
       attrs
     end
   end
+
+  @spec maybe_send_by_email(Invoice.t(), boolean) :: {:ok, pos_integer} | {:error, binary} | nil
+  defp maybe_send_by_email(invoice, true) do
+    invoice
+    |> Repo.preload([{:items, :taxes}, :series])
+    |> Invoices.send_email()
+  end
+
+  defp maybe_send_by_email(_invoice, _send_by_email), do: nil
 
   # Given a recurring_invoice id, returns the amount of invoices that should  be generated
   @spec invoices_to_generate(pos_integer()) :: integer
