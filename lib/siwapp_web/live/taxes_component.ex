@@ -33,32 +33,32 @@ defmodule SiwappWeb.TaxesComponent do
   def render(assigns) do
     ~H"""
     <div class="control msa-wrapper">
-      <%= for {k, _v} <- @selected do %>
-        <input type="hidden" id={"hidden_input_#{@name}"} name={"#{@name}[]"} value={k}>
-      <% end %>
-      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
-        <span class="placeholder"></span>
-        <%= for {k, v} <- @selected do %>
-          <div class="tag-badge">
-            <span>
-              <%= k %>
-            </span>
-            <button
-              type="button"
-              phx-click={JS.push("remove", target: @myself, value: %{index: @index, key: k, val: v})}
-            >
-              x
-            </button>
-          </div>
-        <% end %>
-      </div>
-      <ul id={"tag-list-#{@index}"} class="tag-list" style="display: none;">
-        <%= for {k, v} <- not_selected(@options, @selected) do %>
-          <li phx-click={JS.push("add", target: @myself, value: %{index: @index, key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@index}")}>
+    <%= for {k, _v} <- @selected do %>
+      <input type="hidden" name={"#{@name}[]"} value={k}>
+    <% end %>
+    <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
+      <span class="placeholder"></span>
+      <%= for {k, v} <- @selected do %>
+        <div class="tag-badge">
+          <span>
             <%= k %>
-          </li>
-        <% end %>
-      </ul>
+          </span>
+          <button
+            type="button"
+            phx-click={JS.push("remove", target: @myself, value: %{index: @index, key: k, val: v})}
+          >
+            x
+          </button>
+        </div>
+      <% end %>
+    </div>
+    <ul id={"tag-list-#{@index}"} class="tag-list" style="display: none;">
+      <%= for {k, v} <- not_selected(@options, @selected) do %>
+        <li phx-click={JS.push("add", target: @myself, value: %{index: @index, key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@index}")}>
+          <%= k %>
+        </li>
+      <% end %>
+    </ul>
     </div>
     """
   end
@@ -79,7 +79,7 @@ defmodule SiwappWeb.TaxesComponent do
       {:params_updated, params}
     )
 
-    {:noreply, assign(socket, selected: selected)}
+    {:noreply, socket}
   end
 
   def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
@@ -97,7 +97,7 @@ defmodule SiwappWeb.TaxesComponent do
       {:params_updated, params}
     )
 
-    {:noreply, assign(socket, selected: selected)}
+    {:noreply, socket}
   end
 
   @spec not_selected(MapSet.t(), MapSet.t()) :: MapSet.t()

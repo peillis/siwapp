@@ -110,6 +110,20 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, invoice.series.code <> "-" <> Integer.to_string(invoice.number))
     |> assign(:invoice, invoice)
-    |> assign(:changeset, Invoices.change(invoice))
+    |> assign(:changeset, Invoices.change(invoice, %{"items" => items_from_invoice(invoice)}))
+  end
+
+  defp items_from_invoice(invoice) do
+    invoice.items
+    |> Enum.map(fn item ->
+      item
+      |> Map.from_struct()
+      |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])
+      |> Map.put(:taxes, Enum.map(item.taxes, & &1.name))
+      |> SiwappWeb.PageView.atom_keys_to_string()
+    end)
+    |> Enum.with_index()
+    |> Enum.map(fn {item, i} -> {Integer.to_string(i), item} end)
+    |> Map.new()
   end
 end

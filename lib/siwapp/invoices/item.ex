@@ -107,18 +107,14 @@ defmodule Siwapp.Invoices.Item do
 
   @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp assoc_taxes(changeset, attrs) do
-    attr_taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes", [])
+    attr_taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes")
 
-    if associated_taxes?(changeset, attr_taxes) do
-      cast_assoc(changeset, :taxes)
-    else
-      find_taxes(changeset, attr_taxes)
+    cond do
+      attr_taxes -> find_taxes(changeset, attr_taxes)
+      get_field(changeset, :taxes) != [] -> cast_assoc(changeset, :taxes)
+      true -> find_taxes(changeset, [])
     end
   end
-
-  @spec associated_taxes?(Ecto.Changeset.t(), list | map) :: boolean
-  defp associated_taxes?(_changeset, [%Ecto.Changeset{} | _tail]), do: true
-  defp associated_taxes?(changeset, _attr_taxes), do: get_field(changeset, :taxes) != []
 
   @spec find_taxes(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
   defp find_taxes(changeset, attr_taxes_names) do
