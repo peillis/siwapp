@@ -2,6 +2,7 @@ defmodule Siwapp.Customers do
   @moduledoc """
   The Customers context.
   """
+  import Ecto.Query, warn: false
 
   alias Siwapp.Customers.Customer
   alias Siwapp.Customers.CustomerQuery
@@ -22,12 +23,18 @@ defmodule Siwapp.Customers do
     do: Repo.all(CustomerQuery.list_with_assoc_invoice_fields(limit, offset))
 
   @spec suggest_by_name(binary | nil) :: list
-  def suggest_by_name(""), do: []
-  def suggest_by_name(nil), do: []
+  def suggest_by_name(name, options \\ [])
+  def suggest_by_name("", _options), do: []
+  def suggest_by_name(nil, _options), do: []
 
-  def suggest_by_name(name) do
+  def suggest_by_name(name, options) do
+    default = [limit: 100, offset: 0]
+    options = Keyword.merge(default, options)
+
     Customer
     |> Query.search_in_string(:name, "%#{name}%")
+    |> limit(^options[:limit])
+    |> offset(^options[:offset])
     |> Repo.all()
   end
 

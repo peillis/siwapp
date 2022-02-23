@@ -25,8 +25,11 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
      |> assign(view: socket.view)
      |> assign(f: assigns.f)
      |> assign(customer_name: customer_name)
-     |> assign(customer_suggestions: Customers.suggest_by_name(customer_name))
-     |> assign(status: status)}
+     |> assign(
+       customer_suggestions: Customers.suggest_by_name(customer_name, limit: 10, offset: 0)
+     )
+     |> assign(status: status)
+     |> assign(:page, 0)}
   end
 
   @impl Phoenix.LiveComponent
@@ -55,7 +58,14 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
             autocomplete: "off"
           ) %>
           <div class={"dropdown below-input #{@status}"}>
-            <div class="dropdown-menu dropdown-content" id="dropdown-menu" role="menu">
+            <div
+              class="dropdown-menu dropdown-content"
+              id="customers_list"
+              phx-hook="InfiniteScroll"
+              data-page={@page}
+              phx-target={@myself}
+              role="menu"
+            >
               <%= for customer_suggestion <- @customer_suggestions do %>
                 <a
                   href="#"
@@ -96,6 +106,23 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
 
     {:noreply, assign(socket, status: "just-picked")}
+  end
+
+  def handle_event("load-more", _, socket) do
+    %{
+      page: page,
+      customer_suggestions: customer_suggestions,
+      customer_name: customer_name
+    } = socket.assigns
+
+    next_page = page + 1
+
+    {:noreply,
+     assign(socket,
+       customer_suggestions:
+         customer_suggestions ++ Customers.suggest_by_name(customer_name, limit: 10, offset: 10*next_page),
+       page: next_page
+     )}
   end
 
   defp changes_in_name?(changeset) do
