@@ -5,6 +5,7 @@ defmodule SiwappWeb.ItemsComponent do
 
   alias Ecto.Changeset
   alias Phoenix.HTML.FormData
+  alias Siwapp.Commons
   alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
 
@@ -79,9 +80,9 @@ defmodule SiwappWeb.ItemsComponent do
 
   @spec item_param :: map
   defp item_param do
-    %Item{taxes: []}
+    %Item{taxes: Commons.default_taxes_names()}
     |> Map.from_struct()
-    |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])
+    |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost, :taxes])
     |> SiwappWeb.PageView.atom_keys_to_string()
   end
 end

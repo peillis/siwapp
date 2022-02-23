@@ -64,7 +64,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:action, :new)
     |> assign(:page_title, "New Invoice")
     |> assign(:invoice, %Invoice{})
-    |> assign(:changeset, Invoices.change(%Invoice{}, %{"items" => %{"0" => %{"taxes" => []}}}))
+    |> assign(
+      :changeset,
+      Invoices.change(%Invoice{}, %{
+        "items" => %{"0" => %{"taxes" => Commons.default_taxes_names()}}
+      })
+    )
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

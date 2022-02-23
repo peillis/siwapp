@@ -34,7 +34,7 @@ defmodule SiwappWeb.TaxesComponent do
     ~H"""
     <div class="control msa-wrapper">
       <%= for {k, _v} <- @selected do %>
-        <input type="hidden" id="hidden_input" name={"#{@name}[]"} value={k}>
+        <input type="hidden" id={"hidden_input_#{@name}"} name={"#{@name}[]"} value={k}>
       <% end %>
       <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
         <span class="placeholder"></span>
