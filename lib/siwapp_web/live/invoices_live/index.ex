@@ -4,7 +4,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Query
-  alias Siwapp.Search
+  alias Siwapp.Searches
 
   @impl Phoenix.LiveView
   def mount(%{"id" => id}, _session, socket) do
@@ -113,7 +113,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    invoices = Search.filters(Invoice, params)
+    invoices = Searches.filters(Invoice, params)
 
     {:noreply, assign(socket, :invoices, invoices)}
   end

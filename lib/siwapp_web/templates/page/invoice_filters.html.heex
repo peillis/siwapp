@@ -9,13 +9,13 @@
     <label class="label">
       ISSUE DATE FROM:
     </label>
-    <input name="issue_from_date" class="input" type="date">
+    <%= date_input(@f, :issue_from_date, class: "input") %>
   </div>
   <div class="column is-3">
     <label class="label">
       TO:
     </label>
-    <input name="issue_to_date" class="input" type="date">
+    <%= date_input(@f, :issue_to_date, class: "input") %>
   </div>
 </div>
 <div class="columns">
@@ -24,35 +24,28 @@
       SERIES:
     </label>
     <div class="select is-fullwidth">
-      <select name="series">
-        <option>Choose...</option>
-        <%= for name <- @series_names do %>
-          <option>
-            <%= name %>
-          </option>
-        <% end %>
-      </select>
+      <%= select(@f, :series, ["Choose...": ""] ++ Enum.map(@series_names, &{&1, &1})) %>
     </div>
   </div>
   <div class="column is-3">
     <label class="label">
       NUMBER:
     </label>
-    <input name="number" class="input" type="text">
+    <%= number_input(@f, :number, class: "input") %>
   </div>
   <div class="column is-6">
     <label class="label">
       STATUS:
     </label>
     <div class="select is-fullwidth">
-      <select name="status">
-        <option>Choose...</option>
-        <option>Draft</option>
-        <option>Paid</option>
-        <option>Pending</option>
-        <option>Past Due</option>
-        <option>Failed</option>
-      </select>
+      <%= select(@f, :status,
+        "Choose...": "",
+        Draft: "draft",
+        Paid: "paid",
+        Pending: "pending",
+        "Past Due": "past_due",
+        Failed: "failed"
+      ) %>
     </div>
   </div>
 </div>
@@ -61,12 +54,12 @@
     <label class="label">
       KEY
     </label>
-    <input class="input" name="key" type="text">
+    <%= text_input(@f, :key, class: "input") %>
   </div>
   <div class="column">
     <label class="label">
       VALUE
     </label>
-    <input class="input" name="value" type="text">
+    <%= text_input(@f, :value, class: "input") %>
   </div>
 </div>

@@ -1,7 +1,7 @@
 defmodule SiwappWeb.SearchLive.CustomersInputComponent do
   @moduledoc false
   use SiwappWeb, :live_component
-  alias Siwapp.Search
+  alias Siwapp.Searches
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
@@ -58,7 +58,7 @@ defmodule SiwappWeb.SearchLive.CustomersInputComponent do
 
     {:noreply,
      assign(socket,
-       customers_names: customers_names ++ Search.get_customers_names(value, next_page),
+       customers_names: customers_names ++ Searches.get_customers_names(value, next_page),
        page: next_page
      )}
   end
