@@ -1,8 +1,8 @@
 defmodule SiwappWeb.PageView do
   use SiwappWeb, :view
 
-  alias Siwapp.Invoices.Item
   alias Siwapp.Commons
+  alias Siwapp.Invoices.Item
 
   @doc """
   Returns a string of money, which is formed by amount and currency. Options
