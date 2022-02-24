@@ -234,6 +234,14 @@ defmodule Siwapp.Commons do
     end
   end
 
+  @spec default_taxes_names :: [binary]
+  def default_taxes_names do
+    :cache
+    |> list_taxes()
+    |> Enum.filter(& &1.default)
+    |> Enum.map(& &1.name)
+  end
+
   @doc """
   Returns a Keyword List, with the list of taxes, being the key
   a String with the name of the tax and the value its id, appropiate
