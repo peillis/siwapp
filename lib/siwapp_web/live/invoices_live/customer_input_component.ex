@@ -87,7 +87,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   end
 
   @impl Phoenix.LiveComponent
-  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
+  def handle_event("pick_customer", %{"id" => customer_id}, %{view: SiwappWeb.InvoicesLive.Edit} = socket) do
     customer_params =
       customer_id
       |> Customers.get()
