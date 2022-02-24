@@ -1,7 +1,7 @@
 <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
   <div class="navbar-brand ">
     <%= img_tag(Routes.static_path(@socket_or_conn, "/images/logo.svg"))
-    |> link(to: Routes.page_index_path(@socket_or_conn, :index), class: "navbar-item") %>
+    |> link(to: Routes.home_index_path(@socket_or_conn, :index), class: "navbar-item") %>
     <a
       role="button"
       class="navbar-burger"
@@ -27,7 +27,7 @@
         class: "navbar-item"
       ) %>
       <%= live_redirect("Customers",
-        to: Routes.customer_index_path(@socket_or_conn, :index),
+        to: Routes.customers_index_path(@socket_or_conn, :index),
         class: "navbar-item"
       ) %>
       <div class="navbar-item has-dropdown is-hoverable">

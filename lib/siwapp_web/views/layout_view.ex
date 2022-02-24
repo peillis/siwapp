@@ -10,8 +10,8 @@ defmodule SiwappWeb.LayoutView do
       n when n in [SiwappWeb.SeriesLive.Index, SiwappWeb.SeriesLive.FormComponent] ->
         new_button("New Series", Routes.series_index_path(socket, :new))
 
-      n when n in [SiwappWeb.CustomerLive.Index, SiwappWeb.CustomerLive.Edit] ->
-        new_button("New Customer", Routes.customer_edit_path(socket, :new))
+      n when n in [SiwappWeb.CustomersLive.Index, SiwappWeb.CustomersLive.Edit] ->
+        new_button("New Customer", Routes.customers_edit_path(socket, :new))
 
       n when n in [SiwappWeb.TaxesLive.Index, SiwappWeb.TaxesLive.FormComponent] ->
         new_button("New Tax", Routes.taxes_index_path(socket, :new))
@@ -35,7 +35,7 @@ defmodule SiwappWeb.LayoutView do
   def render_search_live(%Phoenix.LiveView.Socket{} = socket) do
     views_with_search = [
       SiwappWeb.InvoicesLive.Index,
-      SiwappWeb.CustomerLive.Index,
+      SiwappWeb.CustomersLive.Index,
       SiwappWeb.RecurringInvoicesLive.Index
     ]
 
@@ -61,7 +61,7 @@ defmodule SiwappWeb.LayoutView do
       SiwappWeb.InvoicesLive.Index ->
         "invoice_filters"
 
-      SiwappWeb.CustomerLive.Index ->
+      SiwappWeb.CustomersLive.Index ->
         "customer_filters"
 
       SiwappWeb.RecurringInvoicesLive.Index ->

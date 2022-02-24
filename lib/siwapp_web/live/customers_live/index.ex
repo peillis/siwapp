@@ -1,4 +1,4 @@
-defmodule SiwappWeb.CustomerLive.Index do
+defmodule SiwappWeb.CustomersLive.Index do
   @moduledoc """
 
   This module manages the customer index view
@@ -38,7 +38,7 @@ defmodule SiwappWeb.CustomerLive.Index do
   end
 
   def handle_event("edit", %{"id" => id}, socket) do
-    {:noreply, push_redirect(socket, to: Routes.customer_edit_path(socket, :edit, id))}
+    {:noreply, push_redirect(socket, to: Routes.customers_edit_path(socket, :edit, id))}
   end
 
   @impl Phoenix.LiveView

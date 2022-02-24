@@ -93,7 +93,7 @@ defmodule SiwappWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :user, on_mount: SiwappWeb.UserAuthLive do
-      live "/", PageLive.Index, :index
+      live "/", HomeLive.Index, :index
 
       get "/users/settings", UserSettingsController, :edit
       put "/users/settings", UserSettingsController, :update
@@ -115,9 +115,9 @@ defmodule SiwappWeb.Router do
       get "/invoices/:id/download", PageController, :download
       get "/invoices/:id/send_email", PageController, :send_email
 
-      live "/customers/new", CustomerLive.Edit, :new
-      live "/customers/:id/edit", CustomerLive.Edit, :edit
-      live "/customers/", CustomerLive.Index, :index
+      live "/customers/new", CustomersLive.Edit, :new
+      live "/customers/:id/edit", CustomersLive.Edit, :edit
+      live "/customers/", CustomersLive.Index, :index
 
       live "/templates", TemplatesLive.Index, :index
       live "/templates/new", TemplatesLive.Edit, :new
