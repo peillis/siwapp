@@ -37,7 +37,7 @@ defmodule SiwappWeb.CustomersLive.Edit do
         socket =
           socket
           |> put_flash(:info, "Customer successfully saved")
-          |> push_redirect(to: Routes.customer_index_path(socket, :index))
+          |> push_redirect(to: Routes.customers_index_path(socket, :index))
 
         {:noreply, socket}
 
@@ -52,7 +52,7 @@ defmodule SiwappWeb.CustomersLive.Edit do
     socket =
       socket
       |> put_flash(:info, "Customer succesfully deleted")
-      |> push_redirect(to: Routes.customer_index_path(socket, :index))
+      |> push_redirect(to: Routes.customers_index_path(socket, :index))
 
     {:noreply, socket}
   end
