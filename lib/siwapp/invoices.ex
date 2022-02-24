@@ -65,6 +65,38 @@ defmodule Siwapp.Invoices do
     __MODULE__.update(invoice, %{deleted_at: DateTime.utc_now()})
   end
 
+  @doc """
+  Adds virtual fields to invoice struct
+  """
+  @spec with_virtual_fields(Invoice.t()) :: Invoice.t()
+  def with_virtual_fields(invoice) do
+    changeset = change(invoice)
+    Ecto.Changeset.apply_changes(changeset)
+  end
+
+  @doc """
+  Sends email with email_default template as email_body, attaching
+  pdf made with print_default template using invoice data and if
+  operation successes, updates invoice sent_by_email field to true
+  """
+  @spec send_email(Invoice.t()) :: {:ok, pos_integer} | {:error, binary}
+  def send_email(invoice) do
+    case Siwapp.InvoiceMailer.build_invoice_email(invoice) do
+      {:error, msg} ->
+        {:error, msg}
+
+      {:ok, email} ->
+        case Siwapp.Mailer.deliver(email) do
+          {:ok, id} ->
+            __MODULE__.update(invoice, %{sent_by_email: true})
+            {:ok, id}
+
+          {:error, msg} ->
+            {:error, msg}
+        end
+    end
+  end
+
   @spec get(pos_integer()) :: Invoice.t() | nil
   def get(id) do
     Invoice

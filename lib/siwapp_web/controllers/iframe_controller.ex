@@ -8,8 +8,8 @@ defmodule SiwappWeb.IframeController do
 
   @spec iframe(Plug.Conn.t(), map) :: Plug.Conn.t()
   def iframe(conn, %{"id" => id}) do
-    invoice = Invoices.get!(String.to_integer(id), preload: [{:items, :taxes}, :series])
-    str_template = Templates.string_template(invoice)
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
+    str_template = Templates.print_str_template(invoice)
 
     html(conn, str_template)
   end

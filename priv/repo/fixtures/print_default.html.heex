@@ -210,31 +210,42 @@
     </style>
   </head>
   <body class="invoice">
+    <div class="row">
+      <!-- here was company logo -->
+      <div>
+        <ul class="company text-right">
+          <li class="company__name"><%= settings.company %></li>
+          <li class="company__id"><%= settings.company_vat_id %></li>
+          <li class="company__address"><%= settings.company_address %></li>
+          <li><%= settings.company_email %></li>
+        </ul>
+      </div>
+    </div>
+
     <h1>Invoice</h1>
-    <br>
 
     <div class="row">
       <div class="section-sm">
         <p class="text-muted">Billed to:</p>
         <ul class="company customer">
-          <%= if name do %>
-            <li class="company__name"><%= name %></li>
+          <%= if invoice.name do %>
+            <li class="company__name"><%= invoice.name %></li>
           <% end %>
-          <%= if identification do %>
-            <li class="company__id"><%= identification %></li>
+          <%= if invoice.identification do %>
+            <li class="company__id"><%= invoice.identification %></li>
           <% end %>
-          <%= if invoicing_address || contact_person do %>
+          <%= if invoice.invoicing_address || invoice.contact_person do %>
             <li class="company__address">
-              <%= if contact_person do %>
-                <%= contact_person %><br>
+              <%= if invoice.contact_person do %>
+                <%= invoice.contact_person %><br>
               <% end %>
-              <%= if invoicing_address do %>
-                <%= invoicing_address %>
+              <%= if invoice.invoicing_address do %>
+                <%= invoice.invoicing_address %>
               <% end %>
             </li>
           <% end %>
-          <%= if email do %>
-            <li><%= email %></li>
+          <%= if invoice.email do %>
+            <li><%= invoice.email %></li>
           <% end %>
         </ul>
       </div>
@@ -243,15 +254,15 @@
           <tbody>
             <tr>
               <th>Invoice Number:</th>
-              <td class="total"><%= series.code <> "-" <> Integer.to_string(number) %></td>
+              <td class="total"><%= SiwappWeb.PageView.reference(invoice.series.code, invoice.number)%></td>
             </tr>
             <tr>
               <th>Billed:</th>
-              <td class="total"><%= issue_date %></td>
+              <td class="total"><%= invoice.issue_date %></td>
             </tr>
             <tr>
               <th>Due on:</th>
-              <td class="total"><%= due_date %></td>
+              <td class="total"><%= invoice.due_date %></td>
             </tr>
           </tbody>
         </table>
@@ -263,8 +274,8 @@
         <%= status %>
       </div>
       <div class="amount">
-        <%= SiwappWeb.PageView.money_format(gross_amount, currency) %>
-        <span class="amount__currency"><%= currency %></span>
+        <%= SiwappWeb.PageView.money_format(invoice.gross_amount, invoice.currency) %>
+        <span class="amount__currency"><%= invoice.currency %></span>
       </div>
     </div>
 
@@ -280,15 +291,15 @@
         </tr>
       </thead>
       <tbody>
-        <%= for item <- items do %>
+        <%= for item <- invoice.items do %>
           <tr>
             <td> <%= item.description %> </td>
             <%= if item.discount != 0 do %>
-            <td> <%= SiwappWeb.PageView.money_format(item.unitary_cost, currency) %> </td>
+            <td> <%= SiwappWeb.PageView.money_format(item.unitary_cost, invoice.currency) %> </td>
               <td> <%= item.discount %> </td>
             <% end %>
             <td class="total">
-              <%= SiwappWeb.PageView.money_format(item.net_amount, currency) %>
+              <%= SiwappWeb.PageView.money_format(item.net_amount, invoice.currency) %>
             </td>
           </tr>
         <% end %>
@@ -297,11 +308,11 @@
 
     <div class="row">
       <div class="section">
-        <%= if terms do %>
+        <%= if invoice.terms do %>
           <div class="notes">
             <p class="notes__title">Terms &amp; Conditions</p>
             <div class="notes__content">
-              <%= terms %>
+              <%= invoice.terms %>
             </div>
           </div>
         <% end %>
@@ -312,21 +323,21 @@
             <tr>
               <th>Subtotal</th>
               <td class="total">
-                <%= SiwappWeb.PageView.money_format(net_amount, currency) %>
+                <%= SiwappWeb.PageView.money_format(invoice.net_amount, invoice.currency) %>
               </td>
             </tr>
-            <%# <%= for tax <- @invoice.taxes do  %>
+            <%= for {tax_name, tax_value} <- invoice.taxes_amounts do  %>
               <tr>
-                <th> tax </th>
+                <th><%= tax_name %></th>
                 <td class="total">
-                  tax.value
+                  <%= SiwappWeb.PageView.money_format(tax_value, invoice.currency) %>
                 </td>
               </tr>
-            <%# <% end %>
+            <% end %>
             <tr class="grand-total">
               <th>Total</th>
               <td class="total">
-                <%= SiwappWeb.PageView.money_format(gross_amount, currency) %>
+                <%= SiwappWeb.PageView.money_format(invoice.gross_amount, invoice.currency) %>
               </td>
             </tr>
           </tbody>

@@ -16,4 +16,7 @@ defmodule SiwappWeb.PageView do
 
   @spec atom_keys_to_string(map) :: map
   def atom_keys_to_string(map), do: Map.new(map, fn {k, v} -> {Atom.to_string(k), v} end)
+
+  @spec reference(binary, integer) :: binary
+  def reference(series_code, number), do: series_code <> "-#{number}"
 end
