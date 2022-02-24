@@ -89,6 +89,9 @@ defmodule Siwapp.Invoices.InvoiceQuery do
       {:series_id, value} ->
         where(query, series_id: ^value)
 
+      {:recurring_invoice_id, value} ->
+        where(query, recurring_invoice_id: ^value)
+
       {:with_status, :past_due} ->
         past_due(query)
 
