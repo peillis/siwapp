@@ -12,6 +12,7 @@ defmodule SiwappWeb.SettingsController do
     conn
     |> assign(:changeset, changeset)
     |> assign(:currency_options, Invoices.list_currencies())
+    |> assign(:page_title, "Settings")
     |> render("edit.html")
   end
 

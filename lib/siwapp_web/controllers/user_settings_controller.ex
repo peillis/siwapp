@@ -8,7 +8,9 @@ defmodule SiwappWeb.UserSettingsController do
 
   @spec edit(Plug.Conn.t(), list) :: Plug.Conn.t()
   def edit(conn, _params) do
-    render(conn, "edit.html")
+    conn
+    |> assign(:page_title, "Profile")
+    |> render("edit.html")
   end
 
   @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
