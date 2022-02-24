@@ -33,7 +33,10 @@ defmodule SiwappWeb.ItemsComponent do
       |> Enum.count()
       |> Integer.to_string()
 
-    send(self(), {:params_updated, put_in(params, ["items", next_item_index], PageView.get_item_params())})
+    send(
+      self(),
+      {:params_updated, put_in(params, ["items", next_item_index], PageView.get_item_params())}
+    )
 
     {:noreply, socket}
   end
@@ -77,5 +80,4 @@ defmodule SiwappWeb.ItemsComponent do
     |> Changeset.get_field(:gross_amount)
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
-
 end

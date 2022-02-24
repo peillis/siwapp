@@ -121,5 +121,4 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> Enum.map(fn {item, i} -> {Integer.to_string(i), item} end)
     |> Map.new()
   end
-
 end
