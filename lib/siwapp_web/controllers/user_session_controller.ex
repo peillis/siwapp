@@ -6,7 +6,9 @@ defmodule SiwappWeb.UserSessionController do
 
   @spec new(Plug.Conn.t(), map) :: Plug.Conn.t()
   def new(conn, _params) do
-    render(conn, "new.html", error_message: nil)
+    conn
+    |> assign(:page_title, "Log in")
+    |> render("new.html", error_message: nil)
   end
 
   @spec create(Plug.Conn.t(), map) :: Plug.Conn.t()
