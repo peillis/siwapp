@@ -1,4 +1,4 @@
-defmodule SiwappWeb.CustomerLive.Index do
+defmodule SiwappWeb.CustomersLive.Index do
   @moduledoc """
 
   This module manages the customer index view

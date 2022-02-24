@@ -1,4 +1,4 @@
-defmodule SiwappWeb.CustomerLive.Edit do
+defmodule SiwappWeb.CustomersLive.Edit do
   @moduledoc false
   use SiwappWeb, :live_view
 
