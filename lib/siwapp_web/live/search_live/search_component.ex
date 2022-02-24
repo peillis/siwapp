@@ -3,12 +3,15 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   use SiwappWeb, :live_component
   alias Phoenix.LiveView.JS
   alias Siwapp.Commons
-  alias Siwapp.Search
+  alias Siwapp.Searches
+  alias Siwapp.Searches.Search
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket =
       socket
+      |> assign_search()
+      |> assign_changeset()
       |> assign(:series_names, Commons.list_series_names())
       |> assign(:filters, assigns.filters)
 
@@ -16,13 +19,13 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   end
 
   @impl Phoenix.LiveComponent
-  def handle_event("search_customers", %{"_target" => ["name"], "name" => value}, socket) do
+  def handle_event("change", %{"_target" => ["name"], "name" => value}, socket) do
     if value == "" do
       send_update(SiwappWeb.SearchLive.CustomersInputComponent, id: "customers")
 
       {:noreply, socket}
     else
-      customers_names = Search.get_customers_names(value, 0)
+      customers_names = Searches.get_customers_names(value, 0)
 
       send_update(SiwappWeb.SearchLive.CustomersInputComponent,
         id: "customers",
@@ -34,15 +37,31 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
     end
   end
 
-  def handle_event("search_customers", _params, socket) do
-    {:noreply, socket}
+  def handle_event("change", %{"search" => search_params}, %{assigns: %{search: search}} = socket) do
+    changeset =
+      search
+      |> Searches.change(search_params)
+
+    {:noreply,
+     socket
+     |> assign(:changeset, changeset)}
   end
 
-  def handle_event("search", params, socket) do
+  def handle_event("search", %{"search" => params}, socket) do
     params = Enum.reject(params, fn {_key, val} -> val in ["", "Choose..."] end)
 
     send(self(), {:search, params})
 
     {:noreply, socket}
+  end
+
+  @spec assign_search(Phoenix.LiveView.Socket.t()) :: Phoenix.LiveView.Socket.t()
+  defp assign_search(socket) do
+    assign(socket, :search, %Search{})
+  end
+
+  @spec assign_changeset(Phoenix.LiveView.Socket.t()) :: Phoenix.LiveView.Socket.t()
+  defp assign_changeset(%{assigns: %{search: search}} = socket) do
+    assign(socket, :changeset, Searches.change(search))
   end
 end

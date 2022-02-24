@@ -5,7 +5,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   use SiwappWeb, :live_view
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
-  alias Siwapp.Search
+  alias Siwapp.Searches
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
@@ -50,7 +50,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    recurring_invoices = Search.filters(RecurringInvoice, params)
+    recurring_invoices = Searches.filters(RecurringInvoice, params)
 
     {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
   end

@@ -1,4 +1,4 @@
-defmodule Siwapp.Search.SearchQuery do
+defmodule Siwapp.Searches.SearchQuery do
   @moduledoc """
   Search Queries
   """
@@ -110,15 +110,15 @@ defmodule Siwapp.Search.SearchQuery do
   @spec type_of_status(Ecto.Queryable.t(), binary) :: Ecto.Queryable.t()
   defp type_of_status(query, value) do
     case value do
-      v when v in ["Draft", "Paid", "Failed"] ->
+      v when v in ["draft", "paid", "failed"] ->
         value = convert_to_atom(value)
 
         where(query, [q], field(q, ^value) == true)
 
-      "Pending" ->
+      "pending" ->
         InvoiceQuery.pending(query)
 
-      "Past Due" ->
+      "past_due" ->
         InvoiceQuery.past_due(query)
     end
   end
