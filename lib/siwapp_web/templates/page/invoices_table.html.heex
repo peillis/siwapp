@@ -49,7 +49,7 @@
           </td>
         <% end %>
         <td>
-          <%= Siwapp.Invoices.reference(invoice.series.code, invoice.number) %>
+          <%= SiwappWeb.PageView.reference(invoice.series.code, invoice.number) %>
         </td>
         <td>
           <%= invoice.name %>

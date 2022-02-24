@@ -245,7 +245,7 @@
             </li>
           <% end %>
           <%= if invoice.email do %>
-          <li><%= invoice.email %></li>
+            <li><%= invoice.email %></li>
           <% end %>
         </ul>
       </div>
@@ -254,7 +254,7 @@
           <tbody>
             <tr>
               <th>Invoice Number:</th>
-              <td class="total"><%= Siwapp.Invoices.reference(invoice.series.code, invoice.number)%></td>
+              <td class="total"><%= SiwappWeb.PageView.reference(invoice.series.code, invoice.number)%></td>
             </tr>
             <tr>
               <th>Billed:</th>
