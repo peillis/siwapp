@@ -11,7 +11,6 @@ defmodule Siwapp.Invoices.Payment do
     :date,
     :amount,
     :notes,
-    :deleted_at,
     :invoice_id,
     :virtual_amount
   ]
@@ -22,7 +21,6 @@ defmodule Siwapp.Invoices.Payment do
           notes: binary() | nil,
           updated_at: DateTime.t() | nil,
           inserted_at: DateTime.t() | nil,
-          deleted_at: DateTime.t() | nil,
           invoice_id: pos_integer() | nil,
           virtual_amount: float() | nil
         }
@@ -31,7 +29,6 @@ defmodule Siwapp.Invoices.Payment do
     field :date, :date
     field :amount, :integer, default: 0
     field :notes, :string
-    field :deleted_at, :utc_datetime
     field :virtual_amount, :float, virtual: true
     belongs_to :invoice, Invoice
 
