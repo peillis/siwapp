@@ -5,8 +5,6 @@ defmodule SiwappWeb.ItemsComponent do
 
   alias Ecto.Changeset
   alias Phoenix.HTML.FormData
-  alias Siwapp.Commons
-  alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
 
   @impl Phoenix.LiveComponent
