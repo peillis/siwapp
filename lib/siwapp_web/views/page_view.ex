@@ -1,6 +1,9 @@
 defmodule SiwappWeb.PageView do
   use SiwappWeb, :view
 
+  alias Siwapp.Commons
+  alias Siwapp.Invoices.Item
+
   @doc """
   Returns a string of money, which is formed by amount and currency. Options
   can be given. Default are [symbol: true, separator: ","]. Check Money.to_string
@@ -12,6 +15,15 @@ defmodule SiwappWeb.PageView do
     |> round()
     |> Money.new(currency)
     |> Money.to_string(options)
+  end
+
+  @spec get_item_params(Item.t()) :: map
+  def get_item_params(item \\ %Item{taxes: Commons.default_taxes_names()}) do
+    item
+    |> Map.from_struct()
+    |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])
+    |> Map.put(:taxes, Enum.map(item.taxes, & &1.name))
+    |> SiwappWeb.PageView.atom_keys_to_string()
   end
 
   @spec atom_keys_to_string(map) :: map

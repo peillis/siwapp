@@ -78,7 +78,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:action, :edit)
     |> assign(:page_title, recurring_invoice.name)
     |> assign(:recurring_invoice, recurring_invoice)
-    |> assign(:changeset, RecurringInvoices.change(recurring_invoice))
+    |> assign(
+      :changeset,
+      RecurringInvoices.change(recurring_invoice, %{"items" => recurring_invoice.items})
+    )
   end
 
   # Replicates inputs_for behavior for recurring_invoice's items even when there's no association

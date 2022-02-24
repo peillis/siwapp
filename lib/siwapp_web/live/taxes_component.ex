@@ -34,7 +34,7 @@ defmodule SiwappWeb.TaxesComponent do
     ~H"""
     <div class="control msa-wrapper">
       <%= for {k, _v} <- @selected do %>
-        <input type="hidden" id={"hidden_input_#{@name}"} name={"#{@name}[]"} value={k}>
+        <input type="hidden" name={"#{@name}[]"} value={k}>
       <% end %>
       <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
         <span class="placeholder"></span>
@@ -79,7 +79,7 @@ defmodule SiwappWeb.TaxesComponent do
       {:params_updated, params}
     )
 
-    {:noreply, assign(socket, selected: selected)}
+    {:noreply, socket}
   end
 
   def handle_event("add", %{"index" => index, "key" => key, "val" => value}, socket) do
@@ -97,7 +97,7 @@ defmodule SiwappWeb.TaxesComponent do
       {:params_updated, params}
     )
 
-    {:noreply, assign(socket, selected: selected)}
+    {:noreply, socket}
   end
 
   @spec not_selected(MapSet.t(), MapSet.t()) :: MapSet.t()

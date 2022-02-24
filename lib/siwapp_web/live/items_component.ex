@@ -5,8 +5,6 @@ defmodule SiwappWeb.ItemsComponent do
 
   alias Ecto.Changeset
   alias Phoenix.HTML.FormData
-  alias Siwapp.Commons
-  alias Siwapp.Invoices.Item
   alias SiwappWeb.PageView
 
   @impl Phoenix.LiveComponent
@@ -33,7 +31,10 @@ defmodule SiwappWeb.ItemsComponent do
       |> Enum.count()
       |> Integer.to_string()
 
-    send(self(), {:params_updated, put_in(params, ["items", next_item_index], item_param())})
+    send(
+      self(),
+      {:params_updated, put_in(params, ["items", next_item_index], PageView.get_item_params())}
+    )
 
     {:noreply, socket}
   end
@@ -76,13 +77,5 @@ defmodule SiwappWeb.ItemsComponent do
     changeset
     |> Changeset.get_field(:gross_amount)
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
-  end
-
-  @spec item_param :: map
-  defp item_param do
-    %Item{taxes: Commons.default_taxes_names()}
-    |> Map.from_struct()
-    |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost, :taxes])
-    |> SiwappWeb.PageView.atom_keys_to_string()
   end
 end
