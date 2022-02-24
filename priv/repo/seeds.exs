@@ -159,9 +159,9 @@ recurring_invoices = [
     customer_id: 2,
     items: %{
       "0" => %{
-        "description" => "description",
-        "quantity" => 1,
-        "unitary_cost" => 0,
+        "quantity" => Faker.random_between(1, 2),
+        "description" => "#{Faker.App.name()} App Development",
+        "unitary_cost" => Faker.random_between(10_000, 1_000_000),
         "discount" => 0,
         "taxes" => ["RETENTION"]
       }
@@ -176,9 +176,9 @@ recurring_invoices = [
     customer_id: 3,
     items: %{
       "0" => %{
-        "description" => "description",
-        "quantity" => 1,
-        "unitary_cost" => 0,
+        "quantity" => Faker.random_between(1, 2),
+        "description" => "#{Faker.App.name()} App Development",
+        "unitary_cost" => Faker.random_between(10_000, 1_000_000),
         "discount" => 0,
         "taxes" => ["VAT"]
       }
