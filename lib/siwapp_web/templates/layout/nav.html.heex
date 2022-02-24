@@ -1,5 +1,5 @@
 <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand ">
+  <div class="navbar-brand pt-1 ">
     <%= img_tag(Routes.static_path(@socket_or_conn, "/images/logo.svg"))
     |> link(to: Routes.page_index_path(@socket_or_conn, :index), class: "navbar-item") %>
     <a
@@ -50,7 +50,7 @@
           <%= live_redirect("Templates",
             to: Routes.templates_index_path(@socket_or_conn, :index),
             class: "navbar-item"
-          ) %>          
+          ) %>
           <hr class="navbar-divider">
           <%= link("Log out",
             to: Routes.user_session_path(@socket_or_conn, :delete),
