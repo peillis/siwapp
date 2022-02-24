@@ -1,6 +1,6 @@
-defmodule SiwappWeb.PageLive.Index do
+defmodule SiwappWeb.HomeLive.Index do
   @moduledoc """
-  This module manages the invoices LiveView events
+  This module manages the LiveView events from the homepage
   """
   use SiwappWeb, :live_view
   alias Siwapp.Invoices
