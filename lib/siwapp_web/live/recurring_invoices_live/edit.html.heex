@@ -3,7 +3,7 @@
 </h1>
 
 <.form let={f} for={@changeset} phx-change="validate" phx-submit="save">
-  <.live_component module={SiwappWeb.InvoicesLive.CustomerComponent} id="customer" f={f} />
+  <%= render(SiwappWeb.PageView, "invoice_customer_form.html", f: f) %>
 
   <fieldset class="fieldset">
     <h2>Configuration</h2>
