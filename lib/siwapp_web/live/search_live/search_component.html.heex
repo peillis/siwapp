@@ -26,9 +26,7 @@
           <button class="button is-info">
             Export to csv
           </button>
-          <button class="button is-info">
-            Search
-          </button>
+          <%= submit "Search", class: "button is-info", "phx-click": JS.hide(to: "#search-menu") %>
         </div>
       </div>
     </div>
