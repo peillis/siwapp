@@ -26,6 +26,7 @@ defmodule Siwapp.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Siwapp.Supervisor]
     Supervisor.start_link(children, opts)
+    Siwapp.InvoicesGenerator.start_link()
   end
 
   # Tell Phoenix to update the endpoint configuration
