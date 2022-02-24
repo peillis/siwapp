@@ -6,16 +6,16 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
-    {:ok, assign(socket, status: "is-active")}
+    {:ok, assign(socket, status: :is_active)}
   end
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     status =
-      if changes_in_name?(assigns.f.source) and socket.assigns.status != "just-picked" do
-        "is-active"
+      if changes_in_name?(assigns.f.source) and socket.assigns.status != :just_picked do
+        :active
       else
-        "not-active"
+        :idle
       end
 
     customer_name = Ecto.Changeset.get_field(assigns.f.source, :name)
@@ -29,6 +29,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
        customer_suggestions: Customers.suggest_by_name(customer_name, limit: 10, offset: 0)
      )
      |> assign(status: status)
+     |> assign(display: if(status == :active, do: "is-active"))
      |> assign(:page, 0)}
   end
 
@@ -57,7 +58,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
             value: @customer_name,
             autocomplete: "off"
           ) %>
-          <div class={"dropdown below-input #{@status}"}>
+          <div class={"dropdown below-input #{@display}"}>
             <div
               class="dropdown-menu dropdown-content"
               id="customers_list"
@@ -108,7 +109,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
     send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
 
-    {:noreply, assign(socket, status: "just-picked")}
+    {:noreply, assign(socket, status: :just_picked)}
   end
 
   def handle_event("load-more", _, socket) do
