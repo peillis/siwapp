@@ -116,7 +116,7 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  @spec find_taxes(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
+  @spec find_taxes(Ecto.Changeset.t(), [binary()]) :: Ecto.Changeset.t()
   defp find_taxes(changeset, attr_taxes_names) do
     all_taxes = Commons.list_taxes(:cache)
     all_taxes_names = Enum.map(all_taxes, &String.upcase(&1.name))

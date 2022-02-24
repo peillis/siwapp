@@ -113,6 +113,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> assign(:changeset, Invoices.change(invoice, %{"items" => items_from_invoice(invoice)}))
   end
 
+  @spec items_from_invoice(Invoice.t()) :: map()
   defp items_from_invoice(invoice) do
     invoice.items
     |> Enum.map(fn item ->

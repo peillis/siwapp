@@ -33,32 +33,32 @@ defmodule SiwappWeb.TaxesComponent do
   def render(assigns) do
     ~H"""
     <div class="control msa-wrapper">
-    <%= for {k, _v} <- @selected do %>
-      <input type="hidden" name={"#{@name}[]"} value={k}>
-    <% end %>
-    <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
-      <span class="placeholder"></span>
-      <%= for {k, v} <- @selected do %>
-        <div class="tag-badge">
-          <span>
+      <%= for {k, _v} <- @selected do %>
+        <input type="hidden" name={"#{@name}[]"} value={k}>
+      <% end %>
+      <div class="input input-presentation" phx-click={JS.toggle(to: "#tag-list-#{@index}")}>
+        <span class="placeholder"></span>
+        <%= for {k, v} <- @selected do %>
+          <div class="tag-badge">
+            <span>
+              <%= k %>
+            </span>
+            <button
+              type="button"
+              phx-click={JS.push("remove", target: @myself, value: %{index: @index, key: k, val: v})}
+            >
+              x
+            </button>
+          </div>
+        <% end %>
+      </div>
+      <ul id={"tag-list-#{@index}"} class="tag-list" style="display: none;">
+        <%= for {k, v} <- not_selected(@options, @selected) do %>
+          <li phx-click={JS.push("add", target: @myself, value: %{index: @index, key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@index}")}>
             <%= k %>
-          </span>
-          <button
-            type="button"
-            phx-click={JS.push("remove", target: @myself, value: %{index: @index, key: k, val: v})}
-          >
-            x
-          </button>
-        </div>
-      <% end %>
-    </div>
-    <ul id={"tag-list-#{@index}"} class="tag-list" style="display: none;">
-      <%= for {k, v} <- not_selected(@options, @selected) do %>
-        <li phx-click={JS.push("add", target: @myself, value: %{index: @index, key: k, val: v}) |> JS.toggle(to: "#tag-list-#{@index}")}>
-          <%= k %>
-        </li>
-      <% end %>
-    </ul>
+          </li>
+        <% end %>
+      </ul>
     </div>
     """
   end
