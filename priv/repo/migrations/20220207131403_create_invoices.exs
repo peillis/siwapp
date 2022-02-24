@@ -54,5 +54,16 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :item_id, references(:items, on_delete: :delete_all)
       add :tax_id, references(:taxes, on_delete: :delete_all)
     end
+
+    create table(:payments) do
+      add :date, :date
+      add :amount, :integer
+      add :notes, :text
+      add :invoice_id, references(:invoices, type: :integer, on_delete: :delete_all)
+
+      timestamps()
+    end
+
+    create index(:payments, [:invoice_id])
   end
 end

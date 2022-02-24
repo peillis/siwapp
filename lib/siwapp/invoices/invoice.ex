@@ -11,6 +11,7 @@ defmodule Siwapp.Invoices.Invoice do
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Invoices.Item
+  alias Siwapp.Invoices.Payment
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
 
@@ -63,6 +64,7 @@ defmodule Siwapp.Invoices.Invoice do
           currency: <<_::24>> | nil,
           due_date: Date.t() | nil,
           items: Ecto.Association.NotLoaded.t() | [Item.t()],
+          payments: Ecto.Association.NotLoaded.t() | [Payment.t()],
           sent_by_email: boolean(),
           paid_amount: non_neg_integer(),
           draft: boolean(),
@@ -104,6 +106,7 @@ defmodule Siwapp.Invoices.Invoice do
     belongs_to :customer, Customer, on_replace: :nilify
     belongs_to :recurring_invoice, RecurringInvoice
     has_many :items, Item, on_replace: :delete
+    has_many :payments, Payment, on_replace: :delete
 
     timestamps()
   end
@@ -114,6 +117,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> cast(attrs, @fields)
     |> assign_currency()
     |> cast_items()
+    |> cast_payments()
     |> assign_issue_date()
     |> assign_due_date()
     |> only_new_invoice_can_be_draft()
@@ -136,6 +140,12 @@ defmodule Siwapp.Invoices.Invoice do
   def cast_items(changeset) do
     currency = get_field(changeset, :currency)
     cast_assoc(changeset, :items, with: {Item, :changeset, [currency]})
+  end
+
+  @spec cast_payments(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  def cast_payments(changeset) do
+    currency = get_field(changeset, :currency)
+    cast_assoc(changeset, :payments, with: {Payment, :changeset, [currency]})
   end
 
   @doc """
