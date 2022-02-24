@@ -129,28 +129,4 @@ defmodule Siwapp.Searches.SearchQuery do
     |> String.downcase()
     |> String.to_atom()
   end
-
-  # There are 6 types of dates; 3 "to_dates" and 3 "from_dates". Depending on the key name,
-  # the function will make different queries
-  defp type_of_date(query, key, value) do
-    cond do
-      String.starts_with?(key, "issue_from") ->
-        InvoiceQuery.issue_date_gteq(query, value)
-
-      String.starts_with?(key, "issue_to") ->
-        InvoiceQuery.issue_date_lteq(query, value)
-
-      String.starts_with?(key, "starting_from") ->
-        RecurringInvoiceQuery.starting_date_gteq(query, value)
-
-      String.starts_with?(key, "starting_to") ->
-        RecurringInvoiceQuery.starting_date_lteq(query, value)
-
-      String.starts_with?(key, "finishing_from") ->
-        RecurringInvoiceQuery.finishing_date_gteq(query, value)
-
-      true ->
-        RecurringInvoiceQuery.finishing_date_lteq(query, value)
-    end
-  end
 end

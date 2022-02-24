@@ -38,6 +38,7 @@ defmodule Siwapp.Searches do
     Repo.all(CustomerQuery.names(value, page))
   end
 
+  @spec change(Search.t(), map) :: Ecto.Changeset.t()
   def change(%Search{} = search, attrs \\ %{}) do
     Search.changeset(search, attrs)
   end
