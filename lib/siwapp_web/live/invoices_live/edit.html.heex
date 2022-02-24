@@ -20,11 +20,11 @@
       <div class="field">
         <%= label(f, :series_id, class: "label") %>
         <p class=" control select is-fullwidth">
-          <%= select(f, :series_id, Enum.map(@series, &{&1.name, &1.id}), phx_debounce: "blur") %>
+          <%= select(f, :series_id, Enum.map(@series, &{&1.name, &1.id})) %>
         </p>
         <%= error_tag(f, :series_id) %>
       </div>
-      <%= if @live_action == :edit do %>
+      <%= if @live_action == :edit && is_nil(Ecto.Changeset.get_change(@changeset, :series_id)) do %>
         <div class="field">
           <%= label(f, :number, class: "label") %>
           <p class="control">
@@ -36,7 +36,7 @@
       <div class="field">
         <%= label(f, :currency, class: "label") %>
         <p class="control select is-fullwidth">
-          <%= select(f, :currency, @currency_options, phx_debounce: "blur") %>
+          <%= select(f, :currency, @currency_options) %>
         </p>
       </div>
     </div>
