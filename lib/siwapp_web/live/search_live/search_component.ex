@@ -38,13 +38,9 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   end
 
   def handle_event("change", %{"search" => search_params}, %{assigns: %{search: search}} = socket) do
-    changeset =
-      search
-      |> Searches.change(search_params)
+    changeset = Searches.change(search, search_params)
 
-    {:noreply,
-     socket
-     |> assign(:changeset, changeset)}
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_event("search", %{"search" => params}, socket) do
