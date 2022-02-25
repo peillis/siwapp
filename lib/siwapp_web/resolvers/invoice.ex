@@ -57,7 +57,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
 
   @spec delete(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def delete(%{id: id}, _resolution) do
-    invoice = Invoices.get(id, preload: [{:items, :taxes}])
+    invoice = Invoices.get(id, preload: [{:items, :taxes}, :payments])
 
     if is_nil(invoice) do
       {:error, message: "Failed!", details: "Invoice not found"}

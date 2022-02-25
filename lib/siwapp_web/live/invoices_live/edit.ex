@@ -60,23 +60,35 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("add_payment", _, socket) do
-    existing_payments = Map.get(socket.assigns.changeset.changes, :payments, [])
     currency = Ecto.Changeset.get_field(socket.assigns.changeset, :currency)
+    gross_amount = Ecto.Changeset.get_field(socket.assigns.changeset, :gross_amount)
+    paid_amount = Ecto.Changeset.get_field(socket.assigns.changeset, :paid_amount)
+    default_virtual_paid_amount =
+      SiwappWeb.PageView.money_format(gross_amount - paid_amount, currency,
+        symbol: false,
+        separator: ""
+      )
+    payments =
+      socket.assigns.changeset
+      |> Ecto.Changeset.get_field(:payments)
+      |> Kernel.++([%Payment{virtual_amount: default_virtual_paid_amount}])
+      |> Enum.map(&Invoices.change_payment(&1, currency))
 
-    payments = existing_payments ++ [Invoices.change_payment(%Payment{}, currency)]
-
-    changeset = Ecto.Changeset.put_assoc(socket.assigns.changeset, :payments, payments)
+    changeset = Ecto.Changeset.put_change(socket.assigns.changeset, :payments, payments)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("remove_payment", %{"payment-id" => payment_index}, socket) do
+    currency = Ecto.Changeset.get_field(socket.assigns.changeset, :currency)
+
     payments =
       socket.assigns.changeset
       |> Ecto.Changeset.get_field(:payments)
       |> List.delete_at(String.to_integer(payment_index))
+      |> Enum.map(&Invoices.change_payment(&1, currency))
 
-    changeset = Ecto.Changeset.put_assoc(socket.assigns.changeset, :payments, payments)
+    changeset = Ecto.Changeset.put_change(socket.assigns.changeset, :payments, payments)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
