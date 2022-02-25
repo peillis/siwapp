@@ -148,6 +148,7 @@
         ) %>
       <% end %>
       <%= live_redirect("Back", to: Routes.invoices_index_path(@socket, :index), class: "button is-dark") %>
+      <%= if @live_action == :edit do %>
       <button class="button is-info">
         Send Email
       </button>
@@ -155,6 +156,7 @@
         to: Routes.page_path(@socket, :download, @invoice.id),
         class: "button is-info"
       ) %>
+      <% end %>
       <%= submit("Save", class: "button is-success") %>
     </div>
   </nav>
