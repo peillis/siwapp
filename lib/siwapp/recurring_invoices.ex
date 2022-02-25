@@ -69,8 +69,20 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   @doc """
-  Generates invoices associated to recurring_invoice, if this is enabled, and sends them
-  by email if they are meant to (set in recurring_invoice send_by_email field)
+  Generates invoices associated to each recurring_invoice in db
+  using generate_invoices/1
+  """
+  @spec generate_invoices :: :ok
+  def generate_invoices do
+    [select: [:id], limit: false]
+    |> list()
+    |> Enum.each(&generate_invoices(&1.id))
+  end
+
+  @doc """
+  Generates invoices given recurring_invoice_id, if this
+  recurring_invoice is enabled. Also sends them by email
+  if they are meant to (set in recurring_invoice send_by_email field)
   """
   @spec generate_invoices(pos_integer()) :: :ok
   def generate_invoices(id) do
