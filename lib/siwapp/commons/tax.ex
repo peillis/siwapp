@@ -15,7 +15,7 @@ defmodule Siwapp.Commons.Tax do
           name: binary | nil,
           value: binary | nil,
           enabled: boolean(),
-          default: boolean(),
+          default: boolean()
         }
 
   schema "taxes" do

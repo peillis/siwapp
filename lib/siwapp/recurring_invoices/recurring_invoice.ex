@@ -71,7 +71,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           series: Ecto.Association.NotLoaded.t() | [Series.t()],
           invoices: Ecto.Association.NotLoaded.t() | [Invoice.t()],
           updated_at: nil | DateTime.t(),
-          inserted_at: nil | DateTime.t(),
+          inserted_at: nil | DateTime.t()
         }
 
   schema "recurring_invoices" do

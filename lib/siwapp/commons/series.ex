@@ -17,7 +17,7 @@ defmodule Siwapp.Commons.Series do
           code: binary | nil,
           enabled: boolean(),
           default: boolean(),
-          first_number: pos_integer() | nil,
+          first_number: pos_integer() | nil
         }
 
   schema "series" do
