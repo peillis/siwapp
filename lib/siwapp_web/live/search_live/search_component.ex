@@ -11,32 +11,14 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
     socket =
       socket
       |> assign_search()
-      |> assign_changeset()
+      |> assign_changeset(assigns)
       |> assign(:series_names, Commons.list_series_names())
-      |> assign(:filters, assigns.filters)
+      |> assign(filters: assigns.filters)
 
     {:ok, socket}
   end
 
   @impl Phoenix.LiveComponent
-  def handle_event("change", %{"_target" => ["name"], "name" => value}, socket) do
-    if value == "" do
-      send_update(SiwappWeb.SearchLive.CustomersInputComponent, id: "customers")
-
-      {:noreply, socket}
-    else
-      customers_names = Searches.get_customers_names(value, 0)
-
-      send_update(SiwappWeb.SearchLive.CustomersInputComponent,
-        id: "customers",
-        customers_names: customers_names,
-        value: value
-      )
-
-      {:noreply, socket}
-    end
-  end
-
   def handle_event("change", %{"search" => search_params}, %{assigns: %{search: search}} = socket) do
     changeset = Searches.change(search, search_params)
 
@@ -56,8 +38,15 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
     assign(socket, :search, %Search{})
   end
 
-  @spec assign_changeset(Phoenix.LiveView.Socket.t()) :: Phoenix.LiveView.Socket.t()
-  defp assign_changeset(%{assigns: %{search: search}} = socket) do
+  @spec assign_changeset(Phoenix.LiveView.Socket.t(), map) :: Phoenix.LiveView.Socket.t()
+  defp assign_changeset(%{assigns: %{changeset: changeset}} = socket, %{name: name}) do
+    changes_params = Map.replace(changeset.changes, :name, name)
+
+    changeset = Searches.change(socket.assigns.search, changes_params)
+    assign(socket, :changeset, changeset)
+  end
+
+  defp assign_changeset(%{assigns: %{search: search}} = socket, _) do
     assign(socket, :changeset, Searches.change(search))
   end
 end
