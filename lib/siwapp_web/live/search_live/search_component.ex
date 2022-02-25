@@ -41,7 +41,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
     assign(socket, :changeset, changeset)
   end
 
-  defp assign_changeset(socket, _, %Search{} = search) do
-    assign(socket, :changeset, Searches.change(search))
+  defp assign_changeset(socket, _, _) do
+    assign(socket, :changeset, Searches.change(%Search{}))
   end
 end
