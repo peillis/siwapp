@@ -8,32 +8,25 @@ defmodule Siwapp.InvoicesGenerator do
 
   @spec start_link :: {:ok, pid}
   def start_link do
-    GenServer.start_link(__MODULE__, %{})
+    GenServer.start_link(__MODULE__, nil)
   end
 
-  @spec init(%{}) :: {:ok, %{}}
-  def init(state) do
-    generate_invoices()
+  @spec init(nil) :: {:ok, nil}
+  def init(nil) do
+    RecurringInvoices.generate_invoices()
     schedule_work()
-    {:ok, state}
+    {:ok, nil}
   end
 
-  @spec handle_info(:generate_invoices, %{}) :: {:noreply, %{}}
-  def handle_info(:generate_invoices, state) do
-    generate_invoices()
+  @spec handle_info(:generate_invoices, nil) :: {:noreply, nil}
+  def handle_info(:generate_invoices, nil) do
+    RecurringInvoices.generate_invoices()
     schedule_work()
-    {:noreply, state}
+    {:noreply, nil}
   end
 
   @spec schedule_work :: reference()
   defp schedule_work do
-    Process.send_after(self(), :generate_invoices, 24 * 60 * 60 * 1000)
-  end
-
-  @spec generate_invoices :: :ok
-  defp generate_invoices do
-    [select: [:id], limit: false]
-    |> RecurringInvoices.list()
-    |> Enum.each(&RecurringInvoices.generate_invoices(&1.id))
+    Process.send_after(self(), :generate_invoices, :timer.hours(24))
   end
 end
