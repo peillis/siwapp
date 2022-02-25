@@ -8,7 +8,6 @@ defmodule Siwapp.Repo.Migrations.CreateCustomers do
       add :hash_id, :string, size: 32
       add :email, :string, size: 100
       add :contact_person, :string, size: 100
-      add :deleted_at, :utc_datetime
       add :invoicing_address, :text
       add :shipping_address, :text
       add :meta_attributes, :jsonb

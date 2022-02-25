@@ -7,7 +7,6 @@ defmodule Siwapp.Repo.Migrations.CreateCommons do
       add :code, :string, size: 255
       add :enabled, :boolean, default: true
       add :default, :boolean, default: false
-      add :deleted_at, :utc_datetime
       add :first_number, :integer, default: 1
     end
 
@@ -16,7 +15,6 @@ defmodule Siwapp.Repo.Migrations.CreateCommons do
       add :value, :integer
       add :enabled, :boolean, default: true
       add :default, :boolean, default: false
-      add :deleted_at, :utc_datetime
     end
 
     create index(:taxes, [:name, :enabled], unique: true)

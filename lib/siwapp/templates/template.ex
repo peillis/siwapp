@@ -6,7 +6,7 @@ defmodule Siwapp.Templates.Template do
 
   import Ecto.Changeset
 
-  @fields [:name, :template, :print_default, :email_default, :subject, :deleted_at]
+  @fields [:name, :template, :print_default, :email_default, :subject]
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
           name: binary | nil,
@@ -14,7 +14,6 @@ defmodule Siwapp.Templates.Template do
           print_default: boolean(),
           email_default: boolean(),
           subject: binary | nil,
-          deleted_at: DateTime.t() | nil,
           inserted_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil
         }
@@ -25,7 +24,6 @@ defmodule Siwapp.Templates.Template do
     field :print_default, :boolean, default: false
     field :email_default, :boolean, default: false
     field :subject, :string
-    field :deleted_at, :utc_datetime
 
     timestamps()
   end

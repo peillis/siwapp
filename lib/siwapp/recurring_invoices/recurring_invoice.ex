@@ -31,7 +31,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     :starting_date,
     :finishing_date,
     :currency,
-    :deleted_at,
     :notes,
     :terms,
     :meta_attributes,
@@ -73,7 +72,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
           invoices: Ecto.Association.NotLoaded.t() | [Invoice.t()],
           updated_at: nil | DateTime.t(),
           inserted_at: nil | DateTime.t(),
-          deleted_at: nil | Date.t()
         }
 
   schema "recurring_invoices" do
@@ -95,7 +93,6 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
     field :starting_date, :date
     field :finishing_date, :date
     field :currency, :string
-    field :deleted_at, :utc_datetime
     field :notes, :string
     field :terms, :string
     field :meta_attributes, :map, default: %{}

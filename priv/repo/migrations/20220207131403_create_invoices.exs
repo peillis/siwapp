@@ -43,7 +43,6 @@ defmodule Siwapp.Repo.Migrations.CreateInvoices do
       add :discount, :integer, default: 0
       add :description, :string, size: 20000
       add :unitary_cost, :integer, default: 0
-      add :deleted_at, :utc_datetime
       add :invoice_id, references(:invoices, type: :integer, on_delete: :delete_all)
     end
 
