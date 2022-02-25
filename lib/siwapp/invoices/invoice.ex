@@ -246,6 +246,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec calculate_payments(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp calculate_payments(changeset) do
     changeset = set_paid_amount(changeset)
 
@@ -259,6 +260,7 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec set_paid_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_paid_amount(changeset) do
     payments = get_field(changeset, :payments)
 

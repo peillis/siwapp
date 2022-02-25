@@ -44,6 +44,7 @@ defmodule SiwappWeb.ItemsComponent do
       socket.assigns.f.params
       |> pop_in(["items", item_index])
       |> elem(1)
+      |> Map.update!("items", &InvoicesLive.Edit.sort_indexes/1)
 
     send(self(), {:params_updated, params})
 

@@ -5,7 +5,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   alias Siwapp.Commons
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Invoices.Payment
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
@@ -59,38 +58,40 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, socket}
   end
 
-  def handle_event("add_payment", _, socket) do
+  def handle_event("add_payment", %{"params" => params}, socket) do
     currency = Ecto.Changeset.get_field(socket.assigns.changeset, :currency)
     gross_amount = Ecto.Changeset.get_field(socket.assigns.changeset, :gross_amount)
     paid_amount = Ecto.Changeset.get_field(socket.assigns.changeset, :paid_amount)
-    default_virtual_paid_amount =
+
+    left_amount =
       SiwappWeb.PageView.money_format(gross_amount - paid_amount, currency,
         symbol: false,
         separator: ""
       )
-    payments =
-      socket.assigns.changeset
-      |> Ecto.Changeset.get_field(:payments)
-      |> Kernel.++([%Payment{virtual_amount: default_virtual_paid_amount}])
-      |> Enum.map(&Invoices.change_payment(&1, currency))
 
-    changeset = Ecto.Changeset.put_change(socket.assigns.changeset, :payments, payments)
+    params =
+      if params["payments"] == nil do
+        Map.put(params, "payments", %{"0" => payment_params(left_amount)})
+      else
+        next_payment_index =
+          params["payments"]
+          |> Enum.count()
+          |> Integer.to_string()
 
-    {:noreply, assign(socket, changeset: changeset)}
+        put_in(params, ["payments", next_payment_index], payment_params(left_amount))
+      end
+
+    {:noreply, assign(socket, changeset: Invoices.change(socket.assigns.invoice, params))}
   end
 
-  def handle_event("remove_payment", %{"payment-id" => payment_index}, socket) do
-    currency = Ecto.Changeset.get_field(socket.assigns.changeset, :currency)
+  def handle_event("remove_payment", %{"payment_id" => payment_index, "params" => params}, socket) do
+    params =
+      params
+      |> pop_in(["payments", Integer.to_string(payment_index)])
+      |> elem(1)
+      |> Map.update!("payments", &sort_indexes/1)
 
-    payments =
-      socket.assigns.changeset
-      |> Ecto.Changeset.get_field(:payments)
-      |> List.delete_at(String.to_integer(payment_index))
-      |> Enum.map(&Invoices.change_payment(&1, currency))
-
-    changeset = Ecto.Changeset.put_change(socket.assigns.changeset, :payments, payments)
-
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply, assign(socket, changeset: Invoices.change(socket.assigns.invoice, params))}
   end
 
   @impl Phoenix.LiveView
@@ -98,6 +99,18 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     changeset = Invoices.change(socket.assigns.invoice, params)
 
     {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  @spec sort_indexes(map) :: map
+  def sort_indexes(elements) do
+    values = Map.values(elements)
+    indexes = 0..(length(values) - 1)
+
+    indexes
+    |> Enum.zip(values)
+    |> Enum.into(%{})
+    |> Enum.map(fn {k, v} -> {Integer.to_string(k), v} end)
+    |> Map.new()
   end
 
   @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
@@ -137,5 +150,14 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     |> Enum.with_index()
     |> Enum.map(fn {item, i} -> {Integer.to_string(i), item} end)
     |> Map.new()
+  end
+
+  @spec payment_params(binary) :: map
+  defp payment_params(virtual_amount) do
+    %{
+      "date" => Date.utc_today(),
+      "notes" => "",
+      "virtual_amount" => virtual_amount
+    }
   end
 end
