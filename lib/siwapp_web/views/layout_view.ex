@@ -52,7 +52,7 @@ defmodule SiwappWeb.LayoutView do
 
   @spec new_button(binary, binary) :: any()
   defp new_button(text, to) do
-    live_redirect(text, to: to, method: :get, class: "button is-primary")
+    live_redirect(text, to: to, method: :get, class: "button is-info")
   end
 
   @spec which_filters(atom()) :: binary()

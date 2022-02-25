@@ -1,5 +1,5 @@
 <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand ">
+  <div class="navbar-brand pt-2">
     <%= img_tag(Routes.static_path(@socket_or_conn, "/images/logo.svg"))
     |> link(to: Routes.home_index_path(@socket_or_conn, :index), class: "navbar-item") %>
     <a

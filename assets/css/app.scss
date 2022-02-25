@@ -8,6 +8,10 @@ main.container {
   margin: 1em auto;
 }
 
+.navbar.is-fixed-top {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ced4da;
+}
 fieldset.fieldset {
   margin-bottom: 3em;
 }
