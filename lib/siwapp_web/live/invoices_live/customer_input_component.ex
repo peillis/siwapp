@@ -49,7 +49,9 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   def render(assigns) do
     ~H"""
     <div class="field">
-      <%= label(@f, :name, class: "label") %>
+      <%= if @f.name != "search" do %>
+        <%= label(@f, :name, class: "label") %>
+      <% end %>
       <p class="control has-dropdown">
         <div class="input-with-dropdown control">
           <%= text_input(@f, :name,
@@ -108,6 +110,19 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
       |> SiwappWeb.PageView.atom_keys_to_string()
 
     send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
+
+    {:noreply, assign(socket, status: :just_picked)}
+  end
+
+  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
+    name =
+      customer_id
+      |> Customers.get!()
+      |> Map.get(:name)
+
+    filters = SiwappWeb.LayoutView.which_filters(socket.view)
+
+    send_update(SiwappWeb.SearchLive.SearchComponent, id: "search", filters: filters, name: name)
 
     {:noreply, assign(socket, status: :just_picked)}
   end
