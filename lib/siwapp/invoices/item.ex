@@ -58,7 +58,6 @@ defmodule Siwapp.Invoices.Item do
     |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_number(:discount, greater_than_or_equal_to: 0, less_than_or_equal_to: 100)
     |> calculate()
-    |> set_virtual_amount(:unitary_cost, :virtual_unitary_cost, currency)
   end
 
   @doc """

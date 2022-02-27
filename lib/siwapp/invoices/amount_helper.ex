@@ -8,16 +8,14 @@ defmodule Siwapp.Invoices.AmountHelper do
 
   @spec set_amount(Ecto.Changeset.t(), atom(), atom(), atom() | binary()) :: Ecto.Changeset.t()
   def set_amount(changeset, field, virtual_field, currency) do
-    virtual_amount = get_field(changeset, virtual_field)
+    case get_field(changeset, virtual_field) do
+      nil ->
+        set_virtual_amount(changeset, field, virtual_field, currency)
 
-    cond do
-      is_nil(virtual_amount) ->
-        changeset
-
-      virtual_amount == "" ->
+      "" ->
         put_change(changeset, field, 0)
 
-      true ->
+      virtual_amount ->
         case Money.parse(virtual_amount, currency) do
           {:ok, %Money{amount: amount}} -> put_change(changeset, field, amount)
           :error -> add_error(changeset, virtual_field, "Invalid format")
@@ -27,15 +25,15 @@ defmodule Siwapp.Invoices.AmountHelper do
 
   @spec set_virtual_amount(Ecto.Changeset.t(), atom(), atom(), atom() | binary()) ::
           Ecto.Changeset.t()
-  def set_virtual_amount(changeset, field, virtual_field, currency) do
-    if is_nil(get_field(changeset, field)) do
-      changeset
-    else
-      amount = get_field(changeset, field)
+  defp set_virtual_amount(changeset, field, virtual_field, currency) do
+    case get_field(changeset, field) do
+      nil ->
+        changeset
 
-      virtual_amount = PageView.money_format(amount, currency, symbol: false, separator: "")
+      amount ->
+        virtual_amount = PageView.money_format(amount, currency, symbol: false, separator: "")
 
-      put_change(changeset, virtual_field, virtual_amount)
+        put_change(changeset, virtual_field, virtual_amount)
     end
   end
 end
