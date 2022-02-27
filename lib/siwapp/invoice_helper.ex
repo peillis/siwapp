@@ -88,8 +88,8 @@ defmodule Siwapp.InvoiceHelper do
     total_net_amount =
       items
       |> Enum.map(& &1.net_amount)
-      |> Enum.sum()
-      |> round()
+      |> Enum.reduce(0, fn x, acc -> Decimal.add(x, acc) end)
+      #|> Decimal.round()
 
     put_change(changeset, :net_amount, total_net_amount)
   end
@@ -115,8 +115,13 @@ defmodule Siwapp.InvoiceHelper do
     taxes_amount =
       tax_amount
       |> Map.values()
-      |> Enum.sum()
+      |> Enum.reduce(0, fn x, acc -> Decimal.add(x, acc) end)
 
-    put_change(changeset, :gross_amount, round(net_amount + taxes_amount))
+    gross_amount =
+      net_amount
+      |> Decimal.add(taxes_amount)
+      |> Decimal.round()
+
+    put_change(changeset, :gross_amount, gross_amount)
   end
 end

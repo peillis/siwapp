@@ -3,6 +3,8 @@ defmodule SiwappWeb.ItemsComponent do
 
   use SiwappWeb, :live_component
 
+  import SiwappWeb.PageView, only: [money_format: 3, money_format: 2]
+
   alias Ecto.Changeset
   alias Phoenix.HTML.FormData
   alias SiwappWeb.PageView
@@ -48,19 +50,6 @@ defmodule SiwappWeb.ItemsComponent do
     send(self(), {:params_updated, params})
 
     {:noreply, socket}
-  end
-
-  @spec item_net_amount(Changeset.t(), FormData.t()) :: binary
-  defp item_net_amount(changeset, currency) do
-    value = Changeset.get_field(changeset, :net_amount)
-    PageView.money_format(value, currency, symbol: false, separator: "")
-  end
-
-  @spec net_amount(Ecto.Changeset.t()) :: binary
-  defp net_amount(changeset) do
-    changeset
-    |> Changeset.get_field(:net_amount)
-    |> PageView.money_format(Changeset.get_field(changeset, :currency))
   end
 
   @spec taxes_amounts(Ecto.Changeset.t()) :: list

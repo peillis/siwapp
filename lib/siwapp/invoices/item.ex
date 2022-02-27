@@ -37,9 +37,9 @@ defmodule Siwapp.Invoices.Item do
     field :description, :string
     field :unitary_cost, :integer, default: 0
     field :deleted_at, :utc_datetime
-    field :net_amount, :float, virtual: true, default: 0.0
+    field :net_amount, :integer, virtual: true, default: 0
     field :taxes_amount, :map, virtual: true, default: %{}
-    field :virtual_unitary_cost, :float, virtual: true
+    field :virtual_unitary_cost, :decimal, virtual: true
     belongs_to :invoice, Invoice
 
     many_to_many :taxes, Tax,
@@ -76,7 +76,7 @@ defmodule Siwapp.Invoices.Item do
     unitary_cost = get_field(changeset, :unitary_cost)
     discount = get_field(changeset, :discount)
 
-    net_amount = quantity * unitary_cost - quantity * unitary_cost * discount / 100
+    net_amount = round(quantity * unitary_cost * (1 - discount/100))
 
     put_change(changeset, :net_amount, net_amount)
   end
@@ -92,7 +92,8 @@ defmodule Siwapp.Invoices.Item do
 
         taxes_amounts =
           for tax <- taxes, into: %{} do
-            {tax.name, net_amount * (tax.value / 100)}
+            tax_val = Decimal.new("#{tax.value / 100}")
+            {tax.name, Decimal.mult(net_amount, tax_val)}
           end
 
         put_change(changeset, :taxes_amount, taxes_amounts)

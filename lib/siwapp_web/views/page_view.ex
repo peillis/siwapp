@@ -12,7 +12,8 @@ defmodule SiwappWeb.PageView do
   @spec money_format(number, atom | binary, keyword) :: binary
   def money_format(value, currency, options \\ []) do
     value
-    |> round()
+    |> Decimal.round()
+    |> Decimal.to_integer()
     |> Money.new(currency)
     |> Money.to_string(options)
   end

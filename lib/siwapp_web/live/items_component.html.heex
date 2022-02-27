@@ -48,7 +48,7 @@
         </label>
         <p class="control">
           <a class="button is-static is-fullwidth">
-            <%= item_net_amount(fi.source, @currency) %>
+            <%= money_format(input_value(fi, :net_amount), @currency, symbol: false) %>
           </a>
         </p>
       </div>
@@ -83,7 +83,7 @@
           <tr>
             <th>Subtotal:</th>
             <td>
-              <%= net_amount(@changeset) %>
+              <%= money_format(input_value(@f, :net_amount), @currency) %>
             </td>
           </tr>
           <%= for {tax_name, tax_value} <- taxes_amounts(@changeset) do %>
