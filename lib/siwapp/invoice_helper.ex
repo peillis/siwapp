@@ -99,7 +99,7 @@ defmodule Siwapp.InvoiceHelper do
       |> get_field(:items)
       |> Enum.map(& &1.taxes_amount)
       |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> Decimal.add(v1, v2) end))
-      |> Enum.map(fn {k, v} -> {k, Decimal.round(v) |> Decimal.to_integer()} end)
+      |> Enum.map(fn {k, v} -> {k, v |> Decimal.round() |> Decimal.to_integer()} end)
       |> Map.new()
 
     put_change(changeset, :taxes_amounts, total_taxes_amounts)

@@ -51,20 +51,4 @@ defmodule SiwappWeb.ItemsComponent do
 
     {:noreply, socket}
   end
-
-  @spec taxes_amounts(Ecto.Changeset.t()) :: list
-  defp taxes_amounts(changeset) do
-    changeset
-    |> Changeset.get_field(:taxes_amounts)
-    |> Enum.map(fn {k, v} ->
-      {k, PageView.money_format(v, Changeset.get_field(changeset, :currency))}
-    end)
-  end
-
-  @spec gross_amount(Ecto.Changeset.t()) :: binary
-  defp gross_amount(changeset) do
-    changeset
-    |> Changeset.get_field(:gross_amount)
-    |> PageView.money_format(Changeset.get_field(changeset, :currency))
-  end
 end
