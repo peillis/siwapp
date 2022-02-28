@@ -108,7 +108,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
     indexes
     |> Enum.zip(values)
-    |> Enum.into(%{})
     |> Enum.map(fn {k, v} -> {Integer.to_string(k), v} end)
     |> Map.new()
   end
