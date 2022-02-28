@@ -10,7 +10,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   def update(assigns, socket) do
     socket =
       socket
-      |> assign_changeset(assigns, %Search{})
+      |> assign_changeset(assigns)
       |> assign(:series_names, Commons.list_series_names())
       |> assign(filters: assigns.filters)
 
@@ -32,16 +32,16 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
     {:noreply, socket}
   end
 
-  @spec assign_changeset(Phoenix.LiveView.Socket.t(), map, Search.t()) ::
+  @spec assign_changeset(Phoenix.LiveView.Socket.t(), map) ::
           Phoenix.LiveView.Socket.t()
-  defp assign_changeset(%{assigns: %{changeset: changeset}} = socket, %{name: name}, _) do
+  defp assign_changeset(%{assigns: %{changeset: changeset}} = socket, %{name: name}) do
     changes_params = Map.replace(changeset.changes, :name, name)
 
     changeset = Searches.change(%Search{}, changes_params)
     assign(socket, :changeset, changeset)
   end
 
-  defp assign_changeset(socket, _, _) do
+  defp assign_changeset(socket, _) do
     assign(socket, :changeset, Searches.change(%Search{}))
   end
 end
