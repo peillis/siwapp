@@ -25,8 +25,9 @@ defmodule Siwapp.Search.SearchQuery do
 
   def filter_by(query, "series", value) do
     query
-    |> join(:inner, [q], s in Siwapp.Commons.Series, on: q.series_id == s.id)
-    |> where([q, s], ilike(s.name, ^"%#{value}%"))
+    |> from(as: :query)
+    |> join(:inner, [query: q], s in Siwapp.Commons.Series, on: q.series_id == s.id, as: :series)
+    |> where([query: q, series: s], ilike(s.name, ^value))
   end
 
   def filter_by(query, date, value)
