@@ -30,12 +30,11 @@
   </div>
 </nav>
 
-<.live_component
-  module={SiwappWeb.InvoicesLive.HeaderComponent}
-  id="index-header"
-  page_title={@page_title}
-  query={@query}
-/>
+<%= # .live_component
+#  module={SiwappWeb.InvoicesLive.HeaderComponent}
+#  id="index-header"
+#  page_title={@page_title}
+#  query={@query} %>
 
 <%= render(SiwappWeb.PageView, "invoices_table.html", invoices: @invoices, checked: @checked) %>
 

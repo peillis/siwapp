@@ -76,7 +76,7 @@ defmodule Siwapp.Invoices.Item do
     unitary_cost = get_field(changeset, :unitary_cost)
     discount = get_field(changeset, :discount)
 
-    net_amount = round(quantity * unitary_cost * (1 - discount/100))
+    net_amount = round(quantity * unitary_cost * (1 - discount / 100))
 
     put_change(changeset, :net_amount, net_amount)
   end

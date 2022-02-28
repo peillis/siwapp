@@ -83,44 +83,37 @@ defmodule Siwapp.InvoiceHelper do
 
   @spec set_net_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_net_amount(changeset) do
-    items = get_field(changeset, :items)
-
     total_net_amount =
-      items
+      changeset
+      |> get_field(:items)
       |> Enum.map(& &1.net_amount)
-      |> Enum.reduce(0, fn x, acc -> Decimal.add(x, acc) end)
-      #|> Decimal.round()
+      |> Enum.sum()
 
     put_change(changeset, :net_amount, total_net_amount)
   end
 
   @spec set_taxes_amounts(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_taxes_amounts(changeset) do
-    items = get_field(changeset, :items)
-
     total_taxes_amounts =
-      items
+      changeset
+      |> get_field(:items)
       |> Enum.map(& &1.taxes_amount)
-      |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> v1 + v2 end))
+      |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> Decimal.add(v1, v2) end))
+      |> Enum.map(fn {k, v} -> {k, Decimal.round(v) |> Decimal.to_integer()} end)
+      |> Map.new()
 
     put_change(changeset, :taxes_amounts, total_taxes_amounts)
   end
 
   @spec set_gross_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_gross_amount(changeset) do
-    net_amount = get_field(changeset, :net_amount)
-
-    tax_amount = get_field(changeset, :taxes_amounts)
-
     taxes_amount =
-      tax_amount
+      changeset
+      |> get_field(:taxes_amounts)
       |> Map.values()
-      |> Enum.reduce(0, fn x, acc -> Decimal.add(x, acc) end)
+      |> Enum.sum()
 
-    gross_amount =
-      net_amount
-      |> Decimal.add(taxes_amount)
-      |> Decimal.round()
+    gross_amount = get_field(changeset, :net_amount) + taxes_amount
 
     put_change(changeset, :gross_amount, gross_amount)
   end

@@ -5,14 +5,21 @@ defmodule Siwapp.Invoices.AmountHelper do
   import Ecto.Changeset
 
   @doc """
-  Given the virtual_field amount sets the field amount to that.
-  If the virtual_field is not set, then is set to the field.
+  Given the a virtual_field value it sets the field value to that.
+  If the virtual_field is not set, then is set to the value of field.
   """
   @spec set_amount(Ecto.Changeset.t(), atom(), atom(), atom() | binary()) :: Ecto.Changeset.t()
   def set_amount(changeset, field, virtual_field, currency) do
     case get_field(changeset, virtual_field) do
       nil ->
-        set_virtual_amount(changeset, field, virtual_field, currency)
+        case get_field(changeset, field) do
+          nil ->
+            changeset
+
+          amount ->
+            virtual_amount = Money.new(amount, currency) |> Money.to_decimal()
+            put_change(changeset, virtual_field, virtual_amount)
+        end
 
       "" ->
         put_change(changeset, field, 0)
