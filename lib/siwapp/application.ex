@@ -19,14 +19,14 @@ defmodule Siwapp.Application do
       ChromicPDF,
       # Start a worker by calling: Siwapp.Worker.start_link(arg)
       # {Siwapp.Worker, arg}
-      {Cachex, name: :siwapp_cache}
+      {Cachex, name: :siwapp_cache},
+      Siwapp.InvoicesGenerator
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Siwapp.Supervisor]
     Supervisor.start_link(children, opts)
-    Siwapp.InvoicesGenerator.start_link()
   end
 
   # Tell Phoenix to update the endpoint configuration

@@ -6,8 +6,8 @@ defmodule Siwapp.InvoicesGenerator do
 
   alias Siwapp.RecurringInvoices
 
-  @spec start_link :: {:ok, pid}
-  def start_link do
+  @spec start_link([]) :: {:ok, pid}
+  def start_link([]) do
     GenServer.start_link(__MODULE__, nil)
   end
 
