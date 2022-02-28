@@ -10,7 +10,7 @@ defmodule SiwappWeb.CustomersLive.Index do
 
   alias Siwapp.Customers
   alias Siwapp.Customers.Customer
-  alias Siwapp.Search
+  alias Siwapp.Searches
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
@@ -43,7 +43,7 @@ defmodule SiwappWeb.CustomersLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    customers = Search.filters(Customer, params)
+    customers = Searches.filters(Customer, params)
 
     {:noreply, assign(socket, :customers, customers)}
   end

@@ -3,46 +3,45 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   use SiwappWeb, :live_component
   alias Phoenix.LiveView.JS
   alias Siwapp.Commons
-  alias Siwapp.Search
+  alias Siwapp.Searches
+  alias Siwapp.Searches.Search
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket =
       socket
+      |> assign_changeset(assigns)
       |> assign(:series_names, Commons.list_series_names())
-      |> assign(:filters, assigns.filters)
+      |> assign(filters: assigns.filters)
 
     {:ok, socket}
   end
 
   @impl Phoenix.LiveComponent
-  def handle_event("search_customers", %{"_target" => ["name"], "name" => value}, socket) do
-    if value == "" do
-      send_update(SiwappWeb.SearchLive.CustomersInputComponent, id: "customers")
+  def handle_event("change", %{"search" => search_params}, socket) do
+    changeset = Searches.change(%Search{}, search_params)
 
-      {:noreply, socket}
-    else
-      customers_names = Search.get_customers_names(value, 0)
-
-      send_update(SiwappWeb.SearchLive.CustomersInputComponent,
-        id: "customers",
-        customers_names: customers_names,
-        value: value
-      )
-
-      {:noreply, socket}
-    end
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("search_customers", _params, socket) do
-    {:noreply, socket}
-  end
-
-  def handle_event("search", params, socket) do
+  def handle_event("search", %{"search" => params}, socket) do
     params = Enum.reject(params, fn {_key, val} -> val in ["", "Choose..."] end)
 
     send(self(), {:search, params})
 
     {:noreply, socket}
+  end
+
+  @spec assign_changeset(Phoenix.LiveView.Socket.t(), map) ::
+          Phoenix.LiveView.Socket.t()
+  defp assign_changeset(%{assigns: %{changeset: changeset}} = socket, %{name: name}) do
+    changes_params = Map.replace(changeset.changes, :name, name)
+
+    changeset = Searches.change(%Search{}, changes_params)
+    assign(socket, :changeset, changeset)
+  end
+
+  defp assign_changeset(socket, _) do
+    assign(socket, :changeset, Searches.change(%Search{}))
   end
 end

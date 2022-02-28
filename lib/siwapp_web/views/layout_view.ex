@@ -56,7 +56,7 @@ defmodule SiwappWeb.LayoutView do
   end
 
   @spec which_filters(atom()) :: binary()
-  defp which_filters(view) do
+  def which_filters(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->
         "invoice_filters"

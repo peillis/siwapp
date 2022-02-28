@@ -1,11 +1,12 @@
-defmodule Siwapp.Search do
+defmodule Siwapp.Searches do
   @moduledoc """
   Search Context
   """
   alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query
   alias Siwapp.Repo
-  alias Siwapp.Search.SearchQuery
+  alias Siwapp.Searches.Search
+  alias Siwapp.Searches.SearchQuery
 
   @type type_of_struct ::
           Siwapp.Invoices.Invoice.t()
@@ -35,5 +36,10 @@ defmodule Siwapp.Search do
   @spec get_customers_names(binary, non_neg_integer) :: list()
   def get_customers_names(value, page) do
     Repo.all(CustomerQuery.names(value, page))
+  end
+
+  @spec change(Search.t(), map) :: Ecto.Changeset.t()
+  def change(%Search{} = search, attrs \\ %{}) do
+    Search.changeset(search, attrs)
   end
 end
