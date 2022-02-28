@@ -27,13 +27,14 @@ defmodule Siwapp.Customers.CustomerQuery do
   def list_with_assoc_invoice_fields(limit, offset) do
     limit
     |> list(offset)
-    |> join(:left, [c], i in assoc(c, :invoices))
-    |> where([c, i], not (i.draft or i.failed))
+    |> join(:left, [c], i in Siwapp.Invoices.Invoice,
+      on: c.id == i.customer_id and not (i.draft or i.failed)
+    )
     |> group_by([c, i], c.id)
     |> select([c, i], %Customer{
-      total: sum(i.gross_amount),
-      paid: sum(i.paid_amount),
-      currencies: fragment("array_agg(?)", i.currency),
+      total: coalesce(sum(i.gross_amount), 0),
+      paid: coalesce(sum(i.paid_amount), 0),
+      currencies: fragment("COALESCE(NULLIF(array_agg(?), '{NULL}'), '{}')", i.currency),
       name: c.name,
       identification: c.identification,
       id: c.id
