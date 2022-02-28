@@ -21,6 +21,7 @@ defmodule SiwappWeb.Schema.InvoiceTypes do
     field :due_date, :date
     field :draft, :boolean
     field :items, list_of(:item)
+    field :payments, list_of(:payment)
     field :gross_amount, :string
     field :net_amount, :string
     field :paid_amount, :string

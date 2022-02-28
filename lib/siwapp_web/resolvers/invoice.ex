@@ -11,7 +11,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
       Invoices.list(
         limit: limit,
         offset: offset,
-        preload: [:items],
+        preload: [:items, :payments],
         filters: [customer_id: customer_id]
       )
 
@@ -21,7 +21,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
   end
 
   def list(%{limit: limit, offset: offset}, _resolution) do
-    invoices = Invoices.list(limit: limit, offset: offset, preload: [:items])
+    invoices = Invoices.list(limit: limit, offset: offset, preload: [:items, :payments])
     invoices = Enum.map(invoices, &set_correct_units/1)
 
     {:ok, invoices}
@@ -40,7 +40,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
 
   @spec update(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def update(%{id: id, invoice: invoice_params}, _resolution) do
-    invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :series])
+    invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :payments, :series])
 
     if is_nil(invoice) do
       {:error, message: "Failed!", details: "Invoice not found"}

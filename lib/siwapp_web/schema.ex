@@ -5,6 +5,7 @@ defmodule SiwappWeb.Schema do
   import_types(SiwappWeb.Schema.CustomerTypes)
   import_types(SiwappWeb.Schema.InvoiceTypes)
   import_types(SiwappWeb.Schema.ItemTypes)
+  import_types(SiwappWeb.Schema.PaymentTypes)
   import_types(Absinthe.Type.Custom)
 
   alias SiwappWeb.Resolvers
@@ -37,6 +38,13 @@ defmodule SiwappWeb.Schema do
     field :taxes, list_of(:string)
   end
 
+  input_object :payments do
+    field :id, :id
+    field :amount, :integer
+    field :date, :date
+    field :notes, :string
+  end
+
   input_object :update_invoice_params do
     field :name, :string
     field :identification, :string
@@ -52,6 +60,7 @@ defmodule SiwappWeb.Schema do
     field :due_date, :date
     field :draft, :boolean
     field :items, list_of(:items)
+    field :payments, list_of(:payments)
     field :failed, :boolean
     field :recurring_invoice, :id
     field :sent_by_email, :boolean
@@ -86,6 +95,7 @@ defmodule SiwappWeb.Schema do
       arg(:due_date, :date)
       arg(:draft, :boolean)
       arg(:items, list_of(:items))
+      arg(:payments, list_of(:payments))
       arg(:failed, :boolean)
 
       resolve(&Resolvers.Invoice.create/2)
