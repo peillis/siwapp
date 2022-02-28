@@ -99,9 +99,10 @@ defmodule Siwapp.Invoices do
     end
   end
 
+  @spec set_paid(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def set_paid(invoice) do
     final_payments = invoice.payments ++ [last_payment(invoice)]
-    payments_attrs = Enum.map(final_payments,  &Map.take(&1, [:amount, :date, :notes, :id]))
+    payments_attrs = Enum.map(final_payments, &Map.take(&1, [:amount, :date, :notes, :id]))
 
     __MODULE__.update(invoice, %{payments: payments_attrs})
   end
@@ -302,6 +303,7 @@ defmodule Siwapp.Invoices do
     |> Map.put(:taxes, Enum.map(item.taxes, & &1.name))
   end
 
+  @spec last_payment(Invoice.t()) :: map()
   defp last_payment(invoice) do
     %Payment{
       amount: invoice.gross_amount - invoice.paid_amount,
