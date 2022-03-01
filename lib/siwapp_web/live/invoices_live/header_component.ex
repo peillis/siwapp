@@ -2,9 +2,10 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
   @moduledoc false
   use SiwappWeb, :live_component
 
+  import SiwappWeb.PageView, only: [money_format: 2, money_format: 3]
+
   alias Siwapp.Invoices.Statistics
   alias SiwappWeb.GraphicHelpers
-  alias SiwappWeb.PageView
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
@@ -49,11 +50,11 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
         >
           <div class="card-header-content m-3">
             <div class="card-header-title has-text-weight-bold p-0">
-              <%= PageView.money_format(@default_total, @default_currency) %>
+              <%= money_format(@default_total, @default_currency) %>
             </div>
             <%= for {currency, total} <- @other_totals do %>
               <div class="card-header-title has-text-weight-medium p-0">
-                <%= PageView.money_format(total, currency) %>
+                <%= money_format(total, currency) %>
               </div>
             <% end %>
           </div>
@@ -90,7 +91,7 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
     invoices_data
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot(
-      y_formatter: &PageView.money_format(&1, "USD", symbol: false, fractional_unit: false)
+      y_formatter: &money_format(round(&1), "USD", symbol: false, fractional_unit: false)
     )
   end
 
