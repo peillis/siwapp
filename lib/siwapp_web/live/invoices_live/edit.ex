@@ -21,7 +21,6 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   @impl Phoenix.LiveView
   def handle_event("save", %{"invoice" => params}, socket) do
-
     result =
       case socket.assigns.live_action do
         :new -> Invoices.create(params)
