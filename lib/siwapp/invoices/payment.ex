@@ -29,7 +29,7 @@ defmodule Siwapp.Invoices.Payment do
     field :date, :date
     field :amount, :integer, default: 0
     field :notes, :string
-    field :virtual_amount, :float, virtual: true
+    field :virtual_amount, :decimal, virtual: true
     belongs_to :invoice, Invoice
 
     timestamps()

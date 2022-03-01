@@ -268,7 +268,6 @@ defmodule Siwapp.Invoices.Invoice do
       payments
       |> Enum.map(& &1.amount)
       |> Enum.sum()
-      |> round()
 
     put_change(changeset, :paid_amount, total_payments_amount)
   end

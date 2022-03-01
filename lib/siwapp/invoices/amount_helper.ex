@@ -30,8 +30,13 @@ defmodule Siwapp.Invoices.AmountHelper do
 
       virtual_amount ->
         case Money.parse(virtual_amount, currency) do
-          {:ok, money} -> put_change(changeset, field, money.amount)
-          :error -> add_error(changeset, virtual_field, "Invalid format")
+          {:ok, money} ->
+            changeset
+            |> put_change(field, money.amount)
+            |> put_change(virtual_field, Money.to_decimal(Money.new(money.amount, currency)))
+
+          :error ->
+            add_error(changeset, virtual_field, "Invalid format")
         end
     end
   end
