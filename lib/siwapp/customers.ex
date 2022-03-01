@@ -18,7 +18,8 @@ defmodule Siwapp.Customers do
   @doc """
   Lists customers in database following CustomerQuery.list_with_assoc_invoice_fields/2 query
   """
-  @spec list_with_assoc_invoice_fields(Ecto.Queryable.t(), non_neg_integer(), non_neg_integer()) :: [Customer.t()]
+  @spec list_with_assoc_invoice_fields(Ecto.Queryable.t(), non_neg_integer(), non_neg_integer()) ::
+          [Customer.t()]
   def list_with_assoc_invoice_fields(query, limit \\ 100, offset \\ 0),
     do: Repo.all(CustomerQuery.list_with_assoc_invoice_fields(query, limit, offset))
 
