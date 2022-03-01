@@ -3,6 +3,8 @@ defmodule SiwappWeb.HomeLive.Index do
   This module manages the LiveView events from the homepage
   """
   use SiwappWeb, :live_view
+
+  import SiwappWeb.PageView, only: [money_format: 3]
   alias Siwapp.Invoices
   alias SiwappWeb.GraphicHelpers
 
@@ -26,8 +28,7 @@ defmodule SiwappWeb.HomeLive.Index do
     Invoices.Statistics.get_amount_per_day()
     |> Enum.map(fn {date, amount} -> {NaiveDateTime.new!(date, ~T[00:00:00]), amount} end)
     |> GraphicHelpers.line_plot(
-      y_formatter:
-        &SiwappWeb.PageView.money_format(&1, "USD", symbol: false, fractional_unit: false)
+      y_formatter: &money_format(round(&1), "USD", symbol: false, fractional_unit: false)
     )
   end
 

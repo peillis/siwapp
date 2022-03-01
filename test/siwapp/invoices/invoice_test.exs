@@ -121,28 +121,30 @@ defmodule Siwapp.InvoiceTest do
       assert invoice.gross_amount == 0
     end
 
-    test "Total net amount is the rounded sum of the net amounts of each item", %{
-      invoice: invoice
-    } do
-      # 133-(133*(10/100)) = 119.70 (net_amount per item)
-      # 119.70*2 = 239.40 (total net_amount)
-      assert invoice.net_amount == 239
+    test "Total net amount is the sum of the net amounts of each item (which are already rounded)",
+         %{
+           invoice: invoice
+         } do
+      # 133-(133*(10/100)) = 120 (net_amount per item)
+      # 120*2 = 240 (total net_amount)
+      assert invoice.net_amount == 240
     end
 
-    test "Total taxes amounts is a map with the total amount per tax", %{invoice: invoice} do
-      # 119.70 (net_amount per item)
-      # 119.70*(21/100) = 25.137 (VAT per item)
-      # 119.70*(-15/100) = -17.955 (RETENTION for 2nd item)
-      assert invoice.taxes_amounts == %{"RETENTION" => -17.955, "VAT" => 50.274}
+    test "Total taxes amounts is a map with the total amount per tax (which are already rounded)",
+         %{invoice: invoice} do
+      # 120 (net_amount per item)
+      # 120*(21/100) = 25 (VAT per item)
+      # 120*(-15/100) = -18 (RETENTION for 2nd item)
+      assert invoice.taxes_amounts == %{"RETENTION" => -18, "VAT" => 50}
     end
 
-    test "Total gross amount is the rounded sum of the total net amount and the taxes amounts", %{
+    test "Total gross amount is the sum of the total net amount and the taxes amounts", %{
       invoice: invoice
     } do
       # 239 (total net_amount)
       # %{"RETENTION" => -17.955, "VAT" => 50.274} (total taxes amounts)
       # 239 + 50.274 - 17.955 = 271.319 (total gross_amount)
-      assert invoice.gross_amount == 271
+      assert invoice.gross_amount == 272
     end
   end
 
