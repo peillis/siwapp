@@ -1,7 +1,9 @@
 <div>
   <%= for fi <- @inputs_for do %>
     <div class="columns is-multiline-mobile is-1 is-variable">
-      <%= hidden_input(fi, :id) %>
+      <%= if fi.data.id do %>
+        <%= hidden_input(fi, :id) %>
+      <% end %>
       <div class="column is-4-desktop is-full-mobile">
         <%= label(fi, :description, class: "label") %>
         <p class="control">

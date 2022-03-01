@@ -72,7 +72,9 @@
 
       <%= for fp <- inputs_for(f, :payments) do %>
         <div class="columns is-multiline-mobile is-1 is-variable">
-          <%= hidden_input(fp, :id) %>
+          <%= if fp.data.id do %>
+            <%= hidden_input(fp, :id) %>
+          <% end %>
           <div class="column is-3-desktop is-full-mobile">
             <label class="label">
               Date
