@@ -42,7 +42,6 @@ defmodule Siwapp.Invoices.Payment do
     |> assign_date()
     |> set_amount(:amount, :virtual_amount, currency)
     |> foreign_key_constraint(:invoice_id)
-    |> set_virtual_amount(:amount, :virtual_amount, currency)
   end
 
   @spec assign_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
