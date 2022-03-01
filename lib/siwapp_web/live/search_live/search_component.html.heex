@@ -18,14 +18,15 @@
       <div class="search-menu-content" id="search-menu">
         <%= render(
           SiwappWeb.PageView,
-          "#{@filters}.html",
+          "#{@view}_filters.html",
           series_names: @series_names,
           f: f
         ) %>
         <div class="buttons is-right">
-          <button class="button is-info">
-            Export to csv
-          </button>
+          <%= link("Export to CSV",
+            to: Routes.page_path(@socket, :csv, Map.put(f.params, :view, @view)),
+            class: "button is-info"
+          ) %>
           <%= submit("Search", class: "button is-info", "phx-click": JS.hide(to: "#search-menu")) %>
         </div>
       </div>
