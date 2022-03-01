@@ -52,6 +52,7 @@ defmodule Siwapp.MixProject do
       {:gen_smtp, "~> 1.0"},
       {:heex_formatter, github: "feliperenan/heex_formatter"},
       {:jason, "~> 1.2"},
+      {:mappable, "~> 0.2.4"},
       {:money, "~> 1.4"},
       {:phoenix, "~> 1.6.2"},
       {:phoenix_ecto, "~> 4.4"},

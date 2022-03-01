@@ -116,7 +116,12 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   @spec items_as_params([Siwapp.Invoices.Item.t()]) :: map()
   defp items_as_params(items) do
     items
-    |> Enum.map(&SiwappWeb.PageView.get_item_params/1)
+    |> Enum.map(fn item ->
+      item
+      |> Map.take([:description, :discount, :quantity, :virtual_unitary_cost])
+      |> Map.put(:taxes, Commons.default_taxes_names())
+      |> Mappable.to_map(keys: :strings)
+    end)
     |> Enum.with_index()
     |> Enum.map(fn {item, i} -> {Integer.to_string(i), item} end)
     |> Map.new()

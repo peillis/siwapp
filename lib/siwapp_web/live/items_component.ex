@@ -33,7 +33,7 @@ defmodule SiwappWeb.ItemsComponent do
 
     send(
       self(),
-      {:params_updated, put_in(params, ["items", next_item_index], PageView.get_item_params())}
+      {:params_updated, put_in(params, ["items", next_item_index], item_params())}
     )
 
     {:noreply, socket}
@@ -77,5 +77,16 @@ defmodule SiwappWeb.ItemsComponent do
     changeset
     |> Changeset.get_field(:gross_amount)
     |> PageView.money_format(Changeset.get_field(changeset, :currency))
+  end
+
+  @spec item_params() :: map
+  defp item_params do
+    %{
+      "description" => "",
+      "quantity" => "1",
+      "discount" => "0",
+      "unitary_cost" => "0",
+      "taxes" => Siwapp.Commons.default_taxes_names()
+    }
   end
 end
