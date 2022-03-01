@@ -55,9 +55,13 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    recurring_invoices = Searches.filters(RecurringInvoice, params)
+    query = Searches.filters_query(RecurringInvoice, params)
+    recurring_invoices = Searches.filters(query, preload: [:series])
 
-    {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
+    {:noreply,
+      socket
+      |> assign(:query, query)
+      |> assign(:recurring_invoices, recurring_invoices)}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()

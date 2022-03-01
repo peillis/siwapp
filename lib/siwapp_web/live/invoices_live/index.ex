@@ -113,9 +113,13 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    invoices = Searches.filters(Invoice, params)
+    query = Searches.filters_query(Invoice, params)
+    invoices = Searches.filters(query, preload: [:series])
 
-    {:noreply, assign(socket, :invoices, invoices)}
+    {:noreply,
+      socket
+      |> assign(:query, query)
+      |> assign(:invoices, invoices)}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
