@@ -40,8 +40,8 @@ defmodule SiwappWeb.LayoutView do
     ]
 
     if socket.view in views_with_search do
-      filters = which_filters(socket.view)
-      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", filters: filters)
+      view = which_view(socket.view)
+      live_component(SiwappWeb.SearchLive.SearchComponent, id: "search", view: view)
     end
   end
 
@@ -55,17 +55,17 @@ defmodule SiwappWeb.LayoutView do
     live_redirect(text, to: to, method: :get, class: "button is-info")
   end
 
-  @spec which_filters(atom()) :: binary()
-  def which_filters(view) do
+  @spec which_view(atom()) :: binary()
+  def which_view(view) do
     case view do
       SiwappWeb.InvoicesLive.Index ->
-        "invoice_filters"
+        "invoice"
 
       SiwappWeb.CustomersLive.Index ->
-        "customer_filters"
+        "customer"
 
       SiwappWeb.RecurringInvoicesLive.Index ->
-        "recurring_invoice_filters"
+        "recurring_invoice"
     end
   end
 end
