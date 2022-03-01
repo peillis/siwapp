@@ -12,7 +12,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
       socket
       |> assign_changeset(assigns)
       |> assign(:series_names, Commons.list_series_names())
-      |> assign(filters: assigns.filters)
+      |> assign(view: assigns.view)
 
     {:ok, socket}
   end

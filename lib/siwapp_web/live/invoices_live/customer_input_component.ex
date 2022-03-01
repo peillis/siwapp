@@ -120,9 +120,9 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
       |> Customers.get!()
       |> Map.get(:name)
 
-    filters = SiwappWeb.LayoutView.which_filters(socket.view)
+    view = SiwappWeb.LayoutView.which_view(socket.view)
 
-    send_update(SiwappWeb.SearchLive.SearchComponent, id: "search", filters: filters, name: name)
+    send_update(SiwappWeb.SearchLive.SearchComponent, id: "search", view: view, name: name)
 
     {:noreply, assign(socket, status: :just_picked)}
   end

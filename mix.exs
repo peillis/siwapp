@@ -41,6 +41,7 @@ defmodule Siwapp.MixProject do
       {:contex, "~> 0.4.0"},
       {:cachex, "~> 3.4"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:csv, "~> 2.4"},
       {:dart_sass, "~> 0.3", runtime: Mix.env() == :dev},
       {:dialyxir, "~> 1.1", only: :dev, runtime: false},
       {:ecto_sql, "~> 3.6"},
