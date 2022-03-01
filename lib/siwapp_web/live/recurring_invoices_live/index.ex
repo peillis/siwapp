@@ -48,6 +48,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:noreply, push_redirect(socket, to: Routes.recurring_invoices_edit_path(socket, :edit, id))}
   end
 
+  def handle_event("generate_invoices", _, socket) do
+    RecurringInvoices.generate_invoices()
+    {:noreply, push_redirect(socket, to: Routes.invoices_index_path(socket, :index))}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
     recurring_invoices = Searches.filters(RecurringInvoice, params)

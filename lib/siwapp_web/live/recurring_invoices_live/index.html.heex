@@ -5,7 +5,7 @@
         <button class={"button is-danger #{if Enum.empty?(@checked), do: "is-invisible"}"}>
           Delete
         </button>
-        <button class="button is-info">
+        <button class="button is-info" phx-click="generate_invoices">
           Build Pending Invoices
         </button>
       </div>

@@ -12,15 +12,19 @@ defmodule Siwapp.RecurringInvoices do
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
 
+  @doc """
+  Lists RecurringInvoices in database with options to select, preload, limit and offset
+  (these two last default to 100 and 0 resp.). Limit can be removed setting limit: false
+  """
   @spec list(keyword()) :: [RecurringInvoice.t()]
   def list(options \\ []) do
     default = [limit: 100, offset: 0, preload: []]
     options = Keyword.merge(default, options)
 
     RecurringInvoice
-    |> limit(^options[:limit])
-    |> offset(^options[:offset])
     |> Query.list_preload(options[:preload])
+    |> maybe_limit_and_offset(options[:limit], options[:offset])
+    |> maybe_select(options[:select])
     |> Repo.all()
   end
 
@@ -65,8 +69,20 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   @doc """
-  Generates invoices associated to recurring_invoice, if this is enabled, and sends them
-  by email if they are meant to (set in recurring_invoice send_by_email field)
+  Generates invoices associated to each recurring_invoice in db
+  using generate_invoices/1
+  """
+  @spec generate_invoices :: :ok
+  def generate_invoices do
+    [select: [:id], limit: false]
+    |> list()
+    |> Enum.each(&generate_invoices(&1.id))
+  end
+
+  @doc """
+  Generates invoices given recurring_invoice_id, if this
+  recurring_invoice is enabled. Also sends them by email
+  if they are meant to (set in recurring_invoice send_by_email field)
   """
   @spec generate_invoices(pos_integer()) :: :ok
   def generate_invoices(id) do
@@ -106,6 +122,18 @@ defmodule Siwapp.RecurringInvoices do
   end
 
   defp maybe_send_by_email(_invoice, _send_by_email), do: nil
+  @spec maybe_limit_and_offset(Ecto.Query.t(), atom | integer, integer) :: Ecto.Query.t()
+  defp maybe_limit_and_offset(query, false, _offset), do: query
+
+  defp maybe_limit_and_offset(query, limit, offset) do
+    query
+    |> limit(^limit)
+    |> offset(^offset)
+  end
+
+  @spec maybe_select(Ecto.Query.t(), nil | [atom]) :: Ecto.Query.t()
+  defp maybe_select(query, nil), do: query
+  defp maybe_select(query, fields), do: from(q in query, select: struct(q, ^fields))
 
   # Given a recurring_invoice id, returns the amount of invoices that should  be generated
   @spec invoices_to_generate(pos_integer()) :: integer
