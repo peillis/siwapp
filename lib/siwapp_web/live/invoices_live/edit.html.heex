@@ -149,9 +149,10 @@
       <% end %>
       <%= live_redirect("Back", to: Routes.invoices_index_path(@socket, :index), class: "button is-dark") %>
       <%= if @live_action == :edit do %>
-        <button class="button is-info">
-          Send Email
-        </button>
+        <%= link("Send Email",
+          to: Routes.page_path(@socket, :send_email, @invoice.id),
+          class: "button is-purple"
+        ) %>
         <%= link("Download PDF",
           to: Routes.page_path(@socket, :download, @invoice.id),
           class: "button is-info"
