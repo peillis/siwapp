@@ -83,14 +83,14 @@ defmodule SiwappWeb.PageController do
   end
 
   @spec get_values_from_a_queryable(Ecto.Queryable.t(), [{binary, binary}]) :: list(list()) | []
-  def get_values_from_a_queryable(queryable, query_params) do
+  defp get_values_from_a_queryable(queryable, query_params) do
     queryable
     |> Searches.filters(query_params)
     |> Enum.map(&prepare_values(&1))
   end
 
   @spec get_keys_from_a_queryable(Ecto.Queryable.t()) :: list()
-  def get_keys_from_a_queryable(queryable) do
+  defp get_keys_from_a_queryable(queryable) do
     queryable
     |> struct()
     |> Map.from_struct()
