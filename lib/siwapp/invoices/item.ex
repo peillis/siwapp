@@ -16,7 +16,6 @@ defmodule Siwapp.Invoices.Item do
     :discount,
     :description,
     :unitary_cost,
-    :deleted_at,
     :invoice_id,
     :virtual_unitary_cost
   ]
@@ -27,7 +26,6 @@ defmodule Siwapp.Invoices.Item do
           discount: non_neg_integer(),
           description: binary() | nil,
           unitary_cost: integer(),
-          deleted_at: DateTime.t() | nil,
           invoice_id: pos_integer() | nil
         }
 
@@ -36,7 +34,6 @@ defmodule Siwapp.Invoices.Item do
     field :discount, :integer, default: 0
     field :description, :string
     field :unitary_cost, :integer, default: 0
-    field :deleted_at, :utc_datetime
     field :net_amount, :float, virtual: true, default: 0.0
     field :taxes_amount, :map, virtual: true, default: %{}
     field :virtual_unitary_cost, :float, virtual: true

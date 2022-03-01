@@ -9,7 +9,7 @@ defmodule Siwapp.Commons.Series do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
 
-  @fields [:name, :code, :enabled, :default, :deleted_at, :first_number]
+  @fields [:name, :code, :enabled, :default, :first_number]
 
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
@@ -17,8 +17,7 @@ defmodule Siwapp.Commons.Series do
           code: binary | nil,
           enabled: boolean(),
           default: boolean(),
-          first_number: pos_integer() | nil,
-          deleted_at: DateTime.t() | nil
+          first_number: pos_integer() | nil
         }
 
   schema "series" do
@@ -26,7 +25,6 @@ defmodule Siwapp.Commons.Series do
     field :code, :string
     field :enabled, :boolean, default: true
     field :default, :boolean, default: false
-    field :deleted_at, :utc_datetime
     field :first_number, :integer, default: 1
     has_many :invoices, Invoice
     has_many :recurring_invoices, RecurringInvoice

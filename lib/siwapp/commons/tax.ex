@@ -8,15 +8,14 @@ defmodule Siwapp.Commons.Tax do
 
   alias Siwapp.Invoices.Item
 
-  @fields [:name, :value, :enabled, :default, :deleted_at]
+  @fields [:name, :value, :enabled, :default]
 
   @type t :: %__MODULE__{
           id: pos_integer() | nil,
           name: binary | nil,
           value: binary | nil,
           enabled: boolean(),
-          default: boolean(),
-          deleted_at: DateTime.t() | nil
+          default: boolean()
         }
 
   schema "taxes" do
@@ -24,7 +23,6 @@ defmodule Siwapp.Commons.Tax do
     field :value, :integer
     field :enabled, :boolean, default: true
     field :default, :boolean, default: false
-    field :deleted_at, :utc_datetime
 
     many_to_many :items, Item,
       join_through: "items_taxes",

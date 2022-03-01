@@ -20,7 +20,6 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
       add :starting_date, :date
       add :finishing_date, :date
       add :currency, :string, size: 3
-      add :deleted_at, :utc_datetime
       add :notes, :text
       add :terms, :text
       add :meta_attributes, :jsonb

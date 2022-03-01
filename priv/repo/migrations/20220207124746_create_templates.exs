@@ -8,7 +8,6 @@ defmodule Siwapp.Repo.Migrations.CreateTemplates do
       add :print_default, :boolean, default: false
       add :email_default, :boolean, default: false
       add :subject, :string, size: 200
-      add :deleted_at, :utc_datetime
 
       timestamps()
     end
