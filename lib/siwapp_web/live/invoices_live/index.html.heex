@@ -13,15 +13,18 @@
           data: [confirm: "Are you sure?"],
           class: "button is-danger"
         ) %>
-        <button class="button is-info">
-          Send Email
-        </button>
+        <%= link("Send Email",
+          to: "#",
+          phx_click: "send_email",
+          class: "button is-purple"
+        ) %>
         <button class="button is-info">
           Set Paid
         </button>
-        <button class="button is-info">
-          Download PDF
-        </button>
+        <%= link("Download PDf",
+          to: download_url(@checked),
+          class: "button is-info"
+        ) %>
         <button class="button is-info">
           Duplicate
         </button>

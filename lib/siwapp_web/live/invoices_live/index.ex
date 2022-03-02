@@ -77,12 +77,28 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_event("delete", _params, socket) do
     socket.assigns.checked
     |> MapSet.to_list()
+    |> Enum.reject(&(&1 == 0))
     |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}]))
     |> Enum.each(&Invoices.delete(&1))
 
     socket =
       socket
       |> put_flash(:info, "Invoices succesfully deleted")
+      |> push_redirect(to: Routes.invoices_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
+  def handle_event("send_email", _params, socket) do
+    socket.assigns.checked
+    |> MapSet.to_list()
+    |> Enum.reject(&(&1 == 0))
+    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :series]))
+    |> Enum.each(&Invoices.send_email(&1))
+
+    socket =
+      socket
+      |> put_flash(:info, "Invoices sent by mail")
       |> push_redirect(to: Routes.invoices_index_path(socket, :index))
 
     {:noreply, socket}
@@ -97,6 +113,15 @@ defmodule SiwappWeb.InvoicesLive.Index do
      socket
      |> assign(:query, query)
      |> assign(:invoices, invoices)}
+  end
+
+  @spec download_url(MapSet.t()) :: binary
+  def download_url(checked) do
+    "invoices/download" <>
+      (checked
+       |> MapSet.to_list()
+       |> Enum.reject(&(&1 == 0))
+       |> Enum.reduce("", fn id, acc -> acc <> "/#{id}" end))
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()
