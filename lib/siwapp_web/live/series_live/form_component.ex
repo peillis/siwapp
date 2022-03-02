@@ -41,8 +41,8 @@ defmodule SiwappWeb.SeriesLive.FormComponent do
          |> put_flash(:info, "Series was successfully destroyed.")
          |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, _msg} ->
-        {:noreply, put_flash(socket, :error, "You can't delete the default series.")}
+      {:error, msg} ->
+        {:noreply, put_flash(socket, :error, msg)}
     end
   end
 

@@ -159,14 +159,17 @@ defmodule Siwapp.Commons do
         # because that series is the default one
 
   """
-  @spec delete_series(Series.t()) :: {:ok, Series.t()} | {:error, any()}
+  @spec delete_series(Series.t()) :: {:ok, Series.t()} | {:error, binary}
   def delete_series(%Series{} = series) do
-    if get_default_series() == series do
+    if series.default do
       {:error, "The series you're aiming to delete is the default series. \
-      Change the default series first with change_default_series/1 function."}
+      Change the default series first"}
     else
       Repo.delete(series)
     end
+  rescue
+    _e in Ecto.ConstraintError ->
+      {:error, "It's forbidden to delete a series with associated invoices"}
   end
 
   @doc """

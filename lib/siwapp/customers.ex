@@ -65,7 +65,8 @@ defmodule Siwapp.Customers do
   def delete(%Customer{} = customer) do
     Repo.delete(customer)
   rescue
-    e in Ecto.ConstraintError -> {:error, e.message}
+    _e in Ecto.ConstraintError ->
+      {:error, "It's forbidden to delete a customer with associated invoices/recurring invoices"}
   end
 
   @doc """
