@@ -49,14 +49,14 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
           phx-target={@myself}
         >
           <div class="card-header-content m-3 is-flex is-flex-wrap-wrap is-justify-content-space-around is-two-fifths">
-          <%= for {currency, total} <- @other_totals do %>
-          <span class="has-text-weight-medium p-2">
-          <%= money_format(total, currency) %>
-          </span>
-          <% end %>
-          <span class="has-text-weight-bold p-2">
-            <%= money_format(@default_total, @default_currency) %>
-          </span>
+            <%= for {currency, total} <- @other_totals do %>
+              <span class="has-text-weight-medium p-2">
+                <%= money_format(total, currency) %>
+              </span>
+            <% end %>
+            <span class="has-text-weight-bold p-2">
+              <%= money_format(@default_total, @default_currency) %>
+            </span>
           </div>
           <button class="card-header-icon pl-0" aria-label="more options">
             <span class="icon">
