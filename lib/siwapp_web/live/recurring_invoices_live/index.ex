@@ -12,6 +12,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
+     |> assign(:query, RecurringInvoice)
      |> assign(
        :recurring_invoices,
        RecurringInvoices.list(limit: 20, offset: 0, preload: [:series])
@@ -24,7 +25,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   def handle_event("load-more", _, socket) do
     %{
       page: page,
-      recurring_invoices: recurring_invoices
+      recurring_invoices: recurring_invoices,
+      query: query
     } = socket.assigns
 
     {
@@ -32,7 +34,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
       assign(socket,
         recurring_invoices:
           recurring_invoices ++
-            RecurringInvoices.list(limit: 20, offset: (page + 1) * 20, preload: [:series]),
+            Searches.filters(query, offset: (page + 1) * 20, preload: [:series]),
         page: page + 1
       )
     }
@@ -55,9 +57,13 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    recurring_invoices = Searches.filters(RecurringInvoice, params)
+    query = Searches.filters_query(RecurringInvoice, params)
+    recurring_invoices = Searches.filters(query, preload: [:series])
 
-    {:noreply, assign(socket, :recurring_invoices, recurring_invoices)}
+    {:noreply,
+     socket
+     |> assign(:query, query)
+     |> assign(:recurring_invoices, recurring_invoices)}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()

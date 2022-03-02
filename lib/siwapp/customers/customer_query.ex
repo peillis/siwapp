@@ -23,15 +23,20 @@ defmodule Siwapp.Customers.CustomerQuery do
   paid and currencies (sum of gross amount, sum of paid amount and list of
   all currencies, respectively, used in all invoices associated to customer)
   """
-  @spec list_with_assoc_invoice_fields(non_neg_integer(), non_neg_integer()) :: Ecto.Query.t()
-  def list_with_assoc_invoice_fields(limit, offset) do
-    limit
-    |> list(offset)
-    |> join(:left, [c], i in Siwapp.Invoices.Invoice,
-      on: c.id == i.customer_id and not (i.draft or i.failed)
+  @spec list_with_assoc_invoice_fields(Ecto.Queryable.t(), non_neg_integer(), non_neg_integer()) ::
+          Ecto.Query.t()
+  def list_with_assoc_invoice_fields(query, limit, offset) do
+    query
+    |> from(as: :query)
+    |> order_by(desc: :id)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> join(:left, [query: c], i in Siwapp.Invoices.Invoice,
+      on: c.id == i.customer_id and not (i.draft or i.failed),
+      as: :inv
     )
-    |> group_by([c, i], c.id)
-    |> select([c, i], %Customer{
+    |> group_by([query: c], c.id)
+    |> select([query: c, inv: i], %Customer{
       total: coalesce(sum(i.gross_amount), 0),
       paid: coalesce(sum(i.paid_amount), 0),
       currencies: fragment("COALESCE(NULLIF(array_agg(?), '{NULL}'), '{}')", i.currency),

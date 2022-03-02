@@ -41,41 +41,18 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("load-more", _, %{live_action: :customer} = socket) do
-    %{
-      page: page,
-      invoices: invoices,
-      customer_id: customer_id
-    } = socket.assigns
-
-    more_invoices =
-      Invoices.list(
-        filters: [{:customer_id, customer_id}],
-        preload: :series,
-        limit: 20,
-        offset: (page + 1) * 20
-      )
-
-    {
-      :noreply,
-      assign(socket,
-        invoices: invoices ++ more_invoices,
-        page: page + 1
-      )
-    }
-  end
-
   def handle_event("load-more", _, socket) do
     %{
       page: page,
-      invoices: invoices
+      invoices: invoices,
+      query: query
     } = socket.assigns
 
     {
       :noreply,
       assign(socket,
         invoices:
-          invoices ++ Invoices.list(limit: 20, offset: (page + 1) * 20, preload: [:series]),
+          invoices ++ Searches.filters(query, offset: (page + 1) * 20, preload: [:series]),
         page: page + 1
       )
     }
@@ -113,9 +90,13 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    invoices = Searches.filters(Invoice, params)
+    query = Searches.filters_query(Invoice, params)
+    invoices = Searches.filters(query, preload: [:series])
 
-    {:noreply, assign(socket, :invoices, invoices)}
+    {:noreply,
+     socket
+     |> assign(:query, query)
+     |> assign(:invoices, invoices)}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()

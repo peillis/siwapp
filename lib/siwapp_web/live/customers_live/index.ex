@@ -17,7 +17,8 @@ defmodule SiwappWeb.CustomersLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(customers: Customers.list_with_assoc_invoice_fields(20, 0))
+     |> assign(:query, Customer)
+     |> assign(customers: Customers.list_with_assoc_invoice_fields(Customer, 20))
      |> assign(page_title: "Customers")}
   end
 
@@ -25,13 +26,15 @@ defmodule SiwappWeb.CustomersLive.Index do
   def handle_event("load-more", _, socket) do
     %{
       page: page,
-      customers: customers
+      customers: customers,
+      query: query
     } = socket.assigns
 
     {
       :noreply,
       assign(socket,
-        customers: customers ++ Customers.list_with_assoc_invoice_fields(20, (page + 1) * 20),
+        customers:
+          customers ++ Customers.list_with_assoc_invoice_fields(query, 20, (page + 1) * 20),
         page: page + 1
       )
     }
@@ -43,9 +46,13 @@ defmodule SiwappWeb.CustomersLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    customers = Searches.filters(Customer, params)
+    query = Searches.filters_query(Customer, params)
+    customers = Customers.list_with_assoc_invoice_fields(query, 20)
 
-    {:noreply, assign(socket, :customers, customers)}
+    {:noreply,
+     socket
+     |> assign(:query, query)
+     |> assign(:customers, customers)}
   end
 
   @spec due(integer, integer) :: integer
