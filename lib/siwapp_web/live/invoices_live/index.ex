@@ -102,6 +102,20 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:noreply, socket}
   end
 
+  def handle_event("duplicate", _params, socket) do
+    socket.assigns.checked
+    |> MapSet.to_list()
+    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}]))
+    |> Enum.each(&Invoices.duplicate(&1))
+
+    socket =
+      socket
+      |> put_flash(:info, "Invoices succesfully deleted")
+      |> push_redirect(to: Routes.invoices_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
     query = Searches.filters_query(Invoice, params)
