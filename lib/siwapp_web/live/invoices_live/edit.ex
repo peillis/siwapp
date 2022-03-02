@@ -94,6 +94,17 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     {:noreply, assign(socket, changeset: Invoices.change(socket.assigns.invoice, params))}
   end
 
+  def handle_event("copy", _params, socket) do
+    invoicing_address = Ecto.Changeset.get_field(socket.assigns.changeset, :invoicing_address)
+
+    {:noreply,
+     update(
+       socket,
+       :changeset,
+       &Ecto.Changeset.put_change(&1, :shipping_address, invoicing_address)
+     )}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:params_updated, params}, socket) do
     changeset = Invoices.change(socket.assigns.invoice, params)
