@@ -265,7 +265,7 @@ defmodule Siwapp.Commons do
   end
 
   @doc """
-  Gets a single tax.
+  Gets a single tax by its id.
 
   Raises `Ecto.NoResultsError` if the Tax does not exist.
 
@@ -279,9 +279,24 @@ defmodule Siwapp.Commons do
 
   """
   @spec get_tax!(non_neg_integer) :: Tax.t()
-  def get_tax!(id), do: Repo.get!(Tax, id)
+  def get_tax!(id) when is_number(id), do: Repo.get!(Tax, id)
 
-  def get_tax(name), do: by(Tax, :name, name) |> Repo.one()
+  @doc """
+  Gets a single tax by its name.
+
+  Raises `Ecto.NoResultsError` if the Tax does not exist.
+
+  ## Examples
+
+      iex> get_tax!("VAT")
+      %Tax{}
+
+      iex> get_tax!("NOEXIST")
+      ** (Ecto.NoResultsError)
+
+  """
+  @spec get_tax!(binary()) :: Tax.t()
+  def get_tax!(name), do: Tax |> by(:name, name) |> Repo.one!()
 
   @doc """
   Creates a tax.

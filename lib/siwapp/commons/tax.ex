@@ -39,6 +39,7 @@ defmodule Siwapp.Commons.Tax do
     |> maybe_upcase_name()
   end
 
+  @spec maybe_upcase_name(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def maybe_upcase_name(changeset) do
     if name = get_field(changeset, :name) do
       put_change(changeset, :name, String.upcase(name))
