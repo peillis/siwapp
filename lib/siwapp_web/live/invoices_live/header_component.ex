@@ -36,7 +36,7 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
     <div class="mb-4">
       <div class="is-flex is-justify-content-space-between ">
         <div class="is-flex is-align-items-end">
-          <h1 class="mb-0">
+          <h1 class="mb-2">
             <%= @page_title %>
             <span class="subtitle is-5">
               ( <%= @count %> Found)
