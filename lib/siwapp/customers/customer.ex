@@ -78,6 +78,14 @@ defmodule Siwapp.Customers.Customer do
     Base.encode16(:crypto.hash(:md5, "#{normalize(identification)}#{normalize(name)}"))
   end
 
+  @spec fields :: [atom]
+  def fields do
+    [:id]
+    |> Kernel.++(@fields)
+    |> Kernel.--([:meta_attributes])
+    |> Kernel.++([:inserted_at, :updated_at])
+  end
+
   @spec normalize(binary) :: binary
   defp normalize(string) do
     string

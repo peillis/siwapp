@@ -1,21 +1,11 @@
 defmodule SiwappWeb.PageController do
   use SiwappWeb, :controller
+  alias Siwapp.Customers.Customer
   alias Siwapp.Invoices
+  alias Siwapp.Invoices.Invoice
+  alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Searches
   alias Siwapp.Templates
-
-  @reject_fields [
-    :series,
-    :customer,
-    :recurring_invoice,
-    :items,
-    :__meta__,
-    :taxes_amounts,
-    :meta_attributes,
-    :payments,
-    :recurring_invoices,
-    :invoices
-  ]
 
   @type type_of_struct ::
           Siwapp.Invoices.Invoice.t()
@@ -52,17 +42,15 @@ defmodule SiwappWeb.PageController do
 
   @spec csv(Plug.Conn.t(), map) :: Plug.Conn.t()
   def csv(conn, params) do
-    queryable = which_queryable(params["view"])
+    {queryable, fields} = which_queryable_and_fields(params["view"])
 
     query_params =
       params
       |> Map.delete("view")
       |> Enum.reject(fn {_key, val} -> val == "" end)
 
-    keys_list = get_keys_from_a_queryable(queryable)
-    values_list = get_values_from_a_queryable(queryable, query_params)
-
-    keys_plus_values = [keys_list] ++ values_list
+    values_list = get_values_from_a_queryable(queryable, query_params, fields)
+    keys_plus_values = [fields] ++ values_list
 
     csv_content =
       keys_plus_values
@@ -73,43 +61,38 @@ defmodule SiwappWeb.PageController do
     send_download(conn, {:binary, csv_content}, filename: "#{params["view"]}s.csv")
   end
 
-  @spec get_values_from_a_queryable(Ecto.Queryable.t(), [{binary, binary}]) :: list(list()) | []
-  defp get_values_from_a_queryable(queryable, query_params) do
+  # Get the values for each key from every invoice, recurring_invoice or customer a user decide to filter
+  @spec get_values_from_a_queryable(Ecto.Queryable.t(), [{binary, binary}], [atom]) ::
+          [list()] | []
+  defp get_values_from_a_queryable(queryable, query_params, fields) do
     queryable
     |> Searches.filters(query_params)
-    |> Enum.map(&prepare_values(&1))
+    |> Enum.map(&prepare_values(&1, fields))
   end
 
-  @spec get_keys_from_a_queryable(Ecto.Queryable.t()) :: list()
-  defp get_keys_from_a_queryable(queryable) do
-    queryable
-    |> struct()
-    |> Map.from_struct()
-    |> Enum.reject(fn {key, _val} -> key in @reject_fields end)
-    |> Enum.sort()
-    |> Keyword.keys()
-  end
-
-  @spec which_queryable(binary) :: Ecto.Queryable.t()
-  defp which_queryable(view) do
+  @spec which_queryable_and_fields(binary) :: Ecto.Queryable.t()
+  defp which_queryable_and_fields(view) do
     case view do
       "invoice" ->
-        Siwapp.Invoices.Invoice
+        {Invoice, Invoice.fields()}
 
       "customer" ->
-        Siwapp.Customers.Customer
+        {Customer, Customer.fields()}
 
       "recurring_invoice" ->
-        Siwapp.RecurringInvoices.RecurringInvoice
+        {RecurringInvoice, RecurringInvoice.fields()}
     end
   end
 
-  @spec prepare_values(type_of_struct()) :: list()
-  defp prepare_values(struct) do
+  @spec prepare_values(type_of_struct(), [atom]) :: list()
+  defp prepare_values(struct, fields) do
     struct
     |> Map.from_struct()
-    |> Enum.reject(fn {key, _val} -> key in @reject_fields end)
-    |> Enum.sort()
-    |> Keyword.values()
+    |> sort_values(fields)
+  end
+
+  @spec sort_values(map, list) :: list
+  defp sort_values(map, fields) do
+    Enum.reduce(fields, [], fn key, acc -> acc ++ [Map.get(map, key)] end)
   end
 end
