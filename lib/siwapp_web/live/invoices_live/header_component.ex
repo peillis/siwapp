@@ -34,9 +34,9 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
   def render(assigns) do
     ~H"""
     <div class="mb-4">
-      <div class="is-flex is-justify-content-space-between">
-        <div class="is-flex is-align-items-center">
-          <h1>
+      <div class="is-flex is-justify-content-space-between ">
+        <div class="is-flex is-align-items-end">
+          <h1 class="mb-2">
             <%= @page_title %>
             <span class="subtitle is-5">
               ( <%= @count %> Found)
@@ -48,15 +48,15 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
           phx-click="change-summary-state"
           phx-target={@myself}
         >
-          <div class="card-header-content m-3">
-            <div class="card-header-title has-text-weight-bold p-0">
-              <%= money_format(@default_total, @default_currency) %>
-            </div>
+          <div class="card-header-content m-3 is-flex is-flex-wrap-wrap is-justify-content-space-around is-two-fifths">
             <%= for {currency, total} <- @other_totals do %>
-              <div class="card-header-title has-text-weight-medium p-0">
+              <span class="has-text-weight-medium p-2">
                 <%= money_format(total, currency) %>
-              </div>
+              </span>
             <% end %>
+            <span class="has-text-weight-bold p-2">
+              <%= money_format(@default_total, @default_currency) %>
+            </span>
           </div>
           <button class="card-header-icon pl-0" aria-label="more options">
             <span class="icon">
