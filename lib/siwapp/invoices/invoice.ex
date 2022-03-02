@@ -149,6 +149,14 @@ defmodule Siwapp.Invoices.Invoice do
     cast_assoc(changeset, :payments, with: {Payment, :changeset, [currency]})
   end
 
+  @spec fields :: [atom]
+  def fields do
+    [:id]
+    |> Kernel.++(@fields)
+    |> Kernel.--([:meta_attributes])
+    |> Kernel.++([:inserted_at, :updated_at])
+  end
+
   @doc """
   Assigns the series next number to the invoice changeset.
   """

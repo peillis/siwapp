@@ -147,6 +147,14 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
   def untransform_items(changeset), do: changeset
 
+  @spec fields :: [atom]
+  def fields do
+    [:id]
+    |> Kernel.++(@fields)
+    |> Kernel.--([:meta_attributes, :items])
+    |> Kernel.++([:inserted_at, :updated_at])
+  end
+
   # Converts field items from list of maps to list of Item changesets.
   # This is used to handle items validation and calculations
   @spec transform_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
