@@ -110,8 +110,7 @@
             <p class="control">
               <%= link("Remove Payment",
                 to: "#",
-                phx_click:
-                  Phoenix.LiveView.JS.push("remove_payment", value: %{params: f.params, payment_id: fp.index}),
+                phx_click: JS.push("remove_payment", value: %{params: f.params, payment_id: fp.index}),
                 class: "button is-danger is-light is-fullwidth"
               ) %>
             </p>
@@ -121,7 +120,7 @@
 
       <%= link("Add Payment",
         to: "#",
-        phx_click: Phoenix.LiveView.JS.push("add_payment", value: %{params: f.params}),
+        phx_click: JS.push("add_payment", value: %{params: f.params}),
         class: "button is-dark is-fullwidth column is-2"
       ) %>
       <br>
