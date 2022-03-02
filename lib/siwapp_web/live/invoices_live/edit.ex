@@ -150,7 +150,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
       item
       |> Map.take([:description, :discount, :quantity, :id])
       |> Mappable.to_map(keys: :strings)
-      |> Map.put("taxes", Enum.map(item.taxes, &(&1.name)))
+      |> Map.put("taxes", Enum.map(item.taxes, & &1.name))
       |> Map.put("virtual_unitary_cost", item.virtual_unitary_cost)
     end)
     |> Enum.with_index()
