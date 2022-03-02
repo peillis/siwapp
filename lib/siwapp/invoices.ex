@@ -131,11 +131,6 @@ defmodule Siwapp.Invoices do
       |> Query.not_deleted()
       |> Repo.get!(id)
       |> Repo.preload(list)
-
-    items_with_calculations =
-      Enum.map(invoice.items, &Ecto.Changeset.apply_changes(change_item(&1, invoice.currency)))
-
-    Map.put(invoice, :items, items_with_calculations)
   end
 
   @doc """

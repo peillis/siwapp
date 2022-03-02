@@ -36,5 +36,14 @@ defmodule Siwapp.Commons.Tax do
     |> unique_constraint([:name, :enabled])
     |> validate_required([:name, :value])
     |> validate_length(:name, max: 50)
+    |> maybe_upcase_name()
+  end
+
+  def maybe_upcase_name(changeset) do
+    if name = get_field(changeset, :name) do
+      put_change(changeset, :name, String.upcase(name))
+    else
+      changeset
+    end
   end
 end

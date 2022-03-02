@@ -4,6 +4,7 @@ defmodule Siwapp.Commons do
   """
 
   import Ecto.Query, warn: false
+  import Siwapp.Query
 
   alias Siwapp.Commons.Series
   alias Siwapp.Commons.Tax
@@ -279,6 +280,8 @@ defmodule Siwapp.Commons do
   """
   @spec get_tax!(non_neg_integer) :: Tax.t()
   def get_tax!(id), do: Repo.get!(Tax, id)
+
+  def get_tax(name), do: by(Tax, :name, name) |> Repo.one()
 
   @doc """
   Creates a tax.

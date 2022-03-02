@@ -101,37 +101,38 @@ defmodule Siwapp.Invoices.Item do
   # we cast it and that's it. If it actually doesn't, we find the taxes associated
   # in the attributes. If the attributes have a tax that it doesn't exist we add
   # an error in the changeset.
-
   @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp assoc_taxes(changeset, attrs) do
-    attr_taxes = Map.get(attrs, :taxes) || Map.get(attrs, "taxes")
+    attr_taxes = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
+    current_taxes = MapSet.new(get_field(changeset, :taxes) || [], &(&1.name))
+    new_taxes = MapSet.difference(attr_taxes, current_taxes)
 
     cond do
-      attr_taxes -> find_taxes(changeset, attr_taxes)
-      get_field(changeset, :taxes) != [] -> cast_assoc(changeset, :taxes)
-      true -> find_taxes(changeset, [])
+      MapSet.equal?(attr_taxes, current_taxes) -> changeset
+      MapSet.subset?(attr_taxes, current_taxes) -> put_taxes(changeset, attr_taxes)
+      true -> put_taxes(changeset, new_taxes)
     end
   end
 
-  @spec find_taxes(Ecto.Changeset.t(), [binary()]) :: Ecto.Changeset.t()
-  defp find_taxes(changeset, attr_taxes_names) do
-    all_taxes = Commons.list_taxes(:cache)
-    all_taxes_names = Enum.map(all_taxes, &String.upcase(&1.name))
+  @spec put_taxes(Ecto.Changeset.t(), [MapSet.t()]) :: Ecto.Changeset.t()
+  defp put_taxes(changeset, taxes) do
+    all_taxes = MapSet.new(Commons.list_taxes(:cache) || [], &(&1.name))
+    changeset = Enum.reduce(taxes, changeset, &check_wrong_taxes(&1, &2, all_taxes))
 
-    attr_taxes_names = Enum.map(attr_taxes_names, &String.upcase/1)
-    attr_taxes = Enum.filter(all_taxes, &(String.upcase(&1.name) in attr_taxes_names))
-
-    attr_taxes_names
-    |> Enum.reduce(changeset, &check_wrong_taxes(&1, &2, all_taxes_names))
-    |> put_assoc(:taxes, attr_taxes)
+    put_assoc(changeset, :taxes, Enum.map(taxes, &Commons.get_tax/1))
   end
 
   @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), [String.t()]) :: Ecto.Changeset.t()
   defp check_wrong_taxes(tax, changeset, taxes) do
-    if Enum.member?(taxes, tax) do
+    if MapSet.member?(taxes, tax) do
       changeset
     else
       add_error(changeset, :taxes, "The tax #{tax} is not defined")
     end
+  end
+
+  @spec get(map(), atom()) :: any()
+  defp get(map, key) when is_atom(key) do
+    Map.get(map, key) || Map.get(map, Atom.to_string(key))
   end
 end
