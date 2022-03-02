@@ -6,6 +6,7 @@ defmodule SiwappWeb.ItemsComponent do
   import SiwappWeb.PageView, only: [money_format: 3, money_format: 2]
 
   alias Ecto.Changeset
+  alias SiwappWeb.InvoicesLive
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
@@ -44,6 +45,7 @@ defmodule SiwappWeb.ItemsComponent do
       socket.assigns.f.params
       |> pop_in(["items", item_index])
       |> elem(1)
+      |> Map.update!("items", &InvoicesLive.Edit.sort_indexes/1)
 
     send(self(), {:params_updated, params})
 

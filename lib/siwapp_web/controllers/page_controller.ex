@@ -12,7 +12,7 @@ defmodule SiwappWeb.PageController do
 
   @spec download(Plug.Conn.t(), map) :: Plug.Conn.t()
   def download(conn, %{"id" => id}) do
-    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :payments, :series])
     {pdf_content, pdf_name} = Templates.pdf_content_and_name(invoice)
 
     send_download(conn, {:binary, pdf_content}, filename: pdf_name)
@@ -20,7 +20,7 @@ defmodule SiwappWeb.PageController do
 
   @spec send_email(Plug.Conn.t(), map) :: Plug.Conn.t()
   def send_email(conn, %{"id" => id}) do
-    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series])
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :payments, :series])
 
     invoice
     |> Invoices.send_email()

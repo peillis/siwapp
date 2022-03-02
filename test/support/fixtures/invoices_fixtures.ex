@@ -37,6 +37,6 @@ defmodule Siwapp.InvoicesFixtures do
       |> valid_invoice_attributes()
       |> Invoices.create()
 
-    Repo.preload(invoice, [:customer, {:items, :taxes}, :series])
+    Repo.preload(invoice, [:customer, {:items, :taxes}, :payments, :series])
   end
 end

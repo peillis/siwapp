@@ -72,6 +72,9 @@
 
       <%= for fp <- inputs_for(f, :payments) do %>
         <div class="columns is-multiline-mobile is-1 is-variable">
+          <%= if fp.data.id do %>
+            <%= hidden_input(fp, :id) %>
+          <% end %>
           <div class="column is-3-desktop is-full-mobile">
             <label class="label">
               Date
@@ -105,10 +108,9 @@
               invisible
             </label>
             <p class="control">
-              <%= link("Remove Line",
+              <%= link("Remove Payment",
                 to: "#",
-                phx_click: "remove_payment",
-                phx_value_payment_id: fp.index,
+                phx_click: JS.push("remove_payment", value: %{params: f.params, payment_id: fp.index}),
                 class: "button is-danger is-light is-fullwidth"
               ) %>
             </p>
@@ -118,7 +120,7 @@
 
       <%= link("Add Payment",
         to: "#",
-        phx_click: "add_payment",
+        phx_click: JS.push("add_payment", value: %{params: f.params}),
         class: "button is-dark is-fullwidth column is-2"
       ) %>
       <br>

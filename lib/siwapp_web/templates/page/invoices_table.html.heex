@@ -100,7 +100,7 @@
               </span>
             </td>
             <td>
-              <%= money_format(invoice.gross_amount, invoice.currency) %>
+              <%= money_format(invoice.gross_amount - invoice.paid_amount, invoice.currency) %>
             </td>
 
           <% :past_due -> %>
@@ -110,7 +110,7 @@
               </span>
             </td>
             <td>
-              <%= money_format(invoice.gross_amount, invoice.currency) %>
+              <%= money_format(invoice.gross_amount - invoice.paid_amount, invoice.currency) %>
             </td>
         <% end %>
 

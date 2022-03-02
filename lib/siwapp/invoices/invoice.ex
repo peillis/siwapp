@@ -134,6 +134,7 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:contact_person, max: 100)
     |> validate_length(:currency, max: 3)
     |> calculate()
+    |> calculate_payments()
   end
 
   @spec cast_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()
@@ -243,5 +244,31 @@ defmodule Siwapp.Invoices.Invoice do
       nil -> Repo.get(Series, series_id).first_number
       invoice -> invoice.number + 1
     end
+  end
+
+  @spec calculate_payments(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp calculate_payments(changeset) do
+    changeset = set_paid_amount(changeset)
+
+    paid_amount = get_field(changeset, :paid_amount)
+    gross_amount = get_field(changeset, :gross_amount)
+
+    if paid_amount >= gross_amount do
+      put_change(changeset, :paid, true)
+    else
+      put_change(changeset, :paid, false)
+    end
+  end
+
+  @spec set_paid_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp set_paid_amount(changeset) do
+    payments = get_field(changeset, :payments)
+
+    total_payments_amount =
+      payments
+      |> Enum.map(& &1.amount)
+      |> Enum.sum()
+
+    put_change(changeset, :paid_amount, total_payments_amount)
   end
 end
