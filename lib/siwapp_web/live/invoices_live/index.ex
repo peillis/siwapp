@@ -41,30 +41,6 @@ defmodule SiwappWeb.InvoicesLive.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("load-more", _, %{live_action: :customer} = socket) do
-    %{
-      page: page,
-      invoices: invoices,
-      customer_id: customer_id
-    } = socket.assigns
-
-    more_invoices =
-      Invoices.list(
-        filters: [{:customer_id, customer_id}],
-        preload: :series,
-        limit: 20,
-        offset: (page + 1) * 20
-      )
-
-    {
-      :noreply,
-      assign(socket,
-        invoices: invoices ++ more_invoices,
-        page: page + 1
-      )
-    }
-  end
-
   def handle_event("load-more", _, socket) do
     %{
       page: page,
