@@ -97,20 +97,15 @@ defmodule Siwapp.Invoices.Item do
     end
   end
 
-  # First, we check that the taxes association doesn't exist, because if it does
-  # we cast it and that's it. If it actually doesn't, we find the taxes associated
-  # in the attributes. If the attributes have a tax that it doesn't exist we add
-  # an error in the changeset.
   @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp assoc_taxes(changeset, attrs) do
     attr_taxes = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
     current_taxes = MapSet.new(get_field(changeset, :taxes) || [], & &1.name)
-    new_taxes = MapSet.difference(attr_taxes, current_taxes)
 
-    cond do
-      MapSet.equal?(attr_taxes, current_taxes) -> changeset
-      MapSet.subset?(attr_taxes, current_taxes) -> put_taxes(changeset, attr_taxes)
-      true -> put_taxes(changeset, new_taxes)
+    if MapSet.equal?(attr_taxes, current_taxes) do
+      changeset
+    else
+      put_taxes(changeset, attr_taxes)
     end
   end
 
@@ -119,7 +114,7 @@ defmodule Siwapp.Invoices.Item do
     all_taxes = MapSet.new(Commons.list_taxes(:cache), & &1.name)
     changeset = Enum.reduce(taxes, changeset, &check_wrong_taxes(&1, &2, all_taxes))
 
-    put_assoc(changeset, :taxes, Enum.map(taxes, &Commons.get_tax/1))
+    put_assoc(changeset, :taxes, Enum.map(taxes, &Commons.get_tax_by_name!/1))
   end
 
   @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()

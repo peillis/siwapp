@@ -279,7 +279,7 @@ defmodule Siwapp.Commons do
 
   """
   @spec get_tax!(non_neg_integer) :: Tax.t()
-  def get_tax!(id) when is_number(id), do: Repo.get!(Tax, id)
+  def get_tax!(id), do: Repo.get!(Tax, id)
 
   @doc """
   Gets a single tax by its name.
@@ -288,15 +288,15 @@ defmodule Siwapp.Commons do
 
   ## Examples
 
-      iex> get_tax!("VAT")
+      iex> get_tax_by_name!("VAT")
       %Tax{}
 
-      iex> get_tax!("NOEXIST")
+      iex> get_tax_by_name!("NOEXIST")
       ** (Ecto.NoResultsError)
 
   """
   @spec get_tax!(binary()) :: Tax.t()
-  def get_tax!(name), do: Tax |> by(:name, name) |> Repo.one!()
+  def get_tax_by_name!(name), do: Tax |> by(:name, name) |> Repo.one!()
 
   @doc """
   Creates a tax.
