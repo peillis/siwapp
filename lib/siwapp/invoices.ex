@@ -267,6 +267,7 @@ defmodule Siwapp.Invoices do
     Payment.changeset(payment, attrs, currency)
   end
 
+  @spec duplicate(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def duplicate(invoice) do
     params_keys = [
       :contact_person,
@@ -290,10 +291,10 @@ defmodule Siwapp.Invoices do
     |> Map.take(params_keys)
     |> Map.put(:items, new_items_attrs)
     |> create()
-    |> IO.inspect()
   end
 
-  def take_items_attrs(item) do
+  @spec take_items_attrs(Item.t()) :: map()
+  defp take_items_attrs(item) do
     items_keys = [
       :description,
       :discount,
