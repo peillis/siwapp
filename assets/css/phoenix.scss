@@ -1,5 +1,8 @@
 /* Alerts and form errors used by phx.new */
 .alert {
+  position: sticky;
+  top: 60px;
+  z-index: 100;
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
