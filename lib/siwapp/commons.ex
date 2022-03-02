@@ -295,7 +295,7 @@ defmodule Siwapp.Commons do
       ** (Ecto.NoResultsError)
 
   """
-  @spec get_tax!(binary()) :: Tax.t()
+  @spec get_tax_by_name!(binary()) :: Tax.t()
   def get_tax_by_name!(name), do: Tax |> by(:name, name) |> Repo.one!()
 
   @doc """
