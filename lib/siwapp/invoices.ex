@@ -285,6 +285,7 @@ defmodule Siwapp.Invoices do
       :shipping_address,
       :terms
     ]
+
     new_items_attrs = Enum.map(invoice.items, &take_items_attrs(&1))
 
     invoice
@@ -302,9 +303,9 @@ defmodule Siwapp.Invoices do
       :unitary_cost,
       :taxes
     ]
+
     item
     |> Map.take(items_keys)
-    |> Map.put(:taxes, Enum.map(item.taxes, &(&1.name)))
-
+    |> Map.put(:taxes, Enum.map(item.taxes, & &1.name))
   end
 end
