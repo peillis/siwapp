@@ -63,21 +63,21 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     gross_amount = Ecto.Changeset.get_field(socket.assigns.changeset, :gross_amount)
     paid_amount = Ecto.Changeset.get_field(socket.assigns.changeset, :paid_amount)
 
-    left_amount =
+    virtual_left_amount =
       (gross_amount - paid_amount)
       |> Money.new(currency)
       |> Money.to_decimal()
 
     params =
       if params["payments"] == nil do
-        Map.put(params, "payments", %{"0" => new_payment_params(left_amount)})
+        Map.put(params, "payments", %{"0" => new_payment_params(virtual_left_amount)})
       else
         next_payment_index =
           params["payments"]
           |> Enum.count()
           |> Integer.to_string()
 
-        put_in(params, ["payments", next_payment_index], new_payment_params(left_amount))
+        put_in(params, ["payments", next_payment_index], new_payment_params(virtual_left_amount))
       end
 
     {:noreply, assign(socket, changeset: Invoices.change(socket.assigns.invoice, params))}
