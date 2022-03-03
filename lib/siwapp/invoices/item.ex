@@ -115,7 +115,7 @@ defmodule Siwapp.Invoices.Item do
     all_taxes_names = MapSet.new(all_taxes, & &1.name)
     changeset = Enum.reduce(taxes_names, changeset, &check_wrong_taxes(&1, &2, all_taxes_names))
 
-    put_assoc(changeset, :taxes, Enum.filter(all_taxes, &((&1.name) in taxes_names)))
+    put_assoc(changeset, :taxes, Enum.filter(all_taxes, &(&1.name in taxes_names)))
   end
 
   @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()
