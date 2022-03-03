@@ -55,6 +55,20 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:noreply, push_redirect(socket, to: Routes.invoices_index_path(socket, :index))}
   end
 
+  def handle_event("delete", _params, socket) do
+    socket.assigns.checked
+    |> MapSet.to_list()
+    |> Enum.map(&RecurringInvoices.get!(&1, :preload))
+    |> Enum.each(&RecurringInvoices.delete(&1))
+
+    socket =
+      socket
+      |> put_flash(:info, "Recurring Invoices succesfully deleted")
+      |> push_redirect(to: Routes.recurring_invoices_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
     query = Searches.filters_query(RecurringInvoice, params)

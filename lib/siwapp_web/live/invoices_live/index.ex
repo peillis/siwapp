@@ -75,8 +75,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_event("delete", _params, socket) do
     socket.assigns.checked
     |> MapSet.to_list()
-    |> Enum.reject(&(&1 == 0))
-    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}]))
+    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :payments]))
     |> Enum.each(&Invoices.delete(&1))
 
     socket =
