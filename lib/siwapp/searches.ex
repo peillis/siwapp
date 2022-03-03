@@ -18,10 +18,11 @@ defmodule Siwapp.Searches do
   """
   @spec filters(Ecto.Queryable.t(), keyword()) :: [type_of_struct()]
   def filters(query, options \\ []) do
-    default = [limit: 20, offset: 0, preload: [], order_by: [desc: :id]]
+    default = [limit: 20, offset: 0, preload: [], order_by: [desc: :id], deleted_at_query: false]
     options = Keyword.merge(default, options)
 
     query
+    |> maybe_reject_deleted_at(options[:deleted_at_query])
     |> limit(^options[:limit])
     |> offset(^options[:offset])
     |> order_by(^options[:order_by])
@@ -44,5 +45,14 @@ defmodule Siwapp.Searches do
   @spec change(Search.t(), map) :: Ecto.Changeset.t()
   def change(%Search{} = search, attrs \\ %{}) do
     Search.changeset(search, attrs)
+  end
+
+  @spec maybe_reject_deleted_at(Ecto.Queryable.t(), boolean) :: Ecto.Queryable.t()
+  defp maybe_reject_deleted_at(query, boolean) do
+    if boolean do
+      where(query, [q], is_nil(q.deleted_at))
+    else
+      query
+    end
   end
 end
