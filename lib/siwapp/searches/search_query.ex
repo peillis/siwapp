@@ -49,8 +49,7 @@ defmodule Siwapp.Searches.SearchQuery do
   end
 
   def filter_by(query, "key", value) do
-    query
-    |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes),
+    join(query, :inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes),
       on: m.key == ^value
     )
   end
