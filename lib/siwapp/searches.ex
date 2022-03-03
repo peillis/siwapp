@@ -29,7 +29,7 @@ defmodule Siwapp.Searches do
     |> Repo.all()
   end
 
-  @spec filters_query(Ecto.Queryable.t(), [{binary, binary}]) :: Ecto.Queryable.t()
+  @spec filters_query(Ecto.Queryable.t(), [{binary, binary}] | map()) :: Ecto.Queryable.t()
   def filters_query(query, params) do
     Enum.reduce(params, query, fn {key, value}, acc_query ->
       SearchQuery.filter_by(acc_query, key, value)
