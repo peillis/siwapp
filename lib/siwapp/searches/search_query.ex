@@ -53,7 +53,6 @@ defmodule Siwapp.Searches.SearchQuery do
     |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes),
       on: m.key == ^value
     )
-    |> group_by([q], q.id)
   end
 
   def filter_by(query, "value", value) do
@@ -61,7 +60,7 @@ defmodule Siwapp.Searches.SearchQuery do
     |> join(:inner, [q], m in fragment("jsonb_each_text(?)", q.meta_attributes),
       on: m.value == ^value
     )
-    |> group_by([q], q.id)
+    |> distinct(true)
   end
 
   # Get invoices, customers or recurring_invoices by comparing value with name, email or id fields
