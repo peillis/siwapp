@@ -307,7 +307,6 @@ defmodule Siwapp.Invoices do
   defp last_payment(invoice) do
     %Payment{
       amount: invoice.gross_amount - invoice.paid_amount,
-      notes: "Set paid payment",
       date: Date.utc_today()
     }
   end

@@ -120,6 +120,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_event("set_paid", _params, socket) do
     socket.assigns.checked
     |> MapSet.to_list()
+    |> List.delete(0)
     |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :payments]))
     |> Enum.each(&Invoices.set_paid(&1))
 
