@@ -14,7 +14,7 @@ defmodule SiwappWeb.CustomersLive.Index do
 
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
-    IO.inspect params
+    IO.inspect(params)
     query = Searches.filters_query(Customer, params)
 
     {:ok,
