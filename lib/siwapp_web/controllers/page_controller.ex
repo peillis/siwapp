@@ -48,7 +48,14 @@ defmodule SiwappWeb.PageController do
 
   @spec csv(Plug.Conn.t(), map) :: Plug.Conn.t()
   def csv(conn, params) do
-    {queryable, fields} = which_queryable_and_fields(params["view"])
+    queryable = which_queryable(params["view"])
+
+    keys =
+      [:id]
+      |> Kernel.++(queryable.fields)
+      |> Kernel.--([:meta_attributes])
+      |> Kernel.++([:inserted_at, :updated_at])
+      |> maybe_delete_key(params["view"])
 
     query_params =
       params
@@ -62,7 +69,7 @@ defmodule SiwappWeb.PageController do
       |> send_chunked(200)
 
     queryable
-    |> get_stream_from_a_queryable(query_params, fields)
+    |> get_stream_from_a_queryable(query_params, keys)
     |> CSV.encode()
     |> Enum.reduce_while(conn, fn chunk, conn ->
       case chunk(conn, chunk) do
@@ -75,17 +82,26 @@ defmodule SiwappWeb.PageController do
     end)
   end
 
-  @spec which_queryable_and_fields(binary) :: Ecto.Queryable.t()
-  defp which_queryable_and_fields(view) do
+  @spec which_queryable(binary) :: Ecto.Queryable.t()
+  defp which_queryable(view) do
     case view do
       "invoice" ->
-        {Invoice, Invoice.fields()}
+        Invoice
 
       "customer" ->
-        {Customer, Customer.fields()}
+        Customer
 
       "recurring_invoice" ->
-        {RecurringInvoice, RecurringInvoice.fields()}
+        RecurringInvoice
+    end
+  end
+
+  @spec maybe_delete_key([atom], binary) :: [atom]
+  defp maybe_delete_key(keys, view) do
+    if view == "recurring_invoice" do
+      keys -- [:items]
+    else
+      keys
     end
   end
 

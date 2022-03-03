@@ -79,12 +79,7 @@ defmodule Siwapp.Customers.Customer do
   end
 
   @spec fields :: [atom]
-  def fields do
-    [:id]
-    |> Kernel.++(@fields)
-    |> Kernel.--([:meta_attributes])
-    |> Kernel.++([:inserted_at, :updated_at])
-  end
+  def fields, do: @fields
 
   @spec normalize(binary) :: binary
   defp normalize(string) do
