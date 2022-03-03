@@ -11,23 +11,17 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
-    status =
-      if changes_in_name?(assigns.f.source) and socket.assigns.status != :just_picked do
-        :active
-      else
-        :idle
-      end
-
+    current_name = set_current_name(assigns, socket)
+    status = set_status(assigns, current_name)
     customer_name = Ecto.Changeset.get_field(assigns.f.source, :name)
+    customer_suggestions = set_customer_suggestions(status, customer_name)
 
     {:ok,
      socket
      |> assign(view: socket.view)
      |> assign(f: assigns.f)
      |> assign(customer_name: customer_name)
-     |> assign(
-       customer_suggestions: Customers.suggest_by_name(customer_name, limit: 10, offset: 0)
-     )
+     |> assign(customer_suggestions: customer_suggestions)
      |> assign(status: status)
      |> assign(display: if(status == :active, do: "is-active"))
      |> assign(:page, 0)}
@@ -111,7 +105,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
     send(self(), {:params_updated, Map.merge(socket.assigns.f.params, customer_params)})
 
-    {:noreply, assign(socket, status: :just_picked)}
+    {:noreply, assign(socket, customer_name: customer_params["name"])}
   end
 
   def handle_event("pick_customer", %{"id" => customer_id}, socket) do
@@ -124,7 +118,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
     send_update(SiwappWeb.SearchLive.SearchComponent, id: "search", view: view, name: name)
 
-    {:noreply, assign(socket, status: :just_picked)}
+    {:noreply, assign(socket, customer_name: name)}
   end
 
   def handle_event("load-more", _, socket) do
@@ -145,8 +139,24 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
      )}
   end
 
-  @spec changes_in_name?(Ecto.Changeset.t()) :: boolean()
-  defp changes_in_name?(changeset) do
-    if Ecto.Changeset.get_change(changeset, :name), do: true, else: false
+  @spec set_current_name(map, map) :: binary
+  defp set_current_name(assigns, socket) do
+    if Map.has_key?(socket.assigns, :customer_name),
+      do: socket.assigns.customer_name,
+      else: assigns.f.data.name
+  end
+
+  @spec set_status(map, binary) :: :idle | :active
+  defp set_status(assigns, current_name) do
+    if Ecto.Changeset.get_field(assigns.f.source, :name) == current_name,
+      do: :idle,
+      else: :active
+  end
+
+  @spec set_customer_suggestions(:idle | :active | :is_active, binary) :: [Customers.Customer.t()]
+  defp set_customer_suggestions(status, customer_name) do
+    if status == :active,
+      do: Customers.suggest_by_name(customer_name, limit: 10, offset: 0),
+      else: []
   end
 end
