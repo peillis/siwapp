@@ -11,22 +11,10 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
-    current_name =
-      if Map.has_key?(socket.assigns, :customer_name),
-        do: socket.assigns.customer_name,
-        else: assigns.f.data.name
-
-    status =
-      if Ecto.Changeset.get_field(assigns.f.source, :name) == current_name,
-        do: :idle,
-        else: :active
-
+    current_name = set_current_name(assigns, socket)
+    status = set_status(assigns, current_name)
     customer_name = Ecto.Changeset.get_field(assigns.f.source, :name)
-
-    customer_suggestions =
-      if status == :active,
-        do: Customers.suggest_by_name(customer_name, limit: 10, offset: 0),
-        else: []
+    customer_suggestions = set_customer_suggestions(status, customer_name)
 
     {:ok,
      socket
@@ -149,5 +137,26 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
            Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * next_page),
        page: next_page
      )}
+  end
+
+  @spec set_current_name(map, map) :: binary
+  defp set_current_name(assigns, socket) do
+    if Map.has_key?(socket.assigns, :customer_name),
+      do: socket.assigns.customer_name,
+      else: assigns.f.data.name
+  end
+
+  @spec set_status(map, binary) :: :idle | :active
+  defp set_status(assigns, current_name) do
+    if Ecto.Changeset.get_field(assigns.f.source, :name) == current_name,
+      do: :idle,
+      else: :active
+  end
+
+  @spec set_customer_suggestions(:idle | :active | :is_active, binary) :: [Customers.Customer.t()]
+  defp set_customer_suggestions(status, customer_name) do
+    if status == :active,
+      do: Customers.suggest_by_name(customer_name, limit: 10, offset: 0),
+      else: []
   end
 end
