@@ -132,6 +132,8 @@ defmodule SiwappWeb.Router do
       post "/settings", SettingsController, :update
 
       get "/iframe/:id", IframeController, :iframe
+
+      get "/csv", PageController, :csv
     end
   end
 
