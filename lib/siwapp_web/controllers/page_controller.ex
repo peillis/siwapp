@@ -4,6 +4,7 @@ defmodule SiwappWeb.PageController do
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.Repo
   alias Siwapp.Searches
   alias Siwapp.Templates
 
@@ -49,25 +50,24 @@ defmodule SiwappWeb.PageController do
       |> Map.delete("view")
       |> Enum.reject(fn {_key, val} -> val == "" end)
 
-    values_list = get_values_from_a_queryable(queryable, query_params, fields)
-    keys_plus_values = [fields] ++ values_list
+    conn =
+      conn
+      |> put_resp_content_type("application/csv")
+      |> put_resp_header("content-disposition", "attachment; filename=#{params["view"]}s.csv")
+      |> send_chunked(200)
 
-    csv_content =
-      keys_plus_values
-      |> CSV.encode()
-      |> Enum.take(length(values_list) + 1)
-      |> Enum.reduce("", fn val, acc -> acc <> val end)
-
-    send_download(conn, {:binary, csv_content}, filename: "#{params["view"]}s.csv")
-  end
-
-  # Get the values for each key from every invoice, recurring_invoice or customer a user decide to filter
-  @spec get_values_from_a_queryable(Ecto.Queryable.t(), [{binary, binary}], [atom]) ::
-          [list()] | []
-  defp get_values_from_a_queryable(queryable, query_params, fields) do
     queryable
-    |> Searches.filters(query_params)
-    |> Enum.map(&prepare_values(&1, fields))
+    |> get_values_from_a_queryable(query_params, fields)
+    |> CSV.encode()
+    |> Enum.reduce_while(conn, fn (chunk, conn) ->
+      case chunk(conn, chunk) do
+        {:ok, conn} ->
+          {:cont, conn}
+
+        {:error, :closed} ->
+          {:halt, conn}
+      end
+    end)
   end
 
   @spec which_queryable_and_fields(binary) :: Ecto.Queryable.t()
@@ -82,6 +82,20 @@ defmodule SiwappWeb.PageController do
       "recurring_invoice" ->
         {RecurringInvoice, RecurringInvoice.fields()}
     end
+  end
+
+  # Get a stream of the values for each key from every invoice, recurring_invoice or customer a user decide to filter
+  #@spec get_values_from_a_queryable(type_of_struct(), [{binary, binary}], list()) :: Enumerable.t()
+  defp get_values_from_a_queryable(queryable, query_params, fields) do
+    values=
+      queryable
+      |> Searches.filters_query(query_params)
+      |> Repo.all()
+      |> Enum.map(&prepare_values(&1,fields))
+
+    keys_plus_values = [fields] ++ values
+
+    Stream.map(keys_plus_values, & &1)
   end
 
   @spec prepare_values(type_of_struct(), [atom]) :: list()
