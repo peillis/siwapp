@@ -7,12 +7,10 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Searches
 
   @impl Phoenix.LiveView
-  def mount(%{"id" => id}, _session, socket) do
-    customer_id = String.to_integer(id)
-
+  def mount(%{"id" => customer_id}, _session, socket) do
     invoices =
       Invoices.list(
-        filters: [{:customer_id, customer_id}],
+        filters: [customer_id: customer_id],
         preload: :series,
         limit: 20,
         offset: 0
