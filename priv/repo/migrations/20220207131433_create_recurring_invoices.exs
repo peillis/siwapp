@@ -38,7 +38,8 @@ defmodule Siwapp.Repo.Migrations.CreateRecurringInvoices do
     create index(:recurring_invoices, [:series_id])
 
     alter table(:invoices) do
-      add :recurring_invoice_id, references(:recurring_invoices, type: :integer)
+      add :recurring_invoice_id,
+          references(:recurring_invoices, type: :integer, on_delete: :nilify_all)
     end
 
     create index(:invoices, [:recurring_invoice_id])

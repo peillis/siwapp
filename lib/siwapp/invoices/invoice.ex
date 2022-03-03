@@ -104,7 +104,7 @@ defmodule Siwapp.Invoices.Invoice do
     field :meta_attributes, :map, default: %{}
     belongs_to :series, Series
     belongs_to :customer, Customer, on_replace: :nilify
-    belongs_to :recurring_invoice, RecurringInvoice
+    belongs_to :recurring_invoice, RecurringInvoice, on_replace: :nilify
     has_many :items, Item, on_replace: :delete
     has_many :payments, Payment, on_replace: :delete
 
