@@ -175,6 +175,9 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @spec fields() :: [atom]
+  def fields, do: @fields
+
   @spec assign_issue_date(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp assign_issue_date(changeset) do
     if get_field(changeset, :issue_date) do
