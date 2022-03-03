@@ -3,39 +3,26 @@ defmodule SiwappWeb.InvoicesLive.Index do
   use SiwappWeb, :live_view
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
-  alias Siwapp.Query
   alias Siwapp.Searches
 
   @impl Phoenix.LiveView
-  def mount(%{"id" => customer_id}, _session, socket) do
-    invoices =
-      Invoices.list(
-        filters: [customer_id: customer_id],
-        preload: :series,
-        limit: 20,
-        offset: 0
-      )
+  def mount(params, _session, socket) do
+    query = Searches.filters_query(Invoice, params)
 
-    name = Siwapp.Customers.get!(customer_id).name
+    page_title =
+      if Map.has_key?(params, "customer_id") do
+        "Invoices for #{Siwapp.Customers.get!(params["customer_id"]).name}"
+      else
+        "Invoices"
+      end
 
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, invoices)
+     |> assign(:invoices, Searches.filters(query, preload: [:series]))
      |> assign(:checked, MapSet.new())
-     |> assign(:page_title, "Invoices for #{name}")
-     |> assign(:query, Query.by(Invoice, :customer_id, customer_id))
-     |> assign(:customer_id, customer_id)}
-  end
-
-  def mount(_params, _session, socket) do
-    {:ok,
-     socket
-     |> assign(:page, 0)
-     |> assign(:invoices, Searches.filters(Invoice, preload: [:series]))
-     |> assign(:checked, MapSet.new())
-     |> assign(:query, Invoice)
-     |> assign(:page_title, "Invoices")}
+     |> assign(:query, query)
+     |> assign(:page_title, page_title)}
   end
 
   @impl Phoenix.LiveView
@@ -119,13 +106,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    query = Searches.filters_query(Invoice, params)
-    invoices = Searches.filters(query, preload: [:series])
-
-    {:noreply,
-     socket
-     |> assign(:query, query)
-     |> assign(:invoices, invoices)}
+    {:noreply, push_redirect(socket, to: Routes.invoices_index_path(socket, :index, params))}
   end
 
   @spec download_url(MapSet.t()) :: binary

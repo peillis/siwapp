@@ -40,7 +40,7 @@
             class: "button is-danger"
           ) %>
         <% end %>
-        <%= live_redirect("Back", to: Routes.templates_index_path(@socket, :index), class: "button is-dark") %>
+        <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
         <%= submit("Save", class: "button is-success") %>
       </div>
     </nav>

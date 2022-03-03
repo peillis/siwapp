@@ -146,7 +146,7 @@
           class: "button is-danger"
         ) %>
       <% end %>
-      <%= live_redirect("Back", to: Routes.invoices_index_path(@socket, :index), class: "button is-dark") %>
+      <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
       <%= if @live_action == :edit do %>
         <%= link("Send Email",
           to: Routes.page_path(@socket, :send_email, @invoice.id),

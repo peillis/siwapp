@@ -13,12 +13,14 @@ defmodule SiwappWeb.CustomersLive.Index do
   alias Siwapp.Searches
 
   @impl Phoenix.LiveView
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    query = Searches.filters_query(Customer, params)
+
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:query, Customer)
-     |> assign(customers: Customers.list_with_assoc_invoice_fields(Customer, 20))
+     |> assign(:query, query)
+     |> assign(customers: Customers.list_with_assoc_invoice_fields(query, 20))
      |> assign(page_title: "Customers")}
   end
 
@@ -46,13 +48,7 @@ defmodule SiwappWeb.CustomersLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    query = Searches.filters_query(Customer, params)
-    customers = Customers.list_with_assoc_invoice_fields(query, 20)
-
-    {:noreply,
-     socket
-     |> assign(:query, query)
-     |> assign(:customers, customers)}
+    {:noreply, push_redirect(socket, to: Routes.customers_index_path(socket, :index, params))}
   end
 
   @spec due(integer, integer) :: integer

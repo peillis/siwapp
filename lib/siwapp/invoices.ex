@@ -127,11 +127,10 @@ defmodule Siwapp.Invoices do
 
   @spec get!(pos_integer(), keyword()) :: Invoice.t()
   def get!(id, preload: list) do
-    invoice =
-      Invoice
-      |> Query.not_deleted()
-      |> Repo.get!(id)
-      |> Repo.preload(list)
+    Invoice
+    |> Query.not_deleted()
+    |> Repo.get!(id)
+    |> Repo.preload(list)
   end
 
   @doc """

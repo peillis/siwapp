@@ -12,7 +12,7 @@
   />
   <br>
   <%= submit("Save", class: "button is-success") %>
-  <%= live_patch("Back", to: Routes.customers_index_path(@socket, :index), class: "button is-dark") %>
+  <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
   <%= if @live_action == :edit do %>
     <button class="button is-danger" phx-click="delete">
       Delete

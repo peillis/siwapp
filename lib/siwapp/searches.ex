@@ -22,7 +22,6 @@ defmodule Siwapp.Searches do
     options = Keyword.merge(default, options)
 
     query
-    |> Query.not_deleted()
     |> limit(^options[:limit])
     |> offset(^options[:offset])
     |> order_by(^options[:order_by])
