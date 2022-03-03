@@ -3,7 +3,7 @@
 </h1>
 
 <.form let={f} for={@changeset} phx-change="validate" phx-submit="save">
-  <%= render(SiwappWeb.PageView, "invoice_customer_form.html", f: f) %>
+  <%= render(SiwappWeb.PageView, "invoice_customer_form.html", f: f, view: :recurring_invoices) %>
 
   <fieldset class="fieldset">
     <h2>Configuration</h2>
@@ -93,7 +93,7 @@
       f={f}
       inputs_for={pseudo_inputs_for(@changeset)}
     />
-    </fieldset>
+  </fieldset>
 
   <.live_component
     module={SiwappWeb.MetaAttributesComponent}
