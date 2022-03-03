@@ -18,12 +18,13 @@ defmodule Siwapp.RecurringInvoices do
   """
   @spec list(keyword()) :: [RecurringInvoice.t()]
   def list(options \\ []) do
-    default = [limit: 100, offset: 0, preload: []]
+    default = [limit: 100, offset: 0, preload: [], order_by: [desc: :id]]
     options = Keyword.merge(default, options)
 
     RecurringInvoice
     |> Query.list_preload(options[:preload])
     |> maybe_limit_and_offset(options[:limit], options[:offset])
+    |> order_by(^options[:order_by])
     |> maybe_select(options[:select])
     |> Repo.all()
   end

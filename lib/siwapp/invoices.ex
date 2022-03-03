@@ -17,7 +17,7 @@ defmodule Siwapp.Invoices do
   """
   @spec list(keyword()) :: [Invoice.t()]
   def list(options \\ []) do
-    default = [limit: 100, offset: 0, preload: [], filters: []]
+    default = [limit: 100, offset: 0, preload: [], filters: [], order_by: [desc: :id]]
     options = Keyword.merge(default, options)
 
     options[:filters]
@@ -27,6 +27,7 @@ defmodule Siwapp.Invoices do
     |> Query.not_deleted()
     |> limit(^options[:limit])
     |> offset(^options[:offset])
+    |> order_by(^options[:order_by])
     |> Query.list_preload(options[:preload])
     |> Repo.all()
   end
