@@ -284,7 +284,8 @@ defmodule Siwapp.InvoicesTest do
         items: [valid_item_attributes(%{unitary_cost: 500, discount: 0, taxes: []})]
       })
 
-      assert Enum.member?(Invoices.Statistics.get_amount_per_day(), {today, 500}) and Enum.member?(Invoices.Statistics.get_amount_per_day(), {yesterday, 500})
+      assert Enum.member?(Invoices.Statistics.get_amount_per_day(), {today, 500}) and
+               Enum.member?(Invoices.Statistics.get_amount_per_day(), {yesterday, 500})
     end
 
     test "for multiple invoices in the same day, it returns one unique value with the sum of its amounts",
