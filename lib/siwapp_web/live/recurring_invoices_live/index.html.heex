@@ -2,9 +2,12 @@
   <div class="navbar-menu">
     <div class="navbar-end">
       <div class="navbar-item buttons">
-        <button class={"button is-danger #{if Enum.empty?(@checked), do: "is-invisible"}"}>
-          Delete
-        </button>
+        <%= link("Delete",
+          to: "#",
+          phx_click: "delete",
+          data: [confirm: "Are you sure?"],
+          class: "button is-danger #{if Enum.empty?(@checked), do: "is-invisible"}"
+        ) %>
         <button class="button is-info" phx-click="generate_invoices">
           Build Pending Invoices
         </button>

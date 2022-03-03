@@ -62,6 +62,17 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
      )}
   end
 
+  def handle_event("delete", _params, socket) do
+    RecurringInvoices.delete(socket.assigns.recurring_invoice)
+
+    socket =
+      socket
+      |> put_flash(:info, "Recurring Invoice succesfully deleted")
+      |> push_redirect(to: Routes.recurring_invoices_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:params_updated, params}, socket) do
     changeset = RecurringInvoices.change(socket.assigns.recurring_invoice, params)
