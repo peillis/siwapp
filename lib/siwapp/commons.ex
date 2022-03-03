@@ -4,7 +4,6 @@ defmodule Siwapp.Commons do
   """
 
   import Ecto.Query, warn: false
-  import Siwapp.Query
 
   alias Siwapp.Commons.Series
   alias Siwapp.Commons.Tax
@@ -265,7 +264,7 @@ defmodule Siwapp.Commons do
   end
 
   @doc """
-  Gets a single tax by its id.
+  Gets a single tax.
 
   Raises `Ecto.NoResultsError` if the Tax does not exist.
 
@@ -280,23 +279,6 @@ defmodule Siwapp.Commons do
   """
   @spec get_tax!(non_neg_integer) :: Tax.t()
   def get_tax!(id), do: Repo.get!(Tax, id)
-
-  @doc """
-  Gets a single tax by its name.
-
-  Raises `Ecto.NoResultsError` if the Tax does not exist.
-
-  ## Examples
-
-      iex> get_tax_by_name!("VAT")
-      %Tax{}
-
-      iex> get_tax_by_name!("NOEXIST")
-      ** (Ecto.NoResultsError)
-
-  """
-  @spec get_tax_by_name!(binary()) :: Tax.t()
-  def get_tax_by_name!(name), do: Tax |> by(:name, name) |> Repo.one!()
 
   @doc """
   Creates a tax.
