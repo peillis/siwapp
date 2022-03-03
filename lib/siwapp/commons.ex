@@ -221,7 +221,9 @@ defmodule Siwapp.Commons do
   """
   @spec list_taxes :: [Tax.t()]
   def list_taxes do
-    Repo.all(Tax)
+    Tax
+    |> order_by(asc: :id)
+    |> Repo.all()
   end
 
   @spec list_taxes(:cache) :: [Tax.t()]
