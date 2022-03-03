@@ -190,11 +190,26 @@ defmodule Siwapp.Templates do
   uses evaluated print_default template using invoice
   data.
   """
-  @spec pdf_content_and_name(Siwapp.Invoices.Invoice.t()) :: {binary, binary}
-  def pdf_content_and_name(invoice) do
+  @spec pdf_content_and_name(Siwapp.Invoices.Invoice.t() | [Siwapp.Invoices.Invoice.t()]) ::
+          {binary, binary}
+  def pdf_content_and_name(%Siwapp.Invoices.Invoice{} = invoice) do
     {:ok, data} = ChromicPDF.print_to_pdf({:html, print_str_template(invoice)})
 
     {Base.decode64!(data), "#{invoice.series.code}-#{invoice.number}.pdf"}
+  end
+
+  def pdf_content_and_name(invoices) do
+    to_print =
+      {:html,
+       Enum.reduce(invoices, "", fn invoice, acc -> print_str_template(invoice) <> acc end)}
+
+    {
+      to_print
+      |> ChromicPDF.print_to_pdf()
+      |> elem(1)
+      |> Base.decode64!(),
+      "invoices.pdf"
+    }
   end
 
   @doc """

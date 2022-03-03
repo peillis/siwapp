@@ -18,6 +18,15 @@ defmodule SiwappWeb.PageController do
     send_download(conn, {:binary, pdf_content}, filename: pdf_name)
   end
 
+  def download(conn, %{"ids" => ids}) do
+    {pdf_content, pdf_name} =
+      ids
+      |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :payments, :series]))
+      |> Templates.pdf_content_and_name()
+
+    send_download(conn, {:binary, pdf_content}, filename: pdf_name)
+  end
+
   @spec send_email(Plug.Conn.t(), map) :: Plug.Conn.t()
   def send_email(conn, %{"id" => id}) do
     invoice = Invoices.get!(id, preload: [{:items, :taxes}, :payments, :series])
