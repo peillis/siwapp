@@ -18,12 +18,13 @@ defmodule Siwapp.Searches do
   """
   @spec filters(Ecto.Queryable.t(), keyword()) :: [type_of_struct()]
   def filters(query, options \\ []) do
-    default = [limit: 20, offset: 0, preload: []]
+    default = [limit: 20, offset: 0, preload: [], order_by: [desc: :id]]
     options = Keyword.merge(default, options)
 
     query
     |> limit(^options[:limit])
     |> offset(^options[:offset])
+    |> order_by(^options[:order_by])
     |> Query.list_preload(options[:preload])
     |> Repo.all()
   end
