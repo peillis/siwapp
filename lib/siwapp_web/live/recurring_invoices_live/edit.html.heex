@@ -93,56 +93,7 @@
       f={f}
       inputs_for={pseudo_inputs_for(@changeset)}
     />
-
-  </fieldset>
-  <fieldset class="fieldset">
-    <h2>PAYMENTS</h2>
-
-    <div class="field is-horizontal field-body">
-      <div class="field">
-        <label class="label">
-          Date
-        </label>
-        <p class="control">
-          <input class="input" type="date">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">
-          Notes
-        </label>
-        <p class="control">
-          <input class="input" type="text">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">
-          Amount
-        </label>
-        <p class="control">
-          <input class="input" type="text">
-        </p>
-      </div>
-      <div class="field">
-        <label class="label is-invisible is-hidden-mobile">
-          invisible
-        </label>
-        <p class="control">
-          <button class="column is-narrow-desktop button is-danger is-light is-fullwidth">
-            Remove Payment
-          </button>
-        </p>
-      </div>
-    </div>
-
-    <button class="column is-narrow-desktop button is-dark is-fullwidth">
-      Add Payment
-    </button>
-    <label class="checkbox">
-      <input type="checkbox">
-      Payment collection failed
-    </label>
-  </fieldset>
+    </fieldset>
 
   <.live_component
     module={SiwappWeb.MetaAttributesComponent}
