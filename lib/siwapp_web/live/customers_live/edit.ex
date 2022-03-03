@@ -17,10 +17,7 @@ defmodule SiwappWeb.CustomersLive.Edit do
 
   @impl Phoenix.LiveView
   def handle_event("validate", %{"customer" => params}, socket) do
-    changeset =
-      socket.assigns.changeset.data
-      |> Customers.change(params)
-      |> Map.put(:action, :validate)
+    changeset = Customers.change(socket.assigns.customer, params)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
@@ -61,17 +58,14 @@ defmodule SiwappWeb.CustomersLive.Edit do
   end
 
   def handle_event("copy", _params, socket) do
-    invoicing_address =
-      Map.get(
-        socket.assigns.changeset.changes,
-        :invoicing_address,
-        socket.assigns.changeset.data.invoicing_address
-      )
+    invoicing_address = Ecto.Changeset.get_field(socket.assigns.changeset, :invoicing_address)
 
-    changeset =
-      Map.put(socket.assigns.changeset, :changes, %{shipping_address: invoicing_address})
-
-    {:noreply, assign(socket, changeset: changeset)}
+    {:noreply,
+     update(
+       socket,
+       :changeset,
+       &Ecto.Changeset.put_change(&1, :shipping_address, invoicing_address)
+     )}
   end
 
   @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
@@ -79,6 +73,7 @@ defmodule SiwappWeb.CustomersLive.Edit do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Customer")
+    |> assign(:customer, %Customer{})
     |> assign(:changeset, Customers.change(%Customer{}))
   end
 
