@@ -99,30 +99,31 @@ defmodule Siwapp.Invoices.Item do
 
   @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp assoc_taxes(changeset, attrs) do
-    attr_taxes = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
-    current_taxes = MapSet.new(get_field(changeset, :taxes) || [], & &1.name)
+    attr_taxes_names = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
+    current_taxes_names = MapSet.new(get_field(changeset, :taxes) || [], & &1.name)
 
-    if MapSet.equal?(attr_taxes, current_taxes) do
+    if MapSet.equal?(attr_taxes_names, current_taxes_names) do
       changeset
     else
-      put_taxes(changeset, attr_taxes)
+      put_taxes(changeset, attr_taxes_names)
     end
   end
 
   @spec put_taxes(Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()
-  defp put_taxes(changeset, taxes) do
-    all_taxes = MapSet.new(Commons.list_taxes(:cache), & &1.name)
-    changeset = Enum.reduce(taxes, changeset, &check_wrong_taxes(&1, &2, all_taxes))
+  defp put_taxes(changeset, taxes_names) do
+    all_taxes = Commons.list_taxes(:cache)
+    all_taxes_names = MapSet.new(all_taxes, & &1.name)
+    changeset = Enum.reduce(taxes_names, changeset, &check_wrong_taxes(&1, &2, all_taxes_names))
 
-    put_assoc(changeset, :taxes, Enum.filter(all_taxes, &((&1.name) in taxes)))
+    put_assoc(changeset, :taxes, Enum.filter(all_taxes, &((&1.name) in taxes_names)))
   end
 
   @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()
-  defp check_wrong_taxes(tax, changeset, taxes) do
-    if MapSet.member?(taxes, tax) do
+  defp check_wrong_taxes(tax_name, changeset, all_taxes_names) do
+    if MapSet.member?(all_taxes_names, tax_name) do
       changeset
     else
-      add_error(changeset, :taxes, "The tax #{tax} is not defined")
+      add_error(changeset, :taxes, "The tax #{tax_name} is not defined")
     end
   end
 
