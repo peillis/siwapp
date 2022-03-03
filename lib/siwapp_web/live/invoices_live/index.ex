@@ -32,7 +32,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Invoices.list(limit: 20, offset: 0, preload: [:series]))
+     |> assign(:invoices, Searches.filters(Invoice, preload: [:series]))
      |> assign(:checked, MapSet.new())
      |> assign(:query, Invoice)
      |> assign(:page_title, "Invoices")}
@@ -105,12 +105,13 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def handle_event("duplicate", _params, socket) do
     socket.assigns.checked
     |> MapSet.to_list()
+    |> List.delete(0)
     |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}]))
     |> Enum.each(&Invoices.duplicate(&1))
 
     socket =
       socket
-      |> put_flash(:info, "Invoices succesfully deleted")
+      |> put_flash(:info, "Invoices succesfully duplicated")
       |> push_redirect(to: Routes.invoices_index_path(socket, :index))
 
     {:noreply, socket}

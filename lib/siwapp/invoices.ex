@@ -269,22 +269,8 @@ defmodule Siwapp.Invoices do
 
   @spec duplicate(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def duplicate(invoice) do
-    params_keys = [
-      :contact_person,
-      :currency,
-      :due_date,
-      :email,
-      :failed,
-      :identification,
-      :invoicing_address,
-      :issue_date,
-      :meta_attributes,
-      :name,
-      :notes,
-      :series_id,
-      :shipping_address,
-      :terms
-    ]
+    params_keys =
+      Invoice.fields() -- [:paid_amount, :paid, :sent_by_email, :number, :recurring_invoice_id]
 
     new_items_attrs = Enum.map(invoice.items, &take_items_attrs(&1))
 
