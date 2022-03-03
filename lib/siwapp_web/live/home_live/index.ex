@@ -16,7 +16,13 @@ defmodule SiwappWeb.HomeLive.Index do
      |> assign(:page, 0)
      |> assign(
        :invoices,
-       Invoices.list(limit: 20, offset: 0, preload: [:series], filters: [with_status: :past_due])
+       Invoices.list(
+         limit: 20,
+         offset: 0,
+         preload: [:series],
+         filters: [with_status: :past_due],
+         order_by: [asc: :id]
+       )
      )}
   end
 
@@ -49,7 +55,8 @@ defmodule SiwappWeb.HomeLive.Index do
               limit: 20,
               offset: (page + 1) * 20,
               preload: [:series],
-              filters: [with_status: :past_due]
+              filters: [with_status: :past_due],
+              order_by: [asc: :id]
             ),
         page: page + 1
       )
