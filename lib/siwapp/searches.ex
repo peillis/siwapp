@@ -22,7 +22,7 @@ defmodule Siwapp.Searches do
     options = Keyword.merge(default, options)
 
     query
-    |> maybe_reject_deleted_at(options[:deleted_at_query])
+    |> then(&if(options[:deleted_at_query], do: Query.not_deleted(&1), else: &1))
     |> limit(^options[:limit])
     |> offset(^options[:offset])
     |> order_by(^options[:order_by])
@@ -45,14 +45,5 @@ defmodule Siwapp.Searches do
   @spec change(Search.t(), map) :: Ecto.Changeset.t()
   def change(%Search{} = search, attrs \\ %{}) do
     Search.changeset(search, attrs)
-  end
-
-  @spec maybe_reject_deleted_at(Ecto.Queryable.t(), boolean) :: Ecto.Queryable.t()
-  defp maybe_reject_deleted_at(query, boolean) do
-    if boolean do
-      where(query, [q], is_nil(q.deleted_at))
-    else
-      query
-    end
   end
 end
