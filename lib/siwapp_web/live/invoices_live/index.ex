@@ -117,6 +117,21 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:noreply, socket}
   end
 
+  def handle_event("set_paid", _params, socket) do
+    socket.assigns.checked
+    |> MapSet.to_list()
+    |> List.delete(0)
+    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :payments]))
+    |> Enum.each(&Invoices.set_paid(&1))
+
+    socket =
+      socket
+      |> put_flash(:info, "Invoices succesfully paid")
+      |> push_redirect(to: Routes.invoices_index_path(socket, :index))
+
+    {:noreply, socket}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
     query = Searches.filters_query(Invoice, params)

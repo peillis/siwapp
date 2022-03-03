@@ -83,38 +83,50 @@ defmodule Siwapp.InvoiceHelper do
 
   @spec set_net_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_net_amount(changeset) do
-    total_net_amount =
+    if is_nil(get_change(changeset, :items)) do
       changeset
-      |> get_field(:items)
-      |> Enum.map(& &1.net_amount)
-      |> Enum.sum()
+    else
+      total_net_amount =
+        changeset
+        |> get_field(:items)
+        |> Enum.map(& &1.net_amount)
+        |> Enum.sum()
 
-    put_change(changeset, :net_amount, total_net_amount)
+      put_change(changeset, :net_amount, total_net_amount)
+    end
   end
 
   @spec set_taxes_amounts(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_taxes_amounts(changeset) do
-    total_taxes_amounts =
+    if is_nil(get_change(changeset, :items)) do
       changeset
-      |> get_field(:items)
-      |> Enum.map(& &1.taxes_amount)
-      |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> Decimal.add(v1, v2) end))
-      |> Enum.map(fn {k, v} -> {k, v |> Decimal.round() |> Decimal.to_integer()} end)
-      |> Map.new()
+    else
+      total_taxes_amounts =
+        changeset
+        |> get_field(:items)
+        |> Enum.map(& &1.taxes_amount)
+        |> Enum.reduce(%{}, &Map.merge(&1, &2, fn _, v1, v2 -> Decimal.add(v1, v2) end))
+        |> Enum.map(fn {k, v} -> {k, v |> Decimal.round() |> Decimal.to_integer()} end)
+        |> Map.new()
 
-    put_change(changeset, :taxes_amounts, total_taxes_amounts)
+      put_change(changeset, :taxes_amounts, total_taxes_amounts)
+    end
   end
 
   @spec set_gross_amount(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp set_gross_amount(changeset) do
-    taxes_amount =
+    if is_nil(get_change(changeset, :items)) do
       changeset
-      |> get_field(:taxes_amounts)
-      |> Map.values()
-      |> Enum.sum()
+    else
+      taxes_amount =
+        changeset
+        |> get_field(:taxes_amounts)
+        |> Map.values()
+        |> Enum.sum()
 
-    gross_amount = get_field(changeset, :net_amount) + taxes_amount
+      gross_amount = get_field(changeset, :net_amount) + taxes_amount
 
-    put_change(changeset, :gross_amount, gross_amount)
+      put_change(changeset, :gross_amount, gross_amount)
+    end
   end
 end
