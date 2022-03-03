@@ -3,15 +3,11 @@ defmodule SiwappWeb.PageController do
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
+  alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Repo
   alias Siwapp.Searches
   alias Siwapp.Templates
-
-  @type type_of_struct ::
-          Siwapp.Invoices.Invoice.t()
-          | Siwapp.Customers.Customer.t()
-          | Siwapp.RecurringInvoices.RecurringInvoice.t()
 
   @spec show_invoice(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show_invoice(conn, %{"id" => id}) do
@@ -57,9 +53,9 @@ defmodule SiwappWeb.PageController do
       |> send_chunked(200)
 
     queryable
-    |> get_values_from_a_queryable(query_params, fields)
+    |> get_stream_from_a_queryable(query_params, fields)
     |> CSV.encode()
-    |> Enum.reduce_while(conn, fn (chunk, conn) ->
+    |> Enum.reduce_while(conn, fn chunk, conn ->
       case chunk(conn, chunk) do
         {:ok, conn} ->
           {:cont, conn}
@@ -84,21 +80,36 @@ defmodule SiwappWeb.PageController do
     end
   end
 
-  # Get a stream of the values for each key from every invoice, recurring_invoice or customer a user decide to filter
-  #@spec get_values_from_a_queryable(type_of_struct(), [{binary, binary}], list()) :: Enumerable.t()
-  defp get_values_from_a_queryable(queryable, query_params, fields) do
-    values=
-      queryable
-      |> Searches.filters_query(query_params)
-      |> Repo.all()
-      |> Enum.map(&prepare_values(&1,fields))
-
-    keys_plus_values = [fields] ++ values
-
-    Stream.map(keys_plus_values, & &1)
+  # Stream of the keys plus values from every invoice, recurring_invoice or customer a user decide to filter
+  @spec get_stream_from_a_queryable(Ecto.Queryable.t(), [{binary, binary}], [atom]) ::
+          Enumerable.t()
+  defp get_stream_from_a_queryable(queryable, query_params, fields) do
+    [fields]
+    |> Kernel.++(values(queryable, query_params, fields))
+    |> Stream.map(& &1)
   end
 
-  @spec prepare_values(type_of_struct(), [atom]) :: list()
+  # Values from every invoice, recurring_invoice or customer a user decide to filter
+  @spec values(Ecto.Queryable.t(), [{binary, binary}], [atom]) :: [list()]
+  defp values(queryable, query_params, fields) do
+    queryable
+    |> Searches.filters_query(query_params)
+    |> maybe_deleted_at_query(queryable)
+    |> Repo.all()
+    |> Enum.map(&prepare_values(&1, fields))
+  end
+
+  @spec maybe_deleted_at_query(Ecto.Query.t(), Ecto.Queryable.t()) :: Ecto.Query.t()
+  defp maybe_deleted_at_query(query, queryable) do
+    if queryable == Invoice do
+      Query.not_deleted(query)
+    else
+      query
+    end
+  end
+
+  # For each invoice, customer or recurring_invoice gets its own sorted values
+  @spec prepare_values(Ecto.Queryable.t(), [atom]) :: list()
   defp prepare_values(struct, fields) do
     struct
     |> Map.from_struct()
