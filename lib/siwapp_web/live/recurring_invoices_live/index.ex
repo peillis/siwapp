@@ -8,14 +8,16 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   alias Siwapp.Searches
 
   @impl Phoenix.LiveView
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    query = Searches.filters_query(RecurringInvoice, params)
+
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:query, RecurringInvoice)
+     |> assign(:query, query)
      |> assign(
        :recurring_invoices,
-       RecurringInvoices.list(limit: 20, offset: 0, preload: [:series])
+       Searches.filters(query, preload: [:series])
      )
      |> assign(:checked, MapSet.new())
      |> assign(:page_title, "Recurring Invoices")}
@@ -72,13 +74,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:search, params}, socket) do
-    query = Searches.filters_query(RecurringInvoice, params)
-    recurring_invoices = Searches.filters(query, preload: [:series])
-
     {:noreply,
-     socket
-     |> assign(:query, query)
-     |> assign(:recurring_invoices, recurring_invoices)}
+     push_redirect(socket, to: Routes.recurring_invoices_index_path(socket, :index, params))}
   end
 
   @spec update_checked(map(), Phoenix.LiveView.Socket.t()) :: MapSet.t()

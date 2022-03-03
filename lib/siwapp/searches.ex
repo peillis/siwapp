@@ -22,7 +22,6 @@ defmodule Siwapp.Searches do
     options = Keyword.merge(default, options)
 
     query
-    |> Query.not_deleted()
     |> limit(^options[:limit])
     |> offset(^options[:offset])
     |> order_by(^options[:order_by])
@@ -30,7 +29,7 @@ defmodule Siwapp.Searches do
     |> Repo.all()
   end
 
-  @spec filters_query(Ecto.Queryable.t(), [{binary, binary}]) :: Ecto.Queryable.t()
+  @spec filters_query(Ecto.Queryable.t(), [{binary, binary}] | map()) :: Ecto.Queryable.t()
   def filters_query(query, params) do
     Enum.reduce(params, query, fn {key, value}, acc_query ->
       SearchQuery.filter_by(acc_query, key, value)

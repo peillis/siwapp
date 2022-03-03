@@ -111,7 +111,7 @@ defmodule SiwappWeb.Router do
       live "/invoices/:id/edit", InvoicesLive.Edit, :edit
       get "/invoices/:id/show", PageController, :show_invoice
       live "/invoices", InvoicesLive.Index, :index
-      live "/customers/:id/invoices", InvoicesLive.Index, :customer
+      live "/customers/:customer_id/invoices", InvoicesLive.Index, :customer
       get "/invoices/:id/download", PageController, :download
       get "/invoices/download/*ids", PageController, :download
       get "/invoices/:id/send_email", PageController, :send_email

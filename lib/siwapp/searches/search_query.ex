@@ -23,6 +23,10 @@ defmodule Siwapp.Searches.SearchQuery do
     where(query, [q], q.number == type(^value, :integer))
   end
 
+  def filter_by(query, "customer_id", value) do
+    where(query, [q], q.customer_id == type(^value, :integer))
+  end
+
   def filter_by(query, "series", value) do
     query
     |> from(as: :query)
