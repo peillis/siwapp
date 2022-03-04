@@ -100,17 +100,14 @@ defmodule Siwapp.Invoices.Item do
   @spec assoc_taxes(Ecto.Changeset.t(), map()) :: Ecto.Changeset.t()
   defp assoc_taxes(changeset, attrs) do
     attr_taxes_names = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
-    current_taxes_names = MapSet.new(get_field(changeset, :taxes) || [], & &1.name)
-    put_taxes(changeset, attr_taxes_names)
-  end
 
-  @spec put_taxes(Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()
-  defp put_taxes(changeset, taxes_names) do
     all_taxes = Commons.list_taxes(:cache)
     all_taxes_names = MapSet.new(all_taxes, & &1.name)
-    changeset = Enum.reduce(taxes_names, changeset, &check_wrong_taxes(&1, &2, all_taxes_names))
 
-    put_assoc(changeset, :taxes, Enum.filter(all_taxes, &(&1.name in taxes_names)))
+    changeset =
+      Enum.reduce(attr_taxes_names, changeset, &check_wrong_taxes(&1, &2, all_taxes_names))
+
+    put_assoc(changeset, :taxes, Enum.filter(all_taxes, &(&1.name in attr_taxes_names)))
   end
 
   @spec check_wrong_taxes(String.t(), Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()
