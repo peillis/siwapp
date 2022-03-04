@@ -74,6 +74,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket =
       socket
       |> put_flash(:info, "Invoices succesfully deleted")
+      |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
         Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
@@ -107,6 +108,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket =
       socket
       |> put_flash(:info, "Invoices succesfully duplicated")
+      |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
         Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
@@ -125,6 +127,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket =
       socket
       |> put_flash(:info, "Invoices succesfully paid")
+      |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
         Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
