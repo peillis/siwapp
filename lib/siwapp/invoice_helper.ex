@@ -14,9 +14,7 @@ defmodule Siwapp.InvoiceHelper do
       find_customer_or_new(changeset)
     else
       if changes_in_name_or_identification?(changeset) do
-        changeset
-        |> put_change(:customer_id, nil)
-        |> find_customer_or_new()
+        find_customer_or_new(changeset)
       else
         changeset
       end

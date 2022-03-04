@@ -147,8 +147,7 @@ recurring_invoices = [
     period: 3,
     period_type: "Daily",
     starting_date: Date.add(today, -30),
-    series_id: 1,
-    customer_id: 1
+    series_id: 1
   },
   %{
     name: Faker.Person.name(),
@@ -156,7 +155,6 @@ recurring_invoices = [
     period_type: "Monthly",
     starting_date: Date.add(today, -60),
     series_id: 2,
-    customer_id: 2,
     items: %{
       "0" => %{
         "quantity" => Faker.random_between(1, 2),
@@ -173,7 +171,6 @@ recurring_invoices = [
     period_type: "Yearly",
     starting_date: Date.add(today, -400),
     series_id: 3,
-    customer_id: 3,
     items: %{
       "0" => %{
         "quantity" => Faker.random_between(1, 2),
