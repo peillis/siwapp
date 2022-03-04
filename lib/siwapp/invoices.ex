@@ -72,6 +72,9 @@ defmodule Siwapp.Invoices do
   """
   @spec with_virtual_fields(Invoice.t()) :: Invoice.t()
   def with_virtual_fields(invoice) do
+    items_with_calculations =
+      Enum.map(invoice.items, &Ecto.Changeset.apply_changes(change_item(&1, invoice.currency)))
+    invoice = Map.put(invoice, :items, items_with_calculations)
     changeset = change(invoice)
     Ecto.Changeset.apply_changes(changeset)
   end
