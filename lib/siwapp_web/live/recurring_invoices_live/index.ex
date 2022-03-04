@@ -71,7 +71,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     socket =
       socket
       |> put_flash(:info, "Recurring Invoices succesfully deleted")
-      |> push_redirect(to: Routes.recurring_invoices_index_path(socket, :index))
+      |> assign(:checked, MapSet.new())
+      |> assign(
+        :recurring_invoices,
+        Searches.filters(socket.assigns.query, preload: [:series])
+      )
 
     {:noreply, socket}
   end
