@@ -7,6 +7,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   alias Siwapp.RecurringInvoices
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Searches
+  import SiwappWeb.PageView, only: [money_format: 3, money_format: 2]
 
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
