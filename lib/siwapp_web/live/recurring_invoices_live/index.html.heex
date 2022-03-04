@@ -103,7 +103,8 @@
           </td>
         <% end %>
 
-        <td> <%= money_format(recurring_invoice.gross_amount, recurring_invoice.currency) %>
+        <td>
+          <%= money_format(recurring_invoice.gross_amount, recurring_invoice.currency) %>
         </td>
       </tr>
     <% end %>
