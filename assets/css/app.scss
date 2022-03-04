@@ -3,6 +3,7 @@
 @import "./phoenix.scss";
 @import "./multiselect.scss";
 @import "bulma";
+
 main.container {
   margin: 1em auto;
 }
@@ -127,20 +128,14 @@ p.control.has-dropdown {
   stroke-width: 0.5;
 }
 
-@media screen and (max-width: 600px) {
-  .columns.is-multiline-mobile {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .navbar-mobile {
-    position: fixed;
-    z-index: 30;
-    bottom: 0;
-  }
-}
-
 .button.is-purple{
     color: white;
     background-color: #8A4D76;
     border-color: transparent;
+}
+
+@media screen and (max-width: 1000px) {
+  .search-input {
+    display: none;
+  }
 }
