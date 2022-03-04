@@ -40,7 +40,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: %{changeset | action: :insert})}
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 

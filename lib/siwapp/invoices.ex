@@ -56,13 +56,6 @@ defmodule Siwapp.Invoices do
     |> InvoiceHelper.maybe_find_customer_or_new()
     |> Invoice.assign_number()
     |> Repo.update()
-  rescue
-    _e in ArgumentError ->
-      {:error,
-       invoice
-       |> Invoice.changeset(attrs)
-       |> Ecto.Changeset.add_error(:name, "Must remain untouched in saved invoice")
-       |> Ecto.Changeset.add_error(:identification, "Must remain untouched in saved invoice")}
   end
 
   @doc """

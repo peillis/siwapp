@@ -61,13 +61,6 @@ defmodule Siwapp.RecurringInvoices do
     |> InvoiceHelper.maybe_find_customer_or_new()
     |> RecurringInvoice.untransform_items()
     |> Repo.update()
-  rescue
-    _e in ArgumentError ->
-      {:error,
-       recurring_invoice
-       |> RecurringInvoice.changeset(attrs)
-       |> Ecto.Changeset.add_error(:name, "Must remain untouched in saved invoice")
-       |> Ecto.Changeset.add_error(:identification, "Must remain untouched in saved invoice")}
   end
 
   @spec delete(RecurringInvoice.t() | Ecto.Changeset.t()) ::
