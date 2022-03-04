@@ -58,10 +58,7 @@ defmodule Siwapp.Settings.SettingBundle do
 
   @spec validate_days_to_due(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp validate_days_to_due(changeset) do
-    days_to_due =
-      changeset
-      |> get_field(:days_to_due)
-      |> String.to_integer()
+    days_to_due = get_field(changeset, :days_to_due)
 
     if days_to_due >= 0 do
       changeset

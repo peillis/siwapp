@@ -17,6 +17,8 @@ defmodule Siwapp.Settings do
   """
   @spec create({atom | binary, binary}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def create({key, value}) do
+    Cachex.clear(:siwapp_cache)
+
     %Setting{}
     |> change({to_string(key), value})
     |> Repo.insert()
@@ -103,6 +105,8 @@ defmodule Siwapp.Settings do
   """
   @spec update({atom, any}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def update({key, value}) do
+    Cachex.clear(:siwapp_cache)
+
     key
     |> get()
     |> change({to_string(key), to_string(value)})
