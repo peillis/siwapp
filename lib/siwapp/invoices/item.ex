@@ -101,12 +101,7 @@ defmodule Siwapp.Invoices.Item do
   defp assoc_taxes(changeset, attrs) do
     attr_taxes_names = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
     current_taxes_names = MapSet.new(get_field(changeset, :taxes) || [], & &1.name)
-
-    if MapSet.equal?(attr_taxes_names, current_taxes_names) do
-      changeset
-    else
-      put_taxes(changeset, attr_taxes_names)
-    end
+    put_taxes(changeset, attr_taxes_names)
   end
 
   @spec put_taxes(Ecto.Changeset.t(), MapSet.t()) :: Ecto.Changeset.t()
