@@ -19,7 +19,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Searches.filters(Invoice, preload: [:series], deleted_at_query: true))
+     |> assign(:invoices, Searches.filters(query, preload: [:series], deleted_at_query: true))
      |> assign(:checked, MapSet.new())
      |> assign(:query, query)
      |> assign(:page_title, page_title)}
