@@ -39,7 +39,7 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
           <h1 class="mb-2">
             <%= @page_title %>
             <span class="subtitle is-5">
-              ( <%= @count %> Found)
+              (<%= @count %> Found)
             </span>
           </h1>
         </div>
