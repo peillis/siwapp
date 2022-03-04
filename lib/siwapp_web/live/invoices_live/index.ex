@@ -78,7 +78,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.to_list()
     |> Enum.reject(&(&1 == 0))
-    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :series]))
+    |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :series, :payments]))
     |> Enum.each(&Invoices.send_email(&1))
 
     socket =
