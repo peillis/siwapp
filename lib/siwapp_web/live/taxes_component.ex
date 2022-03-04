@@ -110,7 +110,7 @@ defmodule SiwappWeb.TaxesComponent do
     if is_struct(item, Siwapp.Invoices.Item) do
       Map.get(item, :taxes)
     else
-      Ecto.Changeset.get_field(item, :taxes)
+      Map.get(item.data, :taxes)
     end
   end
 end

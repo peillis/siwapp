@@ -138,7 +138,7 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoice do
 
     items =
       items
-      |> Enum.map(&make_item(apply_changes(&1)))
+      |> Enum.map(&make_item(&1.data))
       |> Enum.with_index()
       |> Map.new(fn {item, i} -> {i, item} end)
 
