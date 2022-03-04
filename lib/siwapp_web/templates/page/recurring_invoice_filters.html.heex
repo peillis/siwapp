@@ -3,7 +3,12 @@
     <label class="label">
       CUSTOMER:
     </label>
-    <.live_component module={SiwappWeb.InvoicesLive.CustomerInputComponent} id="customers" f={@f} />
+    <.live_component
+      module={SiwappWeb.InvoicesLive.CustomerInputComponent}
+      id="customers"
+      f={@f}
+      view={:search}
+    />
   </div>
   <div class="column is-6">
     <label class="label">

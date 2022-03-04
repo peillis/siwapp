@@ -18,7 +18,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
     {:ok,
      socket
-     |> assign(view: socket.view)
+     |> assign(view: assigns.view)
      |> assign(f: assigns.f)
      |> assign(customer_name: customer_name)
      |> assign(customer_suggestions: customer_suggestions)
@@ -28,7 +28,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   end
 
   @impl Phoenix.LiveComponent
-  def render(%{view: SiwappWeb.CustomerLive.Edit} = assigns) do
+  def render(%{view: :customer} = assigns) do
     ~H"""
     <div class="field">
       <%= label(@f, :name, class: "label") %>
@@ -68,6 +68,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
                   href="#"
                   phx-click="pick_customer"
                   phx-value-id={customer_suggestion.id}
+                  phx-value-view={@view}
                   phx-target={@myself}
                   class="dropdown-item"
                 >
@@ -84,11 +85,8 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   end
 
   @impl Phoenix.LiveComponent
-  def handle_event(
-        "pick_customer",
-        %{"id" => customer_id},
-        %{view: SiwappWeb.InvoicesLive.Edit} = socket
-      ) do
+  def handle_event("pick_customer", %{"id" => customer_id, "view" => view}, socket)
+      when view in ["invoices", "recurring_invoices"] do
     customer_params =
       customer_id
       |> Customers.get()
@@ -108,7 +106,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     {:noreply, assign(socket, customer_name: customer_params["name"])}
   end
 
-  def handle_event("pick_customer", %{"id" => customer_id}, socket) do
+  def handle_event("pick_customer", %{"id" => customer_id, "view" => "search"}, socket) do
     name =
       customer_id
       |> Customers.get!()

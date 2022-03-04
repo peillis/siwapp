@@ -14,8 +14,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     {:ok,
      socket
      |> assign(:series, Commons.list_series())
-     |> assign(:currency_options, Invoices.list_currencies())
-     |> assign(:customer_suggestions, [])}
+     |> assign(:currency_options, Invoices.list_currencies())}
   end
 
   @impl Phoenix.LiveView
@@ -89,7 +88,9 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     |> assign(:recurring_invoice, %RecurringInvoice{})
     |> assign(
       :changeset,
-      RecurringInvoices.change(%RecurringInvoice{}, %{"items" => %{"0" => %{"taxes" => []}}})
+      RecurringInvoices.change(%RecurringInvoice{}, %{
+        "items" => %{"0" => %{"taxes" => Commons.default_taxes_names()}}
+      })
     )
   end
 

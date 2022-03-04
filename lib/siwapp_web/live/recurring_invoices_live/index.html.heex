@@ -16,6 +16,19 @@
   </div>
 </nav>
 
+<div class="mb-4">
+  <div class="is-flex is-justify-content-space-between ">
+    <div class="is-flex is-align-items-end">
+      <h1 class="mb-2">
+        <%= @page_title %>
+        <span class="subtitle is-5">
+          ( <%= Statistics.count(@query) %> Found)
+        </span>
+      </h1>
+    </div>
+  </div>
+</div>
+
 <table class="table is-fullwidth is-striped is-bordered is-hoverable">
   <thead>
     <tr>

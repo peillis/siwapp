@@ -3,7 +3,7 @@
 </h1>
 
 <.form let={f} for={@changeset} phx-submit="save" phx-change="validate">
-  <%= render(SiwappWeb.PageView, "customer_form.html", f: f) %>
+  <%= render(SiwappWeb.PageView, "customer_form.html", f: f, view: "customer") %>
   <.live_component
     module={SiwappWeb.MetaAttributesComponent}
     id="meta_attributes"
