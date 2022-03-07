@@ -122,6 +122,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.to_list()
     |> List.delete(0)
     |> Enum.map(&Invoices.get!(&1, preload: [{:items, :taxes}, :payments]))
+    |> Enum.filter(&(!&1.paid))
     |> Enum.each(&Invoices.set_paid(&1))
 
     socket =
