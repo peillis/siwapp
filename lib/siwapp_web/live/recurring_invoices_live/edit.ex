@@ -26,8 +26,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
   def handle_event("save", %{"recurring_invoice" => params}, socket) do
     result =
       case socket.assigns.live_action do
-        :new -> RecurringInvoices.create(params)
-        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, put_items_if_empty(params))
+        :new ->
+          RecurringInvoices.create(params)
+
+        :edit ->
+          RecurringInvoices.update(socket.assigns.recurring_invoice, put_items_if_empty(params))
       end
 
     case result do
@@ -107,6 +110,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     )
   end
 
+  @spec put_items_if_empty(map()) :: map()
   defp put_items_if_empty(params) do
     if Map.has_key?(params, "items"), do: params, else: Map.put(params, "items", %{})
   end

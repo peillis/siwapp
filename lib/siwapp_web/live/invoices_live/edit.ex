@@ -154,6 +154,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     )
   end
 
+  @spec put_assoc_if_empty(map()) :: map()
   defp put_assoc_if_empty(params) do
     params
     |> then(&if Map.has_key?(&1, "items"), do: &1, else: Map.put(&1, "items", []))
