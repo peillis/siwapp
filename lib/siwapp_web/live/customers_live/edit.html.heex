@@ -11,11 +11,13 @@
     field={:meta_attributes}
   />
   <br>
-  <%= submit("Save", class: "button is-success") %>
-  <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
-  <%= if @live_action == :edit do %>
-    <button class="button is-danger" phx-click="delete">
-      Delete
-    </button>
-  <% end %>
+  <div class="buttons is-right">
+    <%= if @live_action == :edit do %>
+      <button class="button is-danger" phx-click="delete">
+        Delete
+      </button>
+    <% end %>
+    <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
+    <%= submit("Save", class: "button is-success") %>
+  </div>
 </.form>

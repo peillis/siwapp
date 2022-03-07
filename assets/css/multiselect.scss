@@ -20,6 +20,7 @@ $blue: hsl(217, 71%, 53%);
     font-size: 1rem;
     position: relative;
     cursor: pointer;
+    height: fit-content;
     .placeholder {
       font-weight: 400;
       color: rgba(0, 0, 0, .6);
