@@ -35,11 +35,9 @@ defmodule Siwapp.CustomersFixtures do
     customer
   end
 
-  def customer_with_totals_fixture(attrs \\ %{}) do
-    IO.inspect customer_fixture(attrs)
-
+  def customer_with_totals(customer_id) do
     Customer
-    |> Siwapp.Query.by(:id, customer_fixture(attrs).id)
+    |> Siwapp.Query.by(:id, customer_id)
     |> Customers.list_with_assoc_invoice_fields()
     |> List.first()
   end

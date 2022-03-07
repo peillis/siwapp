@@ -55,23 +55,26 @@ defmodule Siwapp.CustomersTest do
 
   describe "list_with_assoc_invoice_fields/1" do
     test "for a customer with no invoices, its total is 0" do
-      assert customer_with_totals_fixture().total == 0
+      assert customer_with_totals(customer_fixture().id).total == 0
     end
 
     test "for a customer with no invoices, its paid is 0" do
-      assert customer_with_totals_fixture().paid == 0
+      assert customer_with_totals(customer_fixture().id).paid == 0
     end
 
     test "for a customer with one invoice, its total is the invoice's total" do
-      customer = customer_with_totals_fixture(%{invoices: [%{items: [%{unitary_cost: 200}]}]})
-      IO.inspect customer
-      assert customer.total == 200
+      customer = customer_fixture()
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}]})
+
+      assert customer_with_totals(customer.id).total == 200
     end
 
     test "for a customer with one invoice, its paid is the invoice's paid" do
-      customer = customer_with_totals_fixture(%{invoices: [%{items: [%{unitary_cost: 200}]}]})
+      customer = customer_fixture()
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}], paid_amount: 200})
 
-      assert customer.paid == 200
+      assert customer_with_totals(customer.id).total == 200
     end
+
   end
 end
