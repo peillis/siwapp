@@ -39,13 +39,13 @@ defmodule SiwappWeb.Resolvers.Invoice do
   end
 
   @spec update(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
-  def update(%{id: id, invoice: invoice_params}, _resolution) do
+  def update(%{id: id} = params, _resolution) do
     invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :payments, :series])
 
     if is_nil(invoice) do
       {:error, message: "Failed!", details: "Invoice not found"}
     else
-      case Invoices.update(invoice, invoice_params) do
+      case Invoices.update(invoice, params) do
         {:ok, invoice} ->
           {:ok, set_correct_units(invoice)}
 
