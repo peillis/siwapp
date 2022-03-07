@@ -27,7 +27,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
     result =
       case socket.assigns.live_action do
         :new -> RecurringInvoices.create(params)
-        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, params)
+        :edit -> RecurringInvoices.update(socket.assigns.recurring_invoice, put_items_if_empty(params))
       end
 
     case result do
@@ -105,6 +105,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Edit do
       :changeset,
       RecurringInvoices.change(recurring_invoice, %{"items" => recurring_invoice.items})
     )
+  end
+
+  defp put_items_if_empty(params) do
+    if Map.has_key?(params, "items"), do: params, else: Map.put(params, "items", %{})
   end
 
   # Replicates inputs_for behavior for recurring_invoice's items even when there's no association
