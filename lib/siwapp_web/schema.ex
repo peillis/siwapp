@@ -2,6 +2,9 @@ defmodule SiwappWeb.Schema do
   @moduledoc false
 
   use Absinthe.Schema
+
+  import SiwappWeb.Schema.Helpers
+
   import_types(SiwappWeb.Schema.CustomerTypes)
   import_types(SiwappWeb.Schema.InvoiceTypes)
   import_types(SiwappWeb.Schema.ItemTypes)
@@ -45,27 +48,6 @@ defmodule SiwappWeb.Schema do
     field :notes, :string
   end
 
-  input_object :update_invoice_params do
-    field :name, :string
-    field :identification, :string
-    field :contact_person, :string
-    field :email, :string
-    field :invoicing_address, :string
-    field :shipping_address, :string
-    field :terms, :string
-    field :notes, :string
-    field :series_id, :id
-    field :currency, :string
-    field :issue_date, :date
-    field :due_date, :date
-    field :draft, :boolean
-    field :items, list_of(:items)
-    field :payments, list_of(:payments)
-    field :failed, :boolean
-    field :recurring_invoice, :id
-    field :sent_by_email, :boolean
-  end
-
   mutation do
     @desc "Create a customer"
     field :create_customer, type: :customer do
@@ -81,33 +63,20 @@ defmodule SiwappWeb.Schema do
 
     @desc "Create an invoice"
     field :create_invoice, type: :invoice do
-      arg(:name, non_null(:string))
-      arg(:identification, :string)
-      arg(:email, :string)
-      arg(:contact_person, :string)
-      arg(:invoicing_address, :string)
-      arg(:shipping_address, :string)
-      arg(:terms, :string)
-      arg(:notes, :string)
-      arg(:series_id, non_null(:id))
-      arg(:currency, :string)
-      arg(:issue_date, non_null(:date))
-      arg(:due_date, :date)
-      arg(:draft, :boolean)
-      arg(:items, list_of(:items))
-      arg(:payments, list_of(:payments))
-      arg(:failed, :boolean)
+      invoice_args()
 
       resolve(&Resolvers.Invoice.create/2)
     end
 
+    @desc "Update an invoice"
     field :update_invoice, type: :invoice do
       arg(:id, non_null(:integer))
-      arg(:invoice, :update_invoice_params)
+      invoice_args()
 
       resolve(&Resolvers.Invoice.update/2)
     end
 
+    @desc "Delete an invoice"
     field :delete_invoice, type: :invoice do
       arg(:id, non_null(:integer))
 
