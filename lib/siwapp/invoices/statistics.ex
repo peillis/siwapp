@@ -8,10 +8,13 @@ defmodule Siwapp.Invoices.Statistics do
   alias Siwapp.Query
   alias Siwapp.Repo
 
-  @spec count(Ecto.Queryable.t()) :: non_neg_integer()
-  def count(query) do
+  @spec count(Ecto.Queryable.t(), keyword()) :: non_neg_integer()
+  def count(query, options \\ []) do
+    default = [deleted_at_query: false]
+    options = Keyword.merge(default, options)
+
     query
-    |> Query.not_deleted()
+    |> then(&if(options[:deleted_at_query], do: Query.not_deleted(&1), else: &1))
     |> Repo.aggregate(:count)
   end
 

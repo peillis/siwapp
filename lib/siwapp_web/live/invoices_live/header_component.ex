@@ -24,7 +24,7 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
     {:ok,
      socket
      |> assign(page_title: assigns.page_title)
-     |> assign(count: Statistics.count(assigns.query))
+     |> assign(count: Statistics.count(assigns.query, deleted_at_query: true))
      |> assign(chart_data: Statistics.get_amount_per_day(assigns.query))
      |> assign(default_total: default_total)
      |> assign(other_totals: others_totals)}
@@ -39,7 +39,7 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
           <h1 class="mb-2">
             <%= @page_title %>
             <span class="subtitle is-5">
-              ( <%= @count %> Found)
+              (<%= @count %> Found)
             </span>
           </h1>
         </div>
