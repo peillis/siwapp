@@ -32,7 +32,7 @@ defmodule Siwapp.Customers.CustomerQuery do
     |> limit(^limit)
     |> offset(^offset)
     |> join(:left, [query: c], i in Siwapp.Invoices.Invoice,
-      on: c.id == i.customer_id and not (i.draft or i.failed),
+      on: c.id == i.customer_id and not (i.draft or i.failed or not is_nil(i.deleted_at)),
       as: :inv
     )
     |> group_by([query: c], c.id)
