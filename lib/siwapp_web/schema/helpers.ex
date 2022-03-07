@@ -1,5 +1,9 @@
 defmodule SiwappWeb.Schema.Helpers do
-  defmacro invoice_args() do
+  @moduledoc """
+  Helpers to use in GraphQL mutations.
+  """
+
+  defmacro invoice_args do
     quote do
       arg(:name, :string)
       arg(:identification, :string)
