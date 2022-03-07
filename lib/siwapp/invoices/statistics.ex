@@ -10,7 +10,9 @@ defmodule Siwapp.Invoices.Statistics do
 
   @spec count(Ecto.Queryable.t()) :: non_neg_integer()
   def count(query) do
-    Repo.aggregate(query, :count)
+    query
+    |> Query.not_deleted()
+    |> Repo.aggregate(:count)
   end
 
   @doc """
