@@ -1,4 +1,14 @@
 <fieldset class="fieldset">
+  <%= if Map.get(@flash, "error") do %>
+    <span
+      class="alert alert-danger columns is-centered mx-6 mt-1"
+      role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="error"
+    >
+      <%= live_flash(@flash, :error) %>
+    </span>
+  <% end %>
   <h2>
     <%= @title %>
   </h2>
