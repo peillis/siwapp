@@ -1,12 +1,12 @@
 <fieldset class="fieldset">
-  <%= if Map.get(@flash, "error") do %>
+  <%= if error_msg = live_flash(@flash, :error) do %>
     <span
       class="alert alert-danger columns is-centered mx-6 mt-1"
       role="alert"
       phx-click="lv:clear-flash"
       phx-value-key="error"
     >
-      <%= live_flash(@flash, :error) %>
+      <%= error_msg %>
     </span>
   <% end %>
   <h2>
