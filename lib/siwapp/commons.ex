@@ -361,6 +361,9 @@ defmodule Siwapp.Commons do
   def delete_tax(%Tax{} = tax) do
     Cachex.clear(:siwapp_cache)
     Repo.delete(tax)
+  rescue
+    _e in Ecto.ConstraintError ->
+      {:error, "It's forbidden to delete a tax with associated invoices/recurring invoices"}
   end
 
   @doc """

@@ -33,12 +33,17 @@ defmodule SiwappWeb.TaxesLive.FormComponent do
 
   def handle_event("delete", %{"id" => id}, socket) do
     tax = Commons.get_tax!(id)
-    {:ok, _taxes} = Commons.delete_tax(tax)
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "Tax was successfully destroyed.")
-     |> push_redirect(to: socket.assigns.return_to)}
+    case Commons.delete_tax(tax) do
+      {:ok, _taxes} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Tax was successfully destroyed.")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, msg} ->
+        {:noreply, put_flash(socket, :error, msg)}
+    end
   end
 
   @spec save_tax(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
