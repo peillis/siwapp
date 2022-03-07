@@ -4,8 +4,8 @@ defmodule Siwapp.Invoices.Statistics do
   """
   import Ecto.Query
 
-  alias Siwapp.Invoices
   alias Siwapp.Invoices.Invoice
+  alias Siwapp.Query
   alias Siwapp.Repo
 
   @spec count(Ecto.Queryable.t()) :: non_neg_integer()
@@ -20,6 +20,7 @@ defmodule Siwapp.Invoices.Statistics do
   @spec get_amount_per_day(Ecto.Queryable.t()) :: [{Date.t(), non_neg_integer()}]
   def get_amount_per_day(query \\ Invoice) do
     query
+    |> Query.not_deleted()
     |> group_by([q], q.issue_date)
     |> select([q], %{date: q.issue_date, amount: sum(q.gross_amount)})
     |> subquery()
@@ -42,6 +43,7 @@ defmodule Siwapp.Invoices.Statistics do
   @spec get_amount_per_currencies(Ecto.Queryable.t()) :: %{String.t() => integer()}
   def get_amount_per_currencies(query \\ Invoice) do
     query
+    |> Query.not_deleted()
     |> group_by([q], q.currency)
     |> select([q], {q.currency, sum(q.gross_amount)})
     |> Repo.all()

@@ -38,6 +38,7 @@
   id="index-header"
   page_title={@page_title}
   query={@query}
+  invoices={@invoices}
 />
 
 <%= render(SiwappWeb.PageView, "invoices_table.html", invoices: @invoices, checked: @checked) %>
