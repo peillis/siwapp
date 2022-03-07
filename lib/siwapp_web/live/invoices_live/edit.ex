@@ -25,7 +25,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
     result =
       case socket.assigns.live_action do
         :new -> Invoices.create(params)
-        :edit -> Invoices.update(socket.assigns.invoice, params)
+        :edit -> Invoices.update(socket.assigns.invoice, put_assoc_if_empty(params))
       end
 
     case result do
@@ -152,6 +152,13 @@ defmodule SiwappWeb.InvoicesLive.Edit do
         "payments" => payments_as_params(invoice.payments)
       })
     )
+  end
+
+  @spec put_assoc_if_empty(map()) :: map()
+  defp put_assoc_if_empty(params) do
+    params
+    |> then(&if Map.has_key?(&1, "items"), do: &1, else: Map.put(&1, "items", []))
+    |> then(&if Map.has_key?(&1, "payments"), do: &1, else: Map.put(&1, "payments", []))
   end
 
   @spec items_as_params([Siwapp.Invoices.Item.t()]) :: map()
