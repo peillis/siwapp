@@ -22,7 +22,7 @@
       <h1 class="mb-2">
         <%= @page_title %>
         <span class="subtitle is-5">
-          ( <%= Statistics.count(@query) %> Found)
+          <%= "(#{Statistics.count(@query)} Found)" %>
         </span>
       </h1>
     </div>
