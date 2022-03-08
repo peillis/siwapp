@@ -7,6 +7,7 @@ defmodule Siwapp.Invoices.Invoice do
   import Ecto.Changeset
   import Siwapp.InvoiceHelper
 
+  alias Siwapp.Commons
   alias Siwapp.Commons.Series
   alias Siwapp.Customers.Customer
   alias Siwapp.Invoices.InvoiceQuery
@@ -115,6 +116,7 @@ defmodule Siwapp.Invoices.Invoice do
   def changeset(invoice, attrs \\ %{}) do
     invoice
     |> cast(attrs, @fields)
+    |> cast_series_id_by_code(attrs)
     |> assign_currency()
     |> cast_items()
     |> cast_payments()
@@ -135,6 +137,19 @@ defmodule Siwapp.Invoices.Invoice do
     |> validate_length(:currency, max: 3)
     |> calculate()
     |> calculate_payments()
+  end
+
+  # if the attrs have the key "code"
+  @spec cast_series_id_by_code(Ecto.Changeset.t(), map) :: Ecto.Changeset.t()
+  def cast_series_id_by_code(changeset, attrs) do
+    if Map.has_key?(attrs, :series_code) do
+      case Commons.series_id_by_code(attrs.series_code) do
+        nil -> add_error(changeset, :series_code, "series code not found")
+        id -> cast(changeset, %{"series_id" => id}, [:series_id])
+      end
+    else
+      changeset
+    end
   end
 
   @spec cast_items(Ecto.Changeset.t()) :: Ecto.Changeset.t()

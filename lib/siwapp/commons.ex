@@ -193,6 +193,14 @@ defmodule Siwapp.Commons do
     |> Repo.all()
   end
 
+  @spec series_id_by_code(binary()) :: integer | nil
+  def series_id_by_code(code) do
+    Series
+    |> where([s], s.code == ^code)
+    |> select([s], s.id)
+    |> Repo.one()
+  end
+
   @spec insert_new_series(map()) :: {:ok, Series.t()} | {:error, Ecto.Changeset.t()}
   defp insert_new_series(attrs) do
     %Series{}

@@ -13,7 +13,7 @@ defmodule SiwappWeb.Schema.Helpers do
       arg(:shipping_address, :string)
       arg(:terms, :string)
       arg(:notes, :string)
-      arg(:series_id, :id)
+      arg(:series_code, :string)
       arg(:currency, :string)
       arg(:issue_date, :date)
       arg(:due_date, :date)
