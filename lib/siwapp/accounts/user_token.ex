@@ -145,7 +145,7 @@ defmodule Siwapp.Accounts.UserToken do
 
   @spec verify_user_token() :: Ecto.Query.t()
   @doc """
-  Checks if the token had been inserted a day ago
+  Checks if the token had been inserted a week ago
   """
   def verify_user_token do
     from token in Siwapp.Accounts.UserToken,
