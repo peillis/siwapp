@@ -35,6 +35,7 @@ defmodule Siwapp.CustomersFixtures do
     customer
   end
 
+  @spec customer_with_totals(non_neg_integer()) :: Customer.t()
   def customer_with_totals(customer_id) do
     Customer
     |> Siwapp.Query.by(:id, customer_id)
