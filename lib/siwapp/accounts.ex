@@ -374,4 +374,10 @@ defmodule Siwapp.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  @spec delete_user_token :: :ok
+  def delete_user_token do
+    Repo.delete_all(UserToken.verify_user_token())
+    :ok
+  end
 end

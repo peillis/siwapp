@@ -143,6 +143,15 @@ defmodule Siwapp.Accounts.UserToken do
     end
   end
 
+  @spec verify_user_token() :: Ecto.Query.t()
+  @doc """
+  Checks if the token had been inserted a day ago
+  """
+  def verify_user_token do
+    from token in Siwapp.Accounts.UserToken,
+      where: token.inserted_at < ago(1, "week")
+  end
+
   @spec days_for_context(String.t()) :: non_neg_integer()
   defp days_for_context("confirm"), do: @confirm_validity_in_days
   defp days_for_context("reset_password"), do: @reset_password_validity_in_days
