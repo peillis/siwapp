@@ -6,7 +6,6 @@ defmodule Siwapp.CustomersTest do
   import Siwapp.SettingsFixtures
   import Siwapp.CommonsFixtures
   alias Siwapp.Customers
-  alias Siwapp.Customers.Customer
 
   setup do
     series = series_fixture(%{name: "A-Series", code: "A-"})
@@ -71,9 +70,25 @@ defmodule Siwapp.CustomersTest do
 
     test "for a customer with one invoice, its paid is the invoice's paid" do
       customer = customer_fixture()
-      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}], paid_amount: 200})
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}], payments: [%{amount: 200}]})
 
-      assert customer_with_totals(customer.id).total == 200
+      assert customer_with_totals(customer.id).paid == 200
+    end
+
+    test "for a customer with multiple invoices, its total is the sum of invoices' total" do
+      customer = customer_fixture()
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}]})
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}]})
+
+      assert customer_with_totals(customer.id).total == 400
+    end
+
+    test "for a customer with multiple invoices, its paid is the sum of the invoices' paid" do
+      customer = customer_fixture()
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}], payments: [%{amount: 200}]})
+      invoice_fixture(%{name: customer.name, identification: customer.identification, items: [%{unitary_cost: 200}], payments: [%{amount: 200}]})
+
+      assert customer_with_totals(customer.id).paid == 400
     end
 
   end
