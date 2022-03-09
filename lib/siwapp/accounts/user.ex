@@ -21,6 +21,7 @@ defmodule Siwapp.Accounts.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
+    field :admin, :boolean, default: false
     field :confirmed_at, :naive_datetime
 
     timestamps()
@@ -48,7 +49,7 @@ defmodule Siwapp.Accounts.User do
           Ecto.Changeset.t()
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :admin])
     |> validate_email()
     |> validate_password(opts)
   end
@@ -163,5 +164,11 @@ defmodule Siwapp.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  @spec admin_changeset(__MODULE__.t(), map) :: Ecto.Changeset.t()
+  def admin_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:admin])
   end
 end

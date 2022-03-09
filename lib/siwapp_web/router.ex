@@ -128,6 +128,8 @@ defmodule SiwappWeb.Router do
       live "/recurring_invoices/new", RecurringInvoicesLive.Edit, :new
       live "/recurring_invoices/:id/edit", RecurringInvoicesLive.Edit, :edit
 
+      live "/management", ManagementLive.Index, :index
+
       get "/settings", SettingsController, :edit
       post "/settings", SettingsController, :update
 

@@ -10,6 +10,11 @@ defmodule Siwapp.Accounts do
   alias Siwapp.Accounts.UserNotifier
   alias Siwapp.Accounts.UserToken
 
+  @spec list_users :: [User.t()] | []
+  def list_users do
+    Repo.all(User)
+  end
+
   ## Database getters
 
   @doc """
@@ -379,5 +384,10 @@ defmodule Siwapp.Accounts do
   def delete_user_token do
     Repo.delete_all(UserToken.get_user_token_to_be_deleted())
     :ok
+  end
+
+  @spec delete_user(User.t()) :: {:ok, User.t()}
+  def delete_user(user) do
+    Repo.delete(user)
   end
 end

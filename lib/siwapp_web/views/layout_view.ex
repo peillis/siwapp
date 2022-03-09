@@ -22,6 +22,9 @@ defmodule SiwappWeb.LayoutView do
       n when n in [SiwappWeb.RecurringInvoicesLive.Index, SiwappWeb.RecurringInvoicesLive.Edit] ->
         new_button("New Recurring Invoice", Routes.recurring_invoices_edit_path(socket, :new))
 
+      n when n in [SiwappWeb.ManagementLive.Index] ->
+        new_button("New User", Routes.management_index_path(socket, :index))
+
       _ ->
         new_button("New Invoice", Routes.invoices_edit_path(socket, :new))
     end

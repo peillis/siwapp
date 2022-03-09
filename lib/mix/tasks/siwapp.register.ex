@@ -18,16 +18,26 @@ defmodule Mix.Tasks.Siwapp.Register do
 
     validate_args!(args)
 
-    [email, password] = args
-
-    register_user(email, password)
+    register_user(args)
   end
 
-  @spec register_user(binary, binary) :: :ok | no_return()
-  defp register_user(email, password) do
+  @spec register_user([binary() | boolean()]) :: :ok | no_return()
+  defp register_user([email, password, admin]) do
+    case Accounts.register_user(%{email: email, password: password, admin: admin}) do
+      {:ok, user} ->
+        IO.puts("User with email #{user.email} created successfull.")
+        :ok
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        IO.puts(changeset.errors)
+        Mix.raise("Sorry. The user hasn't been created.")
+    end
+  end
+
+  defp register_user([email, password]) do
     case Accounts.register_user(%{email: email, password: password}) do
       {:ok, user} ->
-        IO.puts("User with email #{user.email} created successfully.")
+        IO.puts("User with email #{user.email} created successfull.")
         :ok
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -37,6 +47,8 @@ defmodule Mix.Tasks.Siwapp.Register do
   end
 
   @spec validate_args!(list | term()) :: no_return()
+  defp validate_args!([_, _, _]), do: :ok
+
   defp validate_args!([_, _]), do: :ok
 
   defp validate_args!(_) do
