@@ -3,6 +3,10 @@ defmodule Siwapp.CustomersFixtures do
   This module defines test helpers for creating
   entities via the `Siwapp.Customers` context.
   """
+
+  alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
+
   @spec unique_customer_name :: binary
   def unique_customer_name, do: "#{System.unique_integer()}"
 
@@ -21,13 +25,21 @@ defmodule Siwapp.CustomersFixtures do
     })
   end
 
-  @spec customer_fixture(map()) :: Siwapp.Customers.Customer.t()
+  @spec customer_fixture(map()) :: Customer.t()
   def customer_fixture(attrs \\ %{}) do
     {:ok, customer} =
       attrs
       |> valid_customer_attributes()
-      |> Siwapp.Customers.create()
+      |> Customers.create()
 
     customer
+  end
+
+  @spec customer_with_totals(non_neg_integer()) :: Customer.t()
+  def customer_with_totals(customer_id) do
+    Customer
+    |> Siwapp.Query.by(:id, customer_id)
+    |> Customers.list_with_assoc_invoice_fields()
+    |> List.first()
   end
 end
