@@ -112,7 +112,7 @@ currencies = ["USD", "USD", "USD", "EUR", "GBP"]
 booleans = [true, false]
 
 invoices =
-  Enum.map(0..30, fn _i ->
+  Enum.map(0..5, fn _i ->
     %{customer: Enum.random(customers), issue_date: Faker.Date.backward(31)}
   end)
 
@@ -138,49 +138,49 @@ Enum.each(
   })
 )
 
-# SEEDING RECURRING INVOICES
-today = Date.utc_today()
+# # SEEDING RECURRING INVOICES
+# today = Date.utc_today()
 
-recurring_invoices = [
-  %{
-    name: Faker.Person.name(),
-    period: 3,
-    period_type: "Daily",
-    starting_date: Date.add(today, -30),
-    series_id: 1
-  },
-  %{
-    name: Faker.Person.name(),
-    period: 2,
-    period_type: "Monthly",
-    starting_date: Date.add(today, -60),
-    series_id: 2,
-    items: %{
-      "0" => %{
-        "quantity" => Faker.random_between(1, 2),
-        "description" => "#{Faker.App.name()} App Development",
-        "unitary_cost" => Faker.random_between(10_000, 1_000_000),
-        "discount" => 0,
-        "taxes" => ["RETENTION"]
-      }
-    }
-  },
-  %{
-    name: Faker.Person.name(),
-    period: 1,
-    period_type: "Yearly",
-    starting_date: Date.add(today, -400),
-    series_id: 3,
-    items: %{
-      "0" => %{
-        "quantity" => Faker.random_between(1, 2),
-        "description" => "#{Faker.App.name()} App Development",
-        "unitary_cost" => Faker.random_between(10_000, 1_000_000),
-        "discount" => 0,
-        "taxes" => ["VAT"]
-      }
-    }
-  }
-]
+# recurring_invoices = [
+#   %{
+#     name: Faker.Person.name(),
+#     period: 3,
+#     period_type: "Daily",
+#     starting_date: Date.add(today, -30),
+#     series_id: 1
+#   },
+#   %{
+#     name: Faker.Person.name(),
+#     period: 2,
+#     period_type: "Monthly",
+#     starting_date: Date.add(today, -60),
+#     series_id: 2,
+#     items: %{
+#       "0" => %{
+#         "quantity" => Faker.random_between(1, 2),
+#         "description" => "#{Faker.App.name()} App Development",
+#         "unitary_cost" => Faker.random_between(10_000, 1_000_000),
+#         "discount" => 0,
+#         "taxes" => ["RETENTION"]
+#       }
+#     }
+#   },
+#   %{
+#     name: Faker.Person.name(),
+#     period: 1,
+#     period_type: "Yearly",
+#     starting_date: Date.add(today, -400),
+#     series_id: 3,
+#     items: %{
+#       "0" => %{
+#         "quantity" => Faker.random_between(1, 2),
+#         "description" => "#{Faker.App.name()} App Development",
+#         "unitary_cost" => Faker.random_between(10_000, 1_000_000),
+#         "discount" => 0,
+#         "taxes" => ["VAT"]
+#       }
+#     }
+#   }
+# ]
 
-Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
+# Enum.each(recurring_invoices, &RecurringInvoices.create(&1))
