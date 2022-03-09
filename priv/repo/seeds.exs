@@ -82,7 +82,7 @@ series = [
   %{name: "C-series", code: "C"}
 ]
 
-Enum.each(series, &Commons.create_series(&1))
+Enum.each(series, &Commons.create_series(&1) |> IO.inspect())
 
 # SEEDING TAXES
 taxes = [
