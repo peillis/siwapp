@@ -256,10 +256,14 @@ defmodule Siwapp.Invoices.Invoice do
 
   @spec next_number_in_series(pos_integer()) :: integer
   defp next_number_in_series(series_id) do
+    IO.inspect(series_id)
     query = InvoiceQuery.last_number_with_series_id(__MODULE__, series_id)
 
     case Repo.one(query) do
-      nil -> Repo.get(Series, series_id).first_number
+      nil ->
+        series = Repo.get(Series, series_id)
+        IO.inspect(series)
+        series.first_number
       invoice -> invoice.number + 1
     end
   end
