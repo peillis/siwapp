@@ -20,7 +20,7 @@ defmodule Siwapp.Application do
       # Start a worker by calling: Siwapp.Worker.start_link(arg)
       # {Siwapp.Worker, arg}
       {Cachex, name: :siwapp_cache},
-      Siwapp.InvoicesGenerator
+      Siwapp.TimerEvents
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
