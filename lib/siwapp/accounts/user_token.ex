@@ -143,11 +143,11 @@ defmodule Siwapp.Accounts.UserToken do
     end
   end
 
-  @spec verify_user_token() :: Ecto.Query.t()
+  @spec get_user_token_to_be_deleted() :: Ecto.Query.t()
   @doc """
   Checks if the token had been inserted a week ago
   """
-  def verify_user_token do
+  def get_user_token_to_be_deleted do
     from token in Siwapp.Accounts.UserToken,
       where: token.inserted_at < ago(1, "week")
   end
