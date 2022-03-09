@@ -1,0 +1,66 @@
+<nav
+  class={"navbar is-fixed-bottom
+             #{if Enum.empty?(@checked), do: "is-invisible"}"}
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="navbar-menu">
+    <div class="navbar-end">
+      <div class="navbar-item buttons">
+        <%= link("Delete",
+          to: "#",
+          phx_click: "delete",          
+          data: [confirm: "Are you sure?"],
+          class: "button is-danger"
+        ) %>
+        <button class="button is-info" , phx-click="set_paid">
+          Upgrade to Admin
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+<table class="table is-striped is-bordered is-hoverable">
+  <tr>
+    <%= if @checked != [] do %>
+      <th title="">
+        <input
+          type="checkbox"
+          checked={Enum.member?(@checked, 0)}
+          phx-click="click_checkbox"
+          phx-value-id="0"
+        >
+      </th>
+    <% end %>   
+    <th title="email">
+      Email
+    </th>
+    <th title="admin">
+      Admin
+    </th>
+  </tr>
+  <%= for user <- @users do %>
+    <tr>
+      <td>
+        <input
+          type="checkbox"
+          phx-click="click_checkbox"
+          checked={Enum.member?(@checked, user.id)}
+          phx-value-id={user.id}
+        >
+      </td>      
+      <td>
+        <%= user.email %>
+      </td>
+      <%= if user.admin do %>
+        <td class="icon has-text-success table-icon">
+          <i class="fas fa-check"></i>
+        </td>
+      <% else %>
+        <td class="icon has-text-danger table-icon">
+          <i class="fas fa-times"></i>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
