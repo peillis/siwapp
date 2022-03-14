@@ -98,6 +98,7 @@ defmodule SiwappWeb.Router do
       get "/users/settings", UserSettingsController, :edit
       put "/users/settings", UserSettingsController, :update
       get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+      live "/users", UsersLive.Index, :index
 
       live "/series", SeriesLive.Index, :index
       live "/series/new", SeriesLive.Index, :new
@@ -127,8 +128,6 @@ defmodule SiwappWeb.Router do
       live "/recurring_invoices", RecurringInvoicesLive.Index, :index
       live "/recurring_invoices/new", RecurringInvoicesLive.Edit, :new
       live "/recurring_invoices/:id/edit", RecurringInvoicesLive.Edit, :edit
-
-      live "/management", ManagementLive.Index, :index
 
       get "/settings", SettingsController, :edit
       post "/settings", SettingsController, :update
