@@ -51,6 +51,7 @@ defmodule Siwapp.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.18"},
       {:gen_smtp, "~> 1.0"},
+      {:hackney, "~> 1.8"},
       {:heex_formatter, github: "feliperenan/heex_formatter"},
       {:jason, "~> 1.2"},
       {:mappable, "~> 0.2.4"},
@@ -63,6 +64,7 @@ defmodule Siwapp.MixProject do
       {:phoenix_live_view, "~> 0.17"},
       {:plug_cowboy, "~> 2.5"},
       {:postgrex, ">= 0.0.0"},
+      {:sentry, "~> 8.0"},
       {:swoosh, "~> 1.3"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"}
@@ -85,7 +87,8 @@ defmodule Siwapp.MixProject do
         "sass default --no-source-map --style=compressed",
         "esbuild default --minify",
         "phx.digest"
-      ]
+      ],
+      sentry_recompile: ["compile", "deps.compile sentry --force"]
     ]
   end
 end
