@@ -87,7 +87,8 @@ defmodule Siwapp.MixProject do
         "sass default --no-source-map --style=compressed",
         "esbuild default --minify",
         "phx.digest"
-      ]
+      ],
+      sentry_recompile: ["compile", "deps.compile sentry --force"]
     ]
   end
 end
