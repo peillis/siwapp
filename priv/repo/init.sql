@@ -112,7 +112,6 @@ INSERT INTO taxes SELECT * FROM taxes_demo;
 ALTER TABLE series_demo DROP COLUMN deleted_at;
 INSERT INTO series SELECT * FROM series_demo;
 
--- I'm not inserting meta_attributes because they are all null in siwapp_demo and type text, so I don't know yet how to convert them to jsonb
 --customers
 ALTER TABLE customers_demo DROP COLUMN deleted_at;
 ALTER TABLE customers_demo DROP COLUMN active;
