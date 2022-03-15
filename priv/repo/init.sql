@@ -137,7 +137,6 @@ DECLARE result jsonb;
 BEGIN
     DROP TABLE IF EXISTS items_one_recurring_invoice;
     CREATE TABLE items_one_recurring_invoice(index serial, item jsonb);
-    DROP SEQUENCE IF EXISTS index;
     CREATE SEQUENCE index START 1 OWNED BY items_one_recurring_invoice.index;
     INSERT INTO items_one_recurring_invoice(item)
       SELECT row_to_json(t) FROM
@@ -233,4 +232,6 @@ DROP FUNCTION build_items;
 DROP FUNCTION new_recurring_invoice_id;
 DROP FUNCTION new_invoice_id;
 DROP FUNCTION new_item_id;
+
+\c postgres
 DROP DATABASE prueba_siwapp;

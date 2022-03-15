@@ -1,14 +1,14 @@
 \c postgres
-DROP DATABASE IF EXISTS prueba_siwapp;
+DROP DATABASE IF EXISTS temp;
 SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
 WHERE pg_stat_activity.datname = 'siwapp_ror'
 AND pid <> pg_backend_pid();
-CREATE DATABASE prueba_siwapp
+CREATE DATABASE temp
   WITH TEMPLATE siwapp_ror
     OWNER postgres;
 
-\c prueba_siwapp
+\c temp
 ALTER TABLE taxes RENAME TO taxes_ror;
 ALTER TABLE series RENAME TO series_ror;
 ALTER TABLE items RENAME TO items_ror;
@@ -85,7 +85,7 @@ DROP FUNCTION period_type_conversion;
 
 \c siwapp_dev
 CREATE EXTENSION postgres_fdw;
-CREATE SERVER localsrv FOREIGN DATA WRAPPER postgres_fdw OPTIONS(host 'localhost', dbname 'prueba_siwapp', port '5432');
+CREATE SERVER localsrv FOREIGN DATA WRAPPER postgres_fdw OPTIONS(host 'localhost', dbname 'temp', port '5432');
 CREATE USER MAPPING FOR postgres SERVER localsrv OPTIONS(user 'postgres', password 'postgres');
 IMPORT FOREIGN SCHEMA public FROM SERVER localsrv INTO public;
 
@@ -238,4 +238,6 @@ DROP FUNCTION build_items;
 DROP FUNCTION new_recurring_invoice_id;
 DROP FUNCTION new_invoice_id;
 DROP FUNCTION new_item_id;
-DROP DATABASE prueba_siwapp;
+
+\c postgres
+DROP DATABASE temp;
