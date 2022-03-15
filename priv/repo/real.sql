@@ -17,6 +17,12 @@ ALTER TABLE items_ror DROP COLUMN deleted_at;
 ALTER TABLE customers RENAME TO customers_ror;
 ALTER TABLE payments RENAME TO payments_ror;
 ALTER TABLE items_taxes RENAME TO items_taxes_ror;
+CREATE TABLE commons_id_type_invoice(id integer);
+INSERT INTO commons_id_type_invoice
+  SELECT id FROM commons
+    WHERE type='Invoice' ORDER BY id ASC;
+CREATE TABLE items_invoices AS (SELECT * FROM items_ror WHERE common_id IN (SELECT * FROM commons_id_type_invoice));
+CREATE TABLE items_recurring_invoices AS (SELECT * FROM items_ror WHERE id NOT IN (SELECT id FROM items_invoices));
 
 CREATE FUNCTION change_column_with_function(table_name text, column_name text, t text, fun text)
 RETURNS void
@@ -79,6 +85,7 @@ DROP TABLE webhook_logs;
 DROP TABLE tags;
 DROP TABLE taggings;
 DROP TABLE products;
+DROP TABLE commons_id_type_invoice;
 DROP FUNCTION change_column_with_function;
 DROP FUNCTION to_cents;
 DROP FUNCTION period_type_conversion;
@@ -89,17 +96,10 @@ CREATE SERVER localsrv FOREIGN DATA WRAPPER postgres_fdw OPTIONS(host 'localhost
 CREATE USER MAPPING FOR postgres SERVER localsrv OPTIONS(user 'postgres', password 'postgres');
 IMPORT FOREIGN SCHEMA public FROM SERVER localsrv INTO public;
 
-CREATE FUNCTION is_invoice(common_id integer)
-RETURNS boolean
-LANGUAGE plpgsql
-AS $$
-DECLARE result boolean;
-BEGIN
-    if (SELECT type FROM commons WHERE id=common_id) = 'Invoice' then result = true;
-    else result=false;
-    end if;
-    return result;
-END; $$;
+
+ALTER TABLE recurring_invoices ADD COLUMN old_id integer;
+ALTER TABLE invoices ADD COLUMN old_id integer;
+ALTER TABLE items ADD COLUMN old_id integer;
 
 --taxes
 -- value in ror was numeric, ours will round decimals
@@ -120,16 +120,6 @@ INSERT INTO customers(id, name, hash_id, identification, email, contact_person, 
 SELECT 'customers done' AS msg;
 
 --recurring_invoices
-CREATE FUNCTION new_recurring_invoice_id(old_recurring_invoice_id integer)
-RETURNS integer
-LANGUAGE plpgsql
-AS $$
-DECLARE result integer;
-BEGIN
-    SELECT recurring_invoice_id INTO result FROM recurring_invoices_id_conversion WHERE common_id=old_recurring_invoice_id;
-    return result;
-END; $$;
-
 CREATE FUNCTION build_items(id bigint)
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -156,68 +146,42 @@ INSERT INTO items_taxes_names
 
 CREATE TABLE items_ror_extended(common_id bigint, taxes text[], discount integer, quantity integer, description character varying(20000), unitary_cost integer);
 INSERT INTO items_ror_extended
-  SELECT common_id, taxes, discount, quantity, description, unitary_cost FROM items_ror
-    LEFT JOIN items_taxes_names ON items_taxes_names.item_id=items_ror.id WHERE not is_invoice(common_id);
+  SELECT common_id, taxes, discount, quantity, description, unitary_cost FROM items_recurring_invoices
+    LEFT JOIN items_taxes_names ON items_taxes_names.item_id=items_recurring_invoices.id;
 
-INSERT INTO recurring_invoices(series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, send_by_email, days_to_due, enabled, max_ocurrences, period, period_type, starting_date, finishing_date, inserted_at, updated_at, currency, items, meta_attributes)
-  SELECT series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, sent_by_email, days_to_due, enabled, max_occurrences, period, period_type, starting_date, finishing_date, created_at, updated_at, currency, build_items(id), meta_attributes
+INSERT INTO recurring_invoices(series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, send_by_email, days_to_due, enabled, max_ocurrences, period, period_type, starting_date, finishing_date, inserted_at, updated_at, currency, items, meta_attributes, old_id)
+  SELECT series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, sent_by_email, days_to_due, enabled, max_occurrences, period, period_type, starting_date, finishing_date, created_at, updated_at, currency, build_items(id), meta_attributes, id
     FROM commons WHERE type='RecurringInvoice' ORDER BY id ASC;
-CREATE TABLE recurring_invoices_id_conversion(recurring_invoice_id integer, common_id integer);
-INSERT INTO recurring_invoices_id_conversion
-  SELECT recurring_invoices.id, commons.id FROM recurring_invoices
-    INNER JOIN commons ON recurring_invoices.name = commons.name AND recurring_invoices.identification = commons.identification
-      ORDER BY recurring_invoices.id ASC;
+
 SELECT 'recurring_invoices done' AS msg;
 
 --invoices
-CREATE FUNCTION new_invoice_id(old_invoice_id integer)
-RETURNS integer
-LANGUAGE plpgsql
-AS $$
-DECLARE result integer;
-BEGIN
-    SELECT invoice_id INTO result FROM invoices_id_conversion WHERE common_id=old_invoice_id;
-    return result;
-END; $$;
-
-INSERT INTO invoices(series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, paid_amount, draft, paid, sent_by_email, "number", recurring_invoice_id, issue_date, due_date, inserted_at, updated_at, deleted_at, failed, currency, meta_attributes)
-  SELECT series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, paid_amount, draft, paid, sent_by_email, "number", new_recurring_invoice_id(recurring_invoice_id), issue_date, due_date, created_at, updated_at, deleted_at, failed, currency, meta_attributes
-    FROM commons WHERE type='Invoice' ORDER BY id ASC;
-CREATE TABLE invoices_id_conversion(invoice_id integer, common_id integer);
-INSERT INTO invoices_id_conversion
-  SELECT invoices.id, commons.id FROM invoices
-    INNER JOIN commons ON invoices.name = commons.name AND invoices.identification = commons.identification
-      ORDER BY invoices.id ASC;
+INSERT INTO invoices(series_id, customer_id, name, identification, email, invoicing_address, shipping_address, contact_person, terms, notes, net_amount, gross_amount, paid_amount, draft, paid, sent_by_email, "number", recurring_invoice_id, issue_date, due_date, inserted_at, updated_at, deleted_at, failed, currency, meta_attributes, old_id)
+  SELECT commons.series_id, commons.customer_id, commons.name, commons.identification, commons.email, commons.invoicing_address, commons.shipping_address, commons.contact_person, commons.terms, commons.notes, commons.net_amount, commons.gross_amount, commons.paid_amount, commons.draft, commons.sent_by_email, commons.paid, commons."number", recurring_invoices.id, commons.issue_date, commons.due_date, commons.created_at, commons.updated_at, commons.deleted_at, commons.failed, commons.currency, commons.meta_attributes, commons.id
+    FROM commons
+      LEFT OUTER JOIN recurring_invoices ON recurring_invoices.old_id=commons.recurring_invoice_id
+        WHERE commons.type='Invoice' ORDER BY commons.id ASC;
 SELECT 'invoices done' AS msg;
 
 --items
 -- discount and quantity in ror were numeric, ours will round decimals
-INSERT INTO items(quantity, discount, description, unitary_cost, invoice_id)
-  SELECT quantity, discount, description, unitary_cost, new_invoice_id(common_id)
-    FROM items_ror WHERE is_invoice(common_id)=true;
+INSERT INTO items(quantity, discount, description, unitary_cost, invoice_id, old_id)
+  SELECT quantity, discount, description, unitary_cost, invoices.id, items_invoices.id FROM items_invoices
+    LEFT JOIN invoices ON items_invoices.common_id=invoices.old_id
+    ORDER BY items_invoices.id ASC;
 SELECT 'items done' AS msg;
 
 -- payments
 INSERT INTO payments("date", amount, notes, invoice_id, inserted_at, updated_at)
-  SELECT "date", amount, notes, new_invoice_id(invoice_id), created_at, updated_at FROM payments_ror;
+  SELECT "date", amount, payments_ror.notes, invoices.id, created_at, payments_ror.updated_at FROM payments_ror
+    LEFT JOIN invoices ON invoices.old_id=payments_ror.invoice_id
+    ORDER BY payments_ror.id ASC;
 SELECT 'payments done' AS msg;
 
 -- items_taxes
-CREATE FUNCTION new_item_id(old_item_id integer)
-RETURNS integer
-LANGUAGE plpgsql
-AS $$
-DECLARE result integer;
-BEGIN
-    SELECT item_id INTO result FROM items_id_conversion WHERE item_ror_id=old_item_id;
-    return result;
-END; $$;
-CREATE TABLE items_id_conversion(item_id integer, item_ror_id integer);
-INSERT INTO items_id_conversion
-  SELECT items.id, items_ror.id FROM items
-    INNER JOIN items_ror ON items.description = items_ror.description
-      ORDER BY items.id ASC;
-INSERT INTO items_taxes SELECT new_item_id(item_id), tax_id FROM items_taxes_ror;
+INSERT INTO items_taxes
+  SELECT items.id, tax_id FROM items_taxes_ror
+    RIGHT OUTER JOIN items ON items.old_id=items_taxes_ror.item_id;
 SELECT 'items_taxes done' AS msg;
 
 DROP FOREIGN TABLE taxes_ror;
@@ -227,17 +191,15 @@ DROP FOREIGN TABLE commons;
 DROP FOREIGN TABLE items_taxes_ror;
 DROP FOREIGN TABLE items_ror;
 DROP FOREIGN TABLE payments_ror;
-DROP TABLE recurring_invoices_id_conversion;
-DROP TABLE invoices_id_conversion;
-DROP TABLE items_id_conversion;
+DROP FOREIGN TABLE items_invoices;
+DROP FOREIGN TABLE items_recurring_invoices;
 DROP TABLE items_one_recurring_invoice;
 DROP TABLE items_taxes_names;
 DROP TABLE items_ror_extended;
-DROP FUNCTION is_invoice;
 DROP FUNCTION build_items;
-DROP FUNCTION new_recurring_invoice_id;
-DROP FUNCTION new_invoice_id;
-DROP FUNCTION new_item_id;
+ALTER TABLE recurring_invoices DROP COLUMN old_id;
+ALTER TABLE invoices DROP COLUMN old_id;
+ALTER TABLE items DROP COLUMN old_id;
 
 \c postgres
 DROP DATABASE temp;
