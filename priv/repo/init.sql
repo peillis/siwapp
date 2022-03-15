@@ -1,10 +1,14 @@
 \c postgres
+DROP DATABASE IF EXISTS prueba_siwapp;
 SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
 WHERE pg_stat_activity.datname = 'siwapp_demo'
 AND pid <> pg_backend_pid();
+CREATE DATABASE prueba_siwapp
+  WITH TEMPLATE siwapp_demo
+    OWNER postgres;
 
-\c siwapp_demo
+\c prueba_siwapp
 ALTER TABLE taxes RENAME TO taxes_demo;
 ALTER TABLE series RENAME TO series_demo;
 ALTER TABLE items RENAME TO items_demo;
@@ -74,6 +78,10 @@ DROP TABLE tags;
 DROP TABLE taggings;
 DROP TABLE ar_internal_metadata;
 DROP TABLE products;
+DROP FUNCTION change_column_with_function;
+DROP FUNCTION to_cents;
+DROP FUNCTION period_type_conversion;
+DROP FUNCTION text_to_jsonb;
 
 \c siwapp_dev
 CREATE EXTENSION postgres_fdw;
@@ -203,3 +211,7 @@ DROP TABLE items_id_conversion;
 DROP TABLE items_one_recurring_invoice;
 DROP TABLE items_taxes_names;
 DROP TABLE items_demo_extended;
+DROP FUNCTION is_invoice;
+DROP FUNCTION build_items;
+DROP FUNCTION new_invoice_id;
+DROP FUNCTION new_item_id;
