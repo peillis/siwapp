@@ -27,7 +27,7 @@ defmodule Siwapp.CustomersTest do
              } = errors_on(changeset)
     end
 
-    test "validates identification uniqueness" do
+    test "validates name-identification uniqueness" do
       %{name: name, identification: identification} = customer_fixture()
       {:error, changeset} = Customers.create(%{name: name, identification: identification})
       assert "has already been taken" in errors_on(changeset).identification

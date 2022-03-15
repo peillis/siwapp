@@ -64,7 +64,7 @@ defmodule Siwapp.Customers.Customer do
     |> cast(attrs, @fields)
     |> validate_required_customer([:name, :identification])
     |> put_hash_id()
-    |> unique_constraint(:identification)
+    |> unique_constraint([:identification, :name])
     |> unique_constraint(:hash_id)
     |> validate_format(:email, @email_regex)
     |> validate_length(:name, max: 100)
