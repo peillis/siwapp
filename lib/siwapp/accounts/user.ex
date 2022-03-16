@@ -68,6 +68,7 @@ defmodule Siwapp.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> maybe_validate_required(opts, :password)
+    |> validate_confirmation(:password, message: "does not match password")
     |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
@@ -99,7 +100,7 @@ defmodule Siwapp.Accounts.User do
   @spec email_changeset(t(), map) :: Ecto.Changeset.t()
   def email_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :admin])
+    |> cast(attrs, [:email])
     |> validate_email(opts)
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
@@ -123,7 +124,7 @@ defmodule Siwapp.Accounts.User do
           Ecto.Changeset.t()
   def password_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:password, :admin])
+    |> cast(attrs, [:password])
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password(opts)
   end

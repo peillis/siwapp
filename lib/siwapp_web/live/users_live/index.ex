@@ -42,7 +42,7 @@ defmodule SiwappWeb.UsersLive.Index do
     |> MapSet.to_list()
     |> Enum.reject(&(&1 == 0))
     |> Enum.map(&Accounts.get_user!(&1))
-    |> Enum.each((&Accounts.update_admin(&1, %{admin: not &1.admin})))
+    |> Enum.each((&Accounts.update_user(&1, %{admin: not &1.admin})))
 
     {:noreply, socket
       |> put_flash(:info, "Users succesfully updated")

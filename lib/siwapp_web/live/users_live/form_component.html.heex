@@ -27,7 +27,16 @@
         <%= text_input(f, :password, type: :password, class: "input") %>
       </p>
       <%= error_tag(f, :password) %>
-    </div> 
+    </div>
+
+    <div class="field">
+      <%= label(f, :password_confirmation, "Confirm new password", class: "label") %>
+      <p class="control">
+        <%= password_input(f, :password_confirmation, required: true, class: "input") %>
+      </p>
+      <%= error_tag(f, :password_confirmation) %>
+    </div>
+
 
     <div class="mt-4 buttons is-right">
       <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
@@ -40,7 +49,7 @@
           data: [confirm: "Are you sure?"],
           class: "button is-danger"
         ) %>
-      <% end %>    
+      <% end %>
       <%= submit("Save", class: "button is-success") %>
     </div>
   </.form>
