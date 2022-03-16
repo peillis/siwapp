@@ -68,7 +68,7 @@ defmodule Siwapp.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> maybe_validate_required(opts, :password)
-    |> validate_confirmation(:password, message: "does not match password")
+    |> maybe_validate_confirmation(opts)
     |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
@@ -173,6 +173,18 @@ defmodule Siwapp.Accounts.User do
 
     if required? do
       validate_required(changeset, [atom])
+    else
+      changeset
+    end
+  end
+
+  @spec maybe_validate_confirmation(Ecto.Changeset.t(), list) :: Ecto.Changeset.t()
+  defp maybe_validate_confirmation(changeset, opts) do
+    confirmation? = Keyword.get(opts, :confirmation, false)
+    password_changes? = Map.has_key?(changeset.changes, :password)
+
+    if confirmation? && password_changes? do
+      validate_confirmation(changeset, :password, message: "does not match password")
     else
       changeset
     end

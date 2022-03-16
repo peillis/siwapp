@@ -11,6 +11,7 @@ defmodule Mix.Tasks.Siwapp.Register do
   use Mix.Task
 
   alias Siwapp.Accounts
+  alias Siwapp.Accounts.User
 
   @impl Mix.Task
   def run(args) do
@@ -21,23 +22,11 @@ defmodule Mix.Tasks.Siwapp.Register do
     register_user(args)
   end
 
-  @spec register_user([binary() | boolean()]) :: :ok | no_return()
-  defp register_user([email, password, admin]) do
-    case Accounts.register_user(%{email: email, password: password, admin: admin}) do
+  @spec register_user(list) :: :ok | no_return()
+  defp register_user(args) do
+    case which_register_user(args) do
       {:ok, user} ->
-        IO.puts("User with email #{user.email} created successfull.")
-        :ok
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        IO.puts(changeset.errors)
-        Mix.raise("Sorry. The user hasn't been created.")
-    end
-  end
-
-  defp register_user([email, password]) do
-    case Accounts.register_user(%{email: email, password: password}) do
-      {:ok, user} ->
-        IO.puts("User with email #{user.email} created successfull.")
+        IO.puts("User with email #{user.email} created successfully.")
         :ok
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -66,5 +55,14 @@ defmodule Mix.Tasks.Siwapp.Register do
     For example:
         mix siwapp.register "demo@example.com" "secret_password"
     """)
+  end
+
+  @spec which_register_user([binary | boolean]) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  defp which_register_user([email, password, admin]) do
+    Accounts.register_user(%{email: email, password: password, admin: admin})
+  end
+
+  defp which_register_user([email, password]) do
+    Accounts.register_user(%{email: email, password: password})
   end
 end

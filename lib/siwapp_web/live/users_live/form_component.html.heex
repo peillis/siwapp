@@ -33,7 +33,7 @@
     <div class="field">
       <%= label(f, :password_confirmation, "Confirm new password", class: "label") %>
       <p class="control">
-        <%= password_input(f, :password_confirmation, required: true, class: "input") %>
+        <%= password_input(f, :password_confirmation, class: "input") %>
       </p>
       <%= error_tag(f, :password_confirmation) %>
     </div>
