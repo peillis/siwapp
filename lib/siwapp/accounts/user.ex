@@ -97,7 +97,7 @@ defmodule Siwapp.Accounts.User do
 
   It requires the email to change otherwise an error is added.
   """
-  @spec email_changeset(t(), map) :: Ecto.Changeset.t()
+  @spec email_changeset(t(), map, list) :: Ecto.Changeset.t()
   def email_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email])
@@ -167,6 +167,7 @@ defmodule Siwapp.Accounts.User do
     end
   end
 
+  @spec maybe_validate_required(Ecto.Changeset.t(), list, atom) :: Ecto.Changeset.t()
   defp maybe_validate_required(changeset, opts, atom) do
     required? = Keyword.get(opts, :required, true)
 

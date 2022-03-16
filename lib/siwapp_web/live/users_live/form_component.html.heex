@@ -1,5 +1,7 @@
 <div class="fieldset">
-  <h2> <%= @title %> </h2>
+  <h2>
+    <%= @title %>
+  </h2>
   <.form
     let={f}
     for={@changeset}
@@ -9,8 +11,7 @@
     phx-submit="save"
   >
     <label class="checkbox">
-      <%= checkbox(f, :admin) %>
-      This user is an admin
+      <%= checkbox(f, :admin) %> This user is an admin
     </label>
 
     <div class="field">
@@ -36,7 +37,6 @@
       </p>
       <%= error_tag(f, :password_confirmation) %>
     </div>
-
 
     <div class="mt-4 buttons is-right">
       <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>

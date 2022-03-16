@@ -31,10 +31,11 @@ defmodule SiwappWeb.UsersLive.Index do
     |> Enum.map(&Accounts.get_user!(&1))
     |> Enum.each(&Accounts.delete_user(&1))
 
-    {:noreply, socket
-      |> put_flash(:info, "Users succesfully deleted")
-      |> assign(:checked, MapSet.new)
-      |> assign(:users, Accounts.list_users)}
+    {:noreply,
+     socket
+     |> put_flash(:info, "Users succesfully deleted")
+     |> assign(:checked, MapSet.new())
+     |> assign(:users, Accounts.list_users())}
   end
 
   def handle_event("upgrade_downgrade", _params, socket) do
@@ -42,20 +43,21 @@ defmodule SiwappWeb.UsersLive.Index do
     |> MapSet.to_list()
     |> Enum.reject(&(&1 == 0))
     |> Enum.map(&Accounts.get_user!(&1))
-    |> Enum.each((&Accounts.update_user(&1, %{admin: not &1.admin})))
+    |> Enum.each(&Accounts.update_user(&1, %{admin: not &1.admin}))
 
-    {:noreply, socket
-      |> put_flash(:info, "Users succesfully updated")
-      |> assign(:checked, MapSet.new)
-      |> assign(:users, Accounts.list_users)}
+    {:noreply,
+     socket
+     |> put_flash(:info, "Users succesfully updated")
+     |> assign(:checked, MapSet.new())
+     |> assign(:users, Accounts.list_users())}
   end
 
   def handle_event("redirect", %{"id" => id}, socket) do
-    {:noreply, push_redirect(socket, to: Routes.users_index_path(socket,:edit, id))}
+    {:noreply, push_redirect(socket, to: Routes.users_index_path(socket, :edit, id))}
   end
 
   @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit | :index, map()) ::
-  Phoenix.LiveView.Socket.t()
+          Phoenix.LiveView.Socket.t()
   defp apply_action(socket, :edit, %{"id" => id}) do
     user = Accounts.get_user!(id)
 
@@ -63,6 +65,7 @@ defmodule SiwappWeb.UsersLive.Index do
     |> assign(:page_title, user.email)
     |> assign(:user, user)
   end
+
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New User")

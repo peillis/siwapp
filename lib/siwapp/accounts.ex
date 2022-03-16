@@ -102,7 +102,7 @@ defmodule Siwapp.Accounts do
       %Ecto.Changeset{data: %User{}}
 
   """
-  @spec change_user_registration(User.t(), map) :: Ecto.Changeset.t()
+  @spec change_user_registration(User.t(), map, list) :: Ecto.Changeset.t()
   def change_user_registration(%User{} = user, attrs \\ %{}, opts \\ []) do
     User.registration_changeset(user, attrs, [hash_password: false] ++ opts)
   end
@@ -396,7 +396,7 @@ defmodule Siwapp.Accounts do
   @spec update_user(User.t(), map) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update_user(%User{} = user, attrs \\ %{}) do
     user
-    |> User.registration_changeset(attrs, [required: false])
+    |> User.registration_changeset(attrs, required: false)
     |> Repo.update()
   end
 end

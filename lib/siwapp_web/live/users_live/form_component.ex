@@ -3,10 +3,12 @@ defmodule SiwappWeb.UsersLive.FormComponent do
 
   use SiwappWeb, :live_component
   alias Siwapp.Accounts
+  alias Siwapp.Accounts.User
 
   @impl Phoenix.LiveComponent
   def update(%{user: user} = assigns, socket) do
-   changeset = which_changeset(user, assigns.action)
+    changeset = which_changeset(user, assigns.action)
+
     socket =
       socket
       |> assign(assigns)
@@ -17,7 +19,6 @@ defmodule SiwappWeb.UsersLive.FormComponent do
 
   @impl Phoenix.LiveComponent
   def handle_event("validate", %{"user" => user_params}, socket) do
-
     changeset =
       socket.assigns.user
       |> which_changeset(user_params, socket.assigns.action)
@@ -36,9 +37,9 @@ defmodule SiwappWeb.UsersLive.FormComponent do
     Accounts.delete_user(user)
 
     {:noreply,
-      socket
-      |> put_flash(:info, "User was successfully deleted.")
-      |> push_redirect(to: socket.assigns.return_to)}
+     socket
+     |> put_flash(:info, "User was successfully deleted.")
+     |> push_redirect(to: socket.assigns.return_to)}
   end
 
   @spec save_user(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
@@ -69,9 +70,11 @@ defmodule SiwappWeb.UsersLive.FormComponent do
     end
   end
 
+  @spec which_changeset(User.t(), map, atom) :: Ecto.Changeset.t()
   defp which_changeset(user, user_params \\ %{}, action)
+
   defp which_changeset(user, user_params, :edit) do
-    Accounts.change_user_registration(user, user_params, [required: false])
+    Accounts.change_user_registration(user, user_params, required: false)
   end
 
   defp which_changeset(user, user_params, :new) do
