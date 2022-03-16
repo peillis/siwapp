@@ -1,6 +1,17 @@
+<h1> Users </h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal(SiwappWeb.UsersLive.FormComponent,
+    id: @user.id || :new,
+    title: @page_title,
+    action: @live_action,
+    user: @user || %Siwapp.Accounts.User{},
+    return_to: Routes.users_index_path(@socket, :index)
+  ) %>
+<% end %>
 <nav
   class={"navbar is-fixed-bottom
-             #{if Enum.empty?(@checked), do: "is-invisible"}"}
+          #{if Enum.empty?(@checked), do: "is-invisible"}"}
   role="navigation"
   aria-label="main navigation"
 >
@@ -9,13 +20,13 @@
       <div class="navbar-item buttons">
         <%= link("Delete",
           to: "#",
-          phx_click: "delete",          
+          phx_click: "delete",
           data: [confirm: "Are you sure?"],
           class: "button is-danger"
         ) %>
-        <button class="button is-info" , phx-click="set_paid">
-          Upgrade to Admin
-        </button>
+        <button class="button is-info" , phx-click="upgrade_downgrade">
+          Upgrade/Downgrade
+        </button>        
       </div>
     </div>
   </div>
@@ -31,7 +42,7 @@
           phx-value-id="0"
         >
       </th>
-    <% end %>   
+    <% end %>
     <th title="email">
       Email
     </th>
@@ -40,7 +51,7 @@
     </th>
   </tr>
   <%= for user <- @users do %>
-    <tr>
+    <tr phx-click="redirect" phx-value-id={user.id} class="is-clickable">
       <td>
         <input
           type="checkbox"
@@ -48,7 +59,7 @@
           checked={Enum.member?(@checked, user.id)}
           phx-value-id={user.id}
         >
-      </td>      
+      </td>
       <td>
         <%= user.email %>
       </td>

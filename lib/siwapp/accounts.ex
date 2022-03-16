@@ -12,7 +12,9 @@ defmodule Siwapp.Accounts do
 
   @spec list_users :: [User.t()] | []
   def list_users do
-    Repo.all(User)
+    User
+    |> order_by([u], asc: u.id)
+    |> Repo.all()
   end
 
   ## Database getters
@@ -101,8 +103,8 @@ defmodule Siwapp.Accounts do
 
   """
   @spec change_user_registration(User.t(), map) :: Ecto.Changeset.t()
-  def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, hash_password: false)
+  def change_user_registration(%User{} = user, attrs \\ %{}, opts \\ []) do
+    User.registration_changeset(user, attrs, [hash_password: false] ++ opts)
   end
 
   ## Settings
@@ -389,5 +391,12 @@ defmodule Siwapp.Accounts do
   @spec delete_user(User.t()) :: {:ok, User.t()}
   def delete_user(user) do
     Repo.delete(user)
+  end
+
+  @spec update_user(User.t(), map) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  def update_user(%User{} = user, attrs \\ %{}) do
+    user
+    |> User.registration_changeset(attrs, [required: false])
+    |> Repo.update()
   end
 end

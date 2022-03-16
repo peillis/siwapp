@@ -99,6 +99,8 @@ defmodule SiwappWeb.Router do
       put "/users/settings", UserSettingsController, :update
       get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
       live "/users", UsersLive.Index, :index
+      live "/users/new", UsersLive.Index, :new
+      live "/users/:id/edit", UsersLive.Index, :edit
 
       live "/series", SeriesLive.Index, :index
       live "/series/new", SeriesLive.Index, :new

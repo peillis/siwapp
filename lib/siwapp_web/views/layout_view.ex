@@ -23,7 +23,7 @@ defmodule SiwappWeb.LayoutView do
         new_button("New Recurring Invoice", Routes.recurring_invoices_edit_path(socket, :new))
 
       n when n in [SiwappWeb.UsersLive.Index] ->
-        new_button("New User", Routes.users_index_path(socket, :index))
+        new_button("New User", Routes.users_index_path(socket, :new))
 
       _ ->
         new_button("New Invoice", Routes.invoices_edit_path(socket, :new))
