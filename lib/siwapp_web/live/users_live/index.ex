@@ -22,7 +22,8 @@ defmodule SiwappWeb.UsersLive.Index do
   end
 
   def handle_event("delete", _params, socket) do
-    {atom, msg, checked} = type_of_response(socket.assigns.checked, socket.assigns.current_user, :delete)
+    {atom, msg, checked} =
+      type_of_response(socket.assigns.checked, socket.assigns.current_user, :delete)
 
     if atom == :info do
       checked
@@ -38,7 +39,8 @@ defmodule SiwappWeb.UsersLive.Index do
   end
 
   def handle_event("upgrade_downgrade", _params, socket) do
-    {atom, msg, checked} = type_of_response(socket.assigns.checked, socket.assigns.current_user, :admin)
+    {atom, msg, checked} =
+      type_of_response(socket.assigns.checked, socket.assigns.current_user, :admin)
 
     if atom == :info do
       checked
@@ -64,8 +66,7 @@ defmodule SiwappWeb.UsersLive.Index do
       |> assign(:checked, MapSet.new())
       |> assign(:users, Accounts.list_users())
     else
-      socket
-      |> push_redirect(to: Routes.user_session_path(socket, :new))
+      push_redirect(socket, to: Routes.user_session_path(socket, :new))
     end
   end
 

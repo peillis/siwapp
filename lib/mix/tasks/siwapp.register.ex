@@ -57,7 +57,8 @@ defmodule Mix.Tasks.Siwapp.Register do
     """)
   end
 
-  @spec type_of_register_user([binary | boolean]) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  @spec type_of_register_user([binary | boolean]) ::
+          {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   defp type_of_register_user([email, password, admin]) do
     Accounts.register_user(%{email: email, password: password, admin: admin})
   end
