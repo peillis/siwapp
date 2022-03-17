@@ -3,6 +3,7 @@
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal(SiwappWeb.UsersLive.FormComponent,
     id: @user.id || :new,
+    current_user_id: @current_user.id,
     title: @page_title,
     action: @live_action,
     user: @user || %Siwapp.Accounts.User{},

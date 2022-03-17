@@ -24,7 +24,7 @@ defmodule Mix.Tasks.Siwapp.Register do
 
   @spec register_user(list) :: :ok | no_return()
   defp register_user(args) do
-    case which_register_user(args) do
+    case type_of_register_user(args) do
       {:ok, user} ->
         IO.puts("User with email #{user.email} created successfully.")
         :ok
@@ -57,12 +57,12 @@ defmodule Mix.Tasks.Siwapp.Register do
     """)
   end
 
-  @spec which_register_user([binary | boolean]) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
-  defp which_register_user([email, password, admin]) do
+  @spec type_of_register_user([binary | boolean]) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  defp type_of_register_user([email, password, admin]) do
     Accounts.register_user(%{email: email, password: password, admin: admin})
   end
 
-  defp which_register_user([email, password]) do
+  defp type_of_register_user([email, password]) do
     Accounts.register_user(%{email: email, password: password})
   end
 end

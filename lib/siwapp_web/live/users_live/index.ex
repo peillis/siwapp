@@ -6,10 +6,7 @@ defmodule SiwappWeb.UsersLive.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    {:ok,
-     socket
-     |> assign(:checked, MapSet.new())
-     |> assign(:users, Accounts.list_users())}
+    {:ok, check_admin(socket)}
   end
 
   @impl Phoenix.LiveView
@@ -25,35 +22,51 @@ defmodule SiwappWeb.UsersLive.Index do
   end
 
   def handle_event("delete", _params, socket) do
-    socket.assigns.checked
-    |> MapSet.to_list()
-    |> Enum.reject(&(&1 == 0))
-    |> Enum.map(&Accounts.get_user!(&1))
-    |> Enum.each(&Accounts.delete_user(&1))
+    {atom, msg, checked} = type_of_response(socket.assigns.checked, socket.assigns.current_user, :delete)
+
+    if atom == :info do
+      checked
+      |> Enum.map(&Accounts.get_user!(&1))
+      |> Enum.each(&Accounts.delete_user(&1))
+    end
 
     {:noreply,
      socket
-     |> put_flash(:info, "Users succesfully deleted")
+     |> put_flash(atom, msg)
      |> assign(:checked, MapSet.new())
      |> assign(:users, Accounts.list_users())}
   end
 
   def handle_event("upgrade_downgrade", _params, socket) do
-    socket.assigns.checked
-    |> MapSet.to_list()
-    |> Enum.reject(&(&1 == 0))
-    |> Enum.map(&Accounts.get_user!(&1))
-    |> Enum.each(&Accounts.update_user(&1, %{admin: not &1.admin}))
+    {atom, msg, checked} = type_of_response(socket.assigns.checked, socket.assigns.current_user, :admin)
+
+    if atom == :info do
+      checked
+      |> Enum.map(&Accounts.get_user!(&1))
+      |> Enum.each(&Accounts.update_user(&1, %{admin: not &1.admin}))
+    end
 
     {:noreply,
      socket
-     |> put_flash(:info, "Users succesfully updated")
+     |> put_flash(atom, msg)
      |> assign(:checked, MapSet.new())
      |> assign(:users, Accounts.list_users())}
   end
 
   def handle_event("redirect", %{"id" => id}, socket) do
     {:noreply, push_redirect(socket, to: Routes.users_index_path(socket, :edit, id))}
+  end
+
+  @spec check_admin(Phoenix.LiveView.Socket.t()) :: Phoenix.LiveView.Socket.t()
+  defp check_admin(socket) do
+    if socket.assigns.current_user.admin do
+      socket
+      |> assign(:checked, MapSet.new())
+      |> assign(:users, Accounts.list_users())
+    else
+      socket
+      |> push_redirect(to: Routes.user_session_path(socket, :new))
+    end
   end
 
   @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit | :index, map()) ::
@@ -97,5 +110,40 @@ defmodule SiwappWeb.UsersLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  @spec type_of_response(MapSet.t(), User.t(), atom) :: {atom, binary, list}
+  defp type_of_response(checked, current_user, atom) do
+    checked
+    |> MapSet.to_list()
+    |> Enum.reject(&(&1 in [0, current_user.id]))
+    |> check_if_list_is_empty(atom)
+  end
+
+  @spec check_if_list_is_empty(list, atom) :: {atom, binary, list}
+  defp check_if_list_is_empty(list, atom) do
+    if list == [] do
+      {:error, type_of_error(atom), list}
+    else
+      {:info, type_of_info(atom), list}
+    end
+  end
+
+  @spec type_of_error(atom) :: binary()
+  defp type_of_error(:delete) do
+    "You can´t delete yourself"
+  end
+
+  defp type_of_error(:admin) do
+    "You can´t downgrade yourself"
+  end
+
+  @spec type_of_info(atom) :: binary()
+  defp type_of_info(:delete) do
+    "Users succesfully deleted"
+  end
+
+  defp type_of_info(:admin) do
+    "Users succesfully updated"
   end
 end
