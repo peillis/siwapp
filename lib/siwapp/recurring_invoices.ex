@@ -10,6 +10,7 @@ defmodule Siwapp.RecurringInvoices do
   alias Siwapp.Invoices.InvoiceQuery
   alias Siwapp.Query
   alias Siwapp.RecurringInvoices.RecurringInvoice
+  alias Siwapp.RecurringInvoices.RecurringInvoiceQuery
   alias Siwapp.Repo
 
   @doc """
@@ -94,6 +95,17 @@ defmodule Siwapp.RecurringInvoices do
     |> Range.new(1, -1)
     |> Enum.map(fn _ -> Invoices.create(build_invoice_attrs(rec_inv)) end)
     |> Enum.each(fn {:ok, invoice} -> maybe_send_by_email(invoice, rec_inv.send_by_email) end)
+  end
+
+  @spec tax_in_any_recurring_invoice?(binary) :: boolean
+  def tax_in_any_recurring_invoice?(tax_name) do
+    RecurringInvoice
+    |> RecurringInvoiceQuery.num_of_rec_inv_whose_items_have_tax(tax_name)
+    |> Repo.one()
+    |> case do
+      0 -> false
+      _ -> true
+    end
   end
 
   @spec build_invoice_attrs(RecurringInvoice.t()) :: map

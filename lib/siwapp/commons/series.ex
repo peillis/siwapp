@@ -34,6 +34,7 @@ defmodule Siwapp.Commons.Series do
   def changeset(series, attrs \\ %{}) do
     series
     |> cast(attrs, @fields)
+    |> unique_constraint([:name, :enabled])
     |> validate_required([:code])
     |> validate_length(:name, max: 255)
     |> validate_length(:code, max: 255)
