@@ -11,6 +11,7 @@ defmodule Mix.Tasks.Siwapp.Register do
   use Mix.Task
 
   alias Siwapp.Accounts
+  alias Siwapp.Accounts.User
 
   @impl Mix.Task
   def run(args) do
@@ -18,14 +19,12 @@ defmodule Mix.Tasks.Siwapp.Register do
 
     validate_args!(args)
 
-    [email, password] = args
-
-    register_user(email, password)
+    register_user(args)
   end
 
-  @spec register_user(binary, binary) :: :ok | no_return()
-  defp register_user(email, password) do
-    case Accounts.register_user(%{email: email, password: password}) do
+  @spec register_user(list) :: :ok | no_return()
+  defp register_user(args) do
+    case type_of_register_user(args) do
       {:ok, user} ->
         IO.puts("User with email #{user.email} created successfully.")
         :ok
@@ -37,6 +36,8 @@ defmodule Mix.Tasks.Siwapp.Register do
   end
 
   @spec validate_args!(list | term()) :: no_return()
+  defp validate_args!([_, _, _]), do: :ok
+
   defp validate_args!([_, _]), do: :ok
 
   defp validate_args!(_) do
@@ -54,5 +55,15 @@ defmodule Mix.Tasks.Siwapp.Register do
     For example:
         mix siwapp.register "demo@example.com" "secret_password"
     """)
+  end
+
+  @spec type_of_register_user([binary | boolean]) ::
+          {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  defp type_of_register_user([email, password, admin]) do
+    Accounts.register_user(%{email: email, password: password, admin: admin})
+  end
+
+  defp type_of_register_user([email, password]) do
+    Accounts.register_user(%{email: email, password: password})
   end
 end

@@ -10,6 +10,13 @@ defmodule Siwapp.Accounts do
   alias Siwapp.Accounts.UserNotifier
   alias Siwapp.Accounts.UserToken
 
+  @spec list_users :: [User.t()] | []
+  def list_users do
+    User
+    |> order_by([u], asc: u.id)
+    |> Repo.all()
+  end
+
   ## Database getters
 
   @doc """
@@ -82,7 +89,7 @@ defmodule Siwapp.Accounts do
   @spec register_user(map) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def register_user(attrs) do
     %User{}
-    |> User.registration_changeset(attrs)
+    |> User.registration_changeset(attrs, confirmation: true)
     |> Repo.insert()
   end
 
@@ -95,9 +102,9 @@ defmodule Siwapp.Accounts do
       %Ecto.Changeset{data: %User{}}
 
   """
-  @spec change_user_registration(User.t(), map) :: Ecto.Changeset.t()
-  def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, hash_password: false)
+  @spec change_user_registration(User.t(), map, list) :: Ecto.Changeset.t()
+  def change_user_registration(%User{} = user, attrs \\ %{}, opts \\ []) do
+    User.registration_changeset(user, attrs, [hash_password: false, confirmation: true] ++ opts)
   end
 
   ## Settings
@@ -379,5 +386,17 @@ defmodule Siwapp.Accounts do
   def delete_user_token do
     Repo.delete_all(UserToken.get_user_token_to_be_deleted())
     :ok
+  end
+
+  @spec delete_user(User.t()) :: {:ok, User.t()}
+  def delete_user(user) do
+    Repo.delete(user)
+  end
+
+  @spec update_user(User.t(), map) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  def update_user(%User{} = user, attrs \\ %{}) do
+    user
+    |> User.registration_changeset(attrs, required: false, confirmation: true)
+    |> Repo.update()
   end
 end

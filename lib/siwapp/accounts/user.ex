@@ -21,6 +21,7 @@ defmodule Siwapp.Accounts.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
+    field :admin, :boolean, default: false
     field :confirmed_at, :naive_datetime
 
     timestamps()
@@ -48,15 +49,15 @@ defmodule Siwapp.Accounts.User do
           Ecto.Changeset.t()
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
-    |> validate_email()
+    |> cast(attrs, [:email, :password, :admin])
+    |> validate_email(opts)
     |> validate_password(opts)
   end
 
-  @spec validate_email(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp validate_email(changeset) do
+  @spec validate_email(Ecto.Changeset.t(), list) :: Ecto.Changeset.t()
+  defp validate_email(changeset, opts) do
     changeset
-    |> validate_required([:email])
+    |> maybe_validate_required(opts, :email)
     |> validate_format(:email, @email_regex, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
     |> unsafe_validate_unique(:email, Siwapp.Repo)
@@ -66,7 +67,8 @@ defmodule Siwapp.Accounts.User do
   @spec validate_password(Ecto.Changeset.t(), keyword) :: Ecto.Changeset.t()
   defp validate_password(changeset, opts) do
     changeset
-    |> validate_required([:password])
+    |> maybe_validate_required(opts, :password)
+    |> maybe_validate_confirmation(opts)
     |> validate_length(:password, min: 12, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
@@ -95,11 +97,11 @@ defmodule Siwapp.Accounts.User do
 
   It requires the email to change otherwise an error is added.
   """
-  @spec email_changeset(t(), map) :: Ecto.Changeset.t()
-  def email_changeset(user, attrs) do
+  @spec email_changeset(t(), map, list) :: Ecto.Changeset.t()
+  def email_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email])
-    |> validate_email()
+    |> validate_email(opts)
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
@@ -162,6 +164,29 @@ defmodule Siwapp.Accounts.User do
       changeset
     else
       add_error(changeset, :current_password, "is not valid")
+    end
+  end
+
+  @spec maybe_validate_required(Ecto.Changeset.t(), list, atom) :: Ecto.Changeset.t()
+  defp maybe_validate_required(changeset, opts, atom) do
+    required? = Keyword.get(opts, :required, true)
+
+    if required? do
+      validate_required(changeset, [atom])
+    else
+      changeset
+    end
+  end
+
+  @spec maybe_validate_confirmation(Ecto.Changeset.t(), list) :: Ecto.Changeset.t()
+  defp maybe_validate_confirmation(changeset, opts) do
+    confirmation? = Keyword.get(opts, :confirmation, false)
+    password_changes? = Map.has_key?(changeset.changes, :password)
+
+    if confirmation? && password_changes? do
+      validate_confirmation(changeset, :password, message: "does not match password")
+    else
+      changeset
     end
   end
 end
