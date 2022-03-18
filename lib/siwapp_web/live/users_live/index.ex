@@ -22,35 +22,35 @@ defmodule SiwappWeb.UsersLive.Index do
   end
 
   def handle_event("delete", _params, socket) do
-    {atom, msg, checked} =
+    {info_or_error, msg, checked_users} =
       type_of_response(socket.assigns.checked, socket.assigns.current_user, :delete)
 
-    if atom == :info do
-      checked
+    if info_or_error == :info do
+      checked_users
       |> Enum.map(&Accounts.get_user!(&1))
       |> Enum.each(&Accounts.delete_user(&1))
     end
 
     {:noreply,
      socket
-     |> put_flash(atom, msg)
+     |> put_flash(info_or_error, msg)
      |> assign(:checked, MapSet.new())
      |> assign(:users, Accounts.list_users())}
   end
 
   def handle_event("upgrade_downgrade", _params, socket) do
-    {atom, msg, checked} =
+    {info_or_error, msg, checked_users} =
       type_of_response(socket.assigns.checked, socket.assigns.current_user, :admin)
 
-    if atom == :info do
-      checked
+    if info_or_error == :info do
+      checked_users
       |> Enum.map(&Accounts.get_user!(&1))
       |> Enum.each(&Accounts.update_user(&1, %{admin: not &1.admin}))
     end
 
     {:noreply,
      socket
-     |> put_flash(atom, msg)
+     |> put_flash(info_or_error, msg)
      |> assign(:checked, MapSet.new())
      |> assign(:users, Accounts.list_users())}
   end
