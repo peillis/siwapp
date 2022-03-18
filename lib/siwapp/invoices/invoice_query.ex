@@ -55,6 +55,7 @@ defmodule Siwapp.Invoices.InvoiceQuery do
   def last_number_with_series_id(query, series_id) do
     query
     |> where(series_id: ^series_id)
+    |> where([i], not is_nil(i.number))
     |> order_by(desc: :number)
     |> limit(1)
   end
