@@ -57,11 +57,11 @@ defmodule Siwapp.CommonsTest do
       _series1 = series_fixture()
       _series2 = series_fixture()
 
-      {:ok, series} = Commons.change_default_series(series)
+      {:ok, default_series} = Commons.change_default_series(series)
 
-      assert series.default and
-               Enum.reduce(Commons.list_series(), true, fn x, acc ->
-                 acc and if x != series, do: not x.default, else: x.default
+      assert default_series.default and
+               Enum.reduce(Commons.list_series(), true, fn series, acc ->
+                 acc && if series == default_series, do: series.default, else: not series.default
                end)
     end
   end
