@@ -11,9 +11,9 @@ defmodule Siwapp.CommonsTest do
   alias Siwapp.Commons.Tax
 
   setup do
-    _series = series_fixture(%{name: "Default series", code: "D-"})
-    _tax1 = taxes_fixture(%{name: "VAT", value: 21, default: true})
-    _tax2 = taxes_fixture(%{name: "RETENTION", value: -15})
+    series_fixture(%{name: "Default series", code: "D-"})
+    taxes_fixture(%{name: "VAT", value: 21, default: true})
+    taxes_fixture(%{name: "RETENTION", value: -15})
     settings_fixture()
 
     %{default_series: Commons.get_default_series()}
@@ -54,8 +54,8 @@ defmodule Siwapp.CommonsTest do
   describe "series updating" do
     test "if one series is set to default, the rest will be not default" do
       series = series_fixture()
-      _series1 = series_fixture()
-      _series2 = series_fixture()
+      series_fixture()
+      series_fixture()
 
       {:ok, default_series} = Commons.change_default_series(series)
 
@@ -77,8 +77,8 @@ defmodule Siwapp.CommonsTest do
       series1 = series_fixture()
       series2 = series_fixture()
 
-      _invoice = invoice_fixture(%{series_id: series1.id})
-      _recurring_invoice = recurring_invoice_fixture(%{series_id: series2.id})
+      invoice_fixture(%{series_id: series1.id})
+      recurring_invoice_fixture(%{series_id: series2.id})
       {:error, msg1} = Commons.delete_series(series1)
       {:error, msg2} = Commons.delete_series(series2)
 
@@ -102,9 +102,9 @@ defmodule Siwapp.CommonsTest do
     end
 
     test "taxes are unique by name and enabled combination" do
-      _tax = taxes_fixture(%{name: "Example"})
+      taxes_fixture(%{name: "Example"})
       {:error, changeset} = Commons.create_tax(%{name: "Example", value: 20})
-      _tax = taxes_fixture(%{name: "Example", enabled: false})
+      taxes_fixture(%{name: "Example", enabled: false})
 
       assert %{name: ["has already been taken"]} = errors_on(changeset)
     end
@@ -120,7 +120,7 @@ defmodule Siwapp.CommonsTest do
       tax1 = taxes_fixture(%{name: "Example1"})
       tax2 = taxes_fixture(%{name: "Example2"})
 
-      _invoice = invoice_fixture(%{items: [valid_item_attributes(taxes: ["Example1"])]})
+      invoice_fixture(%{items: [valid_item_attributes(taxes: ["Example1"])]})
 
       items_rec_inv = %{
         "0" => %{
@@ -132,7 +132,7 @@ defmodule Siwapp.CommonsTest do
         }
       }
 
-      _recurring_invoice = recurring_invoice_fixture(%{items: items_rec_inv})
+      recurring_invoice_fixture(%{items: items_rec_inv})
       {:error, msg1} = Commons.delete_tax(tax1)
       {:error, msg2} = Commons.delete_tax(tax2)
 
