@@ -22,12 +22,12 @@ alias Siwapp.{
 }
 
 models = [
+  Invoices.Invoice,
+  RecurringInvoices.RecurringInvoice,
   Commons.Series,
   Commons.Tax,
   Customers.Customer,
-  Invoices.Invoice,
   Invoices.Item,
-  RecurringInvoices.RecurringInvoice,
   Settings.Setting
 ]
 

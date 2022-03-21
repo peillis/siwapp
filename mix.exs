@@ -47,7 +47,7 @@ defmodule Siwapp.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
-      {:faker, "~> 0.17.0", only: [:test, :dev]},
+      {:faker, "~> 0.17.0"},
       {:floki, ">= 0.30.0", only: :test},
       {:gettext, "~> 0.18"},
       {:gen_smtp, "~> 1.0"},
