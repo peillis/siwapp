@@ -7,9 +7,9 @@ defmodule Siwapp.Repo.Migrations.CreateUsersAuthTables do
     create table(:users) do
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
-      add :admin, :boolean, default: false
       add :confirmed_at, :naive_datetime
       timestamps()
+      add :admin, :boolean, default: false
     end
 
     create unique_index(:users, [:email])

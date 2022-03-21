@@ -14,17 +14,17 @@ defmodule Siwapp.Accounts.User do
           hashed_password: binary | nil,
           confirmed_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil,
-          inserted_at: DateTime.t() | nil
+          inserted_at: DateTime.t() | nil,
+          admin: boolean()
         }
 
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
-    field :admin, :boolean, default: false
     field :confirmed_at, :naive_datetime
-
     timestamps()
+    field :admin, :boolean, default: false
   end
 
   @doc """
