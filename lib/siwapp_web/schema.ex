@@ -61,6 +61,13 @@ defmodule SiwappWeb.Schema do
       resolve(&Resolvers.Customer.create/2)
     end
 
+    @desc "Delete a customer"
+    field :delete_customer, type: :customer do
+      arg(:id, non_null(:integer))
+
+      resolve(&Resolvers.Customer.delete/2)
+    end
+
     @desc "Create an invoice"
     field :create_invoice, type: :invoice do
       invoice_args()

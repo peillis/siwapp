@@ -19,4 +19,15 @@ defmodule SiwappWeb.Resolvers.Customer do
         {:error, message: "Failed!", details: Errors.extract(changeset)}
     end
   end
+
+  @spec delete(map, Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Customers.Customer.t()}
+  def delete(%{id: id}, _resolution) do
+    customer = Customers.get(id)
+
+    if is_nil(customer) do
+      {:error, message: "Failed!", details: "Customer not found"}
+    else
+      Customers.delete(customer)
+    end
+  end
 end
