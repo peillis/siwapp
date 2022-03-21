@@ -13,7 +13,7 @@ config :siwapp,
 # which you should run after static files are built and
 # before starting your production server.
 config :siwapp, SiwappWeb.Endpoint,
-  url: [scheme: "https", host: System.get_env("DOMAIN_APP"), port: 443],
+  url: [scheme: "https", host: System.get_env("APP_DOMAIN"), port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
