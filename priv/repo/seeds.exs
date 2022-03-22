@@ -11,8 +11,6 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Siwapp.{
-  Repo,
-  Accounts,
   Commons,
   Customers,
   Invoices,
@@ -20,26 +18,6 @@ alias Siwapp.{
   Settings,
   Templates
 }
-
-models = [
-  Invoices.Invoice,
-  RecurringInvoices.RecurringInvoice,
-  Commons.Series,
-  Commons.Tax,
-  Customers.Customer,
-  Invoices.Item,
-  Settings.Setting
-]
-
-Enum.each(models, &Repo.delete_all(&1))
-
-# SEEDING ACCOUNTS
-Enum.each(1..3, fn _ ->
-  Accounts.register_user(%{
-    email: Faker.Internet.email(),
-    password: Faker.String.base64(12)
-  })
-end)
 
 # SEEDING SETTINGS
 settings = [
