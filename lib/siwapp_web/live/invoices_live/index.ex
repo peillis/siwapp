@@ -9,6 +9,12 @@ defmodule SiwappWeb.InvoicesLive.Index do
   def mount(params, _session, socket) do
     query = Searches.filters_query(Invoice, params)
 
+    send_update(SiwappWeb.SearchLive.SearchComponent,
+      id: "search",
+      view: "invoice",
+      params: params
+    )
+
     page_title =
       if Map.has_key?(params, "customer_id") do
         "Invoices for #{Siwapp.Customers.get!(params["customer_id"]).name}"

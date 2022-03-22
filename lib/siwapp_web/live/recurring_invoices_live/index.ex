@@ -15,6 +15,12 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   def mount(params, _session, socket) do
     query = Searches.filters_query(RecurringInvoice, params)
 
+    send_update(SiwappWeb.SearchLive.SearchComponent,
+      id: "search",
+      view: "recurring_invoice",
+      params: params
+    )
+
     {:ok,
      socket
      |> assign(:page, 0)
