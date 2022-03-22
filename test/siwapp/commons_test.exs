@@ -43,9 +43,9 @@ defmodule Siwapp.CommonsTest do
     end
 
     test "series are unique by name and enabled combination" do
-      {:ok, _series} = Commons.create_series(%{name: "A- series", code: "A"})
-      {:error, changeset} = Commons.create_series(%{name: "A- series", code: "A"})
-      {:ok, _series} = Commons.create_series(%{name: "A- series", code: "A", enabled: false})
+      series_fixture(%{name: "A-series"})
+      {:error, changeset} = Commons.create_series(%{name: "A-series", code: "A", enabled: true})
+      series_fixture(%{name: "A-series", enabled: false})
 
       assert %{name: ["has already been taken"]} = errors_on(changeset)
     end
