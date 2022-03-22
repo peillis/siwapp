@@ -24,8 +24,8 @@ defmodule Siwapp.RecurringInvoices.RecurringInvoiceQuery do
     where(query, [q], q.finishing_date <= ^date)
   end
 
-  @spec any_rec_inv_items_have_tax?(Ecto.Queryable.t(), binary) :: Ecto.Query.t()
-  def any_rec_inv_items_have_tax?(query, tax_name) do
+  @spec any_rec_inv_items_have_tax(Ecto.Queryable.t(), binary) :: Ecto.Query.t()
+  def any_rec_inv_items_have_tax(query, tax_name) do
     query
     |> select([r], not (count(r.id) == 0))
     |> where([r], like(fragment("?::text", r.items), ^"%#{tax_name}%"))
