@@ -16,6 +16,12 @@ defmodule SiwappWeb.CustomersLive.Index do
   def mount(params, _session, socket) do
     query = Searches.filters_query(Customer, params)
 
+    send_update(SiwappWeb.SearchLive.SearchComponent,
+      id: "search",
+      view: "customer",
+      params: params
+    )
+
     {:ok,
      socket
      |> assign(:page, 0)
