@@ -2,10 +2,10 @@
 DROP DATABASE IF EXISTS temp;
 SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
-WHERE pg_stat_activity.datname = 'old_database'
+WHERE pg_stat_activity.datname = 'doofinder_old'
 AND pid <> pg_backend_pid();
 CREATE DATABASE temp
-  WITH TEMPLATE old_database
+  WITH TEMPLATE doofinder_old
     OWNER postgres;
 
 \c temp
@@ -80,7 +80,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE result jsonb;
 BEGIN
-    if meta_attribute IS NULL then result = '{}';
+    if meta_attribute IS NULL or meta_attribute = '{}' then result = NULL;
     else result = meta_attribute::jsonb;
     end if;
     return result;
@@ -90,10 +90,11 @@ SELECT change_column_with_function('commons', 'net_amount', 'integer', 'to_cents
 SELECT change_column_with_function('commons', 'gross_amount', 'integer', 'to_cents') AS gross_amount_to_cents;
 SELECT change_column_with_function('commons', 'paid_amount', 'integer', 'to_cents') AS paid_amount_to_cents;
 SELECT change_column_with_function('commons', 'currency', 'character varying(3)', 'currency_conversion') AS currency_conversion;
+SELECT change_column_with_function('commons', 'identification', 'character varying(50)', 'remove_empty_strings') AS prune_empty_identification_commons;
 SELECT change_column_with_function('items_ror', 'unitary_cost', 'integer', 'to_cents') AS unitary_cost_to_cents;
 SELECT change_column_with_function('payments_ror', 'amount', 'integer', 'to_cents') AS amount_to_cents;
 SELECT change_column_with_function('commons', 'period_type', 'character varying(8)', 'period_type_conversion') AS period_type_conversion;
-SELECT change_column_with_function('customers_ror', 'identification', 'character varying(50)', 'remove_empty_strings') AS prune_empty_identification;
+SELECT change_column_with_function('customers_ror', 'identification', 'character varying(50)', 'remove_empty_strings') AS prune_empty_identification_customers;
 SELECT change_column_with_function('customers_ror', 'meta_attributes', 'jsonb', 'change_metattributes') AS customer_meta_attributes;
 SELECT change_column_with_function('commons', 'meta_attributes', 'jsonb', 'change_metattributes') AS commons_meta_attributes;
 
