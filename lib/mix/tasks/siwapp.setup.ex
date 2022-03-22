@@ -11,6 +11,7 @@ defmodule Mix.Tasks.Siwapp.Setup do
     This will remove all data in database. Are you sure? [y/n]
 
     $ mix siwapp.setup force
+    ...
     All data's been substituted by demo
 
     $ mix siwapp.setp DoesNotExistArg
@@ -68,5 +69,6 @@ defmodule Mix.Tasks.Siwapp.Setup do
   defp setup_db do
     Mix.Task.run("ecto.reset", [])
     Mix.Task.run("siwapp.register", ["demo@example.com", "secretsecret", "true"])
+    IO.puts("All data's been substituted by demo")
   end
 end
