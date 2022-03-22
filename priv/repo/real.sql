@@ -1,11 +1,15 @@
 \c postgres
+
+\set old_data_base 'doofinder_old'
+\set new_data_base 'siwapp_dev'
+
 DROP DATABASE IF EXISTS temp;
 SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
-WHERE pg_stat_activity.datname = 'doofinder_old'
+WHERE pg_stat_activity.datname = :old_data_base
 AND pid <> pg_backend_pid();
 CREATE DATABASE temp
-  WITH TEMPLATE doofinder_old
+  WITH TEMPLATE :old_data_base
     OWNER postgres;
 
 \c temp
@@ -80,7 +84,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE result jsonb;
 BEGIN
-    if meta_attribute IS NULL or meta_attribute = '{}' then result = NULL;
+    if meta_attribute IS NULL then result = '{}';
     else result = meta_attribute::jsonb;
     end if;
     return result;
@@ -115,7 +119,7 @@ DROP FUNCTION change_column_with_function;
 DROP FUNCTION to_cents;
 DROP FUNCTION period_type_conversion;
 
-\c siwapp_dev
+\c :new_data_base
 CREATE EXTENSION postgres_fdw;
 CREATE SERVER localsrv FOREIGN DATA WRAPPER postgres_fdw OPTIONS(host 'localhost', dbname 'temp', port '5432');
 CREATE USER MAPPING FOR postgres SERVER localsrv OPTIONS(user 'postgres', password 'postgres');
@@ -229,6 +233,8 @@ DROP TABLE items_one_recurring_invoice;
 DROP TABLE items_taxes_names;
 DROP TABLE items_ror_extended;
 DROP FUNCTION build_items;
+DROP EXTENSION postgres_fdw CASCADE;
+DROP SERVER localsrv CASCADE;
 ALTER TABLE taxes DROP COLUMN old_id;
 ALTER TABLE series DROP COLUMN old_id;
 ALTER TABLE customers DROP COLUMN old_id;
