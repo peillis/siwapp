@@ -80,7 +80,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE result jsonb;
 BEGIN
-    if meta_attribute IS NULL or meta_attribute = '{}' then result = NULL;
+    if meta_attribute IS NULL then result = '{}';
     else result = meta_attribute::jsonb;
     end if;
     return result;
