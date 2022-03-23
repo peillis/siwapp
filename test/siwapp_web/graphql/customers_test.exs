@@ -21,7 +21,7 @@ defmodule SiwappWeb.Graphql.CustomersTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{
@@ -43,7 +43,7 @@ defmodule SiwappWeb.Graphql.CustomersTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{
@@ -64,7 +64,7 @@ defmodule SiwappWeb.Graphql.CustomersTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{

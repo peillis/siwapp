@@ -38,7 +38,7 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{"data" => %{"invoices" => data_result}}
@@ -56,7 +56,7 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{
@@ -80,7 +80,7 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{
@@ -103,7 +103,7 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     res =
       conn
-      |> post("/graphql/graphiql", %{query: query})
+      |> post("/graphql", %{query: query})
       |> json_response(200)
 
     assert res == %{"data" => %{"delete_invoice" => %{"name" => invoice.name}}}
