@@ -17,16 +17,14 @@ defmodule Mix.Tasks.Siwapp.Demo do
     $ mix siwapp.demo DoesNotExistArg
     Sorry, can't understand that command
   """
-  alias Siwapp.{
-    Accounts,
-    Commons,
-    Customers,
-    Invoices,
-    RecurringInvoices,
-    Repo
-  }
-
   use Mix.Task
+
+  alias Siwapp.Accounts
+  alias Siwapp.Commons
+  alias Siwapp.Customers
+  alias Siwapp.Invoices
+  alias Siwapp.RecurringInvoices
+  alias Siwapp.Repo
 
   @models [
     Invoices.Item,
