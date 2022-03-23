@@ -1,4 +1,8 @@
 function scrollAt(el) {
+  if(el == window) {
+    el = document.documentElement
+  }
+
   let scrollTop = el.scrollTop
   let scrollHeight = el.scrollHeight
   let clientHeight = el.clientHeight
@@ -6,40 +10,57 @@ function scrollAt(el) {
   return scrollTop / (scrollHeight - clientHeight) * 100
 }
 
-function type_of_element(element) {
-  if (element == window) {
-    element_array = [document.documentElement, "#infinite-scroll"]
-  } else {
-    element_array = [element, "#customers_list"]
+function type_of_element(el) {
+  id = el.id
+
+  if (id == "infinite-scroll") {
+    el = window
   }
-  return element_array
+
+  return el
 }
+
+function load_more() {
+  if (window.innerWidth == document.documentElement.scrollWidth){
+    return true
+  }
+  else {
+    return false
+  }
+}
+
 let Hooks = {}
+let checked = true
 
 Hooks.InfiniteScroll = {
   page() { return this.el.dataset.page },
+  last_page() { return this.el.dataset.last_page },
   mounted() {
     this.pending = this.page()
-    this.pass = true
-    let timer
-    let array = [this.el, window];
-    array.forEach(element => {
-      let element_array  = type_of_element(element)
-      element.addEventListener("scroll", () => {
-        clearTimeout(timer)
-        if (this.pending == this.page() && scrollAt(element_array[0]) > 90 && this.pass) {
-          this.pending = this.page() + 1
-          this.pass = false
-          this.pushEventTo(element_array[1], "load-more", {})
-        }
-        timer = setTimeout(() => {
-          console.log("timeout")
-          this.pass = true
-        }, 100)
-      })
+    let element  = type_of_element(this.el)
+    this.is_last_page = this.last_page()
+
+    if (load_more() && checked && this.is_last_page == "false") {
+      checked = false
+      this.pushEventTo("#infinite-scroll", "load-more", {})
+    }
+
+    element.addEventListener("scroll", () => {
+      if (this.pending == this.page() && scrollAt(element) > 90 && this.is_last_page == "false") {
+        this.pending = this.page() + 1
+        this.pushEventTo("#" + this.el.id, "load-more", {})
+      }
     })
   },
-  reconnected() { this.pending = this.page() },
-  updated() { this.pending = this.page() }
+  reconnected() { this.pending = this.page()
+                  this.is_last_page = this.last_page()
+                },
+  updated() { this.pending = this.page()
+              this.is_last_page = this.last_page()              
+              if(load_more() && this.is_last_page == "false"){                
+                this.pushEventTo("#infinite-scroll", "load-more", {})
+              }
+            }
 }
+
 export default Hooks

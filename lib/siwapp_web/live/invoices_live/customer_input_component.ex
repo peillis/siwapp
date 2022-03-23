@@ -3,6 +3,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   use SiwappWeb, :live_component
 
   alias Siwapp.Customers
+  alias Siwapp.Customers.Customer
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
@@ -24,7 +25,8 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
      |> assign(customer_suggestions: customer_suggestions)
      |> assign(status: status)
      |> assign(display: if(status == :active, do: "is-active"))
-     |> assign(:page, 0)}
+     |> assign(:page, 0)
+     |> assign(:last_page, false)}
   end
 
   @impl Phoenix.LiveComponent
@@ -60,6 +62,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
               id="customers_list"
               phx-hook="InfiniteScroll"
               data-page={@page}
+              data-last_page={"#{@last_page}"}
               phx-target={@myself}
               role="menu"
             >
@@ -126,14 +129,15 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
       customer_name: customer_name
     } = socket.assigns
 
-    next_page = page + 1
+    next_customers = Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * (page + 1))
+
+    {customer_suggestions, last_page} = maybe_add(customer_suggestions, next_customers)
 
     {:noreply,
      assign(socket,
-       customer_suggestions:
-         customer_suggestions ++
-           Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * next_page),
-       page: next_page
+       customer_suggestions: customer_suggestions,
+       page: page + 1,
+       last_page: last_page
      )}
   end
 
@@ -156,5 +160,14 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     if status == :active,
       do: Customers.suggest_by_name(customer_name, limit: 10, offset: 0),
       else: []
+  end
+
+  @spec maybe_add([Customer.t()], [Customer.t()] | []) :: {[Customer.t()], boolean}
+  defp maybe_add(customers, next_customers) do
+    if next_customers != [] do
+      {customers ++ next_customers, false}
+    else
+      {customers, true}
+    end
   end
 end

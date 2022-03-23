@@ -25,7 +25,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Searches.filters(query, preload: [:series], deleted_at_query: true))
+     |> assign(:last_page, false)
+     |> assign(
+       :invoices,
+       Searches.filters(query, preload: [:series], deleted_at_query: true)
+     )
      |> assign(:checked, MapSet.new())
      |> assign(:query, query)
      |> assign(:page_title, page_title)}
@@ -39,17 +43,21 @@ defmodule SiwappWeb.InvoicesLive.Index do
       query: query
     } = socket.assigns
 
+    next_invoices =
+      Searches.filters(query,
+        offset: (page + 1) * 20,
+        preload: [:series],
+        deleted_at_query: true
+      )
+
+    {invoices, last_page} = maybe_add(invoices, next_invoices)
+
     {
       :noreply,
       assign(socket,
-        invoices:
-          invoices ++
-            Searches.filters(query,
-              offset: (page + 1) * 20,
-              preload: [:series],
-              deleted_at_query: true
-            ),
-        page: page + 1
+        invoices: invoices,
+        page: page + 1,
+        last_page: last_page
       )
     }
   end
@@ -157,5 +165,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  @spec maybe_add([Invoice.t()], [Invoice.t()] | []) :: {[Invoice.t()], boolean}
+  defp maybe_add(invoices, next_invoices) do
+    if next_invoices != [] do
+      {invoices ++ next_invoices, false}
+    else
+      {invoices, true}
+    end
   end
 end

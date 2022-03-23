@@ -24,6 +24,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
+     |> assign(:last_page, false)
      |> assign(:query, query)
      |> assign(
        :recurring_invoices,
@@ -41,13 +42,16 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
       query: query
     } = socket.assigns
 
+    next_recurring_invoices = Searches.filters(query, offset: (page + 1) * 20, preload: [:series])
+
+    {recurring_invoices, last_page} = maybe_add(recurring_invoices, next_recurring_invoices)
+
     {
       :noreply,
       assign(socket,
-        recurring_invoices:
-          recurring_invoices ++
-            Searches.filters(query, offset: (page + 1) * 20, preload: [:series]),
-        page: page + 1
+        recurring_invoices: recurring_invoices,
+        page: page + 1,
+        last_page: last_page
       )
     }
   end
@@ -111,5 +115,15 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     socket.assigns.checked
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
+  end
+
+  @spec maybe_add([RecurringInvoice.t()], [RecurringInvoice.t()] | []) ::
+          {[RecurringInvoice.t()], boolean}
+  defp maybe_add(recurring_invoices, next_recurring_invoices) do
+    if next_recurring_invoices != [] do
+      {recurring_invoices ++ next_recurring_invoices, false}
+    else
+      {recurring_invoices, true}
+    end
   end
 end

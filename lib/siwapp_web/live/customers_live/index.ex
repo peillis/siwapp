@@ -25,6 +25,7 @@ defmodule SiwappWeb.CustomersLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
+     |> assign(:last_page, false)
      |> assign(:query, query)
      |> assign(customers: Customers.list_with_assoc_invoice_fields(query, 20))
      |> assign(page_title: "Customers")}
@@ -38,12 +39,16 @@ defmodule SiwappWeb.CustomersLive.Index do
       query: query
     } = socket.assigns
 
+    next_customers = Customers.list_with_assoc_invoice_fields(query, 20, (page + 1) * 20)
+
+    {customers, last_page} = maybe_add(customers, next_customers)
+
     {
       :noreply,
       assign(socket,
-        customers:
-          customers ++ Customers.list_with_assoc_invoice_fields(query, 20, (page + 1) * 20),
-        page: page + 1
+        customers: customers,
+        page: page + 1,
+        last_page: last_page
       )
     }
   end
@@ -67,4 +72,13 @@ defmodule SiwappWeb.CustomersLive.Index do
   @spec symbol_option([] | [String.t()]) :: [{:symbol, true}] | [{:symbol, false}]
   defp symbol_option([_currency]), do: [{:symbol, true}]
   defp symbol_option(_currencies), do: [{:symbol, false}]
+
+  @spec maybe_add([Customer.t()], [Customer.t()] | []) :: {[Customer.t()], boolean}
+  defp maybe_add(customers, next_customers) do
+    if next_customers != [] do
+      {customers ++ next_customers, false}
+    else
+      {customers, true}
+    end
+  end
 end
