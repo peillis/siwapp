@@ -50,7 +50,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
         offset: (page + 1) * @recurring_invoices_limit,
         preload: [:series]
       )
-
     {recurring_invoices, no_more_queries} = maybe_add(recurring_invoices, next_recurring_invoices)
 
     {
@@ -126,4 +125,6 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
+
+
 end

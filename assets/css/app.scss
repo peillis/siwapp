@@ -134,6 +134,10 @@ p.control.has-dropdown {
     border-color: transparent;
 }
 
+html {
+  overflow-y: auto;
+}
+
 @media screen and (max-width: 1000px) {
   .search-input {
     display: none;

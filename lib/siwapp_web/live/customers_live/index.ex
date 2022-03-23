@@ -79,4 +79,6 @@ defmodule SiwappWeb.CustomersLive.Index do
   @spec symbol_option([] | [String.t()]) :: [{:symbol, true}] | [{:symbol, false}]
   defp symbol_option([_currency]), do: [{:symbol, true}]
   defp symbol_option(_currencies), do: [{:symbol, false}]
+
+
 end

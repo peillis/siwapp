@@ -177,4 +177,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
+
+
+
 end
