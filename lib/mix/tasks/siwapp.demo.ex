@@ -26,6 +26,8 @@ defmodule Mix.Tasks.Siwapp.Demo do
     Repo
   }
 
+  use Mix.Task
+
   @models [
     Invoices.Item,
     Invoices.Payment,
@@ -35,10 +37,8 @@ defmodule Mix.Tasks.Siwapp.Demo do
     RecurringInvoices.RecurringInvoice,
     Commons.Tax,
     Commons.Series,
-    Customers.Customer,
+    Customers.Customer
   ]
-
-  use Mix.Task
 
   @impl Mix.Task
   def run(args) do
@@ -90,8 +90,7 @@ defmodule Mix.Tasks.Siwapp.Demo do
 
   @spec demo_db :: :ok
   defp demo_db do
-
-    Enum.map(@models, &Repo.delete_all(&1))
+    Enum.each(@models, &Repo.delete_all(&1))
 
     series = [
       %{name: "A-series", code: "A"},
@@ -113,12 +112,12 @@ defmodule Mix.Tasks.Siwapp.Demo do
     Enum.each(
       customers,
       &Customers.create(%{
-      name: &1.name,
-      identification: &1.id,
-      email: Faker.Internet.email(),
-      contact_person: Faker.Person.name(),
-      invoicing_address:
-        "#{Faker.Address.street_address()}\n#{Faker.Address.postcode()} #{Faker.Address.country()}"
+        name: &1.name,
+        identification: &1.id,
+        email: Faker.Internet.email(),
+        contact_person: Faker.Person.name(),
+        invoicing_address:
+          "#{Faker.Address.street_address()}\n#{Faker.Address.postcode()} #{Faker.Address.country()}"
       })
     )
 
@@ -126,62 +125,69 @@ defmodule Mix.Tasks.Siwapp.Demo do
     booleans = [true, false]
 
     invoices =
-    Enum.map(0..30, fn _i ->
-      %{customer: Enum.random(customers), issue_date: Faker.Date.backward(31)}
-    end)
+      Enum.map(0..30, fn _i ->
+        %{customer: Enum.random(customers), issue_date: Faker.Date.backward(31)}
+      end)
 
     Enum.each(
-    invoices,
-    &Invoices.create(%{
-      name: &1.customer.name,
-      identification: &1.customer.id,
-      paid: Enum.random(booleans),
-      sent_by_email: Enum.random(booleans),
-      issue_date: &1.issue_date,
-      due_date: Date.add(&1.issue_date, Faker.random_between(1, 31)),
-      series_id: Enum.random(Enum.map(Commons.list_series,fn x -> x.id end)),
-      currency: Enum.random(currencies),
-      items: [
-        %{
-          quantity: Faker.random_between(1, 2),
-          description: "#{Faker.App.name()} App Development",
-          unitary_cost: Faker.random_between(10_000, 1_000_000),
-          taxes: ["VAT", "RETENTION"]
-        }
+      invoices,
+      &Invoices.create(%{
+        name: &1.customer.name,
+        identification: &1.customer.id,
+        paid: Enum.random(booleans),
+        sent_by_email: Enum.random(booleans),
+        issue_date: &1.issue_date,
+        due_date: Date.add(&1.issue_date, Faker.random_between(1, 31)),
+        series_id: Enum.random(Enum.map(Commons.list_series(), fn x -> x.id end)),
+        currency: Enum.random(currencies),
+        items: [
+          %{
+            quantity: Faker.random_between(1, 2),
+            description: "#{Faker.App.name()} App Development",
+            unitary_cost: Faker.random_between(10_000, 1_000_000),
+            taxes: ["VAT", "RETENTION"]
+          }
         ]
       })
     )
-    today = Date.utc_today()
+
     period_types = ["Daily", "Monthly", "Yearly"]
     taxes_list = [["VAT"], ["RETENTION"], ["VAT", "RETENTION"], []]
 
-    recurring_invoices = Enum.map(0..30, fn _i ->
-      %{customer: Enum.random(customers), starting_date: Faker.Date.backward(31)}
-    end)
+    recurring_invoices =
+      Enum.map(0..30, fn _i ->
+        %{customer: Enum.random(customers), starting_date: Faker.Date.backward(31)}
+      end)
 
-      Enum.each(
-        recurring_invoices,
-        &RecurringInvoices.create(%{
-          name: &1.customer.name,
-          identification: &1.customer.id,
-          period: Faker.random_between(1,12),
-          period_type: Enum.random(period_types),
-          starting_date: &1.starting_date,
-          series_id: Enum.random(Enum.map(Commons.list_series, fn x -> x.id end)),
-          currency: Enum.random(currencies),
-          send_by_email: Enum.random(booleans),
-          items: %{
-            "0" => %{
+    Enum.each(
+      recurring_invoices,
+      &RecurringInvoices.create(%{
+        name: &1.customer.name,
+        identification: &1.customer.id,
+        period: Faker.random_between(1, 12),
+        period_type: Enum.random(period_types),
+        starting_date: &1.starting_date,
+        series_id: Enum.random(Enum.map(Commons.list_series(), fn x -> x.id end)),
+        currency: Enum.random(currencies),
+        send_by_email: Enum.random(booleans),
+        items: %{
+          "0" => %{
             "quantity" => Faker.random_between(1, 2),
             "description" => "#{Faker.App.name()} App Development",
             "unitary_cost" => Faker.random_between(10_000, 1_000_000),
-            "discount" => Faker.random_between(0,5),
+            "discount" => Faker.random_between(0, 5),
             "taxes" => Enum.random(taxes_list)
-            }
           }
-        })
-      )
-    Siwapp.Accounts.register_user(%{email: "demo@example.com", password: "secretsecret", admin: "true"})
+        }
+      })
+    )
+
+    Siwapp.Accounts.register_user(%{
+      email: "demo@example.com",
+      password: "secretsecret",
+      admin: "true"
+    })
+
     IO.puts("All data's been substituted by demo")
   end
 end
