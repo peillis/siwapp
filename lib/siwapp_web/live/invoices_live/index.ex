@@ -166,13 +166,4 @@ defmodule SiwappWeb.InvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
-
-  @spec maybe_add([Invoice.t()], [Invoice.t()] | []) :: {[Invoice.t()], boolean}
-  defp maybe_add(invoices, next_invoices) do
-    if next_invoices != [] do
-      {invoices ++ next_invoices, false}
-    else
-      {invoices, true}
-    end
-  end
 end

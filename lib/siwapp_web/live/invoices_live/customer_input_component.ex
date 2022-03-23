@@ -3,7 +3,6 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
   use SiwappWeb, :live_component
 
   alias Siwapp.Customers
-  alias Siwapp.Customers.Customer
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
@@ -160,14 +159,5 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
     if status == :active,
       do: Customers.suggest_by_name(customer_name, limit: 10, offset: 0),
       else: []
-  end
-
-  @spec maybe_add([Customer.t()], [Customer.t()] | []) :: {[Customer.t()], boolean}
-  defp maybe_add(customers, next_customers) do
-    if next_customers != [] do
-      {customers ++ next_customers, false}
-    else
-      {customers, true}
-    end
   end
 end

@@ -72,13 +72,4 @@ defmodule SiwappWeb.CustomersLive.Index do
   @spec symbol_option([] | [String.t()]) :: [{:symbol, true}] | [{:symbol, false}]
   defp symbol_option([_currency]), do: [{:symbol, true}]
   defp symbol_option(_currencies), do: [{:symbol, false}]
-
-  @spec maybe_add([Customer.t()], [Customer.t()] | []) :: {[Customer.t()], boolean}
-  defp maybe_add(customers, next_customers) do
-    if next_customers != [] do
-      {customers ++ next_customers, false}
-    else
-      {customers, true}
-    end
-  end
 end

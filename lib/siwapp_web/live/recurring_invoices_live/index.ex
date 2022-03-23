@@ -116,14 +116,4 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
-
-  @spec maybe_add([RecurringInvoice.t()], [RecurringInvoice.t()] | []) ::
-          {[RecurringInvoice.t()], boolean}
-  defp maybe_add(recurring_invoices, next_recurring_invoices) do
-    if next_recurring_invoices != [] do
-      {recurring_invoices ++ next_recurring_invoices, false}
-    else
-      {recurring_invoices, true}
-    end
-  end
 end
