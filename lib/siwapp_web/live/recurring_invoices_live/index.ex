@@ -125,6 +125,4 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     |> MapSet.delete(String.to_integer(id))
     |> MapSet.delete(0)
   end
-
-
 end
