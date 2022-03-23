@@ -278,17 +278,19 @@ defmodule Siwapp.Invoices do
     Payment.changeset(payment, attrs, currency)
   end
 
-  @spec duplicate(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
+  @spec duplicate(Invoice.t()) :: Ecto.Changeset.t()
   def duplicate(invoice) do
     params_keys =
       Invoice.fields() -- [:paid_amount, :paid, :sent_by_email, :number, :recurring_invoice_id]
 
     new_items_attrs = Enum.map(invoice.items, &take_items_attrs(&1))
 
-    invoice
-    |> Map.take(params_keys)
-    |> Map.put(:items, new_items_attrs)
-    |> create()
+    attrs =
+      invoice
+      |> Map.take(params_keys)
+      |> Map.put(:items, new_items_attrs)
+
+    change(%Invoice{}, attrs)
   end
 
   @spec take_items_attrs(Item.t()) :: map()

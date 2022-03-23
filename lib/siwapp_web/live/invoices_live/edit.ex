@@ -125,6 +125,19 @@ defmodule SiwappWeb.InvoicesLive.Edit do
 
   @spec apply_action(Phoenix.LiveView.Socket.t(), :new | :edit, map()) ::
           Phoenix.LiveView.Socket.t()
+  defp apply_action(socket, :new, %{"id" => id}) do
+    socket
+    |> assign(:action, :new)
+    |> assign(:page_title, "New Invoice")
+    |> assign(:invoice, %Invoice{})
+    |> assign(
+      :changeset,
+      Invoices.duplicate(
+        Invoices.get!(id, preload: [{:items, :taxes}, :payments, :series, :customer])
+      )
+    )
+  end
+
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:action, :new)

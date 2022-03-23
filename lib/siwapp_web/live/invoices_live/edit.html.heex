@@ -156,6 +156,10 @@
           to: Routes.page_path(@socket, :download, @invoice.id),
           class: "button is-info"
         ) %>
+        <%= link("Duplicate",
+          to: Routes.invoices_edit_path(@socket, :new, @invoice.id),
+          class: "button is-info"
+        ) %>
       <% end %>
       <%= submit("Save", class: "button is-success") %>
     </div>
