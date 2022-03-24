@@ -34,19 +34,19 @@ let checked = true
 
 Hooks.InfiniteScroll = {
   page() { return this.el.dataset.page },
-  last_page() { return this.el.dataset.last_page },
+  no_more_queries() { return this.el.dataset.no_more_queries },
   mounted() {
     this.pending = this.page()
     let element  = type_of_element(this.el)
-    this.is_last_page = this.last_page()
+    this.no_queries = this.no_more_queries()
 
-    if (load_more() && checked && this.is_last_page == "false") {
+    if (load_more() && checked && this.no_queries == 0) {
       checked = false
       this.pushEventTo("#infinite-scroll", "load-more", {})
     }
 
     element.addEventListener("scroll", () => {
-      if (this.pending == this.page() && scrollAt(element) > 90 && this.is_last_page == "false") {
+      if (this.pending == this.page() && scrollAt(element) > 90 && this.no_queries == 0) {
         this.pending = this.page() + 1
         this.pushEventTo("#" + this.el.id, "load-more", {})
       }
@@ -54,13 +54,13 @@ Hooks.InfiniteScroll = {
   },
   reconnected() {
     this.pending = this.page()
-    this.is_last_page = this.last_page()
+    this.no_queries = this.no_more_queries()
   },  
   updated() { 
     this.pending = this.page()
-    this.is_last_page = this.last_page()
+    this.no_queries = this.no_more_queries()
 
-    if(load_more() && this.is_last_page == "false"){
+    if(load_more() && this.no_queries == 0){
       this.pushEventTo("#infinite-scroll", "load-more", {})
     }
   }

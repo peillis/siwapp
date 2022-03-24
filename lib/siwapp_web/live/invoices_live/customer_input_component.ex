@@ -25,7 +25,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
      |> assign(status: status)
      |> assign(display: if(status == :active, do: "is-active"))
      |> assign(:page, 0)
-     |> assign(:last_page, false)}
+     |> assign(:no_more_queries, 0)}
   end
 
   @impl Phoenix.LiveComponent
@@ -61,7 +61,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
               id="customers_list"
               phx-hook="InfiniteScroll"
               data-page={@page}
-              data-last_page={"#{@last_page}"}
+              data-no_more_queries={@no_more_queries}
               phx-target={@myself}
               role="menu"
             >
@@ -130,13 +130,13 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
 
     next_customers = Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * (page + 1))
 
-    {customer_suggestions, last_page} = maybe_add(customer_suggestions, next_customers)
+    {customer_suggestions, no_more_queries} = maybe_add(customer_suggestions, next_customers)
 
     {:noreply,
      assign(socket,
        customer_suggestions: customer_suggestions,
        page: page + 1,
-       last_page: last_page
+       no_more_queries: no_more_queries
      )}
   end
 

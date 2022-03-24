@@ -24,7 +24,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:last_page, false)
+     |> assign(:no_more_queries, 0)
      |> assign(:query, query)
      |> assign(
        :recurring_invoices,
@@ -44,14 +44,14 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
 
     next_recurring_invoices = Searches.filters(query, offset: (page + 1) * 20, preload: [:series])
 
-    {recurring_invoices, last_page} = maybe_add(recurring_invoices, next_recurring_invoices)
+    {recurring_invoices, no_more_queries} = maybe_add(recurring_invoices, next_recurring_invoices)
 
     {
       :noreply,
       assign(socket,
         recurring_invoices: recurring_invoices,
         page: page + 1,
-        last_page: last_page
+        no_more_queries: no_more_queries
       )
     }
   end

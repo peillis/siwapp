@@ -25,7 +25,7 @@ defmodule SiwappWeb.CustomersLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:last_page, false)
+     |> assign(:no_more_queries, 0)
      |> assign(:query, query)
      |> assign(customers: Customers.list_with_assoc_invoice_fields(query, 20))
      |> assign(page_title: "Customers")}
@@ -41,14 +41,14 @@ defmodule SiwappWeb.CustomersLive.Index do
 
     next_customers = Customers.list_with_assoc_invoice_fields(query, 20, (page + 1) * 20)
 
-    {customers, last_page} = maybe_add(customers, next_customers)
+    {customers, no_more_queries} = maybe_add(customers, next_customers)
 
     {
       :noreply,
       assign(socket,
         customers: customers,
         page: page + 1,
-        last_page: last_page
+        no_more_queries: no_more_queries
       )
     }
   end

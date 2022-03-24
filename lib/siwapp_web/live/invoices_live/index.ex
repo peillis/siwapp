@@ -25,7 +25,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:last_page, false)
+     |> assign(:no_more_queries, 0)
      |> assign(
        :invoices,
        Searches.filters(query, preload: [:series], deleted_at_query: true)
@@ -50,14 +50,14 @@ defmodule SiwappWeb.InvoicesLive.Index do
         deleted_at_query: true
       )
 
-    {invoices, last_page} = maybe_add(invoices, next_invoices)
+    {invoices, no_more_queries} = maybe_add(invoices, next_invoices)
 
     {
       :noreply,
       assign(socket,
         invoices: invoices,
         page: page + 1,
-        last_page: last_page
+        no_more_queries: no_more_queries
       )
     }
   end
