@@ -100,8 +100,8 @@ defmodule Siwapp.RecurringInvoices do
   @spec tax_in_any_recurring_invoice?(binary) :: boolean
   def tax_in_any_recurring_invoice?(tax_name) do
     RecurringInvoice
-    |> RecurringInvoiceQuery.any_rec_inv_items_have_tax(tax_name)
-    |> Repo.one()
+    |> RecurringInvoiceQuery.rec_inv_whose_items_have_tax(tax_name)
+    |> Repo.exists?()
   end
 
   @spec build_invoice_attrs(RecurringInvoice.t()) :: map
