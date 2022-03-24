@@ -93,6 +93,7 @@ defmodule Siwapp.RecurringInvoices do
     |> invoices_to_generate()
     |> Range.new(1, -1)
     |> Enum.map(fn _ -> Invoices.create(build_invoice_attrs(rec_inv)) end)
+    |> Enum.reject(&(elem(&1, 0) == :error))
     |> Enum.each(fn {:ok, invoice} -> maybe_send_by_email(invoice, rec_inv.send_by_email) end)
   end
 

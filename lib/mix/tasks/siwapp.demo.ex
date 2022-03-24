@@ -25,6 +25,8 @@ defmodule Mix.Tasks.Siwapp.Demo do
   alias Siwapp.Invoices
   alias Siwapp.RecurringInvoices
   alias Siwapp.Repo
+  alias Siwapp.Settings
+  alias Siwapp.Templates
 
   @models [
     Invoices.Item,
@@ -35,7 +37,9 @@ defmodule Mix.Tasks.Siwapp.Demo do
     RecurringInvoices.RecurringInvoice,
     Commons.Tax,
     Commons.Series,
-    Customers.Customer
+    Customers.Customer,
+    Settings.Setting,
+    Templates.Template
   ]
 
   @impl Mix.Task
@@ -89,6 +93,37 @@ defmodule Mix.Tasks.Siwapp.Demo do
   @spec demo_db :: :ok
   defp demo_db do
     Enum.each(@models, &Repo.delete_all(&1))
+
+    settings = [
+      company: "Doofinder",
+      company_vat_id: "1fg5t7",
+      company_phone: "632778941",
+      company_email: "demo@example.com",
+      company_website: "www.mywebsite.com",
+      currency: "USD",
+      days_to_due: "#{Faker.random_between(0, 5)}",
+      company_address: "Newton Avenue, 32. NY",
+      legal_terms: "Clauses of our contract"
+    ]
+
+    Enum.each(settings, &Settings.create(&1))
+
+    {:ok, print_default} = File.read("priv/repo/fixtures/print_default.html.heex")
+    {:ok, email_default} = File.read("priv/repo/fixtures/email_default.html.heex")
+
+    Templates.create(%{
+      name: "Print Default",
+      template: print_default
+    })
+
+    {:ok, email_template} =
+      Templates.create(%{
+        name: "Email Default",
+        template: email_default,
+        subject: "Invoice: <%= SiwappWeb.PageView.reference(series.code, number)%> "
+      })
+
+    Templates.set_default(:email, email_template)
 
     series = [
       %{name: "A-series", code: "A"},

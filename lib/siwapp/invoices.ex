@@ -43,6 +43,8 @@ defmodule Siwapp.Invoices do
     |> InvoiceHelper.maybe_find_customer_or_new()
     |> Invoice.assign_number()
     |> Repo.insert()
+  rescue
+    e in ArgumentError -> {:error, e.message}
   end
 
   @doc """
