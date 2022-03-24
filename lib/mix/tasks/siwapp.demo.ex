@@ -218,7 +218,7 @@ defmodule Mix.Tasks.Siwapp.Demo do
     Siwapp.Accounts.register_user(%{
       email: "demo@example.com",
       password: "secretsecret",
-      admin: "true"
+      admin: true
     })
 
     IO.puts("All data's been substituted by demo")
