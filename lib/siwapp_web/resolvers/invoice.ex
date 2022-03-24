@@ -29,6 +29,8 @@ defmodule SiwappWeb.Resolvers.Invoice do
 
   @spec create(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def create(args, _resolution) do
+    args = maybe_change_meta_attributes(args, nil)
+
     case Invoices.create(args) do
       {:ok, invoice} ->
         {:ok, set_correct_units(invoice)}
@@ -77,7 +79,14 @@ defmodule SiwappWeb.Resolvers.Invoice do
     end)
   end
 
-  @spec maybe_change_meta_attributes(map, map) :: map
+  @spec maybe_change_meta_attributes(map, map | nil) :: map
+  defp maybe_change_meta_attributes(%{meta_attributes: meta_params} = params, nil) do
+    meta_params =
+      Enum.reduce(meta_params, %{}, fn map, acc -> Map.put(acc, map.key, map.value) end)
+
+    Map.put(params, :meta_attributes, meta_params)
+  end
+
   defp maybe_change_meta_attributes(
          %{meta_attributes: meta_params} = params,
          invoice_meta_attributes
