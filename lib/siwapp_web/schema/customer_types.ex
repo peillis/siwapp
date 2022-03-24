@@ -11,5 +11,11 @@ defmodule SiwappWeb.Schema.CustomerTypes do
     field :contact_person, :string
     field :invoicing_address, :string
     field :shipping_address, :string
+
+    field :meta_attributes, list_of(:meta) do
+      resolve(fn customer, _, _ ->
+        {:ok, Map.to_list(customer.meta_attributes)}
+      end)
+    end
   end
 end
