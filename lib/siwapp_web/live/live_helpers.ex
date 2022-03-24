@@ -34,11 +34,11 @@ defmodule SiwappWeb.LiveHelpers do
   end
 
   @spec maybe_add(list, list) :: {list, boolean}
+  def maybe_add(current_list, []) do
+    {current_list, true}
+  end
+
   def maybe_add(current_list, next_list) do
-    if next_list != [] do
-      {current_list ++ next_list, false}
-    else
-      {current_list, true}
-    end
+    {current_list ++ next_list, false}
   end
 end

@@ -52,15 +52,18 @@ Hooks.InfiniteScroll = {
       }
     })
   },
-  reconnected() { this.pending = this.page()
-                  this.is_last_page = this.last_page()
-                },
-  updated() { this.pending = this.page()
-              this.is_last_page = this.last_page()              
-              if(load_more() && this.is_last_page == "false"){                
-                this.pushEventTo("#infinite-scroll", "load-more", {})
-              }
-            }
+  reconnected() {
+    this.pending = this.page()
+    this.is_last_page = this.last_page()
+  },  
+  updated() { 
+    this.pending = this.page()
+    this.is_last_page = this.last_page()
+
+    if(load_more() && this.is_last_page == "false"){
+      this.pushEventTo("#infinite-scroll", "load-more", {})
+    }
+  }
 }
 
 export default Hooks
