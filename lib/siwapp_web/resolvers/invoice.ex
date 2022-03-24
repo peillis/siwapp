@@ -42,6 +42,8 @@ defmodule SiwappWeb.Resolvers.Invoice do
   def update(%{id: id} = params, _resolution) do
     invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :payments, :series])
 
+    params = maybe_change_meta_attributes(params, invoice.meta_attributes)
+
     if is_nil(invoice) do
       {:error, message: "Failed!", details: "Invoice not found"}
     else
@@ -73,5 +75,22 @@ defmodule SiwappWeb.Resolvers.Invoice do
         PageView.money_format(existing_value, invoice.currency, symbol: false)
       end)
     end)
+  end
+
+  @spec maybe_change_meta_attributes(map, map) :: map
+  defp maybe_change_meta_attributes(
+         %{meta_attributes: meta_params} = params,
+         invoice_meta_attributes
+       ) do
+    meta_params =
+      Enum.reduce(meta_params, %{}, fn map, acc -> Map.put(acc, map.key, map.value) end)
+
+    all_meta_attributes = Map.merge(invoice_meta_attributes, meta_params)
+
+    Map.put(params, :meta_attributes, all_meta_attributes)
+  end
+
+  defp maybe_change_meta_attributes(params, _) do
+    params
   end
 end
