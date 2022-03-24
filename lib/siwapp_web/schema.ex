@@ -9,7 +9,7 @@ defmodule SiwappWeb.Schema do
   import_types(SiwappWeb.Schema.InvoiceTypes)
   import_types(SiwappWeb.Schema.ItemTypes)
   import_types(SiwappWeb.Schema.PaymentTypes)
-  import_types(SiwappWeb.Schema.MetaTypes)
+  import_types(SiwappWeb.Schema.MetaAttributeTypes)
   import_types(Absinthe.Type.Custom)
 
   alias SiwappWeb.Resolvers
@@ -47,6 +47,11 @@ defmodule SiwappWeb.Schema do
     field :amount, :integer
     field :date, :date
     field :notes, :string
+  end
+
+  input_object :meta_attributes do
+    field :key, :string
+    field :value, :string
   end
 
   mutation do

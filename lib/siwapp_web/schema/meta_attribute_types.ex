@@ -1,9 +1,9 @@
-defmodule SiwappWeb.Schema.MetaTypes do
+defmodule SiwappWeb.Schema.MetaAttributeTypes do
   @moduledoc false
 
   use Absinthe.Schema.Notation
 
-  object :meta do
+  object :meta_attribute do
     field :key, :string do
       resolve(fn meta_attributes, _, _ ->
         {key, _} = meta_attributes

@@ -32,7 +32,7 @@ defmodule SiwappWeb.Schema.InvoiceTypes do
     field :inserted_at, :date
     field :updated_at, :date
 
-    field :meta_attributes, list_of(:meta) do
+    field :meta_attributes, list_of(:meta_attribute) do
       resolve(fn invoice, _, _ ->
         {:ok, Map.to_list(invoice.meta_attributes)}
       end)
