@@ -9,6 +9,7 @@ defmodule SiwappWeb.Schema do
   import_types(SiwappWeb.Schema.InvoiceTypes)
   import_types(SiwappWeb.Schema.ItemTypes)
   import_types(SiwappWeb.Schema.PaymentTypes)
+  import_types(SiwappWeb.Schema.MetaTypes)
   import_types(Absinthe.Type.Custom)
 
   alias SiwappWeb.Resolvers
