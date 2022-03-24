@@ -63,6 +63,7 @@ defmodule SiwappWeb.Schema do
       arg(:contact_person, :string)
       arg(:invoicing_address, :string)
       arg(:shipping_address, :string)
+      arg(:meta_attributes, list_of(:meta_attributes))
 
       resolve(&Resolvers.Customer.create/2)
     end
