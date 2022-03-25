@@ -8,7 +8,6 @@ defmodule SiwappWeb.LiveHelpers do
   The rendered modal receives a `:return_to` option to properly update
   the URL when the modal is closed.
   """
-
   @spec live_modal(atom, keyword) :: Phoenix.LiveView.Component.t()
   def live_modal(component, opts) do
     path = Keyword.fetch!(opts, :return_to)
