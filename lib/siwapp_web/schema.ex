@@ -9,6 +9,7 @@ defmodule SiwappWeb.Schema do
   import_types(SiwappWeb.Schema.InvoiceTypes)
   import_types(SiwappWeb.Schema.ItemTypes)
   import_types(SiwappWeb.Schema.PaymentTypes)
+  import_types(SiwappWeb.Schema.MetaAttributeTypes)
   import_types(Absinthe.Type.Custom)
 
   alias SiwappWeb.Resolvers
@@ -48,6 +49,11 @@ defmodule SiwappWeb.Schema do
     field :notes, :string
   end
 
+  input_object :meta_attributes do
+    field :key, type: non_null(:string)
+    field :value, :string
+  end
+
   mutation do
     @desc "Create a customer"
     field :create_customer, type: :customer do
@@ -57,6 +63,7 @@ defmodule SiwappWeb.Schema do
       arg(:contact_person, :string)
       arg(:invoicing_address, :string)
       arg(:shipping_address, :string)
+      arg(:meta_attributes, list_of(:meta_attributes))
 
       resolve(&Resolvers.Customer.create/2)
     end

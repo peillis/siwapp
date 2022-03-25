@@ -21,6 +21,7 @@ defmodule SiwappWeb.Schema.Helpers do
       arg(:items, list_of(:items))
       arg(:payments, list_of(:payments))
       arg(:failed, :boolean)
+      arg(:meta_attributes, list_of(:meta_attributes))
     end
   end
 end

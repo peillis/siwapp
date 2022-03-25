@@ -31,5 +31,11 @@ defmodule SiwappWeb.Schema.InvoiceTypes do
     field :sent_by_email, :boolean
     field :inserted_at, :date
     field :updated_at, :date
+
+    field :meta_attributes, list_of(:meta_attribute) do
+      resolve(fn invoice, _, _ ->
+        {:ok, Map.to_list(invoice.meta_attributes)}
+      end)
+    end
   end
 end
