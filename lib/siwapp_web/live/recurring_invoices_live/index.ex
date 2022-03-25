@@ -11,7 +11,7 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Searches
 
-  @recurring_invoices_limit recurring_invoices_limit()
+  @recurring_invoices_limit 20
 
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do

@@ -21,7 +21,7 @@ function type_of_element(el) {
 }
 
 function load_more() {
-  if (window.innerWidth == document.documentElement.clientWidth){
+  if (document.documentElement.clientHeight == document.documentElement.scrollHeight){
     return true
   }
   else {

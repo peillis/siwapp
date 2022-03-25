@@ -12,7 +12,7 @@ defmodule SiwappWeb.CustomersLive.Index do
   alias Siwapp.Customers.Customer
   alias Siwapp.Searches
 
-  @customers_limit customers_limit()
+  @customers_limit 2
 
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do

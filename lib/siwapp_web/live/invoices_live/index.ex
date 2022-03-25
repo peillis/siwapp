@@ -5,7 +5,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Searches
 
-  @invoices_limit invoices_limit()
+  @invoices_limit 20
 
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
