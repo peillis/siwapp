@@ -30,7 +30,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
 
   @spec create(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Invoices.Invoice.t()}
   def create(args, _resolution) do
-    args = Helpers.maybe_change_meta_attributes(args, nil)
+    args = Helpers.maybe_change_meta_attributes(args)
 
     case Invoices.create(args) do
       {:ok, invoice} ->
@@ -45,7 +45,7 @@ defmodule SiwappWeb.Resolvers.Invoice do
   def update(%{id: id} = params, _resolution) do
     invoice = Invoices.get(id, preload: [:customer, {:items, :taxes}, :payments, :series])
 
-    params = Helpers.maybe_change_meta_attributes(params, invoice.meta_attributes)
+    params = Helpers.maybe_change_meta_attributes(params)
 
     if is_nil(invoice) do
       {:error, message: "Failed!", details: "Invoice not found"}

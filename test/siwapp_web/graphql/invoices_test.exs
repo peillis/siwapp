@@ -47,9 +47,13 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
   test "Create an invoice", %{conn: conn, series: series} do
     query = """
       mutation {
-        create_invoice(name: "test_name", series_code: "#{series.code}") {
+        create_invoice(name: "test_name", series_code: "#{series.code}", metaAttributes: [{key: "testkey"}]) {
           name
           series_id
+          metaAttributes {
+            key
+            value
+          }
         }
       }
     """
@@ -61,7 +65,13 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     assert res == %{
              "data" => %{
-               "create_invoice" => %{"name" => "test_name", "series_id" => "#{series.id}"}
+               "create_invoice" => %{
+                 "name" => "test_name",
+                 "series_id" => "#{series.id}",
+                 "metaAttributes" => [
+                   %{"key" => "testkey", "value" => nil}
+                 ]
+               }
              }
            }
   end
@@ -71,9 +81,13 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     query = """
     mutation {
-      update_invoice(id: #{invoice.id}, email: "info@example.com") {
+      update_invoice(id: #{invoice.id}, email: "info@example.com", metaAttributes: [{key: "testkey" value: "testvalue"}]) {
         name
         email
+        metaAttributes {
+          key
+          value
+        }
         }
       }
     """
@@ -85,9 +99,40 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
 
     assert res == %{
              "data" => %{
-               "update_invoice" => %{"name" => invoice.name, "email" => "info@example.com"}
+               "update_invoice" => %{
+                 "name" => invoice.name,
+                 "email" => "info@example.com",
+                 "metaAttributes" => [
+                   %{"key" => "testkey", "value" => "testvalue"}
+                 ]
+               }
              }
            }
+  end
+
+  test "Updating an invoice with a value but not with a key inside meta_attributes will return an error",
+       %{conn: conn, invoices: invoices} do
+    invoice = hd(invoices)
+
+    query = """
+    mutation {
+      update_invoice(id: #{invoice.id}, metaAttributes: [{value: "testvalue"}]) {
+        metaAttributes {
+          key
+          value
+        }
+      }
+    }
+    """
+
+    res =
+      conn
+      |> post("/graphql", %{query: query})
+      |> json_response(200)
+
+    error_map = hd(res["errors"])
+
+    assert res == %{"errors" => [error_map]}
   end
 
   test "Delete an invoice", %{conn: conn, invoices: invoices} do

@@ -50,7 +50,7 @@ defmodule SiwappWeb.Schema do
   end
 
   input_object :meta_attributes do
-    field :key, :string
+    field :key, type: non_null(:string)
     field :value, :string
   end
 

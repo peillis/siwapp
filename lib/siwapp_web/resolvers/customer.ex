@@ -12,7 +12,7 @@ defmodule SiwappWeb.Resolvers.Customer do
 
   @spec create(map(), Absinthe.Resolution.t()) :: {:error, map()} | {:ok, Customers.Customer.t()}
   def create(args, _resolution) do
-    args = Helpers.maybe_change_meta_attributes(args, nil)
+    args = Helpers.maybe_change_meta_attributes(args)
 
     case Customers.create(args) do
       {:ok, customer} ->
