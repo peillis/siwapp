@@ -12,6 +12,8 @@ defmodule SiwappWeb.CustomersLive.Index do
   alias Siwapp.Customers.Customer
   alias Siwapp.Searches
 
+  @customers_limit customers_limit()
+
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
     query = Searches.filters_query(Customer, params)
@@ -27,7 +29,7 @@ defmodule SiwappWeb.CustomersLive.Index do
      |> assign(:page, 0)
      |> assign(:no_more_queries, 0)
      |> assign(:query, query)
-     |> assign(customers: Customers.list_with_assoc_invoice_fields(query, 20))
+     |> assign(customers: Customers.list_with_assoc_invoice_fields(query, @customers_limit))
      |> assign(page_title: "Customers")}
   end
 
@@ -39,7 +41,12 @@ defmodule SiwappWeb.CustomersLive.Index do
       query: query
     } = socket.assigns
 
-    next_customers = Customers.list_with_assoc_invoice_fields(query, 20, (page + 1) * 20)
+    next_customers =
+      Customers.list_with_assoc_invoice_fields(
+        query,
+        @customers_limit,
+        (page + 1) * @customers_limit
+      )
 
     {customers, no_more_queries} = maybe_add(customers, next_customers)
 

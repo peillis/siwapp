@@ -5,6 +5,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Searches
 
+  @invoices_limit invoices_limit()
+
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
     query = Searches.filters_query(Invoice, params)
@@ -28,7 +30,7 @@ defmodule SiwappWeb.InvoicesLive.Index do
      |> assign(:no_more_queries, 0)
      |> assign(
        :invoices,
-       Searches.filters(query, preload: [:series], deleted_at_query: true)
+       Searches.filters(query, limit: @invoices_limit, preload: [:series], deleted_at_query: true)
      )
      |> assign(:checked, MapSet.new())
      |> assign(:query, query)
@@ -45,7 +47,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
 
     next_invoices =
       Searches.filters(query,
-        offset: (page + 1) * 20,
+        limit: @invoices_limit,
+        offset: (page + 1) * @invoices_limit,
         preload: [:series],
         deleted_at_query: true
       )
@@ -91,7 +94,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
       |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
-        Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
+        Searches.filters(socket.assigns.query,
+          limit: @invoices_limit,
+          preload: [:series],
+          deleted_at_query: true
+        )
       )
 
     {:noreply, socket}
@@ -126,7 +133,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
       |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
-        Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
+        Searches.filters(socket.assigns.query,
+          limit: @invoices_limit,
+          preload: [:series],
+          deleted_at_query: true
+        )
       )
 
     {:noreply, socket}

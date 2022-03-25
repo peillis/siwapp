@@ -8,6 +8,10 @@ defmodule SiwappWeb.LiveHelpers do
   The rendered modal receives a `:return_to` option to properly update
   the URL when the modal is closed.
   """
+  @invoices_limit 20
+  @recurring_invoices_limit 20
+  @customers_limit 20
+
   @spec live_modal(atom, keyword) :: Phoenix.LiveView.Component.t()
   def live_modal(component, opts) do
     path = Keyword.fetch!(opts, :return_to)
@@ -40,5 +44,20 @@ defmodule SiwappWeb.LiveHelpers do
 
   def maybe_add(current_list, next_list) do
     {current_list ++ next_list, 0}
+  end
+
+  @spec invoices_limit :: non_neg_integer()
+  def invoices_limit do
+    @invoices_limit
+  end
+
+  @spec recurring_invoices_limit :: non_neg_integer()
+  def recurring_invoices_limit do
+    @recurring_invoices_limit
+  end
+
+  @spec customers_limit :: non_neg_integer()
+  def customers_limit do
+    @customers_limit
   end
 end
