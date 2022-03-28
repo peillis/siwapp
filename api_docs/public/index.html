@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your API Title | API Reference</title>
+    <title>Siwapp GraphQL | API Reference</title>
     <link rel="stylesheet" href="stylesheets/foundation.min.css" />
     <link rel="stylesheet" href="stylesheets/spectacle.min.css" />
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -19,31 +19,48 @@
         <nav id="nav" role="navigation">
           <h5>Topics</h5>
           <a href="#introduction">Introduction</a>
-          <h5>Paths</h5>
-          <!-- <section>
-                <a href="#path-get_all_customers">get_all_customers</a>
-                <ul> -->
-          <!-- <li> -->
-          <a href="#operation-get_all_customers-post"> Get all customers </a>
-          <!-- </li> -->
-          <!-- </ul>
-              </section> -->
-          <!-- <section>
-                <a href="#path-create_all_invoices">create_all_invoices</a>
-                <ul> -->
-          <!-- <li> -->
-          <a href="#operation-create_all_invoices-post"> Create all invoices </a>
-          <!-- </li> -->
-          <!-- </ul>
-              </section> -->
-          <!-- <section>
-                <a href="#path-create_a_customer">create_a_customer</a>
-                <ul> -->
-          <!-- <li> -->
-          <a href="#operation-create_a_customer-post"> Create a customer </a>
-          <!-- </li> -->
-          <!-- </ul>
-              </section> -->
+          <h5>Operations</h5>
+          <section>
+            <a href="#tag-List">List</a>
+            <ul>
+              <li>
+                <a href="#operation-get_all_customers-post"> Get all customers </a>
+              </li>
+              <li>
+                <a href="#operation-get_all_invoices-post"> Get all invoices </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Create">Create</a>
+            <ul>
+              <li>
+                <a href="#operation-create_a_customer-post"> Create a customer </a>
+              </li>
+              <li>
+                <a href="#operation-create_an_invoice-post"> Create an invoice </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Delete">Delete</a>
+            <ul>
+              <li>
+                <a href="#operation-delete_a_customer-post"> Delete a customer </a>
+              </li>
+              <li>
+                <a href="#operation-delete_an_invoice-post"> Delete an invoice </a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <a href="#tag-Update">Update</a>
+            <ul>
+              <li>
+                <a href="#operation-update_an_invoice-post"> Update an invoice </a>
+              </li>
+            </ul>
+          </section>
           <h5>Schema Definitions</h5>
           <a href="#definition-Boolean"> Boolean </a>
           <a href="#definition-Customer"> Customer </a>
@@ -66,7 +83,7 @@
         </button>
         <div class="example-box doc-content"></div>
         <article>
-          <h1 class="doc-title">Your API Title
+          <h1 class="doc-title">Siwapp GraphQL
             <span>API Reference</span>
           </h1>
           <div id="introduction" data-traverse-target="introduction">
@@ -85,13 +102,12 @@ https://dev-server.com
               </div>
             </div>
           </div>
-          <h1>Paths</h1>
-          <span id="path-get_all_customers"></span>
+          <h1 id="tag-List" class="swagger-summary-tag" data-traverse-target="tag-List">List</h1>
           <div id="operation-get_all_customers-post" class="operation panel" data-traverse-target="operation-get_all_customers-post">
             <!-- <section class="operation-tags row"> -->
             <!-- <div class="doc-copy"> -->
             <div class="operation-tags">
-              <a class="label" href="#tag-Top-Level-Menu-Section">Top Level Menu Section</a>
+              <a class="label" href="#tag-List">List</a>
               <!---->
             </div>
             <!-- </div> -->
@@ -99,13 +115,6 @@ https://dev-server.com
             <h2 class="operation-title">
               <span class="operation-summary">Get all customers</span>
             </h2>
-            <div class="doc-row">
-              <div class="doc-copy">
-                <section class="swagger-operation-description">
-                  <p>Markdown enabled description for operation</p>
-                </section>
-              </div>
-            </div>
             <div class="doc-row">
               <div class="doc-copy">
                 <section class="swagger-request-body"> </section>
@@ -234,26 +243,18 @@ https://dev-server.com
               </div>
             </div>
           </div>
-          <span id="path-create_all_invoices"></span>
-          <div id="operation-create_all_invoices-post" class="operation panel" data-traverse-target="operation-create_all_invoices-post">
+          <div id="operation-get_all_invoices-post" class="operation panel" data-traverse-target="operation-get_all_invoices-post">
             <!-- <section class="operation-tags row"> -->
             <!-- <div class="doc-copy"> -->
             <div class="operation-tags">
-              <a class="label" href="#tag-Top-Level-Menu-Section">Top Level Menu Section</a>
+              <a class="label" href="#tag-List">List</a>
               <!---->
             </div>
             <!-- </div> -->
             <!-- </section> -->
             <h2 class="operation-title">
-              <span class="operation-summary">Create all invoices</span>
+              <span class="operation-summary">Get all invoices</span>
             </h2>
-            <div class="doc-row">
-              <div class="doc-copy">
-                <section class="swagger-operation-description">
-                  <p>Markdown enabled description for operation</p>
-                </section>
-              </div>
-            </div>
             <div class="doc-row">
               <div class="doc-copy">
                 <section class="swagger-request-body"> </section>
@@ -428,12 +429,12 @@ https://dev-server.com
               </div>
             </div>
           </div>
-          <span id="path-create_a_customer"></span>
+          <h1 id="tag-Create" class="swagger-summary-tag" data-traverse-target="tag-Create">Create</h1>
           <div id="operation-create_a_customer-post" class="operation panel" data-traverse-target="operation-create_a_customer-post">
             <!-- <section class="operation-tags row"> -->
             <!-- <div class="doc-copy"> -->
             <div class="operation-tags">
-              <a class="label" href="#tag-Top-Level-Menu-Section">Top Level Menu Section</a>
+              <a class="label" href="#tag-Create">Create</a>
               <!---->
             </div>
             <!-- </div> -->
@@ -441,13 +442,6 @@ https://dev-server.com
             <h2 class="operation-title">
               <span class="operation-summary">Create a customer</span>
             </h2>
-            <div class="doc-row">
-              <div class="doc-copy">
-                <section class="swagger-operation-description">
-                  <p>Markdown enabled description for operation</p>
-                </section>
-              </div>
-            </div>
             <div class="doc-row">
               <div class="doc-copy">
                 <section class="swagger-request-body"> </section>
@@ -643,6 +637,1128 @@ https://dev-server.com
       <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
       <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
       <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="operation-create_an_invoice-post" class="operation panel" data-traverse-target="operation-create_an_invoice-post">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Create">Create</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Create an invoice</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body"> </section>
+                <section class="swagger-request-params">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">contactPerson:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">currency:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">draft:
+                        <span class="prop-type">
+                          <div class="json-property-type">boolean</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">dueDate:
+                        <span class="prop-type">
+                          <div class="json-property-type">object</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">email:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">failed:
+                        <span class="prop-type">
+                          <div class="json-property-type">boolean</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">identification:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">invoicingAddress:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">issueDate:
+                        <span class="prop-type">
+                          <div class="json-property-type">object</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">items:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/Items">Items</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">metaAttributes:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/MetaAttributes">MetaAttributes</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">name:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">notes:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">payments:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/Payments">Payments</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">seriesCode:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">shippingAddress:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">terms:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h4>Example</h3>
+                    <h5>Request Content-Types:
+                      <span>application/json</span>
+                    </h5>
+                    <h5>Query</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> createInvoice<span class="hljs-tag">(<span class="hljs-code">$contactPerson</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$currency</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$draft</span>:<span class="hljs-type"> Boolean,</span> <span class="hljs-code">$dueDate</span>:<span class="hljs-type"> Date,</span> <span class="hljs-code">$email</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$failed</span>:<span class="hljs-type"> Boolean,</span> <span class="hljs-code">$identification</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$invoicingAddress</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$issueDate</span>:<span class="hljs-type"> Date,</span> <span class="hljs-code">$items</span>: <span class="hljs-type">[Items]</span>, <span class="hljs-code">$metaAttributes</span>: <span class="hljs-type">[MetaAttributes]</span>, <span class="hljs-code">$name</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$notes</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$payments</span>: <span class="hljs-type">[Payments]</span>, <span class="hljs-code">$seriesCode</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$shippingAddress</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$terms</span>:<span class="hljs-type"> String)</span>{
+  createInvoice(contactPerson: <span class="hljs-code">$contactPerson</span>, currency: <span class="hljs-code">$currency</span>, draft: <span class="hljs-code">$draft</span>, dueDate: <span class="hljs-code">$dueDate</span>, email: <span class="hljs-code">$email</span>, failed: <span class="hljs-code">$failed</span>, identification: <span class="hljs-code">$identification</span>, invoicingAddress: <span class="hljs-code">$invoicingAddress</span>, issueDate: <span class="hljs-code">$issueDate</span>, items: <span class="hljs-code">$items</span>, metaAttributes: <span class="hljs-code">$metaAttributes</span>, name: <span class="hljs-code">$name</span>, notes: <span class="hljs-code">$notes</span>, payments: <span class="hljs-code">$payments</span>, seriesCode: <span class="hljs-code">$seriesCode</span>, shippingAddress: <span class="hljs-code">$shippingAddress</span>, terms: <span class="hljs-code">$terms</span>)</span><span class="hljs-tag">{
+    <span class="hljs-symbol">contactPerson</span>
+    <span class="hljs-symbol">currency</span>
+    <span class="hljs-symbol">customerId</span>
+    <span class="hljs-symbol">draft</span>
+    <span class="hljs-symbol">dueDate</span>
+    <span class="hljs-symbol">email</span>
+    <span class="hljs-symbol">failed</span>
+    <span class="hljs-symbol">grossAmount</span>
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">identification</span>
+    <span class="hljs-symbol">insertedAt</span>
+    <span class="hljs-symbol">invoicingAddress</span>
+    <span class="hljs-symbol">issueDate</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">netAmount</span>
+    <span class="hljs-symbol">notes</span>
+    <span class="hljs-symbol">number</span>
+    <span class="hljs-symbol">paid</span>
+    <span class="hljs-symbol">paidAmount</span>
+    <span class="hljs-symbol">recurringInvoice</span>
+    <span class="hljs-symbol">sentByEmail</span>
+    <span class="hljs-symbol">seriesId</span>
+    <span class="hljs-symbol">shippingAddress</span>
+    <span class="hljs-symbol">terms</span>
+    <span class="hljs-symbol">updatedAt</span>
+  }</span></span>
+}
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <h5>Variables</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;currency&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;draft&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+  <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;failed&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+  <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;items&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;discount&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+      <span class="hljs-attr">&quot;quantity&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;taxes&quot;</span>: [
+        <span class="hljs-string">&quot;string&quot;</span>
+      ],
+      <span class="hljs-attr">&quot;unitaryCost&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;metaAttributes&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;key&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;payments&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;amount&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+      <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;seriesCode&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;terms&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <a href="https://dev-server.com?query=mutation%20createInvoice(%24contactPerson%3A%20String%2C%20%24currency%3A%20String%2C%20%24draft%3A%20Boolean%2C%20%24dueDate%3A%20Date%2C%20%24email%3A%20String%2C%20%24failed%3A%20Boolean%2C%20%24identification%3A%20String%2C%20%24invoicingAddress%3A%20String%2C%20%24issueDate%3A%20Date%2C%20%24items%3A%20%5BItems%5D%2C%20%24metaAttributes%3A%20%5BMetaAttributes%5D%2C%20%24name%3A%20String%2C%20%24notes%3A%20String%2C%20%24payments%3A%20%5BPayments%5D%2C%20%24seriesCode%3A%20String%2C%20%24shippingAddress%3A%20String%2C%20%24terms%3A%20String)%7B%0A%20%20createInvoice(contactPerson%3A%20%24contactPerson%2C%20currency%3A%20%24currency%2C%20draft%3A%20%24draft%2C%20dueDate%3A%20%24dueDate%2C%20email%3A%20%24email%2C%20failed%3A%20%24failed%2C%20identification%3A%20%24identification%2C%20invoicingAddress%3A%20%24invoicingAddress%2C%20issueDate%3A%20%24issueDate%2C%20items%3A%20%24items%2C%20metaAttributes%3A%20%24metaAttributes%2C%20name%3A%20%24name%2C%20notes%3A%20%24notes%2C%20payments%3A%20%24payments%2C%20seriesCode%3A%20%24seriesCode%2C%20shippingAddress%3A%20%24shippingAddress%2C%20terms%3A%20%24terms)%7B%0A%20%20%20%20contactPerson%0A%20%20%20%20currency%0A%20%20%20%20customerId%0A%20%20%20%20draft%0A%20%20%20%20dueDate%0A%20%20%20%20email%0A%20%20%20%20failed%0A%20%20%20%20grossAmount%0A%20%20%20%20id%0A%20%20%20%20identification%0A%20%20%20%20insertedAt%0A%20%20%20%20invoicingAddress%0A%20%20%20%20issueDate%0A%20%20%20%20name%0A%20%20%20%20netAmount%0A%20%20%20%20notes%0A%20%20%20%20number%0A%20%20%20%20paid%0A%20%20%20%20paidAmount%0A%20%20%20%20recurringInvoice%0A%20%20%20%20sentByEmail%0A%20%20%20%20seriesId%0A%20%20%20%20shippingAddress%0A%20%20%20%20terms%0A%20%20%20%20updatedAt%0A%20%20%7D%0A%7D" target="_blank">Try it now</a>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Successful operation</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name">type</div>
+                    <div class="prop-value">
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/Invoice">Invoice</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <h5>Response Content-Types:
+                  <span>application/json</span>
+                </h5>
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;data&quot;</span>: {
+    <span class="hljs-attr">&quot;createInvoice&quot;</span>: {
+      <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;currency&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;customerId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;draft&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;failed&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;grossAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;netAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;number&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;paid&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;paidAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;recurringInvoice&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;sentByEmail&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;seriesId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;terms&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Delete" class="swagger-summary-tag" data-traverse-target="tag-Delete">Delete</h1>
+          <div id="operation-delete_a_customer-post" class="operation panel" data-traverse-target="operation-delete_a_customer-post">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Delete">Delete</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Delete a customer</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body"> </section>
+                <section class="swagger-request-params">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">id:
+                        <span class="prop-type">
+                          <div class="json-property-type">integer</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h4>Example</h3>
+                    <h5>Request Content-Types:
+                      <span>application/json</span>
+                    </h5>
+                    <h5>Query</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> deleteCustomer<span class="hljs-tag">(<span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>)</span><span class="hljs-tag">{
+  <span class="hljs-symbol">deleteCustomer<span class="hljs-tag">(id: <span class="hljs-code">$id</span>)</span><span class="hljs-tag">{
+    <span class="hljs-symbol">contactPerson</span>
+    <span class="hljs-symbol">email</span>
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">identification</span>
+    <span class="hljs-symbol">invoicingAddress</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">shippingAddress</span>
+  }</span></span>
+}</span></span>
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <h5>Variables</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;integer&quot;</span>
+}
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <a href="https://dev-server.com?query=mutation%20deleteCustomer(%24id%3A%20Int!)%7B%0A%20%20deleteCustomer(id%3A%20%24id)%7B%0A%20%20%20%20contactPerson%0A%20%20%20%20email%0A%20%20%20%20id%0A%20%20%20%20identification%0A%20%20%20%20invoicingAddress%0A%20%20%20%20name%0A%20%20%20%20shippingAddress%0A%20%20%7D%0A%7D" target="_blank">Try it now</a>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Successful operation</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name">type</div>
+                    <div class="prop-value">
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/Customer">Customer</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <h5>Response Content-Types:
+                  <span>application/json</span>
+                </h5>
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;data&quot;</span>: {
+    <span class="hljs-attr">&quot;deleteCustomer&quot;</span>: {
+      <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="operation-delete_an_invoice-post" class="operation panel" data-traverse-target="operation-delete_an_invoice-post">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Delete">Delete</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Delete an invoice</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body"> </section>
+                <section class="swagger-request-params">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">id:
+                        <span class="prop-type">
+                          <div class="json-property-type">integer</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h4>Example</h3>
+                    <h5>Request Content-Types:
+                      <span>application/json</span>
+                    </h5>
+                    <h5>Query</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> deleteInvoice<span class="hljs-tag">(<span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>)</span><span class="hljs-tag">{
+  <span class="hljs-symbol">deleteInvoice<span class="hljs-tag">(id: <span class="hljs-code">$id</span>)</span><span class="hljs-tag">{
+    <span class="hljs-symbol">contactPerson</span>
+    <span class="hljs-symbol">currency</span>
+    <span class="hljs-symbol">customerId</span>
+    <span class="hljs-symbol">draft</span>
+    <span class="hljs-symbol">dueDate</span>
+    <span class="hljs-symbol">email</span>
+    <span class="hljs-symbol">failed</span>
+    <span class="hljs-symbol">grossAmount</span>
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">identification</span>
+    <span class="hljs-symbol">insertedAt</span>
+    <span class="hljs-symbol">invoicingAddress</span>
+    <span class="hljs-symbol">issueDate</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">netAmount</span>
+    <span class="hljs-symbol">notes</span>
+    <span class="hljs-symbol">number</span>
+    <span class="hljs-symbol">paid</span>
+    <span class="hljs-symbol">paidAmount</span>
+    <span class="hljs-symbol">recurringInvoice</span>
+    <span class="hljs-symbol">sentByEmail</span>
+    <span class="hljs-symbol">seriesId</span>
+    <span class="hljs-symbol">shippingAddress</span>
+    <span class="hljs-symbol">terms</span>
+    <span class="hljs-symbol">updatedAt</span>
+  }</span></span>
+}</span></span>
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <h5>Variables</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;integer&quot;</span>
+}
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <a href="https://dev-server.com?query=mutation%20deleteInvoice(%24id%3A%20Int!)%7B%0A%20%20deleteInvoice(id%3A%20%24id)%7B%0A%20%20%20%20contactPerson%0A%20%20%20%20currency%0A%20%20%20%20customerId%0A%20%20%20%20draft%0A%20%20%20%20dueDate%0A%20%20%20%20email%0A%20%20%20%20failed%0A%20%20%20%20grossAmount%0A%20%20%20%20id%0A%20%20%20%20identification%0A%20%20%20%20insertedAt%0A%20%20%20%20invoicingAddress%0A%20%20%20%20issueDate%0A%20%20%20%20name%0A%20%20%20%20netAmount%0A%20%20%20%20notes%0A%20%20%20%20number%0A%20%20%20%20paid%0A%20%20%20%20paidAmount%0A%20%20%20%20recurringInvoice%0A%20%20%20%20sentByEmail%0A%20%20%20%20seriesId%0A%20%20%20%20shippingAddress%0A%20%20%20%20terms%0A%20%20%20%20updatedAt%0A%20%20%7D%0A%7D" target="_blank">Try it now</a>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Successful operation</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name">type</div>
+                    <div class="prop-value">
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/Invoice">Invoice</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <h5>Response Content-Types:
+                  <span>application/json</span>
+                </h5>
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;data&quot;</span>: {
+    <span class="hljs-attr">&quot;deleteInvoice&quot;</span>: {
+      <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;currency&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;customerId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;draft&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;failed&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;grossAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;netAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;number&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;paid&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;paidAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;recurringInvoice&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;sentByEmail&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;seriesId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;terms&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <h1 id="tag-Update" class="swagger-summary-tag" data-traverse-target="tag-Update">Update</h1>
+          <div id="operation-update_an_invoice-post" class="operation panel" data-traverse-target="operation-update_an_invoice-post">
+            <!-- <section class="operation-tags row"> -->
+            <!-- <div class="doc-copy"> -->
+            <div class="operation-tags">
+              <a class="label" href="#tag-Update">Update</a>
+              <!---->
+            </div>
+            <!-- </div> -->
+            <!-- </section> -->
+            <h2 class="operation-title">
+              <span class="operation-summary">Update an invoice</span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-request-body"> </section>
+                <section class="swagger-request-params">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">contactPerson:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">currency:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">draft:
+                        <span class="prop-type">
+                          <div class="json-property-type">boolean</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">dueDate:
+                        <span class="prop-type">
+                          <div class="json-property-type">object</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">email:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">failed:
+                        <span class="prop-type">
+                          <div class="json-property-type">boolean</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">id:
+                        <span class="prop-type">
+                          <div class="json-property-type">integer</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">identification:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">invoicingAddress:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">issueDate:
+                        <span class="prop-type">
+                          <div class="json-property-type">object</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">items:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/Items">Items</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">metaAttributes:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/MetaAttributes">MetaAttributes</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">name:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">notes:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">payments:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/Payments">Payments</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">seriesCode:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">shippingAddress:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">terms:
+                        <span class="prop-type">
+                          <div class="json-property-type">string</div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h4>Example</h3>
+                    <h5>Request Content-Types:
+                      <span>application/json</span>
+                    </h5>
+                    <h5>Query</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> updateInvoice<span class="hljs-tag">(<span class="hljs-code">$contactPerson</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$currency</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$draft</span>:<span class="hljs-type"> Boolean,</span> <span class="hljs-code">$dueDate</span>:<span class="hljs-type"> Date,</span> <span class="hljs-code">$email</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$failed</span>:<span class="hljs-type"> Boolean,</span> <span class="hljs-code">$id</span>:<span class="hljs-type"> Int!</span>, <span class="hljs-code">$identification</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$invoicingAddress</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$issueDate</span>:<span class="hljs-type"> Date,</span> <span class="hljs-code">$items</span>: <span class="hljs-type">[Items]</span>, <span class="hljs-code">$metaAttributes</span>: <span class="hljs-type">[MetaAttributes]</span>, <span class="hljs-code">$name</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$notes</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$payments</span>: <span class="hljs-type">[Payments]</span>, <span class="hljs-code">$seriesCode</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$shippingAddress</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$terms</span>:<span class="hljs-type"> String)</span>{
+  updateInvoice(contactPerson: <span class="hljs-code">$contactPerson</span>, currency: <span class="hljs-code">$currency</span>, draft: <span class="hljs-code">$draft</span>, dueDate: <span class="hljs-code">$dueDate</span>, email: <span class="hljs-code">$email</span>, failed: <span class="hljs-code">$failed</span>, id: <span class="hljs-code">$id</span>, identification: <span class="hljs-code">$identification</span>, invoicingAddress: <span class="hljs-code">$invoicingAddress</span>, issueDate: <span class="hljs-code">$issueDate</span>, items: <span class="hljs-code">$items</span>, metaAttributes: <span class="hljs-code">$metaAttributes</span>, name: <span class="hljs-code">$name</span>, notes: <span class="hljs-code">$notes</span>, payments: <span class="hljs-code">$payments</span>, seriesCode: <span class="hljs-code">$seriesCode</span>, shippingAddress: <span class="hljs-code">$shippingAddress</span>, terms: <span class="hljs-code">$terms</span>)</span><span class="hljs-tag">{
+    <span class="hljs-symbol">contactPerson</span>
+    <span class="hljs-symbol">currency</span>
+    <span class="hljs-symbol">customerId</span>
+    <span class="hljs-symbol">draft</span>
+    <span class="hljs-symbol">dueDate</span>
+    <span class="hljs-symbol">email</span>
+    <span class="hljs-symbol">failed</span>
+    <span class="hljs-symbol">grossAmount</span>
+    <span class="hljs-symbol">id</span>
+    <span class="hljs-symbol">identification</span>
+    <span class="hljs-symbol">insertedAt</span>
+    <span class="hljs-symbol">invoicingAddress</span>
+    <span class="hljs-symbol">issueDate</span>
+    <span class="hljs-symbol">name</span>
+    <span class="hljs-symbol">netAmount</span>
+    <span class="hljs-symbol">notes</span>
+    <span class="hljs-symbol">number</span>
+    <span class="hljs-symbol">paid</span>
+    <span class="hljs-symbol">paidAmount</span>
+    <span class="hljs-symbol">recurringInvoice</span>
+    <span class="hljs-symbol">sentByEmail</span>
+    <span class="hljs-symbol">seriesId</span>
+    <span class="hljs-symbol">shippingAddress</span>
+    <span class="hljs-symbol">terms</span>
+    <span class="hljs-symbol">updatedAt</span>
+  }</span></span>
+}
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <h5>Variables</h5>
+                    <!-- <div class="hljs"> -->
+                    <html>
+                    <head></head>
+                    <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;currency&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;draft&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+  <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;failed&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;integer&quot;</span>,
+  <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;items&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;discount&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+      <span class="hljs-attr">&quot;quantity&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;taxes&quot;</span>: [
+        <span class="hljs-string">&quot;string&quot;</span>
+      ],
+      <span class="hljs-attr">&quot;unitaryCost&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;metaAttributes&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;key&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;payments&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;amount&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
+      <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+      <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  ],
+  <span class="hljs-attr">&quot;seriesCode&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;terms&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                    </html>
+                    <!-- </div> -->
+                    <a href="https://dev-server.com?query=mutation%20updateInvoice(%24contactPerson%3A%20String%2C%20%24currency%3A%20String%2C%20%24draft%3A%20Boolean%2C%20%24dueDate%3A%20Date%2C%20%24email%3A%20String%2C%20%24failed%3A%20Boolean%2C%20%24id%3A%20Int!%2C%20%24identification%3A%20String%2C%20%24invoicingAddress%3A%20String%2C%20%24issueDate%3A%20Date%2C%20%24items%3A%20%5BItems%5D%2C%20%24metaAttributes%3A%20%5BMetaAttributes%5D%2C%20%24name%3A%20String%2C%20%24notes%3A%20String%2C%20%24payments%3A%20%5BPayments%5D%2C%20%24seriesCode%3A%20String%2C%20%24shippingAddress%3A%20String%2C%20%24terms%3A%20String)%7B%0A%20%20updateInvoice(contactPerson%3A%20%24contactPerson%2C%20currency%3A%20%24currency%2C%20draft%3A%20%24draft%2C%20dueDate%3A%20%24dueDate%2C%20email%3A%20%24email%2C%20failed%3A%20%24failed%2C%20id%3A%20%24id%2C%20identification%3A%20%24identification%2C%20invoicingAddress%3A%20%24invoicingAddress%2C%20issueDate%3A%20%24issueDate%2C%20items%3A%20%24items%2C%20metaAttributes%3A%20%24metaAttributes%2C%20name%3A%20%24name%2C%20notes%3A%20%24notes%2C%20payments%3A%20%24payments%2C%20seriesCode%3A%20%24seriesCode%2C%20shippingAddress%3A%20%24shippingAddress%2C%20terms%3A%20%24terms)%7B%0A%20%20%20%20contactPerson%0A%20%20%20%20currency%0A%20%20%20%20customerId%0A%20%20%20%20draft%0A%20%20%20%20dueDate%0A%20%20%20%20email%0A%20%20%20%20failed%0A%20%20%20%20grossAmount%0A%20%20%20%20id%0A%20%20%20%20identification%0A%20%20%20%20insertedAt%0A%20%20%20%20invoicingAddress%0A%20%20%20%20issueDate%0A%20%20%20%20name%0A%20%20%20%20netAmount%0A%20%20%20%20notes%0A%20%20%20%20number%0A%20%20%20%20paid%0A%20%20%20%20paidAmount%0A%20%20%20%20recurringInvoice%0A%20%20%20%20sentByEmail%0A%20%20%20%20seriesId%0A%20%20%20%20shippingAddress%0A%20%20%20%20terms%0A%20%20%20%20updatedAt%0A%20%20%7D%0A%7D" target="_blank">Try it now</a>
+                </section>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="swagger-responses">
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">200 OK</div>
+                    </div>
+                    <div class="prop-value">
+                      <p>Successful operation</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-inner">
+                    <div class="prop-name">type</div>
+                    <div class="prop-value">
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/Invoice">Invoice</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <h5>Response Content-Types:
+                  <span>application/json</span>
+                </h5>
+                <section>
+                  <h5>Response Example
+                    <span>(200 OK)</span>
+                  </h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;data&quot;</span>: {
+    <span class="hljs-attr">&quot;updateInvoice&quot;</span>: {
+      <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;currency&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;customerId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;draft&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;failed&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;grossAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;netAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;number&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;paid&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;paidAmount&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;recurringInvoice&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;sentByEmail&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
+      <span class="hljs-attr">&quot;seriesId&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;terms&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
     }
   }
 }
@@ -2457,6 +3573,157 @@ https://dev-server.com
     <span class="hljs-string">&quot;string&quot;</span>
   ],
   <span class="hljs-attr">&quot;unitaryCost&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-MetaAttribute" class="definition panel" data-traverse-target="definition-MetaAttribute">
+            <h2 class="panel-title">
+              <a name="/definitions/MetaAttribute"></a>MetaAttribute: object
+              <!-- <span class="json-property-type"><div class="json-property-type">object</div>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="key">
+                      <span class="json-property-name">key:</span>
+                      <div class="json-property-type">object</div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="return">
+                            <span class="json-property-name">return:</span>
+                            <div class="json-property-type">
+                              <div class="">
+                                <a class="json-schema-ref" href="#/definitions/String">String</a>
+                              </div>
+                            </div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="arguments">
+                            <span class="json-property-name">arguments:</span>
+                            <div class="json-property-type">object</div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl> </dl>
+                            </section>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="value">
+                      <span class="json-property-name">value:</span>
+                      <div class="json-property-type">object</div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="return">
+                            <span class="json-property-name">return:</span>
+                            <div class="json-property-type">
+                              <div class="">
+                                <a class="json-schema-ref" href="#/definitions/String">String</a>
+                              </div>
+                            </div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="arguments">
+                            <span class="json-property-name">arguments:</span>
+                            <div class="json-property-type">object</div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl> </dl>
+                            </section>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;key&quot;</span>: {
+    <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+  },
+  <span class="hljs-attr">&quot;value&quot;</span>: {
+    <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-MetaAttributes" class="definition panel" data-traverse-target="definition-MetaAttributes">
+            <h2 class="panel-title">
+              <a name="/definitions/MetaAttributes"></a>MetaAttributes: object
+              <!-- <span class="json-property-type"><div class="json-property-type">object</div>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="key">
+                      <span class="json-property-name">key:</span>
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/String">String</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                      <span class="json-property-required"></span>
+                    </dt>
+                    <dt data-property-name="value">
+                      <span class="json-property-name">value:</span>
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/String">String</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;key&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre> </body>
                   </html>

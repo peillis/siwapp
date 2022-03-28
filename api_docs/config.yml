@@ -6,20 +6,30 @@ servers: # same format as for OpenAPI Specification
     description: Dev
 
 info: # same format as for OpenAPI Specification
-    title: Your API Title
+    title: Siwapp GraphQL
     description: Markdown enabled description of your api.
 
  # define your domains by providing a set of usecases
 domains:
-  - name: Top Level Menu Section # Name of the domain
-    description: Description  # Description of the domain
+  - name: List # Name of the domain    
     usecases:
-     - name: Get all customers
-       description: Markdown enabled description for operation
+     - name: Get all customers       
        query: query.customers
-     - name: Create all invoices
-       description: Markdown enabled description for operation
+     - name: Get all invoices       
        query: query.invoices
+  - name: Create
+    usecases:
      - name: Create a customer
-       description: Markdown enabled description for operation
        query: mutation.createCustomer
+     - name: Create an invoice
+       query: mutation.createInvoice
+  - name: Delete 
+    usecases:
+     - name: Delete a customer
+       query: mutation.deleteCustomer     
+     - name: Delete an invoice
+       query: mutation.deleteInvoice
+  - name: Update
+    usecases:
+     - name: Update an invoice
+       query: mutation.updateInvoice    
