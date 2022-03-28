@@ -20,13 +20,20 @@ function type_of_element(el) {
   return el
 }
 
-function load_more() {
-  if (document.documentElement.clientHeight == document.documentElement.scrollHeight){
-    return true
-  }
-  else {
-    return false
-  }
+
+function has_Overflow(el)
+{
+   var curOverflow = el.style.overflow;
+
+   if ( !curOverflow || curOverflow === "visible" )
+      el.style.overflow = "hidden";
+
+   var isOverflowing = el.clientWidth < el.scrollWidth 
+      || el.clientHeight < el.scrollHeight;
+
+   el.style.overflow = curOverflow;   
+   
+   return isOverflowing;
 }
 
 let Hooks = {}
@@ -40,7 +47,7 @@ Hooks.InfiniteScroll = {
     let element  = type_of_element(this.el)
     this.no_queries = this.no_more_queries()
 
-    if (load_more() && checked && this.no_queries == 0) {
+    if (!has_Overflow(document.documentElement) && checked && this.no_queries == 0) {
       checked = false
       this.pushEventTo("#infinite-scroll", "load-more", {})
     }
@@ -60,7 +67,7 @@ Hooks.InfiniteScroll = {
     this.pending = this.page()
     this.no_queries = this.no_more_queries()
 
-    if(load_more() && this.no_queries == 0){
+    if(!has_Overflow(document.documentElement) && this.no_queries == 0){
       this.pushEventTo("#infinite-scroll", "load-more", {})
     }
   }
