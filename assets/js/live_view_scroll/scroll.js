@@ -1,75 +1,59 @@
-function scrollAt(el) {
-  if(el == window) {
-    el = document.documentElement
-  }
-
-  let scrollTop = el.scrollTop
-  let scrollHeight = el.scrollHeight
-  let clientHeight = el.clientHeight
-
-  return scrollTop / (scrollHeight - clientHeight) * 100
-}
-
-function type_of_element(el) {
+function type_of_root(el) {
   id = el.id
 
   if (id == "infinite-scroll") {
-    el = window
+    root = null
+  } else {
+    root = document.querySelector('#customers_list_ancestor')
   }
 
-  return el
-}
-
-
-function has_Overflow(el)
-{
-   var curOverflow = el.style.overflow;
-
-   if ( !curOverflow || curOverflow === "visible" )
-      el.style.overflow = "hidden";
-
-   var isOverflowing = el.clientWidth < el.scrollWidth 
-      || el.clientHeight < el.scrollHeight;
-
-   el.style.overflow = curOverflow;   
-   
-   return isOverflowing;
+  return root
 }
 
 let Hooks = {}
-let checked = true
 
 Hooks.InfiniteScroll = {
   page() { return this.el.dataset.page },
   no_more_queries() { return this.el.dataset.no_more_queries },
-  mounted() {
-    this.pending = this.page()
-    let element  = type_of_element(this.el)
-    this.no_queries = this.no_more_queries()
-
-    if (!has_Overflow(document.documentElement) && checked && this.no_queries == 0) {
-      checked = false
-      this.pushEventTo("#infinite-scroll", "load-more", {})
+  loadMore(entries, no_queries) {
+    const target = entries[0];
+    
+    if (target.isIntersecting && this.pending == this.page() && no_queries == 0) {
+      this.pending = this.page() + 1;
+      this.pushEventTo(target.target, "load-more", {});
     }
-
-    element.addEventListener("scroll", () => {
-      if (this.pending == this.page() && scrollAt(element) > 90 && this.no_queries == 0) {
-        this.pending = this.page() + 1
-        this.pushEventTo("#" + this.el.id, "load-more", {})
-      }
-    })
   },
+  mounted() {
+    this.pending = this.page();
+    this.no_queries = this.no_more_queries();
+    this.observer = new IntersectionObserver(
+      (entries) => this.loadMore(entries, this.no_queries),
+      {
+        root: type_of_root(this.el), // window by default
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+    this.observer.observe(this.el);
+  },
+  beforeDestroy() {this.observer.unobserve(this.el);},
   reconnected() {
     this.pending = this.page()
     this.no_queries = this.no_more_queries()
-  },  
-  updated() { 
+  },
+  updated() {
     this.pending = this.page()
     this.no_queries = this.no_more_queries()
+    this.observer = new IntersectionObserver(
+      (entries) => this.loadMore(entries, this.no_queries),
+      {
+        root: type_of_root(this.el), // window by default
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+    this.observer.observe(this.el);
 
-    if(!has_Overflow(document.documentElement) && this.no_queries == 0){
-      this.pushEventTo("#infinite-scroll", "load-more", {})
-    }
   }
 }
 

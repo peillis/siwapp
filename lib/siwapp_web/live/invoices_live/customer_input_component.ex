@@ -56,15 +56,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
             autocomplete: "off"
           ) %>
           <div class={"dropdown below-input #{@display}"}>
-            <div
-              class="dropdown-menu dropdown-content"
-              id="customers_list"
-              phx-hook="InfiniteScroll"
-              data-page={@page}
-              data-no_more_queries={@no_more_queries}
-              phx-target={@myself}
-              role="menu"
-            >
+            <div id="customers_list_ancestor" class="dropdown-menu dropdown-content" role="menu">
               <%= for customer_suggestion <- @customer_suggestions do %>
                 <a
                   href="#"
@@ -77,6 +69,13 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
                   <%= customer_suggestion.name %>
                 </a>
               <% end %>
+              <div
+                id="customers_list"
+                phx-hook="InfiniteScroll"
+                data-page={@page}
+                data-no_more_queries={@no_more_queries}
+                phx-target={@myself}
+              ></div>
             </div>
           </div>
         </div>
