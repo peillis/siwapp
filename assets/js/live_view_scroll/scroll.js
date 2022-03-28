@@ -53,7 +53,6 @@ Hooks.InfiniteScroll = {
       }
     );
     this.observer.observe(this.el);
-
   }
 }
 
