@@ -53,10 +53,11 @@
           <a href="#definition-Invoice"> Invoice </a>
           <a href="#definition-Item"> Item </a>
           <a href="#definition-Items"> Items </a>
+          <a href="#definition-MetaAttribute"> MetaAttribute </a>
+          <a href="#definition-MetaAttributes"> MetaAttributes </a>
           <a href="#definition-Payment"> Payment </a>
           <a href="#definition-Payments"> Payments </a>
           <a href="#definition-String"> String </a>
-          <a href="#definition-UpdateInvoiceParams"> UpdateInvoiceParams </a>
         </nav>
       </div>
       <div id="docs" class="row collapse expanded drawer" data-drawer>
@@ -505,6 +506,23 @@ https://dev-server.com
                   </div>
                   <div class="prop-row prop-group">
                     <div class="prop-name">
+                      <div class="prop-title">metaAttributes:
+                        <span class="prop-type">
+                          <div class="json-property-type">
+                            <div class="json-schema-ref-array">
+                              <a class="json-schema-ref" href="#/definitions/MetaAttributes">MetaAttributes</a>
+                            </div>
+                          </div>
+                          <span class="json-property-range" title="Value limits"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="prop-value">
+                      <p class="no-description">(no description)</p>
+                    </div>
+                  </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
                       <div class="prop-title">name:
                         <span class="prop-type">
                           <div class="json-property-type">string</div>
@@ -541,8 +559,8 @@ https://dev-server.com
                     <!-- <div class="hljs"> -->
                     <html>
                     <head></head>
-                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> createCustomer<span class="hljs-tag">(<span class="hljs-code">$contactPerson</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$email</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$identification</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$invoicingAddress</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$name</span>:<span class="hljs-type"> String!</span>, <span class="hljs-code">$shippingAddress</span>:<span class="hljs-type"> String)</span>{
-  createCustomer(contactPerson: <span class="hljs-code">$contactPerson</span>, email: <span class="hljs-code">$email</span>, identification: <span class="hljs-code">$identification</span>, invoicingAddress: <span class="hljs-code">$invoicingAddress</span>, name: <span class="hljs-code">$name</span>, shippingAddress: <span class="hljs-code">$shippingAddress</span>)</span><span class="hljs-tag">{
+                    <body><pre><code class="hljs language-gql"><span class="hljs-symbol"><span class="hljs-keyword">mutation</span> createCustomer<span class="hljs-tag">(<span class="hljs-code">$contactPerson</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$email</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$identification</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$invoicingAddress</span>:<span class="hljs-type"> String,</span> <span class="hljs-code">$metaAttributes</span>: <span class="hljs-type">[MetaAttributes]</span>, <span class="hljs-code">$name</span>:<span class="hljs-type"> String!</span>, <span class="hljs-code">$shippingAddress</span>:<span class="hljs-type"> String)</span>{
+  createCustomer(contactPerson: <span class="hljs-code">$contactPerson</span>, email: <span class="hljs-code">$email</span>, identification: <span class="hljs-code">$identification</span>, invoicingAddress: <span class="hljs-code">$invoicingAddress</span>, metaAttributes: <span class="hljs-code">$metaAttributes</span>, name: <span class="hljs-code">$name</span>, shippingAddress: <span class="hljs-code">$shippingAddress</span>)</span><span class="hljs-tag">{
     <span class="hljs-symbol">contactPerson</span>
     <span class="hljs-symbol">email</span>
     <span class="hljs-symbol">id</span>
@@ -564,13 +582,19 @@ https://dev-server.com
   <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
   <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
   <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;metaAttributes&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;key&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+      <span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+    }
+  ],
   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
   <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre> </body>
                     </html>
                     <!-- </div> -->
-                    <a href="https://dev-server.com?query=mutation%20createCustomer(%24contactPerson%3A%20String%2C%20%24email%3A%20String%2C%20%24identification%3A%20String%2C%20%24invoicingAddress%3A%20String%2C%20%24name%3A%20String!%2C%20%24shippingAddress%3A%20String)%7B%0A%20%20createCustomer(contactPerson%3A%20%24contactPerson%2C%20email%3A%20%24email%2C%20identification%3A%20%24identification%2C%20invoicingAddress%3A%20%24invoicingAddress%2C%20name%3A%20%24name%2C%20shippingAddress%3A%20%24shippingAddress)%7B%0A%20%20%20%20contactPerson%0A%20%20%20%20email%0A%20%20%20%20id%0A%20%20%20%20identification%0A%20%20%20%20invoicingAddress%0A%20%20%20%20name%0A%20%20%20%20shippingAddress%0A%20%20%7D%0A%7D" target="_blank">Try it now</a>
+                    <a href="https://dev-server.com?query=mutation%20createCustomer(%24contactPerson%3A%20String%2C%20%24email%3A%20String%2C%20%24identification%3A%20String%2C%20%24invoicingAddress%3A%20String%2C%20%24metaAttributes%3A%20%5BMetaAttributes%5D%2C%20%24name%3A%20String!%2C%20%24shippingAddress%3A%20String)%7B%0A%20%20createCustomer(contactPerson%3A%20%24contactPerson%2C%20email%3A%20%24email%2C%20identification%3A%20%24identification%2C%20invoicingAddress%3A%20%24invoicingAddress%2C%20metaAttributes%3A%20%24metaAttributes%2C%20name%3A%20%24name%2C%20shippingAddress%3A%20%24shippingAddress)%7B%0A%20%20%20%20contactPerson%0A%20%20%20%20email%0A%20%20%20%20id%0A%20%20%20%20identification%0A%20%20%20%20invoicingAddress%0A%20%20%20%20name%0A%20%20%20%20shippingAddress%0A%20%20%7D%0A%7D" target="_blank">Try it now</a>
                 </section>
               </div>
             </div>
@@ -822,6 +846,36 @@ https://dev-server.com
                         </dl>
                       </section>
                     </dt>
+                    <dt data-property-name="metaAttributes">
+                      <span class="json-property-name">metaAttributes:</span>
+                      <div class="json-property-type">object</div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="return">
+                            <span class="json-property-name">return:</span>
+                            <div class="json-property-type">
+                              <div class="json-schema-ref-array">
+                                <a class="json-schema-ref" href="#/definitions/MetaAttribute">MetaAttribute</a>
+                              </div>
+                            </div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="arguments">
+                            <span class="json-property-name">arguments:</span>
+                            <div class="json-property-type">object</div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl> </dl>
+                            </section>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
                     <dt data-property-name="name">
                       <span class="json-property-name">name:</span>
                       <div class="json-property-type">object</div>
@@ -910,6 +964,21 @@ https://dev-server.com
   },
   <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: {
     <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+  },
+  <span class="hljs-attr">&quot;metaAttributes&quot;</span>: {
+    <span class="hljs-attr">&quot;return&quot;</span>: [
+      {
+        <span class="hljs-attr">&quot;key&quot;</span>: {
+          <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+        },
+        <span class="hljs-attr">&quot;value&quot;</span>: {
+          <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+          <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+        }
+      }
+    ],
     <span class="hljs-attr">&quot;arguments&quot;</span>: {}
   },
   <span class="hljs-attr">&quot;name&quot;</span>: {
@@ -1432,6 +1501,36 @@ https://dev-server.com
                             <div class="json-property-type">
                               <div class="json-schema-ref-array">
                                 <a class="json-schema-ref" href="#/definitions/Item">Item</a>
+                              </div>
+                            </div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="arguments">
+                            <span class="json-property-name">arguments:</span>
+                            <div class="json-property-type">object</div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl> </dl>
+                            </section>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="metaAttributes">
+                      <span class="json-property-name">metaAttributes:</span>
+                      <div class="json-property-type">object</div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="return">
+                            <span class="json-property-name">return:</span>
+                            <div class="json-property-type">
+                              <div class="json-schema-ref-array">
+                                <a class="json-schema-ref" href="#/definitions/MetaAttribute">MetaAttribute</a>
                               </div>
                             </div>
                             <span class="json-property-range" title="Value limits"></span>
@@ -2366,6 +2465,157 @@ https://dev-server.com
               </div>
             </div>
           </div>
+          <div id="definition-MetaAttribute" class="definition panel" data-traverse-target="definition-MetaAttribute">
+            <h2 class="panel-title">
+              <a name="/definitions/MetaAttribute"></a>MetaAttribute: object
+              <!-- <span class="json-property-type"><div class="json-property-type">object</div>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="key">
+                      <span class="json-property-name">key:</span>
+                      <div class="json-property-type">object</div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="return">
+                            <span class="json-property-name">return:</span>
+                            <div class="json-property-type">
+                              <div class="">
+                                <a class="json-schema-ref" href="#/definitions/String">String</a>
+                              </div>
+                            </div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="arguments">
+                            <span class="json-property-name">arguments:</span>
+                            <div class="json-property-type">object</div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl> </dl>
+                            </section>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                    <dt data-property-name="value">
+                      <span class="json-property-name">value:</span>
+                      <div class="json-property-type">object</div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-properties">
+                        <dl>
+                          <dt data-property-name="return">
+                            <span class="json-property-name">return:</span>
+                            <div class="json-property-type">
+                              <div class="">
+                                <a class="json-schema-ref" href="#/definitions/String">String</a>
+                              </div>
+                            </div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt data-property-name="arguments">
+                            <span class="json-property-name">arguments:</span>
+                            <div class="json-property-type">object</div>
+                            <span class="json-property-range" title="Value limits"></span>
+                          </dt>
+                          <dt class="json-inner-schema">
+                            <section class="json-schema-properties">
+                              <dl> </dl>
+                            </section>
+                          </dt>
+                        </dl>
+                      </section>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;key&quot;</span>: {
+    <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+  },
+  <span class="hljs-attr">&quot;value&quot;</span>: {
+    <span class="hljs-attr">&quot;return&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+    <span class="hljs-attr">&quot;arguments&quot;</span>: {}
+  }
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-MetaAttributes" class="definition panel" data-traverse-target="definition-MetaAttributes">
+            <h2 class="panel-title">
+              <a name="/definitions/MetaAttributes"></a>MetaAttributes: object
+              <!-- <span class="json-property-type"><div class="json-property-type">object</div>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="key">
+                      <span class="json-property-name">key:</span>
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/String">String</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                      <span class="json-property-required"></span>
+                    </dt>
+                    <dt data-property-name="value">
+                      <span class="json-property-name">value:</span>
+                      <div class="json-property-type">
+                        <div class="">
+                          <a class="json-schema-ref" href="#/definitions/String">String</a>
+                        </div>
+                      </div>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-json">{
+  <span class="hljs-attr">&quot;key&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
+  <span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
+}
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
           <div id="definition-Payment" class="definition panel" data-traverse-target="definition-Payment">
             <h2 class="panel-title">
               <a name="/definitions/Payment"></a>Payment: object
@@ -2734,235 +2984,6 @@ https://dev-server.com
               <div class="doc-copy">
                 <section class="json-schema-description">
                   <p>The <code>String</code> scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.</p>
-                </section>
-              </div>
-            </div>
-          </div>
-          <div id="definition-UpdateInvoiceParams" class="definition panel" data-traverse-target="definition-UpdateInvoiceParams">
-            <h2 class="panel-title">
-              <a name="/definitions/UpdateInvoiceParams"></a>UpdateInvoiceParams: object
-              <!-- <span class="json-property-type"><div class="json-property-type">object</div>
-              <span class="json-property-range" title="Value limits"></span>
-              
-              
-              </span> -->
-            </h2>
-            <div class="doc-row">
-              <div class="doc-copy">
-                <section class="json-schema-properties">
-                  <dl>
-                    <dt data-property-name="contactPerson">
-                      <span class="json-property-name">contactPerson:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="currency">
-                      <span class="json-property-name">currency:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="draft">
-                      <span class="json-property-name">draft:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/Boolean">Boolean</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="dueDate">
-                      <span class="json-property-name">dueDate:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/Date">Date</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="email">
-                      <span class="json-property-name">email:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="failed">
-                      <span class="json-property-name">failed:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/Boolean">Boolean</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="identification">
-                      <span class="json-property-name">identification:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="invoicingAddress">
-                      <span class="json-property-name">invoicingAddress:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="issueDate">
-                      <span class="json-property-name">issueDate:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/Date">Date</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="items">
-                      <span class="json-property-name">items:</span>
-                      <div class="json-property-type">
-                        <div class="json-schema-ref-array">
-                          <a class="json-schema-ref" href="#/definitions/Items">Items</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="name">
-                      <span class="json-property-name">name:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="notes">
-                      <span class="json-property-name">notes:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="payments">
-                      <span class="json-property-name">payments:</span>
-                      <div class="json-property-type">
-                        <div class="json-schema-ref-array">
-                          <a class="json-schema-ref" href="#/definitions/Payments">Payments</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="recurringInvoice">
-                      <span class="json-property-name">recurringInvoice:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/ID">ID</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="sentByEmail">
-                      <span class="json-property-name">sentByEmail:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/Boolean">Boolean</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="seriesId">
-                      <span class="json-property-name">seriesId:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/ID">ID</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="shippingAddress">
-                      <span class="json-property-name">shippingAddress:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="terms">
-                      <span class="json-property-name">terms:</span>
-                      <div class="json-property-type">
-                        <div class="">
-                          <a class="json-schema-ref" href="#/definitions/String">String</a>
-                        </div>
-                      </div>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                  </dl>
-                </section>
-              </div>
-              <div class="doc-examples">
-                <section>
-                  <h5>Example</h5>
-                  <!-- <div class="hljs"> -->
-                  <html>
-                  <head></head>
-                  <body><pre><code class="hljs language-json">{
-  <span class="hljs-attr">&quot;contactPerson&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;currency&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;draft&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
-  <span class="hljs-attr">&quot;dueDate&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-  <span class="hljs-attr">&quot;email&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;failed&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
-  <span class="hljs-attr">&quot;identification&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;invoicingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;issueDate&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-  <span class="hljs-attr">&quot;items&quot;</span>: [
-    {
-      <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-      <span class="hljs-attr">&quot;discount&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
-      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-      <span class="hljs-attr">&quot;quantity&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
-      <span class="hljs-attr">&quot;taxes&quot;</span>: [
-        <span class="hljs-string">&quot;string&quot;</span>
-      ],
-      <span class="hljs-attr">&quot;unitaryCost&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>
-    }
-  ],
-  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;payments&quot;</span>: [
-    {
-      <span class="hljs-attr">&quot;amount&quot;</span>: <span class="hljs-string">&quot;number&quot;</span>,
-      <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-      <span class="hljs-attr">&quot;notes&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
-    }
-  ],
-  <span class="hljs-attr">&quot;recurringInvoice&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-  <span class="hljs-attr">&quot;sentByEmail&quot;</span>: <span class="hljs-string">&quot;boolean&quot;</span>,
-  <span class="hljs-attr">&quot;seriesId&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
-  <span class="hljs-attr">&quot;shippingAddress&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
-  <span class="hljs-attr">&quot;terms&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
-}
-</code></pre> </body>
-                  </html>
-                  <!-- </div> -->
                 </section>
               </div>
             </div>
