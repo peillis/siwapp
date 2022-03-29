@@ -11,7 +11,6 @@ function type_of_root(el) {
 }
 
 let Hooks = {}
-let checked = true
 
 Hooks.InfiniteScroll = {
   page() {return this.el.dataset.page},
