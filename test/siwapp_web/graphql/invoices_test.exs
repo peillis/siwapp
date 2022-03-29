@@ -44,6 +44,25 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
     assert res == %{"data" => %{"invoices" => data_result}}
   end
 
+  test "Get an invoice", %{conn: conn, invoices: invoices} do
+    invoice = hd(invoices)
+
+    query = """
+      query {
+        invoice(id: #{invoice.id}) {
+          name
+        }
+      }
+    """
+
+    res =
+      conn
+      |> post("/graphql", %{query: query})
+      |> json_response(200)
+
+    assert res == %{"data" => %{"invoice" => %{"name" => invoice.name}}}
+  end
+
   test "Create an invoice", %{conn: conn, series: series} do
     query = """
       mutation {
