@@ -5,6 +5,8 @@ defmodule SiwappWeb.InvoicesLive.Index do
   alias Siwapp.Invoices.Invoice
   alias Siwapp.Searches
 
+  @invoices_limit 20
+
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
     query = Searches.filters_query(Invoice, params)
@@ -25,7 +27,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
-     |> assign(:invoices, Searches.filters(query, preload: [:series], deleted_at_query: true))
+     |> assign(:no_more_queries, 0)
+     |> assign(
+       :invoices,
+       Searches.filters(query, limit: @invoices_limit, preload: [:series], deleted_at_query: true)
+     )
      |> assign(:checked, MapSet.new())
      |> assign(:query, query)
      |> assign(:page_title, page_title)}
@@ -39,17 +45,22 @@ defmodule SiwappWeb.InvoicesLive.Index do
       query: query
     } = socket.assigns
 
+    next_invoices =
+      Searches.filters(query,
+        limit: @invoices_limit,
+        offset: (page + 1) * @invoices_limit,
+        preload: [:series],
+        deleted_at_query: true
+      )
+
+    {invoices, no_more_queries} = maybe_add(invoices, next_invoices)
+
     {
       :noreply,
       assign(socket,
-        invoices:
-          invoices ++
-            Searches.filters(query,
-              offset: (page + 1) * 20,
-              preload: [:series],
-              deleted_at_query: true
-            ),
-        page: page + 1
+        invoices: invoices,
+        page: page + 1,
+        no_more_queries: no_more_queries
       )
     }
   end
@@ -83,7 +94,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
       |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
-        Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
+        Searches.filters(socket.assigns.query,
+          limit: @invoices_limit,
+          preload: [:series],
+          deleted_at_query: true
+        )
       )
 
     {:noreply, socket}
@@ -118,7 +133,11 @@ defmodule SiwappWeb.InvoicesLive.Index do
       |> assign(:checked, MapSet.new())
       |> assign(
         :invoices,
-        Searches.filters(socket.assigns.query, preload: [:series], deleted_at_query: true)
+        Searches.filters(socket.assigns.query,
+          limit: @invoices_limit,
+          preload: [:series],
+          deleted_at_query: true
+        )
       )
 
     {:noreply, socket}

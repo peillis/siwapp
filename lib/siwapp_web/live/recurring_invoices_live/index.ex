@@ -11,6 +11,8 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
   alias Siwapp.RecurringInvoices.RecurringInvoice
   alias Siwapp.Searches
 
+  @recurring_invoices_limit 20
+
   @impl Phoenix.LiveView
   def mount(params, _session, socket) do
     query = Searches.filters_query(RecurringInvoice, params)
@@ -24,10 +26,11 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
     {:ok,
      socket
      |> assign(:page, 0)
+     |> assign(:no_more_queries, 0)
      |> assign(:query, query)
      |> assign(
        :recurring_invoices,
-       Searches.filters(query, preload: [:series])
+       Searches.filters(query, limit: @recurring_invoices_limit, preload: [:series])
      )
      |> assign(:checked, MapSet.new())
      |> assign(:page_title, "Recurring Invoices")}
@@ -41,13 +44,21 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
       query: query
     } = socket.assigns
 
+    next_recurring_invoices =
+      Searches.filters(query,
+        limit: @recurring_invoices_limit,
+        offset: (page + 1) * @recurring_invoices_limit,
+        preload: [:series]
+      )
+
+    {recurring_invoices, no_more_queries} = maybe_add(recurring_invoices, next_recurring_invoices)
+
     {
       :noreply,
       assign(socket,
-        recurring_invoices:
-          recurring_invoices ++
-            Searches.filters(query, offset: (page + 1) * 20, preload: [:series]),
-        page: page + 1
+        recurring_invoices: recurring_invoices,
+        page: page + 1,
+        no_more_queries: no_more_queries
       )
     }
   end
@@ -80,7 +91,10 @@ defmodule SiwappWeb.RecurringInvoicesLive.Index do
       |> assign(:checked, MapSet.new())
       |> assign(
         :recurring_invoices,
-        Searches.filters(socket.assigns.query, preload: [:series])
+        Searches.filters(socket.assigns.query,
+          limit: @recurring_invoices_limit,
+          preload: [:series]
+        )
       )
 
     {:noreply, socket}

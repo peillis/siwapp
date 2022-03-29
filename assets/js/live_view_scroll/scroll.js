@@ -1,45 +1,53 @@
-function scrollAt(el) {
-  let scrollTop = el.scrollTop
-  let scrollHeight = el.scrollHeight
-  let clientHeight = el.clientHeight
+function type_of_root(el) {
+  id = el.id
 
-  return scrollTop / (scrollHeight - clientHeight) * 100
-}
-
-function type_of_element(element) {
-  if (element == window) {
-    element_array = [document.documentElement, "#infinite-scroll"]
+  if (id == "infinite-scroll") {
+    root = null
   } else {
-    element_array = [element, "#customers_list"]
+    root = document.querySelector('#customers_list_ancestor')
   }
-  return element_array
+
+  return root
 }
+
 let Hooks = {}
 
 Hooks.InfiniteScroll = {
-  page() { return this.el.dataset.page },
+  page() {return this.el.dataset.page},
+  no_more_queries() { return this.el.dataset.no_more_queries },
+  loadMore(entries) {
+    const target = entries[0];
+
+    if (target.isIntersecting && this.pending == this.page() && this.no_more_queries() == 0) {
+      this.pending = this.pending + 1
+      this.pushEventTo(target.target, "load-more", {});
+    }
+  },
   mounted() {
     this.pending = this.page()
-    this.pass = true
-    let timer
-    let array = [this.el, window];
-    array.forEach(element => {
-      let element_array  = type_of_element(element)
-      element.addEventListener("scroll", () => {
-        clearTimeout(timer)
-        if (this.pending == this.page() && scrollAt(element_array[0]) > 90 && this.pass) {
-          this.pending = this.page() + 1
-          this.pass = false
-          this.pushEventTo(element_array[1], "load-more", {})
-        }
-        timer = setTimeout(() => {
-          console.log("timeout")
-          this.pass = true
-        }, 100)
-      })
-    })
+    this.observer = new IntersectionObserver(
+      (entries) => this.loadMore(entries),
+      {
+        root: type_of_root(this.el), // window by default
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+    this.observer.observe(this.el);
   },
-  reconnected() { this.pending = this.page() },
-  updated() { this.pending = this.page() }
+  beforeDestroy() {this.observer.unobserve(this.el);},
+  updated() {
+    this.pending = this.page()
+    this.observer = new IntersectionObserver(
+      (entries) => this.loadMore(entries),
+      {
+        root: type_of_root(this.el), // window by default
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+    this.observer.observe(this.el);
+  }
 }
+
 export default Hooks

@@ -32,4 +32,13 @@ defmodule SiwappWeb.LiveHelpers do
       str
     end
   end
+
+  @spec maybe_add(list, list) :: {list, non_neg_integer()}
+  def maybe_add(current_list, []) do
+    {current_list, 1}
+  end
+
+  def maybe_add(current_list, next_list) do
+    {current_list ++ next_list, 0}
+  end
 end

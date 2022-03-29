@@ -40,4 +40,9 @@
 
 <%= render(SiwappWeb.PageView, "invoices_table.html", invoices: @invoices, checked: @checked) %>
 
-<div id="infinite-scroll" phx-hook="InfiniteScroll" data-page={@page}></div>
+<div
+  id="infinite-scroll"
+  phx-hook="InfiniteScroll"
+  data-page={@page}
+  data-no_more_queries={@no_more_queries}
+></div>

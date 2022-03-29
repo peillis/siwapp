@@ -24,7 +24,8 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
      |> assign(customer_suggestions: customer_suggestions)
      |> assign(status: status)
      |> assign(display: if(status == :active, do: "is-active"))
-     |> assign(:page, 0)}
+     |> assign(:page, 0)
+     |> assign(:no_more_queries, 0)}
   end
 
   @impl Phoenix.LiveComponent
@@ -55,14 +56,7 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
             autocomplete: "off"
           ) %>
           <div class={"dropdown below-input #{@display}"}>
-            <div
-              class="dropdown-menu dropdown-content"
-              id="customers_list"
-              phx-hook="InfiniteScroll"
-              data-page={@page}
-              phx-target={@myself}
-              role="menu"
-            >
+            <div id="customers_list_ancestor" class="dropdown-menu dropdown-content" role="menu">
               <%= for customer_suggestion <- @customer_suggestions do %>
                 <a
                   href="#"
@@ -75,6 +69,13 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
                   <%= customer_suggestion.name %>
                 </a>
               <% end %>
+              <div
+                id="customers_list"
+                phx-hook="InfiniteScroll"
+                data-page={@page}
+                data-no_more_queries={@no_more_queries}
+                phx-target={@myself}
+              ></div>
             </div>
           </div>
         </div>
@@ -126,14 +127,15 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
       customer_name: customer_name
     } = socket.assigns
 
-    next_page = page + 1
+    next_customers = Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * (page + 1))
+
+    {customer_suggestions, no_more_queries} = maybe_add(customer_suggestions, next_customers)
 
     {:noreply,
      assign(socket,
-       customer_suggestions:
-         customer_suggestions ++
-           Customers.suggest_by_name(customer_name, limit: 10, offset: 10 * next_page),
-       page: next_page
+       customer_suggestions: customer_suggestions,
+       page: page + 1,
+       no_more_queries: no_more_queries
      )}
   end
 
