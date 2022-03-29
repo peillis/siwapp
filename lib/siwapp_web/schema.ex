@@ -15,6 +15,13 @@ defmodule SiwappWeb.Schema do
   alias SiwappWeb.Resolvers
 
   query do
+    @desc "Get an invoice"
+    field :invoice, :invoice do
+      arg(:id, non_null(:id))
+
+      resolve(&Resolvers.Invoice.get/2)
+    end
+
     @desc "Get all customers"
     field :customers, list_of(:customer) do
       arg(:limit, :integer, default_value: 10)

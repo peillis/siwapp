@@ -6,6 +6,13 @@ defmodule SiwappWeb.Resolvers.Invoice do
   alias SiwappWeb.Resolvers.Errors
   alias SiwappWeb.Resolvers.Helpers
 
+  @spec get(map(), Absinthe.Resolution.t()) :: {:ok, Invoices.Invoice.t()}
+  def get(%{id: id}, _resolution) do
+    invoice = Invoices.get!(id, preload: [:items, :payments])
+
+    {:ok, invoice}
+  end
+
   @spec list(map(), Absinthe.Resolution.t()) :: {:ok, [Invoices.Invoice.t()]}
   def list(%{customer_id: customer_id, limit: limit, offset: offset}, _resolution) do
     invoices =
