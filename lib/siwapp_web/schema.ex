@@ -23,6 +23,13 @@ defmodule SiwappWeb.Schema do
       resolve(&Resolvers.Customer.list/2)
     end
 
+    @desc "Get an invoice"
+    field :invoice, :invoice do
+      arg(:id, non_null(:id))
+
+      resolve(&Resolvers.Invoice.get/2)
+    end
+
     @desc "Get all invoices"
     field :invoices, list_of(:invoice) do
       arg(:customer_id, :id)
