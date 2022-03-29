@@ -11,7 +11,11 @@ info: # same format as for OpenAPI Specification
 
  # define your domains by providing a set of usecases
 domains:
-  - name: List # Name of the domain
+  - name: Get # Name of the domain
+    usecases:
+     - name: Get an invoice
+       query: query.invoice
+  - name: List
     usecases:
      - name: Get all customers
        query: query.customers
@@ -20,7 +24,7 @@ domains:
   - name: Create
     usecases:
      - name: Create a customer
-       query: mutation.createCustomer       
+       query: mutation.createCustomer
      - name: Create an invoice
        query: mutation.createInvoice
   - name: Delete
