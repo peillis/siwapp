@@ -45,13 +45,22 @@ defmodule Siwapp.Invoices.Statistics do
   Returns a map in which each key is the string of a currency code and its value the accumulated amount
   corresponding to all the 'invoices' in that currency.
   """
-  @spec get_amount_per_currencies(Ecto.Queryable.t()) :: %{String.t() => integer()}
-  def get_amount_per_currencies(query \\ Invoice) do
+  @spec get_amount_per_currencies(Ecto.Queryable.t(), atom) :: %{String.t() => integer()}
+  def get_amount_per_currencies(query \\ Invoice, type_of_amount) do
     query
     |> Query.not_deleted()
     |> group_by([q], q.currency)
-    |> select([q], {q.currency, sum(q.gross_amount)})
+    |> select_amount(type_of_amount)
     |> Repo.all()
     |> Map.new()
+  end
+
+  @spec select_amount(Ecto.Queryable.t(), atom) :: Ecto.Queryable.t()
+  defp select_amount(query, :gross) do
+    select(query, [q], {q.currency, sum(q.gross_amount)})
+  end
+
+  defp select_amount(query, :net) do
+    select(query, [q], {q.currency, sum(q.net_amount)})
   end
 end

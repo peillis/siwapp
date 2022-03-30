@@ -1,0 +1,27 @@
+<div class="has-text-centered">
+  <div class="columns is-gapless">
+    <div class="column has-text-weight-bold">
+      Gross Amount:
+    </div>
+    <%= for {currency, total} <- @gross_totals do %>
+      <div class="column">
+        <span class="has-text-weight-medium">
+          <%= money_format(total, currency) %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="columns is-gapless">
+    <div class="column has-text-weight-bold">
+      Net Amount:
+    </div>
+    <%= for {currency, total} <- @net_totals do %>
+      <div class="column">
+        <span class="has-text-weight-medium">
+          <%= money_format(total, currency) %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+</div>
