@@ -105,7 +105,7 @@
         <tbody>
           <tr>
             <th>Subtotal:</th>
-            <td>
+            <td class="has-text-right">
               <%= money_format(input_value(@f, :net_amount), @currency) %>
             </td>
           </tr>
@@ -114,14 +114,14 @@
               <th>
                 <%= tax_name %>
               </th>
-              <td>
+              <td class="has-text-right">
                 <%= money_format(tax_value, @currency) %>
               </td>
             </tr>
           <% end %>
           <tr>
             <th>TOTAL</th>
-            <td>
+            <td class="has-text-right">
               <%= money_format(input_value(@f, :gross_amount), @currency) %>
             </td>
           </tr>
