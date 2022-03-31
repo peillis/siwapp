@@ -1,10 +1,10 @@
-<div class="has-text-centered">
-  <div class="columns is-gapless">
-    <div class="column has-text-weight-bold">
+<div class="total-content">
+  <div class="is-flex is-flex-direction-row">
+    <div class="mr-3 has-text-weight-bold">
       Gross Amount:
     </div>
     <%= for {currency, total} <- @gross_totals do %>
-      <div class="column">
+      <div class="mr-5">
         <span class="has-text-weight-medium">
           <%= money_format(total, currency) %>
         </span>
@@ -12,16 +12,31 @@
     <% end %>
   </div>
 
-  <div class="columns is-gapless">
-    <div class="column has-text-weight-bold">
+  <div class="is-flex is-flex-direction-row">
+    <div class="mr-3 has-text-weight-bold">
       Net Amount:
     </div>
     <%= for {currency, total} <- @net_totals do %>
-      <div class="column">
+      <div class="mr-5">
         <span class="has-text-weight-medium">
           <%= money_format(total, currency) %>
         </span>
       </div>
     <% end %>
   </div>
+
+  <%= for {name, list} <- @taxes do %>
+    <div class="is-flex is-flex-direction-row">
+      <div class="mr-3 has-text-weight-bold">
+        <%= name %> :
+      </div>
+      <%= for {currency, total} <- list do %>
+        <div class="mr-5">
+          <span class="has-text-weight-medium">
+            <%= money_format(total, currency) %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 </div>

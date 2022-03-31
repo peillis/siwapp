@@ -134,6 +134,17 @@ p.control.has-dropdown {
     border-color: transparent;
 }
 
+.total-content{  
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0px 0 1px rgb(10 10 10 / 2%);
+  border-radius: 6px;
+  width: fit-content;
+  padding: 0.5rem;
+}
+
+.total-content>.is-flex:not(:last-child, :first-child){
+  margin: 0.75rem 0;
+}
+
 @media screen and (max-width: 1000px) {
   .search-input {
     display: none;

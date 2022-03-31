@@ -21,6 +21,7 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
     net_totals = Statistics.get_amount_per_currencies(assigns.query, :net)
     default_total = gross_totals[socket.assigns.default_currency] || 0
     others_totals = Map.drop(gross_totals, [socket.assigns.default_currency])
+    taxes = Statistics.get_tax_amount_per_currencies(assigns.query)
 
     {:ok,
      socket
@@ -30,7 +31,8 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
      |> assign(default_total: default_total)
      |> assign(other_totals: others_totals)
      |> assign(gross_totals: gross_totals)
-     |> assign(net_totals: net_totals)}
+     |> assign(net_totals: net_totals)
+     |> assign(taxes: taxes)}
   end
 
   @impl Phoenix.LiveComponent
@@ -76,7 +78,8 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
           </div>
           <%= render(SiwappWeb.PageView, "totals_info.html",
             gross_totals: @gross_totals,
-            net_totals: @net_totals
+            net_totals: @net_totals,
+            taxes: @taxes
           ) %>
         </div>
       </div>
