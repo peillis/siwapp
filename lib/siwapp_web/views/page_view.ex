@@ -10,7 +10,7 @@ defmodule SiwappWeb.PageView do
   def money_format(value, currency, options \\ []) do
     value
     |> Money.new(currency)
-    |> Money.to_string(options)
+    |> Money.to_string(options ++ [{:symbol_on_right, true}])
   end
 
   @spec reference(binary, integer) :: binary
