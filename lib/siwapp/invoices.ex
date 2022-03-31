@@ -92,7 +92,7 @@ defmodule Siwapp.Invoices do
         {:error, msg}
 
       {:ok, email} ->
-        case Siwapp.Mailer.deliver(email) do
+        case Siwapp.Mailer.deliver(email, mailer_options(System.get_env("MAILER"))) do
           {:ok, id} ->
             __MODULE__.update(invoice, %{sent_by_email: true})
             {:ok, id}
@@ -102,6 +102,10 @@ defmodule Siwapp.Invoices do
         end
     end
   end
+
+  @spec mailer_options(nil | binary) :: [] | [adapter: atom]
+  defp mailer_options(nil), do: []
+  defp mailer_options(mailer), do: [adapter: String.to_atom("Siwapp.#{mailer}Mailer")]
 
   @spec set_paid(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def set_paid(invoice) do
