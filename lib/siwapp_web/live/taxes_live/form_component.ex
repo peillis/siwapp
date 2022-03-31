@@ -28,10 +28,12 @@ defmodule SiwappWeb.TaxesLive.FormComponent do
   end
 
   def handle_event("save", %{"tax" => tax_params}, socket) do
+    Cachex.clear(:siwapp_cache)
     save_tax(socket, socket.assigns.action, tax_params)
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
+    Cachex.clear(:siwapp_cache)
     tax = Commons.get_tax!(id)
 
     case Commons.delete_tax(tax) do

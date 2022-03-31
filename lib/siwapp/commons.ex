@@ -234,7 +234,7 @@ defmodule Siwapp.Commons do
     |> Repo.all()
   end
 
-  @spec list_taxes(:cache) :: [Tax.t()]
+  @spec list_taxes(:cache) :: [Tax.t()] | {:error, binary}
   def list_taxes(:cache) do
     case Cachex.get(:siwapp_cache, :taxes) do
       {:ok, nil} ->
@@ -245,6 +245,8 @@ defmodule Siwapp.Commons do
       {:ok, taxes} ->
         taxes
     end
+  rescue
+    e in ArgumentError -> {:error, e.message}
   end
 
   @spec default_taxes_names :: [binary]
@@ -304,8 +306,6 @@ defmodule Siwapp.Commons do
   """
   @spec create_tax(map) :: {:ok, Tax.t()} | {:error, Ecto.Changeset.t()}
   def create_tax(attrs \\ %{}) do
-    Cachex.clear(:siwapp_cache)
-
     %Tax{}
     |> Tax.changeset(attrs)
     |> Repo.insert()
@@ -326,8 +326,6 @@ defmodule Siwapp.Commons do
   @spec update_tax(Tax.t(), map) ::
           {:ok, Tax.t()} | {:error, Ecto.Changeset.t()}
   def update_tax(%Tax{} = tax, attrs) do
-    Cachex.clear(:siwapp_cache)
-
     tax
     |> Tax.changeset(attrs)
     |> Repo.update()
@@ -367,8 +365,6 @@ defmodule Siwapp.Commons do
   """
   @spec delete_tax(Tax.t()) :: {:ok, Tax.t()} | {:error, Ecto.Changeset.t()}
   def delete_tax(%Tax{} = tax) do
-    Cachex.clear(:siwapp_cache)
-
     if Siwapp.RecurringInvoices.tax_in_any_recurring_invoice?(tax.name) do
       {:error, "It's forbidden to delete a tax with associated invoices/recurring invoices"}
     else
