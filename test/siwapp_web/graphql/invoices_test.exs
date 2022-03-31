@@ -6,6 +6,7 @@ defmodule SiwappWeb.Graphql.InvoicesTest do
   import Siwapp.SettingsFixtures
 
   setup do
+    Cachex.clear(:siwapp_cache)
     series = series_fixture(%{name: "A-Series", code: "A-"})
     taxes_fixture(%{name: "VAT", value: 21, default: true})
     taxes_fixture(%{name: "RETENTION", value: -15})
