@@ -102,7 +102,11 @@
     field={:meta_attributes}
   />
 
-  <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
+  <nav
+    class="navbar is-fixed-bottom navbar-menu mr-3"
+    role="navigation"
+    aria-label="main navigation"
+  >
     <div class="navbar-end navbar-items buttons">
       <%= if @live_action == :edit do %>
         <%= link("Delete",
