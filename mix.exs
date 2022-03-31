@@ -54,6 +54,7 @@ defmodule Siwapp.MixProject do
       {:hackney, "~> 1.8"},
       {:heex_formatter, github: "feliperenan/heex_formatter"},
       {:jason, "~> 1.2"},
+      {:mail, ">= 0.0.0"},
       {:mappable, "~> 0.2.4"},
       {:money, "~> 1.4"},
       {:phoenix, "~> 1.6.2"},
