@@ -1,5 +1,5 @@
 <nav class="navbar is-fixed-bottom navbar-menu" role="navigation" aria-label="main navigation">
-  <div class="navbar-end navbar-items buttons">
+  <div class="navbar-end navbar-items buttons mr-3">
     <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
     <%= link("Send Email",
       to: Routes.page_path(@conn, :send_email, @invoice.id),
