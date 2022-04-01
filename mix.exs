@@ -10,7 +10,46 @@ defmodule Siwapp.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      docs: [
+        groups_for_modules: [
+          Context: [
+            Siwapp.Accounts,
+            Siwapp.Invoices,
+            Siwapp.RecurringInvoices,
+            Siwapp.Customers,
+            Siwapp.Settings,
+            Siwapp.Templates,
+            Siwapp.Commons,
+            Siwapp.Query,
+            Siwapp.Searches
+          ],
+          Invoices: [
+            Siwapp.Invoices.Invoice,
+            Siwapp.Invoices.Payment,
+            Siwapp.Invoices.Item,
+            Siwapp.Invoices.InvoiceQuery,
+            Siwapp.Invoices.AmountHelper,
+            Siwapp.Invoices.Statistics
+          ],
+          Customers: [Siwapp.Customers.Customer, Siwapp.Customers.CustomerQuery],
+          "Recurring Invoices": [
+            Siwapp.RecurringInvoices.RecurringInvoice,
+            Siwapp.RecurringInvoices.RecurringInvoiceQuery
+          ],
+          Commons: [Siwapp.Commons.Series, Siwapp.Commons.Tax],
+          Accounts: [
+            Siwapp.Accounts.User,
+            Siwapp.Accounts.UserNotifier,
+            Siwapp.Accounts.UserToken
+          ],
+          Settings: [Siwapp.Settings.Setting, Siwapp.Settings.SettingBundle],
+          Templates: [Siwapp.Templates.Template],
+          Searches: [Siwapp.Searches.Search, Siwapp.Searches.SearchQuery]
+        ],
+        extras: ["README.md"],
+        logo: "#{__DIR__}/priv/static/images/logo.svg"
+      ]
     ]
   end
 
