@@ -104,7 +104,13 @@ defmodule Siwapp.Invoices.Statistics do
       {tax_name, currency, total} = tuple
 
       if Map.has_key?(acc, tax_name) do
-        Map.update!(acc, tax_name, &(&1 ++ [{currency, Decimal.to_integer(total)}]))
+        Map.update!(
+          acc,
+          tax_name,
+          &(&1
+            |> Kernel.++([{currency, Decimal.to_integer(total)}])
+            |> Enum.sort())
+        )
       else
         Map.put(acc, tax_name, [{currency, Decimal.to_integer(total)}])
       end
