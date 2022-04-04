@@ -60,7 +60,7 @@ defmodule Siwapp.Invoices.StatisticsTest do
 
   describe "get_amount_per_currencies/1" do
     test "when there is no invoices it returns an empty map" do
-      assert Statistics.get_amount_per_currencies() == %{}
+      assert Statistics.get_amount_per_currencies(:gross) == %{}
     end
 
     test "for multiple invoices with different currencies, there is a key and an amount for each one" do
@@ -74,7 +74,7 @@ defmodule Siwapp.Invoices.StatisticsTest do
         currency: "GBP"
       })
 
-      assert Statistics.get_amount_per_currencies() == %{"USD" => 500, "GBP" => 500}
+      assert Statistics.get_amount_per_currencies(:gross) == %{"USD" => 500, "GBP" => 500}
     end
 
     test "for multiple invoices with the same currency, there is only one key and accumulated amount for them" do
@@ -88,7 +88,7 @@ defmodule Siwapp.Invoices.StatisticsTest do
         currency: "USD"
       })
 
-      assert Statistics.get_amount_per_currencies() == %{"USD" => 1000}
+      assert Statistics.get_amount_per_currencies(:gross) == %{"USD" => 1000}
     end
   end
 end

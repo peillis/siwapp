@@ -45,13 +45,75 @@ defmodule Siwapp.Invoices.Statistics do
   Returns a map in which each key is the string of a currency code and its value the accumulated amount
   corresponding to all the 'invoices' in that currency.
   """
-  @spec get_amount_per_currencies(Ecto.Queryable.t()) :: %{String.t() => integer()}
-  def get_amount_per_currencies(query \\ Invoice) do
+  @spec get_amount_per_currencies(Ecto.Queryable.t(), atom) :: %{String.t() => integer()}
+  def get_amount_per_currencies(query \\ Invoice, type_of_amount) do
     query
     |> Query.not_deleted()
     |> group_by([q], q.currency)
-    |> select([q], {q.currency, sum(q.gross_amount)})
+    |> select_amount(type_of_amount)
     |> Repo.all()
     |> Map.new()
+  end
+
+  @spec get_tax_amount_per_currencies(Ecto.Queryable.t()) :: %{binary() => [tuple()]} | %{}
+  def get_tax_amount_per_currencies(query \\ Invoice) do
+    final_query =
+      from(
+        sbq in subquery(
+          query
+          |> Query.not_deleted()
+          |> join(:inner, [q], q in assoc(q, :items), as: :items)
+          |> join(:inner, [items: itm], itm in assoc(itm, :taxes), as: :taxes)
+          |> group_by([q, taxes: t], [q.currency, q.id, t.name])
+          |> select(
+            [q, items: itm, taxes: t],
+            %{
+              total:
+                fragment(
+                  "round(sum(?*?*?::decimal/100))",
+                  itm.quantity,
+                  itm.unitary_cost,
+                  t.value
+                ),
+              name: t.name,
+              currency: q.currency
+            }
+          )
+        ),
+        group_by: [sbq.name, sbq.currency],
+        select: {sbq.name, sbq.currency, fragment("sum(total)")}
+      )
+
+    final_query
+    |> Repo.all()
+    |> restructure()
+  end
+
+  @spec select_amount(Ecto.Queryable.t(), atom) :: Ecto.Queryable.t()
+  defp select_amount(query, :gross) do
+    select(query, [q], {q.currency, sum(q.gross_amount)})
+  end
+
+  defp select_amount(query, :net) do
+    select(query, [q], {q.currency, sum(q.net_amount)})
+  end
+
+  @spec restructure([tuple]) :: %{binary() => [tuple()]} | %{}
+  defp restructure(list) do
+    Enum.reduce(list, %{}, fn tuple, acc ->
+      {tax_name, currency, total} = tuple
+
+      if Map.has_key?(acc, tax_name) do
+        Map.update!(
+          acc,
+          tax_name,
+          &(&1
+            |> Kernel.++([{currency, Decimal.to_integer(total)}])
+            |> Enum.sort())
+        )
+      else
+        Map.put(acc, tax_name, [{currency, Decimal.to_integer(total)}])
+      end
+    end)
   end
 end

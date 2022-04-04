@@ -17,9 +17,9 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
-    totals = Statistics.get_amount_per_currencies(assigns.query)
-    default_total = totals[socket.assigns.default_currency] || 0
-    others_totals = Map.drop(totals, [socket.assigns.default_currency])
+    gross_totals = Statistics.get_amount_per_currencies(assigns.query, :gross)
+    default_total = gross_totals[socket.assigns.default_currency] || 0
+    others_totals = Map.drop(gross_totals, [socket.assigns.default_currency])
 
     {:ok,
      socket
@@ -27,7 +27,9 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
      |> assign(count: Statistics.count(assigns.query, deleted_at_query: true))
      |> assign(chart_data: Statistics.get_amount_per_day(assigns.query))
      |> assign(default_total: default_total)
-     |> assign(other_totals: others_totals)}
+     |> assign(other_totals: others_totals)
+     |> assign(gross_totals: gross_totals)
+     |> assign(query: assigns.query)}
   end
 
   @impl Phoenix.LiveComponent
@@ -67,11 +69,18 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
       </div>
 
       <div id="summary-card" class={"card #{@summary_state.visibility}"}>
-        <div class="card-content">
-          <div class="content">
-            <%= summary_chart(@chart_data) %>
+        <%= if @summary_state.visibility == "is-block" do %>
+          <div class="card-content">
+            <div class="content">
+              <%= summary_chart(@chart_data) %>
+            </div>
+            <%= render(SiwappWeb.PageView, "totals_info.html",
+              gross_totals: @gross_totals,
+              net_totals: @net_totals,
+              taxes: @taxes
+            ) %>
           </div>
-        </div>
+        <% end %>
       </div>
     </div>
     """
@@ -80,7 +89,14 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
   @impl Phoenix.LiveComponent
   def handle_event("change-summary-state", _params, socket) do
     if socket.assigns.summary_state.visibility == "is-hidden" do
-      {:noreply, assign(socket, :summary_state, set_summary(:opened))}
+      net_totals = Statistics.get_amount_per_currencies(socket.assigns.query, :net)
+      taxes = Statistics.get_tax_amount_per_currencies(socket.assigns.query)
+
+      {:noreply,
+       socket
+       |> assign(:summary_state, set_summary(:opened))
+       |> assign(net_totals: net_totals)
+       |> assign(taxes: taxes)}
     else
       {:noreply, assign(socket, :summary_state, set_summary(:closed))}
     end
