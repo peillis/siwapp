@@ -54,7 +54,8 @@ defmodule Siwapp.MixProject do
           GraphQL: [
             SiwappWeb.Resolvers.Customer,
             SiwappWeb.Resolvers.Invoice,
-            SiwappWeb.Resolvers.Errors
+            SiwappWeb.Resolvers.Errors,
+            SiwappWeb.Schema.Helpers
           ],
           Views: [
             SiwappWeb.LayoutView,

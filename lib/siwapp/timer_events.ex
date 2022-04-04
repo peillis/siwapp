@@ -1,7 +1,5 @@
 defmodule Siwapp.TimerEvents do
-  @moduledoc """
-  Module to generate events
-  """
+  @moduledoc false
   use GenServer
 
   alias Siwapp.Accounts
