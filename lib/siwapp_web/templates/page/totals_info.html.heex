@@ -1,42 +1,36 @@
-<div class="total-content">
-  <div class="is-flex is-flex-direction-row">
-    <div class="mr-3 has-text-weight-bold">
-      Gross Amount:
-    </div>
-    <%= for {currency, total} <- @gross_totals do %>
-      <div class="mr-5">
-        <span class="has-text-weight-medium">
+<table class="table is-bordered is-narrow has-text-centered">
+  <tbody>
+    <tr>
+      <td class="has-text-weight-bold">
+        Gross Amount:
+      </td>
+      <%= for {currency, total} <- @gross_totals do %>
+        <td class="has-text-weight-medium">
           <%= money_format(total, currency) %>
-        </span>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="is-flex is-flex-direction-row">
-    <div class="mr-3 has-text-weight-bold">
-      Net Amount:
-    </div>
-    <%= for {currency, total} <- @net_totals do %>
-      <div class="mr-5">
-        <span class="has-text-weight-medium">
-          <%= money_format(total, currency) %>
-        </span>
-      </div>
-    <% end %>
-  </div>
-
-  <%= for {name, list} <- @taxes do %>
-    <div class="is-flex is-flex-direction-row">
-      <div class="mr-3 has-text-weight-bold">
-        <%= name %> :
-      </div>
-      <%= for {currency, total} <- list do %>
-        <div class="mr-5">
-          <span class="has-text-weight-medium">
-            <%= money_format(total, currency) %>
-          </span>
-        </div>
+        </td>
       <% end %>
-    </div>
-  <% end %>
-</div>
+    </tr>
+    <tr>
+      <td class="has-text-weight-bold">
+        Net Amount:
+      </td>
+      <%= for {currency, total} <- @net_totals do %>
+        <td class="has-text-weight-medium">
+          <%= money_format(total, currency) %>
+        </td>
+      <% end %>
+    </tr>
+    <%= for {name, list} <- @taxes do %>
+      <tr>
+        <td class="has-text-weight-bold">
+          <%= name %> :
+        </td>
+        <%= for {currency, total} <- list do %>
+          <td class="has-text-weight-medium">
+            <%= money_format(total, currency) %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
