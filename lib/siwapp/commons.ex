@@ -234,7 +234,7 @@ defmodule Siwapp.Commons do
     |> Repo.all()
   end
 
-  @spec list_taxes(:cache) :: [Tax.t()] | {:error, binary}
+  @spec list_taxes(:cache) :: [Tax.t()]
   def list_taxes(:cache) do
     case Cachex.get(:siwapp_cache, :taxes) do
       {:ok, nil} ->

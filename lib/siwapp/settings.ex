@@ -112,7 +112,7 @@ defmodule Siwapp.Settings do
   end
 
   @spec act(tuple) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
-  defp act({key, value} = tuple) do
+  defp act({key, _value} = tuple) do
     if is_nil(get(key)), do: create(tuple), else: update(tuple)
   end
 
