@@ -190,6 +190,9 @@ defmodule Siwapp.Invoices.Invoice do
     end
   end
 
+  @doc """
+  Returns module fields
+  """
   @spec fields() :: [atom]
   def fields, do: @fields
 

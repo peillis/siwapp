@@ -10,7 +10,63 @@ defmodule Siwapp.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      docs: [
+        groups_for_modules: [
+          Context: [
+            Siwapp.Accounts,
+            Siwapp.Invoices,
+            Siwapp.RecurringInvoices,
+            Siwapp.Customers,
+            Siwapp.Settings,
+            Siwapp.Templates,
+            Siwapp.Commons
+          ],
+          Invoices: [
+            Siwapp.Invoices.Invoice,
+            Siwapp.Invoices.Payment,
+            Siwapp.Invoices.Item,
+            Siwapp.Invoices.InvoiceQuery,
+            Siwapp.Invoices.AmountHelper,
+            Siwapp.Invoices.Statistics
+          ],
+          Customers: [Siwapp.Customers.Customer, Siwapp.Customers.CustomerQuery],
+          "Recurring Invoices": [
+            Siwapp.RecurringInvoices.RecurringInvoice,
+            Siwapp.RecurringInvoices.RecurringInvoiceQuery
+          ],
+          Commons: [Siwapp.Commons.Series, Siwapp.Commons.Tax],
+          Accounts: [Siwapp.Accounts.User],
+          Settings: [Siwapp.Settings.Setting, Siwapp.Settings.SettingBundle],
+          Templates: [Siwapp.Templates.Template],
+          Searches: [Siwapp.Searches.Search, Siwapp.Searches.SearchQuery],
+          Controllers: [
+            SiwappWeb.IframeController,
+            SiwappWeb.PageController,
+            SiwappWeb.SettingsController,
+            SiwappWeb.UserConfirmationController,
+            SiwappWeb.UserResetPasswordController,
+            SiwappWeb.UserSessionController,
+            SiwappWeb.UserSettingsController,
+            SiwappWeb.Api.InvoicesController,
+            SiwappWeb.Api.TokenController
+          ],
+          GraphQL: [
+            SiwappWeb.Resolvers.Customer,
+            SiwappWeb.Resolvers.Invoice,
+            SiwappWeb.Resolvers.Errors,
+            SiwappWeb.Schema.Helpers
+          ],
+          Views: [
+            SiwappWeb.LayoutView,
+            SiwappWeb.PageView,
+            SiwappWeb.ErrorHelpers,
+            SiwappWeb.GraphicHelpers
+          ]
+        ],
+        extras: ["README.md"],
+        logo: "#{__DIR__}/priv/static/images/logo.svg"
+      ]
     ]
   end
 

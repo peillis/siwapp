@@ -1,7 +1,5 @@
 defmodule SiwappWeb.RecurringInvoicesLive.Index do
-  @moduledoc """
-  This module manages the recurring_invoices LiveView events
-  """
+  @moduledoc false
   use SiwappWeb, :live_view
 
   import SiwappWeb.PageView, only: [money_format: 2]

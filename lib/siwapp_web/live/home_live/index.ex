@@ -1,7 +1,5 @@
 defmodule SiwappWeb.HomeLive.Index do
-  @moduledoc """
-  This module manages the LiveView events from the homepage
-  """
+  @moduledoc false
   use SiwappWeb, :live_view
 
   import SiwappWeb.PageView, only: [money_format: 3]

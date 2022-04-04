@@ -1,4 +1,5 @@
 defmodule SiwappWeb.Api.TokenView do
+  @moduledoc false
   use SiwappWeb, :view
 
   @spec render(binary, map) :: map()

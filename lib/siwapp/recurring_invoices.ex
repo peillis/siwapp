@@ -144,7 +144,9 @@ defmodule Siwapp.RecurringInvoices do
   defp maybe_select(query, nil), do: query
   defp maybe_select(query, fields), do: from(q in query, select: struct(q, ^fields))
 
-  # Given a recurring_invoice id, returns the amount of invoices that should  be generated
+  @doc """
+  Given a recurring_invoice id, returns the amount of invoices that should  be generated
+  """
   @spec invoices_to_generate(pos_integer()) :: integer
   def invoices_to_generate(id) do
     theoretical_number_of_inv_generated(id) - generated_invoices(id)
