@@ -245,8 +245,6 @@ defmodule Siwapp.Commons do
       {:ok, taxes} ->
         taxes
     end
-  rescue
-    e in ArgumentError -> {:error, e.message}
   end
 
   @spec default_taxes_names :: [binary]
