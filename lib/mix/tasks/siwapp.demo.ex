@@ -96,15 +96,8 @@ defmodule Mix.Tasks.Siwapp.Demo do
     Enum.each(@models, &Repo.delete_all(&1))
 
     settings = [
-      company: "Doofinder",
-      company_vat_id: "1fg5t7",
-      company_phone: "632778941",
-      company_email: "demo@example.com",
-      company_website: "www.mywebsite.com",
       currency: "USD",
-      days_to_due: "#{Faker.random_between(0, 5)}",
-      company_address: "Newton Avenue, 32. NY",
-      legal_terms: "Clauses of our contract"
+      days_to_due: "#{Faker.random_between(0, 5)}"
     ]
 
     Enum.each(settings, &Settings.create(&1))
