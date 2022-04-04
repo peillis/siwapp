@@ -30,6 +30,9 @@ defmodule Siwapp.Invoices.InvoiceQuery do
     |> where([q], is_nil(q.due_date) or q.due_date >= ^date_today)
   end
 
+  @doc """
+  Returns a query all the invoices that its item descritption, email, name or identification match with terms
+  """
   @spec with_terms(Ecto.Queryable.t(), any) :: Ecto.Query.t()
   def with_terms(query, terms) do
     query

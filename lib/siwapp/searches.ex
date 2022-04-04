@@ -30,6 +30,9 @@ defmodule Siwapp.Searches do
     |> Repo.all()
   end
 
+  @doc """
+  Returns a query for the filter_params
+  """
   @spec filters_query(Ecto.Queryable.t(), [{binary, binary}] | map()) :: Ecto.Queryable.t()
   def filters_query(query, params) do
     Enum.reduce(params, query, fn {key, value}, acc_query ->
@@ -37,6 +40,9 @@ defmodule Siwapp.Searches do
     end)
   end
 
+  @doc """
+  Returns 10 customers names starting from an offset(10*page) that match with the value
+  """
   @spec get_customers_names(binary, non_neg_integer) :: list()
   def get_customers_names(value, page) do
     Repo.all(CustomerQuery.names(value, page))
