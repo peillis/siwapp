@@ -38,11 +38,7 @@ defmodule Siwapp.MixProject do
             Siwapp.RecurringInvoices.RecurringInvoiceQuery
           ],
           Commons: [Siwapp.Commons.Series, Siwapp.Commons.Tax],
-          Accounts: [
-            Siwapp.Accounts.User,
-            Siwapp.Accounts.UserNotifier,
-            Siwapp.Accounts.UserToken
-          ],
+          Accounts: [Siwapp.Accounts.User],
           Settings: [Siwapp.Settings.Setting, Siwapp.Settings.SettingBundle],
           Templates: [Siwapp.Templates.Template],
           Searches: [Siwapp.Searches.Search, Siwapp.Searches.SearchQuery]

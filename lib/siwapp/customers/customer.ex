@@ -57,7 +57,6 @@ defmodule Siwapp.Customers.Customer do
     timestamps()
   end
 
-  @doc false
   @spec changeset(t(), map) :: Ecto.Changeset.t()
   def changeset(customer, attrs \\ %{}) do
     customer
@@ -78,6 +77,9 @@ defmodule Siwapp.Customers.Customer do
     Base.encode16(:crypto.hash(:md5, "#{normalize(identification)}#{normalize(name)}"))
   end
 
+  @doc """
+  Returns module fields
+  """
   @spec fields :: [atom]
   def fields, do: @fields
 
