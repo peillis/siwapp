@@ -1,4 +1,5 @@
 defmodule SiwappWeb.ErrorView do
+  @moduledoc false
   use SiwappWeb, :view
 
   # If you want to customize a particular status code

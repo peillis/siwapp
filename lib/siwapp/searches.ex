@@ -1,5 +1,7 @@
 defmodule Siwapp.Searches do
-  @moduledoc false
+  @moduledoc """
+  Search Context
+  """
   import Ecto.Query
   alias Siwapp.Customers.CustomerQuery
   alias Siwapp.Query

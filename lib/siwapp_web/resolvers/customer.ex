@@ -1,5 +1,7 @@
 defmodule SiwappWeb.Resolvers.Customer do
-  @moduledoc false
+  @moduledoc """
+  Customers functions for GraphQL
+  """
 
   alias Siwapp.Customers
   alias SiwappWeb.Resolvers.Errors

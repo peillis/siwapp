@@ -1,5 +1,7 @@
 defmodule SiwappWeb.Resolvers.Invoice do
-  @moduledoc false
+  @moduledoc """
+  Invoices functions for GraphQL
+  """
 
   alias Siwapp.Invoices
   alias SiwappWeb.PageView

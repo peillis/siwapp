@@ -1,8 +1,5 @@
 defmodule SiwappWeb.CustomersLive.Index do
-  @moduledoc """
-
-  This module manages the customer index view
-  """
+  @moduledoc false
 
   use SiwappWeb, :live_view
 

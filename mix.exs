@@ -20,9 +20,7 @@ defmodule Siwapp.MixProject do
             Siwapp.Customers,
             Siwapp.Settings,
             Siwapp.Templates,
-            Siwapp.Commons,
-            Siwapp.Query,
-            Siwapp.Searches
+            Siwapp.Commons
           ],
           Invoices: [
             Siwapp.Invoices.Invoice,
@@ -41,7 +39,29 @@ defmodule Siwapp.MixProject do
           Accounts: [Siwapp.Accounts.User],
           Settings: [Siwapp.Settings.Setting, Siwapp.Settings.SettingBundle],
           Templates: [Siwapp.Templates.Template],
-          Searches: [Siwapp.Searches.Search, Siwapp.Searches.SearchQuery]
+          Searches: [Siwapp.Searches.Search, Siwapp.Searches.SearchQuery],
+          Controllers: [
+            SiwappWeb.IframeController,
+            SiwappWeb.PageController,
+            SiwappWeb.SettingsController,
+            SiwappWeb.UserConfirmationController,
+            SiwappWeb.UserResetPasswordController,
+            SiwappWeb.UserSessionController,
+            SiwappWeb.UserSettingsController,
+            SiwappWeb.Api.InvoicesController,
+            SiwappWeb.Api.TokenController
+          ],
+          GraphQL: [
+            SiwappWeb.Resolvers.Customer,
+            SiwappWeb.Resolvers.Invoice,
+            SiwappWeb.Resolvers.Errors
+          ],
+          Views: [
+            SiwappWeb.LayoutView,
+            SiwappWeb.PageView,
+            SiwappWeb.ErrorHelpers,
+            SiwappWeb.GraphicHelpers
+          ]
         ],
         extras: ["README.md"],
         logo: "#{__DIR__}/priv/static/images/logo.svg"
