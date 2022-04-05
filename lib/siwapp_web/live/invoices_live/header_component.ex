@@ -17,15 +17,14 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
 
   @impl Phoenix.LiveComponent
   def update(assigns, socket) do
-    gross_totals = Statistics.get_amount_per_currencies(assigns.query, :gross)
+    {gross_totals, count} = Statistics.get_amount_per_currencies_and_count(assigns.query, :gross)
     default_total = gross_totals[socket.assigns.default_currency] || 0
     others_totals = Map.drop(gross_totals, [socket.assigns.default_currency])
 
     {:ok,
      socket
      |> assign(page_title: assigns.page_title)
-     |> assign(count: Statistics.count(assigns.query, deleted_at_query: true))
-     |> assign(chart_data: Statistics.get_amount_per_day(assigns.query))
+     |> assign(count: count)
      |> assign(default_total: default_total)
      |> assign(other_totals: others_totals)
      |> assign(gross_totals: gross_totals)
@@ -89,13 +88,14 @@ defmodule SiwappWeb.InvoicesLive.HeaderComponent do
   @impl Phoenix.LiveComponent
   def handle_event("change-summary-state", _params, socket) do
     if socket.assigns.summary_state.visibility == "is-hidden" do
-      net_totals = Statistics.get_amount_per_currencies(socket.assigns.query, :net)
+      {net_totals, _} = Statistics.get_amount_per_currencies_and_count(socket.assigns.query, :net)
       taxes = Statistics.get_tax_amount_per_currencies(socket.assigns.query)
 
       {:noreply,
        socket
        |> assign(:summary_state, set_summary(:opened))
        |> assign(net_totals: net_totals)
+       |> assign(chart_data: Statistics.get_amount_per_day(socket.assigns.query))
        |> assign(taxes: taxes)}
     else
       {:noreply, assign(socket, :summary_state, set_summary(:closed))}

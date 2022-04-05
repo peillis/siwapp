@@ -42,17 +42,28 @@ defmodule Siwapp.Invoices.Statistics do
   end
 
   @doc """
-  Returns a map in which each key is the string of a currency code and its value the accumulated amount
+  Returns a tuple with the number of invoices found and a map in which each key is the string of a currency code and its value the accumulated amount
   corresponding to all the 'invoices' in that currency.
   """
-  @spec get_amount_per_currencies(Ecto.Queryable.t(), atom) :: %{String.t() => integer()}
-  def get_amount_per_currencies(query \\ Invoice, type_of_amount) do
-    query
-    |> Query.not_deleted()
-    |> group_by([q], q.currency)
-    |> select_amount(type_of_amount)
-    |> Repo.all()
-    |> Map.new()
+  @spec get_amount_per_currencies_and_count(Ecto.Queryable.t(), atom) :: {map, non_neg_integer()}
+  def get_amount_per_currencies_and_count(query \\ Invoice, type_of_amount) do
+    [{count, total}] =
+      query
+      |> Query.not_deleted()
+      |> group_by([q], q.currency)
+      |> select_amount_and_count(type_of_amount)
+      |> subquery()
+      |> select(
+        [sbq],
+        {sum(sbq.num_of_inv), fragment("array_agg((?, ?))", sbq.currency, sbq.total)}
+      )
+      |> Repo.all()
+
+    if is_nil(total) do
+      {%{}, 0}
+    else
+      {Map.new(total), count}
+    end
   end
 
   @spec get_tax_amount_per_currencies(Ecto.Queryable.t()) :: %{binary() => [tuple()]} | %{}
@@ -89,13 +100,17 @@ defmodule Siwapp.Invoices.Statistics do
     |> restructure()
   end
 
-  @spec select_amount(Ecto.Queryable.t(), atom) :: Ecto.Queryable.t()
-  defp select_amount(query, :gross) do
-    select(query, [q], {q.currency, sum(q.gross_amount)})
+  @spec select_amount_and_count(Ecto.Queryable.t(), atom) :: Ecto.Queryable.t()
+  defp select_amount_and_count(query, :gross) do
+    select(query, [q], %{
+      num_of_inv: count(q.id),
+      currency: q.currency,
+      total: sum(q.gross_amount)
+    })
   end
 
-  defp select_amount(query, :net) do
-    select(query, [q], {q.currency, sum(q.net_amount)})
+  defp select_amount_and_count(query, :net) do
+    select(query, [q], %{num_of_inv: count(q.id), currency: q.currency, total: sum(q.net_amount)})
   end
 
   @spec restructure([tuple]) :: %{binary() => [tuple()]} | %{}

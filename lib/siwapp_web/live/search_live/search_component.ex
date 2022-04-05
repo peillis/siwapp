@@ -8,7 +8,7 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
 
   @impl Phoenix.LiveComponent
   def mount(socket) do
-    {:ok, assign(socket, series_names: Commons.list_series_names)}
+    {:ok, assign(socket, series_names: Commons.list_series_names())}
   end
 
   @impl Phoenix.LiveComponent
