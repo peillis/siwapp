@@ -105,7 +105,7 @@ defmodule Siwapp.Invoices do
 
   @spec mailer_options(nil | binary) :: [] | [adapter: atom]
   defp mailer_options(nil), do: []
-  defp mailer_options(mailer), do: [adapter: String.to_atom("Siwapp.#{mailer}Mailer")]
+  defp mailer_options(mailer), do: [adapter: String.to_atom("Elixir.Swoosh.Adapters.#{mailer}")]
 
   @spec set_paid(Invoice.t()) :: {:ok, Invoice.t()} | {:error, Ecto.Changeset.t()}
   def set_paid(invoice) do

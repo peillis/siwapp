@@ -56,7 +56,7 @@ if config_env() == :prod do
   # ## Configuring the mailer
 
   mailer = System.get_env("MAILER")
-  mailer_adapters = String.to_atom("Swoosh.Adapters.#{mailer}")
+  mailer_adapters = String.to_atom("Elixir.Swoosh.Adapters.#{mailer}")
   mailers_only_api_key = ["Dyn", "MailPace", "Mandrill", "Postmark", "Sendgrid", "Sendinblue"]
   mailers_api_key = mailers_only_api_key ++ ["Mailjet", "Mailgun", "SocketLabs", "SparkPost"]
 
@@ -129,11 +129,10 @@ if config_env() == :prod do
         hostname: System.get_env("SMTP_HOST")
   end
 
-  #
   # For this example you need include a HTTP client required by Swoosh API client.
   # Swoosh supports Hackney and Finch out of the box:
   #
-  #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+  config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
