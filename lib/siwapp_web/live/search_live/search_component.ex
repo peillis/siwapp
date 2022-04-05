@@ -7,11 +7,15 @@ defmodule SiwappWeb.SearchLive.SearchComponent do
   alias Siwapp.Searches.Search
 
   @impl Phoenix.LiveComponent
+  def mount(socket) do
+    {:ok, assign(socket, series_names: Commons.list_series_names())}
+  end
+
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     socket =
       socket
       |> assign_changeset(assigns)
-      |> assign(:series_names, Commons.list_series_names())
       |> assign(view: assigns.view)
 
     {:ok, socket}
