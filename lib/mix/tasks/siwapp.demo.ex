@@ -44,8 +44,9 @@ defmodule Mix.Tasks.Siwapp.Demo do
 
   @impl Mix.Task
   def run(args) do
-    Enum.each([:postgrex, :ecto], &Application.ensure_all_started(&1))
+    Enum.each([:postgrex, :ecto, :cachex], &Application.ensure_all_started(&1))
     Siwapp.Repo.start_link()
+    Cachex.start_link(:siwapp_cache)
 
     validate_args!(args)
 

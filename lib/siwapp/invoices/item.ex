@@ -101,12 +101,7 @@ defmodule Siwapp.Invoices.Item do
   defp assoc_taxes(changeset, attrs) do
     attr_taxes_names = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
 
-    cachex? =
-      :cachex
-      |> Application.start()
-      |> elem(1) == {:already_started, :cachex}
-
-    all_taxes = if cachex?, do: Commons.list_taxes(:cache), else: Commons.list_taxes()
+    all_taxes = Commons.list_taxes(:cache)
 
     all_taxes_names = MapSet.new(all_taxes, & &1.name)
 
