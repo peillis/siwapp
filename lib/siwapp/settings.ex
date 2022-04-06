@@ -17,8 +17,6 @@ defmodule Siwapp.Settings do
   """
   @spec create({atom | binary, binary}) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
   def create({key, value}) do
-    Cachex.clear(:siwapp_cache)
-
     %Setting{}
     |> change({to_string(key), value})
     |> Repo.insert()
@@ -60,7 +58,7 @@ defmodule Siwapp.Settings do
     if changeset.valid? do
       changeset.changes
       |> Map.to_list()
-      |> Enum.each(&update/1)
+      |> Enum.each(&act/1)
 
       {:ok, changeset}
     else
@@ -111,6 +109,11 @@ defmodule Siwapp.Settings do
     |> get()
     |> change({to_string(key), to_string(value)})
     |> Repo.update()
+  end
+
+  @spec act(tuple) :: {:ok, Setting.t()} | {:error, Ecto.Changeset.t()}
+  defp act({key, _value} = tuple) do
+    if is_nil(get(key)), do: create(tuple), else: update(tuple)
   end
 
   @spec change(Setting.t(), {binary, binary}) :: Ecto.Changeset.t()

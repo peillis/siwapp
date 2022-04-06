@@ -102,6 +102,7 @@ defmodule Siwapp.Invoices.Item do
     attr_taxes_names = MapSet.new(get(attrs, :taxes) || [], &String.upcase/1)
 
     all_taxes = Commons.list_taxes(:cache)
+
     all_taxes_names = MapSet.new(all_taxes, & &1.name)
 
     changeset =

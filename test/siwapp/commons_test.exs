@@ -11,6 +11,7 @@ defmodule Siwapp.CommonsTest do
   alias Siwapp.Commons.Tax
 
   setup do
+    Cachex.clear(:siwapp_cache)
     series_fixture(%{name: "Default series", code: "D-"})
     taxes_fixture(%{name: "VAT", value: 21, default: true})
     taxes_fixture(%{name: "RETENTION", value: -15})
@@ -120,7 +121,9 @@ defmodule Siwapp.CommonsTest do
       tax1 = taxes_fixture(%{name: "Example1"})
       tax2 = taxes_fixture(%{name: "Example2"})
 
-      invoice_fixture(%{items: [valid_item_attributes(taxes: ["Example1"])]})
+      Cachex.clear(:siwapp_cache)
+
+      invoice_fixture(%{items: [valid_item_attributes(taxes: ["EXAMPLE1"])]})
 
       items_rec_inv = %{
         "0" => %{
@@ -128,7 +131,7 @@ defmodule Siwapp.CommonsTest do
           "discount" => 0,
           "description" => "desc",
           "unitary_cost" => 1_000,
-          "taxes" => ["Example2"]
+          "taxes" => ["EXAMPLE2"]
         }
       }
 
