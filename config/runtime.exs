@@ -54,26 +54,85 @@ if config_env() == :prod do
   # See `mix help release` for more information.
 
   # ## Configuring the mailer
-  #
-  # In production you need to configure the mailer to use a different adapter.
-  # Also, you may need to configure the Swoosh API client of your choice if you
-  # are not using SMTP. Here is an example of the configuration:
-  #
-  config :siwapp, Siwapp.Mailer,
-    adapter: Swoosh.Adapters.SMTP,
-    hostname: System.get_env("SMTP_HOST"),
-    port: System.get_env("SMTP_PORT"),
-    relay: System.get_env("SMTP_DOMAIN"),
-    username: System.get_env("SMTP_USER"),
-    password: System.get_env("SMTP_PASSWORD"),
-    authentication: System.get_env("SMTP_AUTHENTICATION"),
-    tls: System.get_env("SMTP_ENABLE_STARTTLS_AUTO")
 
-  #
+  mailer = System.get_env("MAILER")
+  mailer_adapters = String.to_atom("Elixir.Swoosh.Adapters.#{mailer}")
+  mailers_only_api_key = ["Dyn", "MailPace", "Mandrill", "Postmark", "Sendgrid", "Sendinblue"]
+  mailers_api_key = mailers_only_api_key ++ ["Mailjet", "Mailgun", "SocketLabs", "SparkPost"]
+
+  cond do
+    Enum.member?(mailers_api_key, mailer) ->
+      api_key = System.get_env("MAILER_API_KEY")
+
+      if Enum.member?(mailers_only_api_key, mailer) do
+        config :siwapp, Siwapp.Mailer,
+          adapter: mailer_adapters,
+          api_key: api_key
+      else
+        case mailer do
+          "Mailjet" ->
+            config :siwapp, Siwapp.Mailer,
+              adapter: mailer_adapters,
+              api_key: api_key,
+              secret: System.get_env("MAILER_SECRET_KEY")
+
+          "Mailgun" ->
+            config :siwapp, Siwapp.Mailer,
+              adapter: mailer_adapters,
+              api_key: api_key,
+              domain: System.get_env("MAILER_DOMAIN"),
+              base_url: System.get_env("MAILER_BASE_URL")
+
+          "SocketLabs" ->
+            config :siwapp, Siwapp.Mailer,
+              adapter: mailer_adapters,
+              api_key: api_key,
+              server_id: System.get_env("MAILER_SERVER_ID")
+
+          "SparkPost" ->
+            config :siwapp, Siwapp.Mailer,
+              adapter: mailer_adapters,
+              api_key: api_key,
+              endpoint: System.get_env("MAILER_ENDPOINT")
+        end
+      end
+
+    mailer == "AmazonSES" ->
+      config :siwapp, Siwapp.Mailer,
+        adapter: mailer_adapters,
+        region: System.get_env("MAILER_REGION_ENDPOINT"),
+        access_key: System.get_env("MAILER_ACCESS_KEY"),
+        secret: System.get_env("MAILER_SECRET_KEY")
+
+    mailer == "Gmail" ->
+      config :siwapp, Siwapp.Mailer,
+        adapter: mailer_adapters,
+        access_token: System.get_env("GMAIL_API_ACCESS_TOKEN")
+
+    mailer == "Sendmail" ->
+      config :siwapp, Siwapp.Mailer,
+        adapter: mailer_adapters,
+        cmd_path: System.get_env("MAILER_CMD_PATH"),
+        cmd_args: "-N delay,failure,success",
+        qmail: true
+
+    mailer == "SMTP" ->
+      config :siwapp, Siwapp.Mailer,
+        adapter: mailer_adapters,
+        relay: System.get_env("SMTP_DOMAIN"),
+        username: System.get_env("SMTP_USER"),
+        password: System.get_env("SMTP_PASSWORD"),
+        ssl: true,
+        tls: System.get_env("SMTP_ENABLE_STARTTLS_AUTO"),
+        auth: System.get_env("SMTP_AUTHENTICATION"),
+        port: System.get_env("SMTP_PORT"),
+        hostname: System.get_env("SMTP_HOST")
+  end
+
   # For this example you need include a HTTP client required by Swoosh API client.
   # Swoosh supports Hackney and Finch out of the box:
   #
-  #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+  config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end

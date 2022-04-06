@@ -126,7 +126,7 @@ defmodule Siwapp.RecurringInvoices do
   @spec maybe_send_by_email(Invoice.t(), boolean) :: {:ok, pos_integer} | {:error, binary} | nil
   defp maybe_send_by_email(invoice, true) do
     invoice
-    |> Repo.preload([{:items, :taxes}, :series])
+    |> Repo.preload([{:items, :taxes}, :series, :payments])
     |> Invoices.send_email()
   end
 
