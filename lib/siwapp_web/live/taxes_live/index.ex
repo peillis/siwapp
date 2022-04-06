@@ -19,6 +19,7 @@ defmodule SiwappWeb.TaxesLive.Index do
 
   @impl Phoenix.LiveView
   def handle_event("defaultClicked", %{"id" => id}, socket) do
+    Cachex.clear(:siwapp_cache)
     Commons.set_default_tax(id)
     taxes = Commons.list_taxes()
 
