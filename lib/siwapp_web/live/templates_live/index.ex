@@ -17,9 +17,23 @@ defmodule SiwappWeb.TemplatesLive.Index do
   @impl Phoenix.LiveView
   def handle_event("defaultClicked", %{"id" => id, "type" => type}, socket) do
     template = id |> String.to_integer() |> Templates.get()
-    Templates.set_default(String.to_atom(type), template)
 
-    {:noreply, assign(socket, templates: Templates.list())}
+    socket =
+      case Templates.set_default(String.to_atom(type), template) do
+        {:ok, _} ->
+          socket
+          |> assign(templates: Templates.list())
+          |> clear_flash()
+
+        {:error, %{errors: [{_key, {msg, _}}]}} ->
+          put_flash(
+            socket,
+            :error,
+            msg
+          )
+      end
+
+    {:noreply, socket}
   end
 
   def handle_event("edit", %{"id" => id}, socket) do
