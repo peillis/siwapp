@@ -10,10 +10,10 @@
       <th class="no-wrap" title="Identification">
         Identification
       </th>
-      <th class="text-right" title="Due">
+      <th class="has-text-right" title="Due">
         Due
       </th>
-      <th class="text-right" title="Total">
+      <th class="has-text-right" title="Total">
         Total
       </th>
       <th class="text-right" title=" "></th>
@@ -29,21 +29,21 @@
         <td class="no-wrap">
           <%= customer.identification %>
         </td>
-        <td class="text-right">
+        <td class="has-text-right">
           <%= money_format(
             due(customer.total, customer.paid),
             set_currency(customer.currencies),
             symbol_option(customer.currencies)
           ) %>
         </td>
-        <td class="text-right">
+        <td class="has-text-right">
           <%= money_format(
             customer.total,
             set_currency(customer.currencies),
             symbol_option(customer.currencies)
           ) %>
         </td>
-        <td class="text-center">
+        <td class="has-text-centered">
           <%= live_redirect(" ",
             class: "icon fas fa-list",
             to: Routes.invoices_index_path(@socket, :customer, customer.id)

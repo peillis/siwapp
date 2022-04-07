@@ -23,13 +23,13 @@
       <th title="Sent">
         Sent
       </th>
-      <th title="Status">
+      <th title="Status" class="has-text-centered">
         Status
       </th>
-      <th title="Pending">
+      <th title="Pending" class="has-text-right">
         Pending
       </th>
-      <th title="Total">
+      <th title="Total" class="has-text-right">
         Total
       </th>
     </tr>
@@ -99,7 +99,7 @@
                 Pending
               </span>
             </td>
-            <td>
+            <td class="has-text-right">
               <%= money_format(invoice.gross_amount - invoice.paid_amount, invoice.currency) %>
             </td>
 
@@ -109,12 +109,12 @@
                 Past_Due
               </span>
             </td>
-            <td>
+            <td class="has-text-right">
               <%= money_format(invoice.gross_amount - invoice.paid_amount, invoice.currency) %>
             </td>
         <% end %>
 
-        <td>
+        <td class="has-text-right">
           <%= money_format(invoice.gross_amount, invoice.currency) %>
         </td>
       </tr>
