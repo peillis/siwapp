@@ -94,11 +94,26 @@ defmodule Mix.Tasks.Siwapp.Demo do
 
   @spec demo_db :: :ok
   defp demo_db do
-    Enum.each(@models, &Repo.delete_all(&1))
+    sequence_name = fn x ->
+      (x |> to_string() |> String.split(".") |> List.last() |> String.downcase()) <> "s_id_seq"
+    end
+
+    Enum.each(
+      @models,
+      &(Repo.delete_all(&1) &&
+          Repo.query("ALTER SEQUENCE #{sequence_name.(&1)} RESTART"))
+    )
 
     settings = [
+      company: "Doofinder",
+      company_vat_id: "1fg5t7",
+      company_phone: "632278941",
+      company_email: "demo@example",
+      company_website: "www.mywebsite.com",
       currency: "USD",
-      days_to_due: "#{Faker.random_between(0, 5)}"
+      days_to_due: "#{Faker.random_between(0, 5)}",
+      company_address: "Newton Avenue, 32. NY",
+      legal_terms: "Clauses of our contract"
     ]
 
     Enum.each(settings, &Settings.create(&1))
