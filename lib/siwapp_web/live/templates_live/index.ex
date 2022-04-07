@@ -19,27 +19,18 @@ defmodule SiwappWeb.TemplatesLive.Index do
     template = id |> String.to_integer() |> Templates.get()
 
     socket =
-      cond do
-        template.print_default and type == "print" ->
-          put_flash(
-            socket,
-            :error,
-            "You must have one default template. Please select one to swipe defaults."
-          )
-
-        template.email_default and type == "email" ->
-          put_flash(
-            socket,
-            :error,
-            "You must have one default template. Please select one to swipe defaults."
-          )
-
-        true ->
-          Templates.set_default(String.to_atom(type), template)
-
+      case Templates.set_default(String.to_atom(type), template) do
+        {:ok, _} ->
           socket
           |> assign(templates: Templates.list())
           |> clear_flash()
+
+        {:error, %{errors: [{_key, {msg, _}}]}} ->
+          put_flash(
+            socket,
+            :error,
+            msg
+          )
       end
 
     {:noreply, socket}

@@ -140,8 +140,37 @@ defmodule Siwapp.Templates do
   """
   @spec set_default(:print | :email, Template.t() | nil) ::
           {:ok, Template.t()} | {:error, Ecto.Changeset.t()}
-  def set_default(:print, template), do: change_default(:print_default, template)
-  def set_default(:email, template), do: change_default(:email_default, template)
+  def set_default(:print, template) do
+    if template.print_default do
+      changeset =
+        template
+        |> Siwapp.Templates.change()
+        |> Ecto.Changeset.add_error(
+          :print_default,
+          "There must be one and only one print default. To unset this one, choose another template as print default"
+        )
+
+      {:error, changeset}
+    else
+      change_default(:print_default, template)
+    end
+  end
+
+  def set_default(:email, template) do
+    if template.email_default do
+      changeset =
+        template
+        |> Siwapp.Templates.change()
+        |> Ecto.Changeset.add_error(
+          :email_default,
+          "There must be one and only one email default. To unset this one, choose another template as email default"
+        )
+
+      {:error, changeset}
+    else
+      change_default(:email_default, template)
+    end
+  end
 
   @doc """
   Deletes a template.
