@@ -106,9 +106,7 @@ defmodule SiwappWeb.InvoicesLive.Edit do
   end
 
   def handle_event("send_email", %{"id" => id}, socket) do
-    invoice =
-      id
-      |> Invoices.get!(preload: [{:items, :taxes}, :series, :payments])
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series, :payments])
 
     socket =
       case Invoices.send_email(invoice) do
