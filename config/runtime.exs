@@ -127,6 +127,9 @@ if config_env() == :prod do
         auth: System.get_env("SMTP_AUTHENTICATION"),
         port: System.get_env("SMTP_PORT"),
         hostname: System.get_env("SMTP_HOST")
+
+    true ->
+      config :siwapp, Siwapp.Mailer, adapter: Swoosh.Adapters.Local
   end
 
   # For this example you need include a HTTP client required by Swoosh API client.
