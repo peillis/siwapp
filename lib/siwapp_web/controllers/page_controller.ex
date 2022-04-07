@@ -43,7 +43,7 @@ defmodule SiwappWeb.PageController do
       {:ok, _id} -> put_flash(conn, :info, "Email successfully sent")
       {:error, msg} -> put_flash(conn, :error, msg)
     end
-    |> redirect(to: "/")
+    |> redirect(to: "/invoices/#{id}/show")
   end
 
   @spec csv(Plug.Conn.t(), map) :: Plug.Conn.t()

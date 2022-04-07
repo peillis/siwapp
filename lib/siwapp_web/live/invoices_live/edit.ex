@@ -105,6 +105,21 @@ defmodule SiwappWeb.InvoicesLive.Edit do
      )}
   end
 
+  def handle_event("send_email", %{"id" => id}, socket) do
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :series, :payments])
+
+    socket =
+      case Invoices.send_email(invoice) do
+        {:ok, _} ->
+          put_flash(socket, :info, "Invoice sent by email")
+
+        {:error, msg} ->
+          put_flash(socket, :error, msg)
+      end
+
+    {:noreply, socket}
+  end
+
   @impl Phoenix.LiveView
   def handle_info({:params_updated, params}, socket) do
     changeset = Invoices.change(socket.assigns.invoice, params)

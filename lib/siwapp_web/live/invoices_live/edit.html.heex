@@ -157,7 +157,9 @@
       <%= link("Back", to: "#", onclick: "history.back()", class: "button is-dark") %>
       <%= if @live_action == :edit do %>
         <%= link("Send Email",
-          to: Routes.page_path(@socket, :send_email, @invoice.id),
+          to: "#",
+          phx_click: "send_email",
+          phx_value_id: @invoice.id,
           class: "button is-purple"
         ) %>
         <%= link("Download PDF",
