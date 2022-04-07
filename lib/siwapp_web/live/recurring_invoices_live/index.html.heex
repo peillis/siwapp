@@ -55,7 +55,7 @@
       <th title="Send">
         Send&nbsp;Email
       </th>
-      <th title="Total">
+      <th title="Total" class="has-text-right">
         Total
       </th>
     </tr>
@@ -103,7 +103,7 @@
           </td>
         <% end %>
 
-        <td>
+        <td class="has-text-right">
           <%= money_format(recurring_invoice.gross_amount, recurring_invoice.currency) %>
         </td>
       </tr>

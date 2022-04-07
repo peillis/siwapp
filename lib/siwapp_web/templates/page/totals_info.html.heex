@@ -1,11 +1,11 @@
-<table class="table is-bordered is-narrow has-text-centered">
+<table class="table is-bordered is-narrow">
   <tbody>
     <tr>
       <td class="has-text-weight-bold">
         Gross Amount:
       </td>
       <%= for {currency, total} <- @gross_totals do %>
-        <td class="has-text-weight-medium">
+        <td class="has-text-weight-medium has-text-right">
           <%= money_format(total, currency) %>
         </td>
       <% end %>
@@ -15,7 +15,7 @@
         Net Amount:
       </td>
       <%= for {currency, total} <- @net_totals do %>
-        <td class="has-text-weight-medium">
+        <td class="has-text-weight-medium has-text-right">
           <%= money_format(total, currency) %>
         </td>
       <% end %>
@@ -26,7 +26,7 @@
           <%= name %> :
         </td>
         <%= for {currency, total} <- list do %>
-          <td class="has-text-weight-medium">
+          <td class="has-text-weight-medium has-text-right">
             <%= money_format(total, currency) %>
           </td>
         <% end %>
