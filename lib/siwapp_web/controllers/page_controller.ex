@@ -33,6 +33,20 @@ defmodule SiwappWeb.PageController do
     send_download(conn, {:binary, pdf_content}, filename: pdf_name)
   end
 
+  @spec send_email(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def send_email(conn, %{"id" => id}) do
+    invoice = Invoices.get!(id, preload: [{:items, :taxes}, :payments, :series])
+
+    invoice
+    |> Invoices.send_email()
+    |> case do
+      {:ok, _id} -> put_flash(conn, :info, "Email successfully sent")
+      {:error, msg} -> put_flash(conn, :error, msg)
+    end
+    |> IO.inspect()
+    |> redirect(to: "/invoices/#{id}/show")
+  end
+
   @spec csv(Plug.Conn.t(), map) :: Plug.Conn.t()
   def csv(conn, params) do
     queryable = which_queryable(params["view"])
