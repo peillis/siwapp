@@ -17,6 +17,21 @@ config :siwapp, SiwappWeb.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+database_url =
+  System.get_env("DATABASE_URL") ||
+    raise """
+    environment variable DATABASE_URL is missing.
+    For example: ecto://USER:PASS@HOST/DATABASE
+    """
+
+config :siwapp, Siwapp.Repo,
+  ssl: true,
+  # socket_options: [:inet6],
+  url: database_url,
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  database: "siwapp_prod",
+  show_sensitive_data_on_connection_error: true
+
 # Do not print debug messages in production
 config :logger, level: :info
 
