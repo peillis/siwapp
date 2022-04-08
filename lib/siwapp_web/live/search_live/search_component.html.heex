@@ -1,5 +1,5 @@
 <div class="navbar-item">
-  <.form let={f} for={@changeset} phx-change="change" phx-submit="search" phx-target={@myself}>
+  <.form let={f} for={@changeset} phx-change="change" phx-submit="search" phx-capture-click={JS.hide(to: "#search-menu")} phx-target={@myself}>
     <div class="search-input">
       <button id="search-button" class="button" type="button" phx-click={JS.toggle(to: "#search-menu")}>
         <span class="icon is-small">

@@ -81,9 +81,10 @@ defmodule Siwapp.Invoices.Statistics do
             %{
               total:
                 fragment(
-                  "round(sum(?*?*?::decimal/100))",
+                  "round(sum(?*?*(1-?::decimal/100)*?::decimal/100))",
                   itm.quantity,
                   itm.unitary_cost,
+                  itm.discount,
                   t.value
                 ),
               name: t.name,
