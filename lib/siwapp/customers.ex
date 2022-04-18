@@ -36,6 +36,7 @@ defmodule Siwapp.Customers do
     |> Query.search_in_string(:name, "%#{name}%")
     |> limit(^options[:limit])
     |> offset(^options[:offset])
+    |> select([c], {c.name, c.id})
     |> Repo.all()
   end
 

@@ -57,16 +57,16 @@ defmodule SiwappWeb.InvoicesLive.CustomerInputComponent do
           ) %>
           <div class={"dropdown below-input #{@display}"}>
             <div id="customers_list_ancestor" class="dropdown-menu dropdown-content" role="menu">
-              <%= for customer_suggestion <- @customer_suggestions do %>
+              <%= for {name, id} <- @customer_suggestions do %>
                 <a
                   href="#"
                   phx-click="pick_customer"
-                  phx-value-id={customer_suggestion.id}
+                  phx-value-id={id}
                   phx-value-view={@view}
                   phx-target={@myself}
                   class="dropdown-item"
                 >
-                  <%= customer_suggestion.name %>
+                  <%= name %>
                 </a>
               <% end %>
               <div
