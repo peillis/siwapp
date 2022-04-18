@@ -95,7 +95,12 @@ defmodule Mix.Tasks.Siwapp.Demo do
   @spec demo_db :: :ok
   defp demo_db do
     sequence_name = fn x ->
-      (x |> to_string() |> String.split(".") |> List.last() |> String.downcase()) <> "s_id_seq"
+      case x |> to_string() |> String.split(".") |> List.last() |> String.downcase() do
+        "recurringinvoice" -> "recurring_invoice"
+        "tax" -> "taxe"
+        "series" -> "serie"
+        model -> model
+      end <> "s_id_seq"
     end
 
     Enum.each(
